@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
-import "./App.css";
+import "./index.css";
 function App() {
   const router = createBrowserRouter([
     {
@@ -18,6 +18,7 @@ function App() {
   ]);
 
   return <RouterProvider router={router} />;
+
   function Root() {
     return (
       <div className="App">
@@ -37,7 +38,7 @@ function App() {
           </label>
           <input type="checkbox" id="remember" name="remember" />
           <br />
-          <input type="submit" value="Log In" />
+          <input type="submit" value="Log In" name="login" />
           <br />
           <input type="button" value="Forgot Password?" />
           <br />

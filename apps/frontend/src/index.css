@@ -34,3 +34,20 @@ body {
 .example-component {
   background-color: cyan;
 }
+
+.App {
+  text-align: center;
+  margin: auto;
+}
+
+.App-header {
+  font-family: "Calibri", serif;
+  font-size: 48px;
+  text-align: center;
+  color: cornflowerblue;
+}
+
+.Small-label {
+  font-size: 14px;
+  color: forestgreen;
+}
