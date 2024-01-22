@@ -35,8 +35,19 @@ body {
   background-color: cyan;
 }
 
+.App {
+  text-align: center;
+  margin: auto;
+}
+
 .App-header {
   font-family: "Comic Sans MS", serif;
   font-size: 48px;
   text-align: center;
+  color: deeppink;
+}
+
+.Small-label {
+  font-size: 14px;
+  color: forestgreen;
 }
