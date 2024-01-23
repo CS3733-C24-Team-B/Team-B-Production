@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginPage from "./components/LoginPage.tsx";
+import HomePage from "./components/HomePage.tsx";
 import "./index.css";
 import HomePage from "./components/HomePage.tsx";
 function App() {
@@ -8,7 +8,7 @@ function App() {
     {
       path: "/",
       errorElement: <div />,
-      element: <LoginPage />,
+      element: <HomePage />,
       // children: [
       //   {
       //     path: "",
