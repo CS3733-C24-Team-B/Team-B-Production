@@ -6,7 +6,7 @@ import HomePage from "./components/HomePage.tsx";
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/login",
+      path: "/",
       errorElement: <div />,
       element: <LoginPage />,
       // children: [
