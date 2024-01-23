@@ -1,13 +1,13 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginPage from "./components/LoginPage.tsx";
+import HomePage from "./components/HomePage.tsx";
 import "./index.css";
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       errorElement: <div />,
-      element: <LoginPage />,
+      element: <HomePage />,
       // children: [
       //   {
       //     path: "",
