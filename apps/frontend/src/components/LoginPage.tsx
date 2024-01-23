@@ -1,9 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../index.css";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
+  function handleClick() {
+    navigate("/home");
+  }
+
   return (
     <div className="App">
       <header className="App-header">Login</header>
@@ -22,7 +29,12 @@ export default function LoginPage() {
         </label>
         <input type="checkbox" id="remember" name="remember" />
         <br />
-        <input type="submit" value="Log In" name="login" />
+        <input
+          type="submit"
+          value="Log In"
+          name="login"
+          onClick={handleClick}
+        />
         <br />
         <input type="button" value="Forgot Password?" />
         <br />
