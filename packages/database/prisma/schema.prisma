@@ -13,8 +13,29 @@ datasource db {
 }
 
 // example table used in the express router example
-model HighScore {
-  id    Int      @id @default(autoincrement())
-  time  DateTime
-  score Int
+// model HighScore {
+//   id    Int      @id @default(autoincrement())
+//   time  DateTime
+//   score Int
+// }
+
+model Node {
+  nodeID      String      @id
+  xcoord      Int
+  ycoord      Int
+  floor       String
+  building    String
+  nodeType    String
+  longName    String
+  shortName   String
+  startEdges  Edge[]      @relation("StartNode")
+  endEdges    Edge[]      @relation("EndNode")
+}
+
+model Edge {
+  edgeID      String      @id
+  startNode   Node        @relation("StartNode", fields: [startNodeID], references: [nodeID])
+  startNodeID String
+  endNode     Node        @relation("EndNode", fields: [endNodeID], references: [nodeID])
+  endNodeID   String
 }
