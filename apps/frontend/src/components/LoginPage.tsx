@@ -7,8 +7,16 @@ import "../index.css";
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  function handleClick() {
+  function homePage() {
     navigate("/home");
+  }
+
+  function createAcc() {
+    navigate("/createacc");
+  }
+
+  function forgotPass() {
+    navigate("/forgotpass");
   }
 
   return (
@@ -29,16 +37,11 @@ export default function LoginPage() {
         </label>
         <input type="checkbox" id="remember" name="remember" />
         <br />
-        <input
-          type="submit"
-          value="Log In"
-          name="login"
-          onClick={handleClick}
-        />
+        <input type="submit" value="Log In" name="login" onClick={homePage} />
         <br />
-        <input type="button" value="Forgot Password?" />
+        <input type="button" value="Forgot Password?" onClick={forgotPass} />
         <br />
-        <input type="button" value="Create Account" />
+        <input type="button" value="Create Account" onClick={createAcc} />
       </form>
       <Outlet />
     </div>
