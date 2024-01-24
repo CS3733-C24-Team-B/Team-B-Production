@@ -2,7 +2,7 @@
 
 :root {
   /*font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-  background-image: url("images/hpphoto.jpeg");
+  /*background-image: url("images/hpphoto.jpeg");*/
 
   font-size: 18px;
   line-height: 1.4;
@@ -46,6 +46,19 @@ CSS .body {
 .App {
   text-align: center;
   margin: auto;
+}
+
+.App::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("images/hpphoto.jpeg");
+  background-size: cover;
+  opacity: 0.2;
+  z-index: -1;
 }
 
 .App-header {
