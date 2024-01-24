@@ -34,7 +34,8 @@
 .example-component {
   background-color: cyan;
 }
-CSS .body {
+
+.body {
   /*background-image: url("paper.gif");*/
   margin: 0;
   padding: 0;
