@@ -187,6 +187,7 @@ export function breadthFirstSearch(){
             if (!visited.has(neighbor)) {
                 visited.add(neighbor);
                 queue.push(neighbor);
+
             }
         }
     }
