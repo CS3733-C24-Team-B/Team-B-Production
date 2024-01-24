@@ -10,13 +10,9 @@ export default function HomePage() {
       <div className="App">
         <header className="App-header">
           Welcome to Home Page :D
-          <img
-            src={logo}
-            alt="Hospital Logo"
-            width="400"
-            height="100"
-            style={{ position: "absolute", top: "0", left: "50px" }}
-          />
+          <div className="logo">
+            <img src={logo} alt="Hospital Logo" />
+          </div>
         </header>
         <div className="navbar">
           <div className="navbar-butn">
