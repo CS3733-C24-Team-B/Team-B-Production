@@ -1,4 +1,5 @@
-import { readFileSync } from "fs";
+import {readFileSync} from "fs";
+
 //import { MapNode } from "./Node.ts";
 class MapNode {
     nodeID: string;
@@ -71,6 +72,49 @@ export function readCSV(filePath: string): any[] {
 
   return data;
 }
+
+/**
+ * Reads data from an edge CSV file and returns a list of JSON objects.
+ *
+ * Format example:
+ * data: {
+ *     edgeID: 'CCONF002L1_WELEV00HL1',
+ *     startNodeID: 'CCONF002L1',
+ *     endNodeID: 'WELEV00HL1'
+ * }
+ *
+ * @param filePath
+ * @return edgeData
+ */
+export function readEdgeCSV(filePath: string) {
+
+    // create place to store edge data in JSON format
+    const edgeData = [];
+
+    // read file
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split('\n');
+    lines.splice(0, 1);                     // remove 1st line (column headings)
+    lines.splice(lines.length - 1, 1);      // remove last line (empty line)
+
+    // loop through lines and put into JSON format
+    for (let i: number = 0; i < lines.length; i++) {
+        const data: string[] = lines[i].split(',');
+        edgeData[i] = {
+            data: {
+                edgeID: data[0],
+                startNodeID: data[1],
+                endNodeID: data[2]
+            }
+        };
+    }
+
+    console.log(edgeData);
+    console.log(edgeData.length + " edges read");
+
+    return edgeData;
+}
+
 //use to iterate/print out different values of each node
 export function createNodeList() {
   const filePath = "src/csvs/L1Nodes.csv";
