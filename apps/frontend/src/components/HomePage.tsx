@@ -23,10 +23,15 @@ export default function HomePage() {
             <a href="/home">Home</a>
           </div>
           <div className="navbar-butn">
-            <a href="/">Login</a>
-          </div>
-          <div className="navbar-butn">
             <a href="/settings">Settings</a>
+          </div>
+          <div className="dropdown">
+            <button className="dropbtn">Profile</button>
+            <div className="dropdown-content">
+              <a href="/home">View Profile</a>
+              <a href="/settings">Settings</a>
+              <a href="/">Log Out</a>
+            </div>
           </div>
         </div>
         <img
@@ -35,7 +40,6 @@ export default function HomePage() {
           width={"1500"}
           height={"1020"}
         />
-
         <Outlet />
       </div>
     </body>
