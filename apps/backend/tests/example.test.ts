@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import {createEdgeList, createNodeList, readNodeCSV} from "../src/utilities/algorithm.ts";
+import {createEdgeList, createNodeList, readEdgeCSV} from "../src/utilities/algorithm.ts";
 
 /*function sum(a: number, b: number) {
   return a + b;
@@ -13,6 +13,10 @@ test("nodelist", () => {
 });
 test("edgeList", () => {
     createEdgeList();
+});
+
+test("addEdgesToDB", () => {
+    readEdgeCSV("/Users/katystuparu/WebstormProjects/Team-B-Production/apps/backend/src/csvs/L1Edges.csv");
 });
 
 test("addNodeToDB", () =>{
