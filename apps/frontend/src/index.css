@@ -1,6 +1,9 @@
+/*import background_img from "../images/hpphoto.jpeg";*/
+
 :root {
   /*font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-  background-color: #ffffff;
+  /*background-image: url("images/hpphoto.jpeg");*/
+
   font-size: 18px;
   line-height: 1.4;
 
@@ -10,12 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-body {
-  width: 100%;
-  height: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
+
 #root {
   display: flex;
   height: 100%;
@@ -37,9 +35,31 @@ body {
   background-color: cyan;
 }
 
+.body {
+  /*background-image: url("paper.gif");*/
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  /* background-image: url("images/hpphoto.jpeg");*/
+}
+
 .App {
   text-align: center;
   margin: auto;
+}
+
+.App::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("images/hpphoto.jpeg");
+  background-size: cover;
+  opacity: 0.2;
+  z-index: -1;
 }
 
 .App-header {
