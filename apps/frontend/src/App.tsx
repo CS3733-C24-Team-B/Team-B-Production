@@ -5,6 +5,7 @@ import "./index.css";
 import HomePage from "./components/HomePage.tsx";
 import CreateAccount from "./components/CreateAccount.tsx";
 import ForgotPassword from "./components/ForgotPassword.tsx";
+import Settings from "./components/Settings.tsx";
 function App() {
   const router = createBrowserRouter([
     {
@@ -26,6 +27,11 @@ function App() {
       path: "/forgotpass",
       errorElement: <div />,
       element: <ForgotPassword />,
+    },
+    {
+      path: "/settings",
+      errorElement: <div />,
+      element: <Settings />,
     },
   ]);
 

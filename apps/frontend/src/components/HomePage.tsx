@@ -1,10 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-//import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../index.css";
 import firstfloor from "../images/00_thegroundfloor.png";
 import logo from "../images/bwh-logo.svg";
-//import 01_thefirstfloor from ./01_thefirstfloor.png
 
 export default function HomePage() {
   return (
@@ -28,7 +26,7 @@ export default function HomePage() {
             <a href="/">Login</a>
           </li>
           <li>
-            <a href="/forgotpass">Settings</a>
+            <a href="/settings">Settings</a>
           </li>
         </ul>
         <img
