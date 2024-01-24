@@ -1,5 +1,6 @@
-import {readFileSync} from "fs";
-
+import { readFileSync } from "fs";
+import {G} from "vitest/dist/types-198fd1d9";
+import {start} from "http-errors";
 //import { MapNode } from "./Node.ts";
 class MapNode {
     nodeID: string;
@@ -18,8 +19,8 @@ class MapNode {
         this.floor = floor;
         this.building = building;
         this.nodeType = nodeType;
-        this.longName = longName;
         this.shortName = shortName;
+        this.longName = longName;
     }
 }
 class MapEdge {
@@ -33,7 +34,7 @@ class MapEdge {
     }
 }
 class Graph {
-    private adjacencyList: Map<MapNode, MapNode[]>;
+    adjacencyList: Map<MapNode, MapNode[]>;
 
     constructor() {
         this.adjacencyList = new Map();
@@ -51,86 +52,49 @@ class Graph {
 }
 const nodeList: MapNode[] = [];
 const edgeList: MapEdge[] = [];
+export function findNode(nodeID: string) : MapNode{
+    //return array.find(obj => obj.id === id);
+    // console.log(createNodeList()[7]);
+    //console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
+    return createNodeList().find(MapNode => MapNode.nodeID === nodeID) as MapNode;
+}
 export function readCSV(filePath: string): any[] {
-  //Read the file
-  const fileContent = readFileSync(filePath, "utf8");
+    //Read the file
+    const fileContent = readFileSync(filePath, "utf8");
 
-  //Split the file content by new line to get the rows
-  const lines = fileContent.split("\n");
+    //Split the file content by new line to get the rows
+    const lines = fileContent.split("\n");
 
-  //Extract headers
-  const headers = lines[0].split(",");
+    //Extract headers
+    const headers = lines[0].split(",");
 
-  //Parse each line
-  const data = lines.slice(1).map((line) => {
-    const values = line.split(",");
-    return headers.reduce((obj, header, index) => {
-      obj[header] = values[index];
-      return obj;
-    }, {} as any);
-  });
+    //Parse each line
+    const data = lines.slice(1).map((line) => {
+        const values = line.split(",");
+        return headers.reduce((obj, header, index) => {
+            obj[header] = values[index];
+            return obj;
+        }, {} as any);
+    });
 
-  return data;
+    return data;
 }
-
-/**
- * Reads data from an edge CSV file and returns a list of JSON objects.
- *
- * Format example:
- * data: {
- *     edgeID: 'CCONF002L1_WELEV00HL1',
- *     startNodeID: 'CCONF002L1',
- *     endNodeID: 'WELEV00HL1'
- * }
- *
- * @param filePath
- * @return edgeData
- */
-export function readEdgeCSV(filePath: string) {
-
-    // create place to store edge data in JSON format
-    const edgeData = [];
-
-    // read file
-    const fileContent: string = readFileSync(filePath, "utf-8");
-    const lines: string[] = fileContent.split('\n');
-    lines.splice(0, 1);                     // remove 1st line (column headings)
-    lines.splice(lines.length - 1, 1);      // remove last line (empty line)
-
-    // loop through lines and put into JSON format
-    for (let i: number = 0; i < lines.length; i++) {
-        const data: string[] = lines[i].split(',');
-        edgeData[i] = {
-            data: {
-                edgeID: data[0],
-                startNodeID: data[1],
-                endNodeID: data[2]
-            }
-        };
-    }
-
-    console.log(edgeData);
-    console.log(edgeData.length + " edges read");
-
-    return edgeData;
-}
-
 //use to iterate/print out different values of each node
 export function createNodeList() {
-  const filePath = "src/csvs/L1Nodes.csv";
-  const nodeString = readCSV(filePath);
-  const nodes: string[] = [];
-  for (const node of nodeString) {
-    nodes.push(node);
-  }
-  nodeList.pop();
-  for (const node of nodes) {
-    const curr = JSON.stringify(node);
-    let currNode: string[]= curr.substring(68, curr.length - 2).split(" ");
-    const newNode: MapNode = new MapNode(currNode[0],parseInt(currNode[1]),parseInt(currNode[2]),currNode[3],currNode[4],currNode[5],currNode[6],currNode[7]);
-    nodeList.push(newNode);
-  }
-  return nodeList;
+    const filePath = "src/csvs/L1Nodes.csv";
+    const nodeString = readCSV(filePath);
+    const nodes: string[] = [];
+    for (const node of nodeString) {
+        nodes.push(node);
+    }
+    nodeList.pop();
+    for (const node of nodes) {
+        const curr = JSON.stringify(node);
+        let currNode: string[]= curr.substring(70, curr.length - 2).split(" ");
+        const newNode: MapNode = new MapNode(currNode[0],parseInt(currNode[1]),parseInt(currNode[2]),currNode[3],currNode[4],currNode[5],currNode[6],currNode[7]);
+        nodeList.push(newNode);
+    }
+    return nodeList;
 }
 export function createEdgeList() {
     const filePath = "src/csvs/L1Edges.csv";
@@ -139,8 +103,8 @@ export function createEdgeList() {
     for (const edge of edgeString) {
         edges.push(edge);
     }
-edges.pop();
-let x = 1;
+    edges.pop();
+    let x = 1;
     for (const edge of edges) {
         if(x==1) {
             x = 2;
@@ -158,9 +122,71 @@ let x = 1;
     return edgeList;
 }
 
-/*export function breadthFirstSearch(listEdges: MapEdge[], listNodes: MapNode[]){
+export function breadthFirstSearch(){
+    let graph : Graph = new Graph();
+    for(const currentNode of createNodeList()){
+        graph.addVertex(currentNode);
+    }
+    for(const currentEdge of createEdgeList()){
+        graph.addEdge(findNode(currentEdge.endNode),findNode(currentEdge.startNode));
+        graph.addEdge(findNode(currentEdge.startNode),findNode(currentEdge.endNode));
+    }
+    const visited: Set<MapNode> = new Set();
+    const queue: MapNode[] = [];
+    const result: MapNode[] = [];
 
-}*/
+    visited.add(createNodeList()[0]);
+    queue.push(createNodeList()[0]);
+
+    while (queue.length > 0) {
+        const currentVertex = queue.shift()!;
+        result.push(currentVertex);
+
+        const neighbors : MapNode[] = graph.adjacencyList.get(currentVertex) || [];
+
+        for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                queue.push(neighbor);
+            }
+        }
+    }
+    console.log(result.map(obj => obj.nodeID));
+    return result;
+}
+export function pathFindBFS(startNode:MapNode,endNode:MapNode){
+    let graph : Graph = new Graph();
+    for(const currentNode of createNodeList()){
+        graph.addVertex(currentNode);
+    }
+    for(const currentEdge of createEdgeList()){
+        graph.addEdge(findNode(currentEdge.endNode),findNode(currentEdge.startNode));
+        graph.addEdge(findNode(currentEdge.startNode),findNode(currentEdge.endNode));
+    }
+    const visited: Set<MapNode> = new Set();
+    const queue: MapNode[][] = [[startNode]];
+    visited.add(startNode);
+
+    while (queue.length > 0) {
+        const currentPath = queue.shift()!;
+        const currentVertex = currentPath[currentPath.length-1];
+        if(currentVertex===endNode){
+            console.log(currentPath);
+            return currentPath;
+        }
+
+        const neighbors : MapNode[] = graph.adjacencyList.get(currentVertex) || [];
+
+        for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                const newPath : MapNode[] =[...currentPath,neighbor];
+                queue.push(newPath);
+            }
+        }
+    }
+    return null;
+}
 //const filePath = "src/csvs/L1Nodes.csv";
 //console.log(readCSV(filePath));
 //const filePath = "src/csvs/L1Edges.csv";
