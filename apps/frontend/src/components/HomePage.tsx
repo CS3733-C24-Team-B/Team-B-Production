@@ -9,14 +9,10 @@ export default function HomePage() {
     <body>
       <div className="App">
         <header className="App-header">
-          Welcome to Home Page :D
-          <img
-            src={logo}
-            alt="Hospital Logo"
-            width="400"
-            height="100"
-            style={{ position: "absolute", top: "0", left: "50px" }}
-          />
+          Welcome to home page :D
+          <div className="logo">
+            <img src={logo} alt="Hospital Logo" />
+          </div>
         </header>
         <div className="navbar">
           <div className="navbar-butn">
@@ -29,12 +25,9 @@ export default function HomePage() {
             <a href="/settings">Settings</a>
           </div>
         </div>
-        <img
-          src={firstfloor}
-          alt="first floor"
-          width={"1500"}
-          height={"1020"}
-        />
+        <div id="map-container">
+          <img src={firstfloor} alt="first floor" id="map-image" />
+        </div>
 
         <Outlet />
       </div>
