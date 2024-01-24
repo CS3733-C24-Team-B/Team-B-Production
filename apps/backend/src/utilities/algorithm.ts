@@ -1,5 +1,8 @@
 import { readFileSync } from "fs";
 //import { MapNode } from "./Node.ts";
+import * as path from "path";
+import * as fs from "fs";
+
 class MapNode {
     nodeID: string;
     xcoord: number;
@@ -70,6 +73,42 @@ export function readCSV(filePath: string): any[] {
   });
 
   return data;
+}
+/*
+read data from NodeCSV and export in JSON:
+format:
+"data": {
+    "nodeID": "CCONF001L1",
+    "xcoord": 2255,
+    "ycoord": 849,
+    "floor": "L1",
+    "building": "45 Francis",
+    "nodeType": "CONF",
+    "longName": "Anesthesia Conf Floor L1",
+    "shortName":"Conf C001L1"
+ */
+export function readNodeCSV(filePath:string){
+    const NodeData = [];
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split('\n');
+
+    for (let i: number = 1; i < lines.length; i++) {
+        const data = lines[i].split(',');
+        NodeData[i] = {
+            data:{
+                "nodeID": data[0],
+                "xcoord": data[1],
+                "ycoord": data[2],
+                "floor": data[3],
+                "building": data[4],
+                "nodeType": data[5],
+                "longName": data[6],
+                "shortName": data[7]
+            }
+        };
+    }
+    console.log(NodeData);
+    return NodeData;
 }
 //use to iterate/print out different values of each node
 export function createNodeList() {
