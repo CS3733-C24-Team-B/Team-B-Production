@@ -13,6 +13,8 @@
 body {
   width: 100%;
   height: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }
 #root {
   display: flex;
@@ -38,29 +40,6 @@ body {
 .App {
   text-align: center;
   margin: auto;
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-  }
-
-  li {
-    float: left;
-  }
-
-  li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-
-  li a:hover {
-    background-color: #111;
-  }
 }
 
 .App-header {
@@ -73,4 +52,30 @@ body {
 .Small-label {
   font-size: 14px;
   color: forestgreen;
+}
+
+.navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.navbar-butn {
+  float: left;
+}
+
+.navbar-butn a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.navbar-butn a:hover {
+  background-color: #111;
 }

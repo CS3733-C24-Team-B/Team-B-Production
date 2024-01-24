@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../index.css";
 
-export default function LoginPage() {
+export default function Settings() {
   const navigate = useNavigate();
 
   function handleClick() {

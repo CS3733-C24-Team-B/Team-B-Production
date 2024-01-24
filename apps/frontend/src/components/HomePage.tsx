@@ -18,17 +18,17 @@ export default function HomePage() {
             style={{ position: "absolute", top: "0", left: "50px" }}
           />
         </header>
-        <ul>
-          <li>
+        <div className="navbar">
+          <div className="navbar-butn">
             <a href="/home">Home</a>
-          </li>
-          <li>
+          </div>
+          <div className="navbar-butn">
             <a href="/">Login</a>
-          </li>
-          <li>
+          </div>
+          <div className="navbar-butn">
             <a href="/settings">Settings</a>
-          </li>
-        </ul>
+          </div>
+        </div>
         <img
           src={firstfloor}
           alt="first floor"
