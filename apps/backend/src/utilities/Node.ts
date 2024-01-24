@@ -8,16 +8,7 @@
   longName: string;
   shortName: string;
 
-  constructor(
-    nodeID: string,
-    xcoord: number,
-    ycoord: number,
-    floor: string,
-    building: string,
-    nodeType: string,
-    longName: string,
-    shortName: string,
-  ) {
+  constructor(nodeID: string, xcoord: number, ycoord: number, floor: string, building: string, nodeType: string, longName: string, shortName: string) {
     this.nodeID = nodeID;
     this.xcoord = xcoord;
     this.ycoord = ycoord;
@@ -27,5 +18,5 @@
     this.longName = longName;
     this.shortName = shortName;
   }
-}
-*/
+}*/
+
