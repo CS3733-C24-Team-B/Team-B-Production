@@ -9,7 +9,7 @@ export default function HomePage() {
     <body>
       <div className="App">
         <header className="App-header">
-          Welcome to home page :D
+          Welcome to Home Page :D
           <div className="logo">
             <img src={logo} alt="Hospital Logo" />
           </div>
@@ -19,10 +19,15 @@ export default function HomePage() {
             <a href="/home">Home</a>
           </div>
           <div className="navbar-butn">
-            <a href="/">Login</a>
-          </div>
-          <div className="navbar-butn">
             <a href="/settings">Settings</a>
+          </div>
+          <div className="dropdown">
+            <button className="dropbtn">Profile</button>
+            <div className="dropdown-content">
+              <a href="/home">View Profile</a>
+              <a href="/settings">Settings</a>
+              <a href="/">Log Out</a>
+            </div>
           </div>
         </div>
         <div id="map-container">
