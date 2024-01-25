@@ -13,7 +13,7 @@ export default function CSVData() {
           const res = await axios.get("/api/db-get-nodes");
 
           console.log(res.data);
-          setData(res.data);
+          setData(JSON.stringify(res.data));
       }
       fetch().then();
   }, []);
@@ -22,7 +22,7 @@ export default function CSVData() {
     <div className="App">
       <header className="App-header">CSV Data</header>
       <br />
-        <p>{data}</p>
+        <p>{data.toString()}</p>
     </div>
   );
 }
