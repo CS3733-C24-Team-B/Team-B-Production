@@ -1156,7 +1156,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:^8.10.1":
+"@types/pg@npm:^8, @types/pg@npm:^8.10.1":
   version: 8.10.9
   resolution: "@types/pg@npm:8.10.9"
   dependencies:
@@ -5006,7 +5006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:^8.11.0":
+"pg@npm:^8.11.0, pg@npm:^8.11.3":
   version: 8.11.3
   resolution: "pg@npm:8.11.3"
   dependencies:
@@ -5970,6 +5970,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "softeng-starter-code@workspace:."
   dependencies:
+    "@types/pg": "npm:^8"
     "@types/react": "npm:^18.0.37"
     "@types/react-dom": "npm:^18.0.11"
     "@vitest/ui": "npm:^0.33.0"
@@ -5978,6 +5979,7 @@ __metadata:
     eslint-config-custom: "workspace:*"
     happy-dom: "npm:^10.6.3"
     husky: "npm:^8.0.0"
+    pg: "npm:^8.11.3"
     prettier: "npm:2.8.8"
     prettier-config-custom: "workspace:*"
     react: "npm:^18.2.0"
