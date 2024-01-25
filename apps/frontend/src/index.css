@@ -116,7 +116,7 @@
 #map-container {
   position: relative;
 }
-
+/*maps the image*/
 #map-image {
   width: 100%;
   height: auto;
