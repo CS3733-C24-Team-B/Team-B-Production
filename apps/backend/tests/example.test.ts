@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import {breadthFirstSearch, createEdgeList, createNodeList, findNode, pathFindBFS} from "../src/utilities/algorithm.ts";
+import {createEdgeList, createNodeList, readEdgeCSV} from "../src/utilities/algorithm.ts";
 
 /*function sum(a: number, b: number) {
   return a + b;
@@ -30,3 +30,7 @@ test("pathfindBFS",() =>{
     pathFindBFS(findNode("WELEV00HL1"),findNode("CSERV001L1"));
 });
 
+
+test("addNodeToDB", () =>{
+    readNodeCSV("src/csvs/L1Nodes.csv");
+});
