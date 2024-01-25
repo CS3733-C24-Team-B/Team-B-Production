@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import {createEdgeList, createNodeList, readEdgeCSV} from "../src/utilities/algorithm.ts";
+import {breadthFirstSearch, createEdgeList, createNodeList, findNode, pathFindBFS} from "../src/utilities/algorithm.ts";
 
 /*function sum(a: number, b: number) {
   return a + b;
@@ -18,3 +18,15 @@ test("edgeList", () => {
 test("addEdgesToDB", () => {
     readEdgeCSV("/Users/katystuparu/WebstormProjects/Team-B-Production/apps/backend/src/csvs/L1Edges.csv");
 });
+
+test("bfs",() =>{
+    breadthFirstSearch();
+});
+
+test("findNode",() =>{
+    findNode("CCONF002L1");
+});
+test("pathfindBFS",() =>{
+    pathFindBFS(findNode("WELEV00HL1"),findNode("CSERV001L1"));
+});
+

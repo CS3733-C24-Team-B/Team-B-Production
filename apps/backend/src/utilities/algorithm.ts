@@ -54,10 +54,11 @@ const nodeList: MapNode[] = [];
 const edgeList: MapEdge[] = [];
 export function findNode(nodeID: string) : MapNode{
     //return array.find(obj => obj.id === id);
-    // console.log(createNodeList()[7]);
-    //console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
+    //console.log(createNodeList()[7]);
+   // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
     return createNodeList().find(MapNode => MapNode.nodeID === nodeID) as MapNode;
 }
+
 export function readCSV(filePath: string): any[] {
     //Read the file
     const fileContent = readFileSync(filePath, "utf8");
@@ -84,18 +85,24 @@ export function createNodeList() {
     const filePath = "src/csvs/L1Nodes.csv";
     const nodeString = readCSV(filePath);
     const nodes: string[] = [];
+    nodeString.pop();
     for (const node of nodeString) {
         nodes.push(node);
     }
-    nodeList.pop();
     for (const node of nodes) {
         const curr = JSON.stringify(node);
-        let currNode: string[]= curr.substring(70, curr.length - 2).split(" ");
+        let currNode: string[]= curr.split(",");
+        currNode=currNode.map(obj => obj.substring(obj.indexOf(":")+2,obj.length-1));
+
         const newNode: MapNode = new MapNode(currNode[0],parseInt(currNode[1]),parseInt(currNode[2]),currNode[3],currNode[4],currNode[5],currNode[6],currNode[7]);
+        newNode.shortName=newNode.shortName.substring(0,newNode.shortName.length-4);
         nodeList.push(newNode);
+        //console.log(newNode);
     }
+    console.log(nodeList);
     return nodeList;
 }
+
 export function createEdgeList() {
     const filePath = "src/csvs/L1Edges.csv";
     const edgeString = readCSV(filePath);
@@ -103,22 +110,20 @@ export function createEdgeList() {
     for (const edge of edgeString) {
         edges.push(edge);
     }
+
     edges.pop();
-    let x = 1;
     for (const edge of edges) {
-        if(x==1) {
-            x = 2;
-        }
-        else {
             const curr = JSON.stringify(edge);
-            let curredge: string[] = [];
-            curredge[0] = curr.substring(7, 28);
-            curredge[1] = curr.substring(28, 38);
-            curredge[2] = curr.substring(38, 48);
+            let curredge: string[]= curr.split(",");
+            curredge=curredge.map(obj => obj.substring(obj.indexOf(":")+2,obj.length-1));
+            curredge[2]=curredge[2].substring(0,curredge[2].length-3);
+           // console.log(curredge);
+
             const newEdge: MapEdge = new MapEdge(curredge[0], curredge[1], curredge[2]);
             edgeList.push(newEdge);
-        }
     }
+
+    //console.log(edgeList);
     return edgeList;
 }
 
@@ -151,7 +156,7 @@ export function breadthFirstSearch(){
             }
         }
     }
-    console.log(result.map(obj => obj.nodeID));
+    //console.log(result.map(obj => obj.nodeID));
     return result;
 }
 export function pathFindBFS(startNode:MapNode,endNode:MapNode){
