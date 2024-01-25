@@ -2,14 +2,14 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import "../index.css";
 import firstfloor from "../images/00_thegroundfloor.png";
-import logo from "../images/bwh-logo.svg";
+import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 export default function HomePage() {
   return (
     <body>
       <div className="App">
         <header className="App-header">
-          Welcome to Home Page
+          <div className="title">Welcome to Home Page</div>
           <div className="logo">
             <img src={logo} alt="Hospital Logo" />
           </div>
