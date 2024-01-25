@@ -189,7 +189,14 @@
   height: auto;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 8px;
+}
+
+body {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-top: 0;
 }
 
 .body {
