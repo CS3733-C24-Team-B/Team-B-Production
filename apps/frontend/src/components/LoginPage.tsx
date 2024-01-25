@@ -38,11 +38,24 @@ export default function LoginPage() {
           </label>
           <input type="checkbox" id="remember" name="remember" />
           <br />
-          <input type="submit" value="Log In" name="login" onClick={homePage} />
-          <br />
-          <input type="button" value="Forgot Password?" onClick={forgotPass} />
-          <br />
-          <input type="button" value="Create Account" onClick={createAcc} />
+          <div className={"login-butn"}>
+            <input
+              type="submit"
+              value="Log In"
+              name="login"
+              onClick={homePage}
+            />
+            <br />
+          </div>
+          <div className={"create-butn"}>
+            <input
+              type="button"
+              value="Forgot Password?"
+              onClick={forgotPass}
+            />
+            <br />
+            <input type="button" value="Create Account" onClick={createAcc} />
+          </div>
         </form>
         <Outlet />
       </body>

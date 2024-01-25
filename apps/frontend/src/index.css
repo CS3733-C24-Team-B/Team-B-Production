@@ -58,20 +58,20 @@
   bottom: 0;
   background-image: url("images/hpphoto.jpeg");
   background-size: cover;
-  opacity: 0.2;
+  opacity: 0.6;
   z-index: -1;
 }
 
 .App-header {
   font-family: "Calibri", serif;
-  font-size: 48px;
+  font-size: 36px;
   text-align: center;
-  color: cornflowerblue;
+  color: black;
 }
 
 .Small-label {
   font-size: 14px;
-  color: forestgreen;
+  color: black;
 }
 
 .navbar {
@@ -93,6 +93,27 @@
   color: white;
   text-align: center;
   padding: 14px 16px;
+  text-decoration: none;
+}
+
+.login-butn input {
+  display: block;
+  color: black;
+  background-color: cornflowerblue;
+  border: none;
+  padding: 14px 16px;
+  text-decoration: none;
+  text-align: left;
+}
+
+.create-butn input {
+  display: block;
+  position: relative;
+  color: blue;
+  text-align: left;
+  background-color: white;
+  border: none;
+  padding: 0px 0px;
   text-decoration: none;
 }
 
@@ -166,4 +187,14 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.body {
+  vertical-align: center;
+  background-color: white;
+  text-align: center;
+  max-width: 300px;
+  max-height: 300px;
+  margin: 5px;
+  padding: 5px;
 }
