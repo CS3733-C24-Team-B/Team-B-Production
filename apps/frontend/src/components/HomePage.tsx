@@ -9,7 +9,7 @@ export default function HomePage() {
     <body>
       <div className="App">
         <header className="App-header">
-          Welcome to Home Page :D
+          Welcome to Home Page
           <div className="logo">
             <img src={logo} alt="Hospital Logo" />
           </div>
