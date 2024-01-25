@@ -1,30 +1,42 @@
 import express, { Router, Request, Response } from "express";
-// import { Prisma } from "database";
-import PrismaClient from "../bin/database-connection.ts";
-import {readCSV} from "../utilities/algorithm.ts";
+import client from "../bin/database-connection.ts";
+import { readNodeCSV, readEdgeCSV } from "../utilities/readCSV.ts";
 
 const router: Router = express.Router();
 
 router.post("/", async function (req: Request, res: Response) {
 
-    const edge_data = readCSV("../csvs/L1Edges.csv");
-    // const node_data = readCSV("../csvs/L1Nodes.csv");
+    const node_data = readNodeCSV("./src/csvs/L1Nodes.csv");
+    const edge_data = readEdgeCSV("./src/csvs/L1Edges.csv");
 
-    for (let i: number = 0; i < edge_data.length; i++) {
-
-        try {
-            await PrismaClient.edge.create(edge_data[i]);
-            console.info("Successfully added edge " + edge_data[i] + " to database");
-        }
-        catch (error) {
-            console.error("Unable to add edge " + edge_data[i] + " to database");
-            res.sendStatus(400);
-            return;
-        }
-
-        res.sendStatus(200);
-
+    try {
+        await client.node.createMany({
+            data: node_data
+        });
+        console.info("Successfully added " + node_data.length + " nodes to database");
     }
+    catch (error) {
+        console.error(error);
+        console.error("Unable to add " + node_data.length + " nodes to database");
+        res.sendStatus(400);
+        return;
+    }
+
+    try {
+        await client.edge.createMany({
+            data: edge_data
+        });
+        console.info("Successfully added " + edge_data.length + " edges to database");
+    }
+    catch (error) {
+        console.error(error);
+        console.error("Unable to add " + edge_data.length + " edges to database");
+        res.sendStatus(400);
+        return;
+    }
+
+    res.sendStatus(200);
+
 });
 
 export default router;
