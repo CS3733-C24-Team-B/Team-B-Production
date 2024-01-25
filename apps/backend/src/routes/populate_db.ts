@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import client from "../bin/database-connection.ts";
 import { readNodeCSV, readEdgeCSV } from "../utilities/readCSV.ts";
+//import { readNodeCSV, readEdgeCSV } from "../utilities/algorithm.ts";
 
 const router: Router = express.Router();
 
@@ -19,7 +20,6 @@ router.post("/", async function (req: Request, res: Response) {
         console.error(error);
         console.error("Unable to add " + node_data.length + " nodes to database");
         res.sendStatus(400);
-        return;
     }
 
     try {
@@ -32,7 +32,6 @@ router.post("/", async function (req: Request, res: Response) {
         console.error(error);
         console.error("Unable to add " + edge_data.length + " edges to database");
         res.sendStatus(400);
-        return;
     }
 
     res.sendStatus(200);

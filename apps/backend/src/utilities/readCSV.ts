@@ -1,5 +1,14 @@
 import { readFileSync } from "fs";
 
+function readCSVToArray(filePath: string): string[] {
+    // read file
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split(/\r?\n/);
+    lines.splice(0, 1);                     // remove 1st line (column headings)
+    lines.splice(lines.length - 1, 1);      // remove last line (empty line)
+    return lines;
+}
+
 /**
  * Reads data from a node CSV file and returns a list of JSON objects.
  *
@@ -24,10 +33,7 @@ export function readNodeCSV(filePath: string) {
     const nodeData = [];
 
     // read file
-    const fileContent: string = readFileSync(filePath, "utf-8").replaceAll('\r', '');
-    const lines: string[] = fileContent.split('\n');
-    lines.splice(0, 1);                     // remove 1st line (column headings)
-    lines.splice(lines.length - 1, 1);      // remove last line (empty line)
+    const lines: string[] = readCSVToArray(filePath);
 
     // loop through lines and put into JSON format
     for (let i: number = 0; i < lines.length; i++) {
@@ -68,10 +74,7 @@ export function readEdgeCSV(filePath: string) {
     const edgeData = [];
 
     // read file
-    const fileContent: string = readFileSync(filePath, "utf-8");
-    const lines: string[] = fileContent.split('\n');
-    lines.splice(0, 1);                     // remove 1st line (column headings)
-    lines.splice(lines.length - 1, 1);      // remove last line (empty line)
+    const lines: string[] = readCSVToArray(filePath);
 
     // loop through lines and put into JSON format
     for (let i: number = 0; i < lines.length; i++) {

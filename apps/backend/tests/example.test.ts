@@ -1,5 +1,11 @@
 import { test } from "vitest";
-import {createEdgeList, createNodeList, readEdgeCSV} from "../src/utilities/algorithm.ts";
+import {
+    breadthFirstSearch,
+    createEdgeList,
+    createNodeList, findNode, pathFindBFS,
+    readEdgeCSV,
+    readNodeCSV
+} from "../src/utilities/algorithm.ts";
 
 /*function sum(a: number, b: number) {
   return a + b;
@@ -24,7 +30,7 @@ test("bfs",() =>{
 });
 
 test("findNode",() =>{
-    findNode("CCONF002L1");
+    findNode("CCONF003L1");
 });
 test("pathfindBFS",() =>{
     pathFindBFS(findNode("WELEV00HL1"),findNode("CSERV001L1"));
@@ -33,4 +39,7 @@ test("pathfindBFS",() =>{
 
 test("addNodeToDB", () =>{
     readNodeCSV("src/csvs/L1Nodes.csv");
+});
+test("readNodeCSV", () => {
+   console.log(readNodeCSV("src/csvs/L1Nodes.csv")[1].data.nodeID);
 });
