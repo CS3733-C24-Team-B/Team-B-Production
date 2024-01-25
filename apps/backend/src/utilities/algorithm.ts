@@ -1,6 +1,10 @@
 import { readFileSync } from "fs";
+// import * as path from "path";
+// import * as fs from "fs";
+// import {G} from "vitest/dist/types-198fd1d9";
+// import {start} from "http-errors";
 
-class MapNode {
+export class MapNode {
     nodeID: string;
     xcoord: number;
     ycoord: number;
@@ -21,7 +25,7 @@ class MapNode {
         this.longName = longName;
     }
 }
-class MapEdge {
+export class MapEdge {
     edgeID: string;
     startNode: string; //foreign key nodeID
     endNode: string; // foreign key nodeID
