@@ -10,6 +10,13 @@ export default function CSVData() {
     const [data, setData] = useState("");
   useEffect(() => {
       async function fetch() {
+          try {
+              const res2 = await axios.post("/api/db-insert");
+              console.log(res2.data);
+          }
+          catch{
+              console.log("post error");
+          }
           const res = await axios.get("/api/db-get-nodes");
 
           console.log(res.data);
