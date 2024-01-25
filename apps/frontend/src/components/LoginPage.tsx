@@ -24,7 +24,7 @@ export default function LoginPage() {
       <body className="body">
         <header className="App-header">Login</header>
         <br />
-        <form>
+        <form className="form">
           <label htmlFor="email">Email:</label>
           <br />
           <input type="email" id="email" name="email" />
@@ -36,7 +36,12 @@ export default function LoginPage() {
           <label className="Small-label" htmlFor="remember">
             Remember me:
           </label>
-          <input type="checkbox" id="remember" name="remember" />
+          <input
+            className="checkbox"
+            type="checkbox"
+            id="remember"
+            name="remember"
+          />
           <br />
           <div className={"login-butn"}>
             <input
