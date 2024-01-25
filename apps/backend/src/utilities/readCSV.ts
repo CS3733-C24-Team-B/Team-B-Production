@@ -24,8 +24,8 @@ export function readNodeCSV(filePath: string) {
     const nodeData = [];
 
     // read file
-    const fileContent: string = readFileSync(filePath, "utf-8").replaceAll('\r', '');
-    const lines: string[] = fileContent.split('\n');
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split(/\r?\n/);
     lines.splice(0, 1);                     // remove 1st line (column headings)
     lines.splice(lines.length - 1, 1);      // remove last line (empty line)
 
