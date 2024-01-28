@@ -222,3 +222,7 @@ body {
 .checkbox {
   cursor: pointer;
 }
+
+table {
+    margin: auto;
+}
