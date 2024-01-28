@@ -6,6 +6,8 @@ import exampleRouter from "./routes/example.ts";
 import dbRouter from "./routes/populate_db.ts";
 import nodesRouter from "./routes/get_nodes.ts";
 import edgesRouter from "./routes/get_edges.ts";
+import exportNodeRouter from "./routes/dbExportNodeToCSV.ts";
+import exportEdgeRouter from "./routes/dbExportEdgeToCSV.ts";
 
 const app: Express = express(); // Setup the backend
 
@@ -28,6 +30,8 @@ app.use("/api/high-score", exampleRouter);
 app.use("/api/db-insert", dbRouter);
 app.use("/api/db-get-nodes", nodesRouter);
 app.use("/api/db-get-edges", edgesRouter);
+app.use("/api/db-export-nodes", exportNodeRouter);
+app.use("/api/db-export-edges", exportEdgeRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler
