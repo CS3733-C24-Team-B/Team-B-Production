@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import "../index.css";
 import firstfloor from "../images/00_thegroundfloor.png";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
+import PathPrinter from "./PathPrinter.tsx";
 
 export default function HomePage() {
   return (
@@ -43,6 +44,7 @@ export default function HomePage() {
 
         <Outlet />
       </div>
+    <PathPrinter />
     </body>
   );
 }
