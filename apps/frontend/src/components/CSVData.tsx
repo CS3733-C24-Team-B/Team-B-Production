@@ -7,7 +7,8 @@ import axios from "axios";
 
 export default function CSVData() {
   //const nodes : MapNode[] = createNodeList();
-    const [data, setData] = useState("");
+    const [nodeData, setNodeData] = useState("");
+    const [edgeData, setEdgeData] = useState("");
   useEffect(() => {
       async function fetch() {
           try {
@@ -18,9 +19,11 @@ export default function CSVData() {
               console.log("post error");
           }
           const res = await axios.get("/api/db-get-nodes");
+          const res3 = await axios.get("/api/db-get-edges");
 
           console.log(res.data);
-          setData(JSON.stringify(res.data));
+          setNodeData(JSON.stringify(res.data));
+          setEdgeData(JSON.stringify(res3.data));
       }
       fetch().then();
   }, []);
@@ -29,7 +32,9 @@ export default function CSVData() {
     <div className="App">
       <header className="App-header">CSV Data</header>
       <br />
-        <p>{data.toString()}</p>
+        <p>{nodeData.toString()}</p>
+        <br/>
+        <p>{edgeData.toString()}</p>
     </div>
   );
 }

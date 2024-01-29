@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("");
 
   function homePage() {
-    if (username === "admin" && password === "password") {
+    if (username === "admin" && password === "admin") {
       navigate("/home");
     } else {
       setErrorMessage("Incorrect username or password. Please try again.");
