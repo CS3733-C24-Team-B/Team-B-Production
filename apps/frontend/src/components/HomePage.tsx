@@ -94,8 +94,12 @@ export default function HomePage() {
                 </div>
                 <div id="map-container">
                     {/* Display the selected floor image */}
-                    <img src={floorImages[selectedFloor]} alt="floor" id="map-image"/>
+                    <img src={floorImages[selectedFloor]} alt="floor" id="map-image" useMap="#workmap"/>
                 </div>
+                <map name="workmap">
+                    <area shape="rect" coords="0,0, 200, 200" alt="Computer"
+                          href="/"/>
+                </map>
                 <Outlet/>
             </div>
         </div>
