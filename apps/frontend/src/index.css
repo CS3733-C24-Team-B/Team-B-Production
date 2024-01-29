@@ -214,7 +214,6 @@ body {
   text-align: center;
   max-width: 300px;
   max-height: 300px;
-  margin: 250px;
   padding: 50px;
   height: 100vh;
   width: 100vw;
@@ -222,4 +221,13 @@ body {
 
 .checkbox {
   cursor: pointer;
+}
+
+table {
+    margin: auto;
+}
+
+td {
+    padding-left: 3vw;
+    padding-right: 3vw;
 }
