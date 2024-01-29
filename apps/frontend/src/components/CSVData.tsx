@@ -36,6 +36,20 @@ export default function CSVData() {
         </tr>
     );
 
+    function nodeIDtoName(nId : string) {
+        return nodeData.find(({nodeID}) =>
+            nodeID === nId
+        )!["longName"];
+    }
+
+    const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
+        <tr key={i} >
+            <td>{edgeID}</td>
+            <td>{nodeIDtoName(startNodeID)}</td>
+            <td>{nodeIDtoName(endNodeID)}</td>
+        </tr>
+    );
+
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
     <div className="App">
@@ -49,7 +63,13 @@ export default function CSVData() {
             </tr>
             {arrayNode}</table>
         <br/>
-        <p>{edgeData.toString()}</p>
+        <table>
+            <tr>
+                <th>Edge ID</th>
+                <th>Start Room</th>
+                <th>End Room</th>
+            </tr>
+            {arrayEdge}</table>
     </div>
-  );
+    );
 }
