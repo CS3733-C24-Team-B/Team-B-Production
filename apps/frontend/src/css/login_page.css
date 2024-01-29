@@ -1,0 +1,45 @@
+.login-butn input {
+    border-radius: 12px;
+    display: inline;
+    color: black;
+    background-color: cornflowerblue;
+    border: none;
+    padding: 10px 70px;
+    text-decoration: none;
+    text-align: left;
+}
+
+.login-butn input:hover {
+    background-color: royalblue;
+    cursor: pointer;
+}
+
+.create-butn input {
+    display: inline;
+    position: relative;
+    color: blue;
+    text-align: left;
+    background-color: white;
+    border: none;
+    padding: 0;
+    text-decoration: none;
+}
+
+.create-butn input:hover {
+    cursor: pointer;
+}
+
+.checkbox {
+    cursor: pointer;
+}
+
+.body {
+    vertical-align: center;
+    background-color: white;
+    text-align: center;
+    max-width: 300px;
+    max-height: 300px;
+    padding: 50px;
+    height: 100vh;
+    width: 100vw;
+}
