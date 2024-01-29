@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 //import { Outlet } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
-import "../index.css";
+import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
 
