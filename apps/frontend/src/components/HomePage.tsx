@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Outlet} from "react-router-dom";
-import "../index.css";
+import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
 import lowerlevel2 from "../images/00_thelowerlevel2.png";
@@ -52,6 +52,13 @@ export default function HomePage() {
                 </div>
                 <div className="navbar-butn">
                     <a href="/csvdata">CSV Data</a>
+                </div>
+                <div className="dropdown">
+                    <button className="dropbtn">Admin Options</button>
+                    <div className="dropdown-content">
+                        <a href="/servicerequestform">Service Request Form</a>
+                        <a href="/home">List of Service Requests</a>
+                    </div>
                 </div>
                 <div className="dropdown">
                     <button className="dropbtn">Profile</button>
