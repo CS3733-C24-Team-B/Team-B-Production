@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Outlet} from "react-router-dom";
+import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -7,7 +8,6 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
-import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 interface FloorImages {
     groundfloor: string;
@@ -57,22 +57,7 @@ export default function HomePage() {
                     <button className="dropbtn">Admin Options</button>
                     <div className="dropdown-content">
                         <a href="/servicerequestform">Service Request Form</a>
-                        <a href="/home">List of Service Requests</a>
-                    </div>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">Profile</button>
-                    <div className="dropdown-content">
-                        <a href="/home">View Profile</a>
-                        <link
-                            rel="stylesheet"
-                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-                        />
-                        <a href="/settings">
-                            <div className="fa fa-gear fa-spin"></div>
-                            Settings
-                        </a>
-                        <a href="/">Log Out</a>
+                        <a href="/servicerequestlist">List of Service Requests</a>
                     </div>
                 </div>
                 <div className="dropdown">
@@ -99,10 +84,26 @@ export default function HomePage() {
                         </a>
                     </div>
                 </div>
+                <div className="dropdown">
+                    <button className="dropbtn">Profile</button>
+                    <div className="dropdown-content">
+                        <a href="/home">View Profile</a>
+                        <link
+                            rel="stylesheet"
+                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+                        />
+                        <a href="/settings">
+                            <div className="fa fa-gear fa-spin"></div>
+                            Settings
+                        </a>
+                        <a href="/">Log Out</a>
+                    </div>
+                </div>
                 <div id="map-container">
                     {/* Display the selected floor image */}
                     <img src={floorImages[selectedFloor]} alt="floor" id="map-image"/>
                 </div>
+
                 <Outlet/>
             </div>
         </div>

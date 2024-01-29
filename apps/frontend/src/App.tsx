@@ -8,6 +8,7 @@ import ForgotPassword from "./components/ForgotPassword.tsx";
 import Settings from "./components/Settings.tsx";
 import CSVData from "./components/CSVData.tsx";
 import SRForm from "./components/ServiceRequestForm.tsx";
+import SRList from "./components/SRLists.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -45,6 +46,11 @@ function App() {
             path: "/servicerequestform",
             errorElement: <div/>,
             element: <SRForm/>,
+        },
+        {
+            path: "/servicerequestlist",
+            errorElement: <div/>,
+            element: <SRList/>,
         },
     ]);
 
