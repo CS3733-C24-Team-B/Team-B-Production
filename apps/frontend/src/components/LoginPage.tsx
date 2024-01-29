@@ -20,13 +20,13 @@ export default function LoginPage() {
         }
     }
 
-    function createAcc() {
-        navigate("/createacc");
-    }
+  function createAcc() {
+    navigate("/createacc");
+  }
 
-    function forgotPass() {
-        navigate("/forgotpass");
-    }
+  function forgotPass() {
+    navigate("/forgotpass");
+  }
 
     return (
         <div className="App">
@@ -84,7 +84,3 @@ export default function LoginPage() {
         </div>
     );
 }
-
-
-
-
