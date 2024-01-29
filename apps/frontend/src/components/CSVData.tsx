@@ -52,24 +52,31 @@ export default function CSVData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-    <div className="App">
-      <header className="App-header">CSV Data</header>
-      <br />
-        <table>
-            <tr>
-                <th>Room Name</th>
-                <th>Floor</th>
-                <th>Building Name</th>
-            </tr>
-            {arrayNode}</table>
-        <br/>
-        <table>
-            <tr>
-                <th>Edge ID</th>
-                <th>Start Room</th>
-                <th>End Room</th>
-            </tr>
-            {arrayEdge}</table>
-    </div>
+        <div className="App">
+            <header className="App-header">CSV Data</header>
+            <br/>
+            <form>
+                <div>
+                    <input className={"file button"} type="file" id="myFile" name="filename"/>
+
+                </div>
+                <br/>
+            </form>
+            <table>
+                <tr>
+                    <th>Room Name</th>
+                    <th>Floor</th>
+                    <th>Building Name</th>
+                </tr>
+                {arrayNode}</table>
+            <br/>
+            <table>
+                <tr>
+                    <th>Edge ID</th>
+                    <th>Start Room</th>
+                    <th>End Room</th>
+                </tr>
+                {arrayEdge}</table>
+        </div>
     );
 }
