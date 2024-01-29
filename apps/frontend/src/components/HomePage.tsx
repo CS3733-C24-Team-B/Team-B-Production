@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Outlet} from "react-router-dom";
 import "../index.css";
+import firstfloor from "../images/00_thegroundfloor.png";
+import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
 import lowerlevel2 from "../images/00_thelowerlevel2.png";
@@ -103,5 +105,3 @@ export default function HomePage() {
 )
     ;
 }
-
-

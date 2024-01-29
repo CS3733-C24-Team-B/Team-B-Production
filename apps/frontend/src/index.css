@@ -3,10 +3,8 @@
 :root {
   /*font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
   /*background-image: url("images/hpphoto.jpeg");*/
-
   font-size: 18px;
   line-height: 1.4;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -55,9 +53,20 @@
 
 .App-header {
   font-family: "Calibri", serif;
-  font-size: 36px;
+  width: 100%;
+  font-size: 3vw;
   text-align: center;
   color: black;
+}
+
+.logo img {
+  /*display: block;*/
+  width: 30%;
+  height: auto;
+  position: absolute;
+  margin-top: 16px;
+  top: 0;
+  left: 16px;
 }
 
 .Small-label {
@@ -198,7 +207,8 @@
   background-color: white;
   text-align: center;
   max-width: 300px;
-  margin: 8px;
+  max-height: 300px;
+  margin: 250px;
   padding: 50px;
   height: 100vh;
   width: 100vw;
