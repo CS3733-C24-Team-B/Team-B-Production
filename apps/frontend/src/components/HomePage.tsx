@@ -8,6 +8,7 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
+import PathHandler from "./PathHandler.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -17,7 +18,6 @@ interface FloorImages {
     secondfloor: string;
     thirdfloor: string;
 }
-import PathHandler from "./PathHandler.tsx";
 
 export default function HomePage() {
     // State to keep track of the selected floor
@@ -104,7 +104,7 @@ export default function HomePage() {
                     {/* Display the selected floor image */}
                     <img src={floorImages[selectedFloor]} alt="floor" id="map-image"/>
                 </div>
-
+            </div>
           <Outlet/>
       </div>
         <PathHandler/>
