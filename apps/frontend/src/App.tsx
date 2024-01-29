@@ -7,6 +7,7 @@ import CreateAccount from "./components/CreateAccount.tsx";
 import ForgotPassword from "./components/ForgotPassword.tsx";
 import Settings from "./components/Settings.tsx";
 import CSVData from "./components/CSVData.tsx";
+import RequestForm from "./components/RequestForm.tsx";
 function App() {
   const router = createBrowserRouter([
     {
@@ -38,6 +39,11 @@ function App() {
           path: "/csvdata",
           errorElement: <div />,
           element: <CSVData />,
+      },
+      {
+          path: "/requestForm",
+          errorElement: <div />,
+          element: <RequestForm />,
       },
   ]);
 

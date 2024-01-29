@@ -53,6 +53,9 @@ export default function HomePage() {
                 <div className="navbar-butn">
                     <a href="/csvdata">CSV Data</a>
                 </div>
+                <div className="navbar-butn">
+                    <a href="/requestForm">Request Form</a>
+                </div>
                 <div className="dropdown">
                     <button className="dropbtn">Profile</button>
                     <div className="dropdown-content">
