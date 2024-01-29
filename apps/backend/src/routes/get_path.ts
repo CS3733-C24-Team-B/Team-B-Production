@@ -5,7 +5,7 @@ import {pathFindBFS} from "../utilities/algorithm.ts";
 const router: Router = express.Router();
 
 router.get("/", async function (req: Request, res: Response) {
-
+    
     async function getPath(startNode: string, endNode: string) {
 
         const node_data = await client.node.findMany({
