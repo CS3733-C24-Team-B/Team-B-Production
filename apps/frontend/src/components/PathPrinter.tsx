@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-export default function PathPrinter(){
+
+export const PathPrinter = (data: { startNode: string; endNode: string }) => {
 
     // Join the array of words into a single string
 
@@ -10,11 +11,12 @@ export default function PathPrinter(){
 
     useEffect(() => {
         async function fetch() {
-                const res2 = await axios.get("/api/db-get-path/WELEV00HL1/CSERV001L1");
-                setPath(res2.data);
+          //  console.log(`${data.startNode}`);
+                const res2 = await axios.get(`/api/db-get-path/${data.startNode}/${data.endNode}`);
+            setPath(res2.data);
         }
         fetch().then();
-    }, []);
+    }, [data.endNode,data.startNode]);
 
     const speakArray = () => {
         if (!speaking && window.speechSynthesis) {
@@ -32,12 +34,7 @@ export default function PathPrinter(){
     return (
         <div>
             <h2>Hospital Path</h2>
-            <form action="/api/saveData" method="POST">
-                <label htmlFor="dataInput">Enter data:</label>
-                <input type="text" id="dataInput" name="dataInput" required/>
-                <button type="submit">Save Data</button>
-            </form>
-            <p>{joinedWords}</p>
+            <pre>{joinedWords}</pre>
             <button onClick={speakArray} disabled={speaking}>
                 {speaking ? 'Speaking...' : 'Speak Array'}
             </button>

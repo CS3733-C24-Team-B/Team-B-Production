@@ -3,18 +3,18 @@ import { Outlet } from "react-router-dom";
 import "../index.css";
 import firstfloor from "../images/00_thegroundfloor.png";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
-import PathPrinter from "./PathPrinter.tsx";
+import PathHandler from "./PathHandler.tsx";
 
 export default function HomePage() {
   return (
-    <body>
+      <body>
       <div className="App">
-        <header className="App-header">
-          <div className="title">Welcome to Home Page</div>
-          <div className="logo">
-            <img src={logo} alt="Hospital Logo" />
-          </div>
-        </header>
+          <header className="App-header">
+              <div className="title">Welcome to Home Page</div>
+              <div className="logo">
+                  <img src={logo} alt="Hospital Logo"/>
+              </div>
+          </header>
           <div className="navbar">
               <div className="navbar-butn">
                   <a href="/home">Home</a>
@@ -40,11 +40,11 @@ export default function HomePage() {
           </div>
           <div id="map-container">
               <img src={firstfloor} alt="first floor" id="map-image"/>
-        </div>
+          </div>
 
-        <Outlet />
+          <Outlet/>
       </div>
-    <PathPrinter />
-    </body>
+        <PathHandler/>
+      </body>
   );
 }
