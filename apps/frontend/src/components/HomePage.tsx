@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Outlet} from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
@@ -19,15 +19,20 @@ interface FloorImages {
 }
 
 export default function HomePage() {
-    // State to keep track of the selected floor
     const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("groundfloor");
+    const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
 
-    // Function to handle floor selection change
     const handleFloorChange = (floor: keyof FloorImages) => {
         setSelectedFloor(floor);
     };
 
-    // Mapping of floor names to their corresponding images
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const xPosition = e.clientX - rect.left;
+        const yPosition = e.clientY - rect.top;
+        setClickPosition({ x: xPosition, y: yPosition });
+    };
+
     const floorImages: FloorImages = {
         groundfloor,
         lowerlevel1,
@@ -43,7 +48,7 @@ export default function HomePage() {
             <header className="App-header">
                 <div className="title">Welcome to Home Page</div>
                 <div className="logo">
-                    <img src={logo} alt="Hospital Logo"/>
+                    <img src={logo} alt="Hospital Logo" />
                 </div>
             </header>
             <div className="navbar">
@@ -99,14 +104,19 @@ export default function HomePage() {
                         <a href="/">Log Out</a>
                     </div>
                 </div>
-                <div id="map-container">
-                    {/* Display the selected floor image */}
-                    <img src={floorImages[selectedFloor]} alt="floor" id="map-image"/>
-                </div>
-
-                <Outlet/>
             </div>
+            <div id="map-container" onClick={handleClick}>
+                <img src={floorImages[selectedFloor]} alt="floor" id="map-image" />
+                {clickPosition && (
+                    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>
+                        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />
+                        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />
+                    </div>
+                )}
+            </div>
+            <Outlet />
         </div>
         </body>
     );
 }
+
