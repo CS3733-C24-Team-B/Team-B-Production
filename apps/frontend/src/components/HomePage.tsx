@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Outlet } from "react-router-dom";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
@@ -8,6 +8,7 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
+import axios from "axios";
 
 interface FloorImages {
     groundfloor: string;
@@ -20,18 +21,54 @@ interface FloorImages {
 
 export default function HomePage() {
     const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("groundfloor");
-    const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
+    //const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
+    const [nodeData, setNodeData] = useState([]);
+    useEffect(() => {
+        async function fetch() {
+            try {
+                const res2 = await axios.post("/api/db-insert");
+                console.log(res2.data);
+            }
+            catch{
+                console.log("post error");
+            }
+            const res = await axios.get("/api/db-get-nodes");
+
+            console.log(res.data);
+            setNodeData(res.data);
+        }
+        fetch().then();
+    }, []);
+
+    const arrayNode = nodeData.map(({xcoord, ycoord}, i) =>
+        <div key={i} style={{position: 'absolute', left: xcoord, top: ycoord}}>
+            <div style={{
+                width: 20,
+                height: 2,
+                backgroundColor: 'red',
+                position: 'absolute',
+                transform: 'translate(-50%, -50%)'
+            }}/>
+            <div style={{
+                width: 2,
+                height: 20,
+                backgroundColor: 'red',
+                position: 'absolute',
+                transform: 'translate(-50%, -50%)'
+            }}/>
+        </div>
+    );
 
     const handleFloorChange = (floor: keyof FloorImages) => {
         setSelectedFloor(floor);
     };
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left;
-        const yPosition = e.clientY - rect.top;
-        setClickPosition({ x: xPosition, y: yPosition });
-    };
+    // const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    //     const rect = e.currentTarget.getBoundingClientRect();
+    //     const xPosition = e.clientX - rect.left;
+    //     const yPosition = e.clientY - rect.top;
+    //     setClickPosition({x: xPosition, y: yPosition});
+    // };
 
     const floorImages: FloorImages = {
         groundfloor,
@@ -105,14 +142,15 @@ export default function HomePage() {
                     </div>
                 </div>
             </div>
-            <div id="map-container" onClick={handleClick}>
+            <div id="map-container" >
                 <img src={floorImages[selectedFloor]} alt="floor" id="map-image" />
-                {clickPosition && (
-                    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>
-                        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />
-                        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />
-                    </div>
-                )}
+                {arrayNode}
+                {/*{clickPosition && (*/}
+                {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
+                {/*        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
+                {/*        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
+                {/*    </div>*/}
+                {/*)}*/}
             </div>
             <Outlet />
         </div>
