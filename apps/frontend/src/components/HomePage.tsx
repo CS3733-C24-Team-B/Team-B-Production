@@ -53,13 +53,10 @@ export default function HomePage() {
                 <div className="navbar-butn">
                     <a href="/csvdata">CSV Data</a>
                 </div>
-                <div className="navbar-butn">
-                    <a href="/requestForm">Request Form</a>
-                </div>
                 <div className="dropdown">
                     <button className="dropbtn">Admin Options</button>
                     <div className="dropdown-content">
-                        <a href="/servicerequestform">Service Request Form</a>
+                        <a href="/requestForm">Service Request Form</a>
                         <a href="/servicerequestlist">List of Service Requests</a>
                     </div>
                 </div>
