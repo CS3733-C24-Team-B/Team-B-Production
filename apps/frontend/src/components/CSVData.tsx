@@ -54,7 +54,7 @@ export default function CSVData() {
             }
 
             formData.append("csvFile", csvFile.files[0]); // Update based on backend
-            axios.post('/api/db-upload', formData, {
+            axios.post('/api/db-load-nodes', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
