@@ -8,7 +8,6 @@ import axios from "axios";
 export default function CSVData() {
   //const nodes : MapNode[] = createNodeList();
     const [nodeData, setNodeData] = useState([]);
-    const [edgeData, setEdgeData] = useState([]);
   useEffect(() => {
       async function fetch() {
           try {
@@ -19,11 +18,9 @@ export default function CSVData() {
               console.log("post error");
           }
           const res = await axios.get("/api/db-get-nodes");
-          const res3 = await axios.get("/api/db-get-edges");
 
           console.log(res.data);
           setNodeData(res.data);
-          setEdgeData(res3.data);
       }
       fetch().then();
   }, []);
@@ -33,20 +30,6 @@ export default function CSVData() {
             <td>{longName}</td>
             <td>{floor}</td>
             <td>{building}</td>
-        </tr>
-    );
-
-    function nodeIDtoName(nId : string) {
-        return nodeData.find(({nodeID}) =>
-            nodeID === nId
-        )!["longName"];
-    }
-
-    const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
-        <tr key={i} >
-            <td>{edgeID}</td>
-            <td>{nodeIDtoName(startNodeID)}</td>
-            <td>{nodeIDtoName(endNodeID)}</td>
         </tr>
     );
 
@@ -63,13 +46,6 @@ export default function CSVData() {
             </tr>
             {arrayNode}</table>
         <br/>
-        <table>
-            <tr>
-                <th>Edge ID</th>
-                <th>Start Room</th>
-                <th>End Room</th>
-            </tr>
-            {arrayEdge}</table>
     </div>
     );
 }
