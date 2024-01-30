@@ -6,9 +6,10 @@ import HomePage from "./components/HomePage.tsx";
 import CreateAccount from "./components/CreateAccount.tsx";
 import ForgotPassword from "./components/ForgotPassword.tsx";
 import Settings from "./components/Settings.tsx";
-import CSVData from "./components/CSVData.tsx";
-import SRForm from "./components/ServiceRequestForm.tsx";
+import CSVNodeData from "./components/CSVNodeData.tsx";
+import CSVEdgeData from "./components/CSVEdgeData.tsx";
 import SRList from "./components/SRLists.tsx";
+import RequestForm from "./components/RequestForm.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -38,14 +39,19 @@ function App() {
             element: <Settings/>,
         },
         {
-            path: "/csvdata",
+            path: "/csvnodedata",
             errorElement: <div/>,
-            element: <CSVData/>,
+            element: <CSVNodeData/>,
         },
         {
-            path: "/servicerequestform",
+            path: "/csvedgedata",
             errorElement: <div/>,
-            element: <SRForm/>,
+            element: <CSVEdgeData/>,
+        },
+        {
+            path: "/requestForm",
+            errorElement: <div />,
+            element: <RequestForm />,
         },
         {
             path: "/servicerequestlist",
