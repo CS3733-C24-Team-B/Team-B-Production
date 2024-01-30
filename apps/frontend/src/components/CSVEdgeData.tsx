@@ -68,7 +68,7 @@ export default function CSVEdgeData() {
             <header className="App-header">CSV Data</header>
             <br/>
             <div>
-                <input className={"file button"} type="file" id="myFile" name="filename"/>
+                <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
                 <input onClick={uploadToDB} type="button" value="Submit"/>
             </div>
             <br/>
