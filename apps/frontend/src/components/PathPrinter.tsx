@@ -26,7 +26,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
             utterance.onend = () => {
                 setSpeaking(false);
             };
-
+    utterance.rate=0.5;
             window.speechSynthesis.speak(utterance);
         }
     };

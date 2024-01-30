@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from "react";
 
 export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2: string }) => void }> = ({onDataSubmit,}) => {
     const [input1, setInput1] = useState('');
@@ -8,6 +8,12 @@ export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2
             e.preventDefault();
             onDataSubmit({ input1, input2 });
         };
+    /*function nodeIDtoName(nId : string) {
+        return nodeData.find(({nodeID}) =>
+            nodeID === nId
+        )!["longName"];
+    }*/
+    //
 
     return (
         <div>
