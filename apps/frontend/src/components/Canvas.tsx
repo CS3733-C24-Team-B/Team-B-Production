@@ -97,14 +97,14 @@ const Canvas = ({ width, height, imageSource }: CanvasProps) => {
 
     useEffect(() => {
         const nameToXPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["xcoord"];
         };
 
         const nameToYPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["ycoord"];
         };
         async function fetch() {
