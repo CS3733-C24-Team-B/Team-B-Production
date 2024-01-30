@@ -5,7 +5,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
 
     // Join the array of words into a single string
 
-    // [speaking, setSpeaking] = useState(false);
+    const [speaking, setSpeaking] = useState(false);
     const [words, setPath] = useState([""]);
     const joinedWords = words.join(' -> ');
 
@@ -19,20 +19,26 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
         fetch().then();
     }, [data.endNode, data.startNode]);
 
-    // const speakArray = () => {
-    //     if (!speaking && window.speechSynthesis) {
-    //         setSpeaking(true);
-    //
-    //         const utterance = new SpeechSynthesisUtterance(words.join(" to "));
-    //         utterance.onend = () => {
-    //             setSpeaking(false);
-    //         };
-    // utterance.rate=0.5;
-    //         window.speechSynthesis.speak(utterance);
-    //     }
-    // };
+    const speakArray = () => {
+        if (!speaking && window.speechSynthesis) {
+            setSpeaking(true);
+
+            const utterance = new SpeechSynthesisUtterance(words.join(" to "));
+            utterance.onend = () => {
+                setSpeaking(false);
+            };
+    utterance.rate=0.5;
+            window.speechSynthesis.speak(utterance);
+        }
+    };
 
     return (
-        <pre>{"" + data.startNode + " " + data.endNode + " " + words[0] + " " + joinedWords}</pre>
-    );
+
+        <div>
+            <h2>Hospital Path</h2>
+            <pre>{joinedWords}</pre>
+            <button onClick={speakArray} disabled={speaking}>
+                {speaking ? 'Speaking...' : 'Speak Array'}
+            </button>
+        </div>);
 };
