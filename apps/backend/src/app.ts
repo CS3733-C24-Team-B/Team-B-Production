@@ -5,6 +5,7 @@ import logger from "morgan";
 import exampleRouter from "./routes/example.ts";
 import nodesRouter from "./routes/get_nodes.ts";
 import edgesRouter from "./routes/get_edges.ts";
+import pathRouter from "./routes/get_path.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import csvRouter from "./routes/upload_csv.ts";
@@ -29,6 +30,7 @@ app.use(cookieParser()); // Cookie parser
 app.use("/api/high-score", exampleRouter);
 app.use("/api/db-get-nodes", nodesRouter);
 app.use("/api/db-get-edges", edgesRouter);
+app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/db-upload", csvRouter);
