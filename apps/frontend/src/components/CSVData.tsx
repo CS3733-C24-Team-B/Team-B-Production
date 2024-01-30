@@ -42,6 +42,29 @@ export default function CSVData() {
         )!["longName"];
     }
 
+    function uploadToDB() {
+        console.log("Running Upload to DB");
+
+        try {
+            const formData = new FormData();
+            const csvFile = document.querySelector('#myFile');
+            if (csvFile == null) {
+                console.log("imagefile should not be null...");
+                return;
+            }
+
+            formData.append("csvFile", csvFile.files[0]); // Update based on backend
+            axios.post('/api/db-upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        }
+        catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
     const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
         <tr key={i} >
             <td>{edgeID}</td>
@@ -58,7 +81,7 @@ export default function CSVData() {
             <form>
                 <div>
                     <input className={"file button"} type="file" id="myFile" name="filename"/>
-
+                    <input onClick={uploadToDB} type="button" value="Submit" />
                 </div>
                 <br/>
             </form>
