@@ -11,13 +11,6 @@ export default function CSVEdgeData() {
     const [edgeData, setEdgeData] = useState([]);
   useEffect(() => {
       async function fetch() {
-          try {
-              const res2 = await axios.post("/api/db-insert");
-              console.log(res2.data);
-          }
-          catch{
-              console.log("post error");
-          }
           const res = await axios.get("/api/db-get-nodes");
           const res3 = await axios.get("/api/db-get-edges");
 
