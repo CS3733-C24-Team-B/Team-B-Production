@@ -6,7 +6,8 @@ import HomePage from "./components/HomePage.tsx";
 import CreateAccount from "./components/CreateAccount.tsx";
 import ForgotPassword from "./components/ForgotPassword.tsx";
 import Settings from "./components/Settings.tsx";
-import CSVData from "./components/CSVData.tsx";
+import CSVNodeData from "./components/CSVNodeData.tsx";
+import CSVEdgeData from "./components/CSVEdgeData.tsx";
 import SRList from "./components/SRLists.tsx";
 import RequestForm from "./components/RequestForm.tsx";
 
@@ -38,9 +39,14 @@ function App() {
             element: <Settings/>,
         },
         {
-            path: "/csvdata",
+            path: "/csvnodedata",
             errorElement: <div/>,
-            element: <CSVData/>,
+            element: <CSVNodeData/>,
+        },
+        {
+            path: "/csvedgedata",
+            errorElement: <div/>,
+            element: <CSVEdgeData/>,
         },
         {
             path: "/requestForm",
