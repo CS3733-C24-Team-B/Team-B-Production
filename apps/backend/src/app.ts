@@ -5,10 +5,8 @@ import logger from "morgan";
 import exampleRouter from "./routes/example.ts";
 import nodesRouter from "./routes/get_nodes.ts";
 import edgesRouter from "./routes/get_edges.ts";
-import importNodesRouter from "./routes/dbImportNode.ts";
-import importEdgesRouter from "./routes/dbImportEdge.ts";
-import exportNodeRouter from "./routes/dbExportNodeToCSV.ts";
-import exportEdgeRouter from "./routes/dbExportEdgeToCSV.ts";
+import loadNodesRouter from "./routes/loadNode.ts";
+import loadEdgesRouter from "./routes/loadEdge.ts";
 
 const app: Express = express(); // Setup the backend
 
@@ -30,10 +28,8 @@ app.use(cookieParser()); // Cookie parser
 app.use("/api/high-score", exampleRouter);
 app.use("/api/db-get-nodes", nodesRouter);
 app.use("/api/db-get-edges", edgesRouter);
-app.use("/api/db-import-nodes", importNodesRouter);
-app.use("/api/db-import-edges", importEdgesRouter);
-app.use("/api/db-export-nodes", exportNodeRouter);
-app.use("/api/db-export-edges", exportEdgeRouter);
+app.use("/api/db-load-nodes", loadNodesRouter);
+app.use("/api/db-load-edges", loadEdgesRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler

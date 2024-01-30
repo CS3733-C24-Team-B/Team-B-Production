@@ -1,9 +1,31 @@
 import express, { Router, Request, Response } from "express";
 import multer from "multer";
+import { Node } from "database";
 import client from "../bin/database-connection.ts";
 
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
+
+router.get("/", async function (req: Request, res: Response) {
+
+    // create a place to store CSV data
+    let csvString: string = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName\n";
+
+    // get all nodes from database
+    const nodes: Node[] = await client.node.findMany();
+
+    for (let i: number = 0; i < nodes.length; i++) {
+        const node: Node = nodes[i];
+        csvString += node.nodeID + "," + node.xcoord + "," + node.ycoord + "," + node.floor + "," + node.building
+            + "," + node.nodeType + "," + node.longName + "," + node.shortName + "\n";
+    }
+
+    console.info("Successfully exported node data into CSV format.");
+
+    res.send(csvString);
+    console.info("Successfully sent node CSV string to frontend.");
+
+});
 
 router.post("/", upload.single("test"), async function (req: Request, res: Response) {
 
@@ -15,7 +37,7 @@ router.post("/", upload.single("test"), async function (req: Request, res: Respo
         return;
     }
 
-    const nodeData = [];
+    const nodeData: Node[] = [];
 
     const requestData: string = String(nodeFile.buffer);
     const lines: string[] = requestData.split(/\r?\n/);

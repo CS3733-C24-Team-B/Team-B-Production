@@ -1,9 +1,30 @@
 import express, { Router, Request, Response } from "express";
 import multer from "multer";
+import { Edge } from "database";
 import client from "../bin/database-connection.ts";
 
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
+
+router.get("/", async function (req: Request, res: Response) {
+
+    // create a place to store CSV data
+    let csvString: string = "edgeID,startNode,endNode\n";
+
+    // get all edges from database
+    const edges: Edge[] = await client.edge.findMany();
+
+    for (let i: number = 0; i < edges.length; i++) {
+        const edge: Edge = edges[i];
+        csvString += edge.edgeID + "," + edge.startNodeID + "," + edge.endNodeID + "\n";
+    }
+
+    console.info("Successfully exported edge data into CSV format.");
+
+    res.send(Buffer.from(csvString, 'utf8'));
+    console.info("Successfully sent edge CSV string to frontend.");
+
+});
 
 router.post("/", upload.single("test"), async function (req: Request, res: Response) {
 
@@ -15,7 +36,7 @@ router.post("/", upload.single("test"), async function (req: Request, res: Respo
         return;
     }
 
-    const edgeData = [];
+    const edgeData: Edge[] = [];
 
     const requestData: string = String(edgeFile.buffer);
     const lines: string[] = requestData.split(/\r?\n/);
