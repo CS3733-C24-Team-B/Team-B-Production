@@ -10,8 +10,65 @@ interface CanvasProps {
 const Canvas = ({ width, height, imageSource }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
+    let startX = 0;
+    let startY = 0;
+    let drawLine = false;
     const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
     let ctx = canvasCtxRef.current;
+
+    const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const xPosition = e.clientX - rect.left;
+        const yPosition = e.clientY - rect.top;
+        // coords.forEach((nc) => {
+        //     if(Math.abs(nc.xPos - xPosition) < 10 && Math.abs(nc.yPos - yPosition) < 10) {
+        //         return nc.roomName;
+        //     }
+        // });
+        console.log(width + " " + height);
+        nodeData.map(({longName, xcoord, ycoord}) => {
+            const xPos = xcoord * (window.innerWidth / 5000);
+            const yPos = ycoord * (window.innerHeight / 3400);
+            if(Math.abs(xPos - xPosition) < 5 && Math.abs(yPos - yPosition) < 5) {
+                console.log(longName);
+                if(drawLine) {
+                    ctx = canvasCtxRef.current;
+                    ctx!.beginPath();
+                    ctx?.moveTo(startX, startY);
+                    ctx?.lineTo(xPos, yPos);
+                    ctx!.strokeStyle = "green";
+                    ctx!.lineWidth = 3;
+                    ctx!.stroke();
+                } else {
+                    startX = xPos;
+                    startY = yPos;
+                }
+                drawLine = !drawLine;
+            }
+        });
+    };
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const xPosition = e.clientX - rect.left;
+        const yPosition = e.clientY - rect.top;
+        nodeData.map(({xcoord, ycoord}) => {
+            const xPos = xcoord * (window.innerWidth / 5000);
+            const yPos = ycoord * (window.innerHeight / 3400);
+            if(Math.abs(xPos - xPosition) < 5 && Math.abs(yPos - yPosition) < 5) {
+                ctx!.beginPath();
+                ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
+                ctx!.fillStyle = "green";
+                ctx!.fill();
+            }
+            else {
+                ctx!.beginPath();
+                ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
+                ctx!.fillStyle = "blue";
+                ctx!.fill();
+            }
+        });
+    };
 
     useEffect(() => {
         async function fetch() {
@@ -63,7 +120,7 @@ const Canvas = ({ width, height, imageSource }: CanvasProps) => {
         }
     }, [ctx]);
 
-    return <canvas ref={canvasRef} height={height} width={width} />;
+    return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>;
 };
 
 Canvas.defaultProps = {

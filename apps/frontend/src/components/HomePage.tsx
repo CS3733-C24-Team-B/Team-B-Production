@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
@@ -21,18 +21,11 @@ interface FloorImages {
 
 export default function HomePage() {
     const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("lowerlevel1");
-    //const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
+    // const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
 
     const handleFloorChange = (floor: keyof FloorImages) => {
         setSelectedFloor(floor);
     };
-
-    // const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    //     const rect = e.currentTarget.getBoundingClientRect();
-    //     const xPosition = e.clientX - rect.left;
-    //     const yPosition = e.clientY - rect.top;
-    //     setClickPosition({x: xPosition, y: yPosition});
-    // };
 
     const floorImages: FloorImages = {
         groundfloor,
@@ -107,7 +100,7 @@ export default function HomePage() {
                 </div>
             </div>
             <div id="map-container">
-                <Canvas imageSource={floorImages[selectedFloor]}/>
+                <Canvas imageSource={floorImages[selectedFloor]} width={window.innerWidth} />
                 {/*<img src={floorImages[selectedFloor]} alt="floor" id="map-image" />*/}
                 {/*{clickPosition && (*/}
                 {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
