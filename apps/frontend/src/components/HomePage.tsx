@@ -9,6 +9,7 @@ import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import Canvas from "./Canvas.tsx";
+import PathHandler from "./PathHandler.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -115,7 +116,7 @@ export default function HomePage() {
             </div>
             <Outlet />
         </div>
+        <PathHandler/>
         </body>
     );
 }
-
