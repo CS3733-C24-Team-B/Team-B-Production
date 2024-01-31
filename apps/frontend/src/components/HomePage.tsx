@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Outlet} from "react-router-dom";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
@@ -8,6 +8,7 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
+import axios from "axios";
 import Canvas from "./Canvas.tsx";
 
 interface FloorImages {
@@ -20,13 +21,38 @@ interface FloorImages {
 }
 
 export default function HomePage() {
-    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("lowerlevel1");
-    // const [clickPosition, setClickPosition] = useState<{ x: number, y: number } | null>(null);
+    // State to keep track of the selected floor
+    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("groundfloor");
+    const [nodeData, setNodeData] = useState([]);
+    useEffect(() => {
+        async function fetch() {
+            try {
+                const res2 = await axios.post("/api/db-insert");
+                console.log(res2.data);
+            } catch {
+                console.log("post error");
+            }
+            const res = await axios.get("/api/db-get-nodes");
 
+            console.log(res.data);
+            setNodeData(res.data);
+        }
+
+        fetch().then();
+    }, []);
+
+    const arrayNode = nodeData.map(({longName}) =>
+        <a href="/home">
+            {longName}
+        </a>
+    );
+
+    // Function to handle floor selection change
     const handleFloorChange = (floor: keyof FloorImages) => {
         setSelectedFloor(floor);
     };
 
+    // Mapping of floor names to their corresponding images
     const floorImages: FloorImages = {
         groundfloor,
         lowerlevel1,
@@ -35,6 +61,38 @@ export default function HomePage() {
         secondfloor,
         thirdfloor,
     };
+
+    function myFunction() {
+        const dropdown = document.getElementById("myDropdown");
+        if (dropdown) {
+            dropdown.classList.toggle("show");
+        }
+    }
+
+    function filterFunction() {
+        let input: HTMLInputElement | null = document.getElementById("myInput") as HTMLInputElement;
+        let div: HTMLElement | null = document.getElementById("myDropdown");
+
+        let visibleCount = 0;
+
+        if (input && div) {
+            let filter = input.value.toUpperCase();
+            let a = div.getElementsByTagName("a");
+
+            for (let i = 0; i < a.length; i++) {
+                let txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    if (visibleCount < 5) { // Change 5 to your desired limit
+                        a[i].style.display = "";
+                        visibleCount++;
+                    }else
+                        a[i].style.display = "none";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+    }
 
     return (
         <body>
@@ -102,20 +160,28 @@ export default function HomePage() {
                         <a href="/">Log Out</a>
                     </div>
                 </div>
+                <div className="dropdown">
+                    <input onClick={myFunction} onKeyUp={filterFunction} type="text" placeholder="Search.."
+                           id="myInput"/>
+                    <div id="myDropdown" className="dropdown-content">
+                        {arrayNode}
+                    </div>
+                </div>
+
+                <div id="map-container">
+                    <Canvas imageSource={floorImages[selectedFloor]} width={window.innerWidth}/>
+                    {/*<img src={floorImages[selectedFloor]} alt="floor" id="map-image" />*/}
+                    {/*{clickPosition && (*/}
+                    {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
+                    {/*        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
+                    {/*        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
+                </div>
+
+                <Outlet/>
             </div>
-            <div id="map-container">
-                <Canvas imageSource={floorImages[selectedFloor]} width={window.innerWidth} />
-                {/*<img src={floorImages[selectedFloor]} alt="floor" id="map-image" />*/}
-                {/*{clickPosition && (*/}
-                {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
-                {/*        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                {/*        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                {/*    </div>*/}
-                {/*)}*/}
-            </div>
-            <Outlet />
         </div>
         </body>
     );
 }
-
