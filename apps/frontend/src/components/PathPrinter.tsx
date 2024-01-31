@@ -10,10 +10,11 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     const joinedWords = words.join(' -> ');
 
     useEffect(() => {
-        console.log("SUS");
         async function fetch() {
           //  console.log(`${data.startNode}`);
                 const res2 = await axios.get(`/api/db-get-path/${data.startNode}/${data.endNode}`);
+
+            console.log("SUSSY "+res2.data);
             setPath(res2.data);
         }
         fetch().then();

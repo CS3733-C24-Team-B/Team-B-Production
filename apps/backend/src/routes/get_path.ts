@@ -17,7 +17,7 @@ router.get("/:startNode/:endNode/", async function (req: Request, res: Response)
             res.sendStatus(204);    // no data
         } else {
 
-            res.send(JSON.stringify(nodes.map(obj => obj!.nodeID)));
+            res.send(JSON.stringify(nodes.map(obj => obj!.longName)));
             console.info("Successfully sent " + nodes.length + " nodes to frontend");
         }
 

@@ -149,14 +149,14 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         });
 
         const nameToXPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["xcoord"];
         };
 
         const nameToYPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["ycoord"];
         };
 
