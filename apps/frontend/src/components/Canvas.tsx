@@ -7,8 +7,6 @@ interface CanvasProps {
     imageSource: string;
 }
 
-
-
 const Canvas = ({ width, height, imageSource }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
@@ -159,6 +157,7 @@ const Canvas = ({ width, height, imageSource }: CanvasProps) => {
         ctx?.drawImage(image, 0, 0, width, height);
     };
 
+        //ctx.clearRect(0, 0, width, height);
 
     useEffect(() => {
         // Initialize
