@@ -10,6 +10,7 @@ import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "./Canvas.tsx";
+import PathHandler from "./PathHandler.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -98,7 +99,7 @@ export default function HomePage() {
         <body>
         <div className="App">
             <header className="App-header">
-                <div className="title">Welcome to Home Page</div>
+                <div className="title">Navigation Page</div>
                 <div className="logo">
                     <img src={logo} alt="Hospital Logo" />
                 </div>
@@ -182,6 +183,7 @@ export default function HomePage() {
                 <Outlet/>
             </div>
         </div>
+        <PathHandler/>
         </body>
     );
 }
