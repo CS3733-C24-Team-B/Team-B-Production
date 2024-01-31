@@ -89,7 +89,7 @@ export default function CSVData() {
             </div>
             <input onClick={downloadFromDB} type="button" value="Export"/>
             <br/>
-            <table>
+            <table className={"tables"}>
                 <tr>
                     <th>Room Name</th>
                     <th>Floor</th>
