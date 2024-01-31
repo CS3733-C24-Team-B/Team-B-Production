@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
+import Navbar from "./Navbar.tsx";
 
 export default function CSVEdgeData() {
   //const nodes : MapNode[] = createNodeList();
@@ -92,7 +93,8 @@ export default function CSVEdgeData() {
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
         <div className="App">
-            <header className="App-header">CSV Data</header>
+            <header className="App-header">CSV Edge Data</header>
+            <Navbar/>
             <br/>
             <div>
                 <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
