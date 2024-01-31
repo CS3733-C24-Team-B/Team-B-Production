@@ -109,43 +109,47 @@ export default function HomePage() {
                 </div>
             </header>
             <Navbar/>
-            <div className="dropdown">
-                <button className="dropbtn">Floor</button>
-                <div className="dropdown-content">
-                    {/* Dropdown options for selecting the floor */}
-                    <a onClick={() => handleFloorChange("lowerlevel1", "L1")}>
-                        Lower Level 1
-                    </a>
-                    <a onClick={() => handleFloorChange("lowerlevel2", "L2")}>
-                        Lower Level 2
-                    </a>
-                    <a onClick={() => handleFloorChange("groundfloor", "L3")}>
-                        Ground Floor
-                    </a>
-                    <a onClick={() => handleFloorChange("firstfloor", "L4")}>
-                        First Floor
-                    </a>
-                    <a onClick={() => handleFloorChange("secondfloor", "L5")}>
-                        Second Floor
-                    </a>
-                    <a onClick={() => handleFloorChange("thirdfloor", "L6")}>
-                        Third Floor
-                    </a>
+            <div className="navbar">
+                <div className="dropdown">
+                    <button className="dropbtn">Floor</button>
+                    <div className="dropdown-content">
+                        {/* Dropdown options for selecting the floor */}
+                        <a onClick={() => handleFloorChange("lowerlevel1", "L1")}>
+                            Lower Level 1
+                        </a>
+                        <a onClick={() => handleFloorChange("lowerlevel2", "L2")}>
+                            Lower Level 2
+                        </a>
+                        <a onClick={() => handleFloorChange("groundfloor", "L3")}>
+                            Ground Floor
+                        </a>
+                        <a onClick={() => handleFloorChange("firstfloor", "L4")}>
+                            First Floor
+                        </a>
+                        <a onClick={() => handleFloorChange("secondfloor", "L5")}>
+                            Second Floor
+                        </a>
+                        <a onClick={() => handleFloorChange("thirdfloor", "L6")}>
+                            Third Floor
+                        </a>
+                    </div>
+                </div>
+                <div className="dropdown">
+                    <input onClick={myFunction} onKeyUp={filterFunction} type="text" placeholder="Search.."
+                           id="myInput"/>
+                    <div id="myDropdown" className="dropdown-content">
+                        {arrayNode}
+                    </div>
                 </div>
             </div>
-            <div className="dropdown">
-                <input onClick={myFunction} onKeyUp={filterFunction} type="text" placeholder="Search.."
-                       id="myInput"/>
-                <div id="myDropdown" className="dropdown-content">
-                    {arrayNode}
-                </div>
-            </div>
+
+            <PathHandler/>
+
             <div id="map-container">
                 <Canvas imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>
             </div>
-            <Outlet />
+            <Outlet/>
         </div>
-        <PathHandler/>
         <Footer/>
         </body>
     );

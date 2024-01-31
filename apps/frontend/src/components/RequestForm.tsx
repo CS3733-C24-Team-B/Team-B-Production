@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import Navbar from "./Navbar.tsx";
 import Footer from "./Footer.tsx";
 
 export default function LoginPage() {
@@ -16,8 +17,8 @@ export default function LoginPage() {
 
     return (
         <div className="App">
-            <body className="body">
             <header className="App-header">Service Request Form</header>
+            <Navbar/>
             <br />
             <form>
                 <label htmlFor="reqName">Name of Requester:</label>
@@ -59,7 +60,6 @@ export default function LoginPage() {
             </form>
             <Outlet/>
             <Footer/>
-            </body>
         </div>
     );
 }

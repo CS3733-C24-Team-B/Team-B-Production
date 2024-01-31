@@ -1,4 +1,5 @@
 import React, { useState} from "react";
+import "../css/pathhandler.css";
 
 export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2: string }) => void }> = ({onDataSubmit,}) => {
     const [input1, setInput1] = useState('');
@@ -16,10 +17,10 @@ export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2
     //
 
     return (
-        <div>
+        <div className="pathhandler">
             <h1>Find Path between Two Nodes</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="input1">Starting Node ID:</label>
+                <label htmlFor="input1">Starting Node ID: </label>
                 <input
                     type="text"
                     id="input1"
@@ -28,8 +29,8 @@ export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2
                     onChange={(e) => setInput1(e.target.value)}
                     required
                 />
-
-                <label htmlFor="input2">Ending Node ID:</label>
+                <br/>
+                <label htmlFor="input2">Ending Node ID: </label>
                 <input
                     type="text"
                     id="input2"
