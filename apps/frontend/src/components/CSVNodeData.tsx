@@ -5,6 +5,7 @@ import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
 import Navbar from "./Navbar.tsx";
+import Footer from "./Footer.tsx";
 
 export default function CSVData() {
   //const nodes : MapNode[] = createNodeList();
@@ -99,6 +100,7 @@ export default function CSVData() {
                 </tr>
                 {arrayNode}</table>
             <br/>
+            <Footer/>
         </div>
     );
 }

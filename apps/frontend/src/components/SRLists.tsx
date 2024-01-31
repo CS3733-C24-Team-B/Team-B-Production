@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
+import Footer from "./Footer.tsx";
 
 export default function ServiceRequestLists() {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function ServiceRequestLists() {
             <br/>
             <input type="button" value="Return to Home" onClick={handleClick}/>
             <Outlet/>
+            <Footer/>
         </div>
     );
 }

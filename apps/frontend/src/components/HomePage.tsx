@@ -11,6 +11,7 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 import Canvas from "./Canvas.tsx";
 import PathHandler from "./PathHandler.tsx";
 import Navbar from "./Navbar.tsx";
+import Footer from "./Footer.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -83,8 +84,9 @@ export default function HomePage() {
                 {/*)}*/}
             </div>
             <Outlet/>
+            <PathHandler/>
+            <Footer/>
         </div>
-        <PathHandler/>
         </body>
     );
 }

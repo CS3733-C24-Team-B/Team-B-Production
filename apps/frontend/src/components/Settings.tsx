@@ -2,6 +2,7 @@ import React from "react";
 import {Outlet} from "react-router-dom";
 import "../index.css";
 import Navbar from "./Navbar.tsx";
+import Footer from "./Footer.tsx";
 
 export default function Settings() {
     return (
@@ -25,6 +26,7 @@ export default function Settings() {
                 <br/>
             </form>
             <Outlet/>
+            <Footer/>
         </div>
     );
 }

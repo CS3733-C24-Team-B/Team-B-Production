@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import Footer from "./Footer.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -57,6 +58,7 @@ export default function LoginPage() {
                 </div>
             </form>
             <Outlet/>
+            <Footer/>
             </body>
         </div>
     );
