@@ -1,8 +1,10 @@
 import { readFileSync } from "fs";
-import {G} from "vitest/dist/types-198fd1d9";
-import {start} from "http-errors";
-//import { MapNode } from "./Node.ts";
-class MapNode {
+// import * as path from "path";
+// import * as fs from "fs";
+// import {G} from "vitest/dist/types-198fd1d9";
+// import {start} from "http-errors";
+
+export class MapNode {
     nodeID: string;
     xcoord: number;
     ycoord: number;
@@ -23,7 +25,7 @@ class MapNode {
         this.longName = longName;
     }
 }
-class MapEdge {
+export class MapEdge {
     edgeID: string;
     startNode: string; //foreign key nodeID
     endNode: string; // foreign key nodeID
@@ -34,153 +36,181 @@ class MapEdge {
     }
 }
 class Graph {
-    adjacencyList: Map<MapNode, MapNode[]>;
+    adjacencyList: Map<string, string[]>;
 
     constructor() {
         this.adjacencyList = new Map();
     }
-    addVertex(vertex: MapNode): void {
+    addVertex(vertex: string): void {
         if (!this.adjacencyList.has(vertex)) {
             this.adjacencyList.set(vertex, []);
         }
     }
+    addEdge(vertex1: string, vertex2: string): void {
+        // Check if vertices exist in the graph
+        if (!this.adjacencyList.has(vertex1) || !this.adjacencyList.has(vertex2)) {
+            return;
+        }
 
-    addEdge(vertex1: MapNode, vertex2: MapNode): void {
+        // Add vertex2 to the adjacency list of vertex1
         this.adjacencyList.get(vertex1)?.push(vertex2);
+
+        // Add vertex1 to the adjacency list of vertex2
         this.adjacencyList.get(vertex2)?.push(vertex1);
     }
 }
-const nodeList: MapNode[] = [];
-const edgeList: MapEdge[] = [];
 export function findNode(nodeID: string) : MapNode{
     //return array.find(obj => obj.id === id);
-    // console.log(createNodeList()[7]);
-    //console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
+    //console.log(createNodeList()[7]);
+   // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
     return createNodeList().find(MapNode => MapNode.nodeID === nodeID) as MapNode;
 }
-export function readCSV(filePath: string): any[] {
-    //Read the file
-    const fileContent = readFileSync(filePath, "utf8");
 
-    //Split the file content by new line to get the rows
-    const lines = fileContent.split("\n");
 
-    //Extract headers
-    const headers = lines[0].split(",");
+/*
+read data from NodeCSV and export in JSON:
+format:
+"data": {
+    "nodeID": "CCONF001L1",
+    "xcoord": 2255,
+    "ycoord": 849,
+    "floor": "L1",
+    "building": "45 Francis",
+    "nodeType": "CONF",
+    "longName": "Anesthesia Conf Floor L1",
+    "shortName":"Conf C001L1"
+ */
+export function readNodeCSV(filePath:string){
+    const NodeData = [];
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split(/\r?\n/);
+    lines.pop();
+    for (let i: number = 1; i < lines.length; i++) {
+        const data = lines[i].split(',');
+        NodeData[i] = {
+            data: {
+                "nodeID": data[0],
+                "xcoord": data[1],
+                "ycoord": data[2],
+                "floor": data[3],
+                "building": data[4],
+                "nodeType": data[5],
+                "longName": data[6],
+                "shortName": data[7]
+            }
+        };
+    }
 
-    //Parse each line
-    const data = lines.slice(1).map((line) => {
-        const values = line.split(",");
-        return headers.reduce((obj, header, index) => {
-            obj[header] = values[index];
-            return obj;
-        }, {} as any);
-    });
-
-    return data;
+    //console.log(NodeData);
+    return NodeData;
 }
+export function readEdgeCSV(filePath:string){
+    const edgeData = [];
+    const fileContent: string = readFileSync(filePath, "utf-8");
+    const lines: string[] = fileContent.split(/\r?\n/);
+    lines.pop();
+    for (let i: number = 1; i < lines.length; i++) {
+        const data = lines[i].split(',');
+        edgeData[i] = {
+            data:{
+                "edgeID": data[0],
+                "startNode": data[1],
+                "endNode": data[2]
+            }
+        };
+    }
+
+    //console.log(NodeData);
+    return edgeData;
+}
+
 //use to iterate/print out different values of each node
 export function createNodeList() {
     const filePath = "src/csvs/L1Nodes.csv";
-    const nodeString = readCSV(filePath);
-    const nodes: string[] = [];
-    for (const node of nodeString) {
-        nodes.push(node);
+    const nodes = readNodeCSV(filePath);
+    const nodeList : MapNode[] = [];
+    for (let i = 1; i<nodes.length;i++) {
+        const node = nodes[i];
+        nodeList.push(new MapNode(node.data.nodeID,parseInt(node.data.xcoord),parseInt(node.data.ycoord),node.data.floor,node.data.building,node.data.nodeType,node.data.longName,node.data.shortName));
     }
-    nodeList.pop();
-    for (const node of nodes) {
-        const curr = JSON.stringify(node);
-        let currNode: string[]= curr.substring(70, curr.length - 2).split(" ");
-        const newNode: MapNode = new MapNode(currNode[0],parseInt(currNode[1]),parseInt(currNode[2]),currNode[3],currNode[4],currNode[5],currNode[6],currNode[7]);
-        nodeList.push(newNode);
-    }
+    //console.log(nodeList);
     return nodeList;
 }
+
 export function createEdgeList() {
     const filePath = "src/csvs/L1Edges.csv";
-    const edgeString = readCSV(filePath);
-    const edges: string[] = [];
-    for (const edge of edgeString) {
-        edges.push(edge);
+    const edges = readEdgeCSV(filePath);
+    const edgeList : MapEdge[] = [];
+    for (let i = 1; i<edges.length;i++) {
+        const edge = edges[i];
+        edgeList.push(new MapEdge(edge.data.edgeID,edge.data.startNode,edge.data.endNode));
     }
-    edges.pop();
-    let x = 1;
-    for (const edge of edges) {
-        if(x==1) {
-            x = 2;
-        }
-        else {
-            const curr = JSON.stringify(edge);
-            let curredge: string[] = [];
-            curredge[0] = curr.substring(7, 28);
-            curredge[1] = curr.substring(28, 38);
-            curredge[2] = curr.substring(38, 48);
-            const newEdge: MapEdge = new MapEdge(curredge[0], curredge[1], curredge[2]);
-            edgeList.push(newEdge);
-        }
-    }
+   // console.log(edgeList);
     return edgeList;
 }
+
 
 export function breadthFirstSearch(){
     let graph : Graph = new Graph();
     for(const currentNode of createNodeList()){
-        graph.addVertex(currentNode);
+        graph.addVertex(currentNode.nodeID);
     }
     for(const currentEdge of createEdgeList()){
-        graph.addEdge(findNode(currentEdge.endNode),findNode(currentEdge.startNode));
-        graph.addEdge(findNode(currentEdge.startNode),findNode(currentEdge.endNode));
+        graph.addEdge(currentEdge.endNode,currentEdge.startNode);
     }
-    const visited: Set<MapNode> = new Set();
-    const queue: MapNode[] = [];
-    const result: MapNode[] = [];
+    const visited: Set<string> = new Set();
+    const queue: string[] = [];
+    const result: string[] = [];
 
-    visited.add(createNodeList()[0]);
-    queue.push(createNodeList()[0]);
+    visited.add(createNodeList()[0].nodeID);
+    queue.push(createNodeList()[0].nodeID);
+
 
     while (queue.length > 0) {
         const currentVertex = queue.shift()!;
         result.push(currentVertex);
-
-        const neighbors : MapNode[] = graph.adjacencyList.get(currentVertex) || [];
-
+        const neighbors : string[] = graph.adjacencyList.get(currentVertex) || [];
         for (const neighbor of neighbors) {
             if (!visited.has(neighbor)) {
                 visited.add(neighbor);
+                //console.log("visited: "+neighbor);
                 queue.push(neighbor);
+
             }
         }
     }
-    console.log(result.map(obj => obj.nodeID));
+    console.log(result);
     return result;
 }
-export function pathFindBFS(startNode:MapNode,endNode:MapNode){
+export function pathFindBFS(startingNode:string,endingNode:string){
+    const startNode = findNode(startingNode);
+    const endNode = findNode(endingNode);
     let graph : Graph = new Graph();
     for(const currentNode of createNodeList()){
-        graph.addVertex(currentNode);
+        graph.addVertex(currentNode.nodeID);
     }
     for(const currentEdge of createEdgeList()){
-        graph.addEdge(findNode(currentEdge.endNode),findNode(currentEdge.startNode));
-        graph.addEdge(findNode(currentEdge.startNode),findNode(currentEdge.endNode));
+        graph.addEdge(currentEdge.endNode,currentEdge.startNode);
+        graph.addEdge(currentEdge.startNode,currentEdge.endNode);
     }
-    const visited: Set<MapNode> = new Set();
-    const queue: MapNode[][] = [[startNode]];
-    visited.add(startNode);
+    const visited: Set<string> = new Set();
+    const queue: string[][] = [[startNode.nodeID]];
+    visited.add(startNode.nodeID);
 
     while (queue.length > 0) {
         const currentPath = queue.shift()!;
         const currentVertex = currentPath[currentPath.length-1];
-        if(currentVertex===endNode){
+        if(currentVertex===endNode.nodeID){
             console.log(currentPath);
             return currentPath;
         }
 
-        const neighbors : MapNode[] = graph.adjacencyList.get(currentVertex) || [];
+        const neighbors : string[] = graph.adjacencyList.get(currentVertex) || [];
 
         for (const neighbor of neighbors) {
             if (!visited.has(neighbor)) {
                 visited.add(neighbor);
-                const newPath : MapNode[] =[...currentPath,neighbor];
+                const newPath : string[] =[...currentPath,neighbor];
                 queue.push(newPath);
             }
         }

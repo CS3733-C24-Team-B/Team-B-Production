@@ -1,0 +1,16 @@
+table {
+    margin: auto;
+    border:1px solid black;
+}
+
+td,
+th {
+    padding-left: 3vw;
+    padding-right: 3vw;
+    border:1px solid black;
+}
+
+.file button{
+    background-color: cornflowerblue;
+
+}
