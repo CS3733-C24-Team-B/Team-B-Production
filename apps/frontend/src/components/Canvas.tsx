@@ -5,9 +5,10 @@ interface CanvasProps {
     width: number;
     height: number;
     imageSource: string;
+    currLevel: string;
 }
 
-const Canvas = ({ width, height, imageSource }: CanvasProps) => {
+const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
     let startX = 0;
@@ -52,20 +53,21 @@ const Canvas = ({ width, height, imageSource }: CanvasProps) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const xPosition = e.clientX - rect.left;
         const yPosition = e.clientY - rect.top;
-        nodeData.map(({xcoord, ycoord}) => {
-            const xPos = xcoord * (window.innerWidth / 5000);
-            const yPos = ycoord * (window.innerHeight / 3400);
-            if(Math.abs(xPos - xPosition) < 5 && Math.abs(yPos - yPosition) < 5) {
-                ctx!.beginPath();
-                ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
-                ctx!.fillStyle = "green";
-                ctx!.fill();
-            }
-            else {
-                ctx!.beginPath();
-                ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
-                ctx!.fillStyle = "blue";
-                ctx!.fill();
+        nodeData.map(({xcoord, ycoord, floor}) => {
+            if(floor === currLevel) {
+                const xPos = xcoord * (window.innerWidth / 5000);
+                const yPos = ycoord * (window.innerHeight / 3400);
+                if (Math.abs(xPos - xPosition) < 5 && Math.abs(yPos - yPosition) < 5) {
+                    ctx!.beginPath();
+                    ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
+                    ctx!.fillStyle = "green";
+                    ctx!.fill();
+                } else {
+                    ctx!.beginPath();
+                    ctx!.arc(xPos, yPos, 3, 0, 2 * Math.PI, false);
+                    ctx!.fillStyle = "blue";
+                    ctx!.fill();
+                }
             }
         });
     };
@@ -99,11 +101,13 @@ const Canvas = ({ width, height, imageSource }: CanvasProps) => {
 
 
 
-        nodeData.map(({xcoord, ycoord}) => {
-            ctx!.beginPath();
-            ctx!.arc(xcoord*(width/5000), ycoord*(height/3400), 3, 0, 2 * Math.PI, false);
-            ctx!.fillStyle = "#0000FF";
-            ctx!.fill();
+        nodeData.map(({xcoord, ycoord, floor}) => {
+            if(floor === currLevel) {
+                ctx!.beginPath();
+                ctx!.arc(xcoord * (width / 5000), ycoord * (height / 3400), 3, 0, 2 * Math.PI, false);
+                ctx!.fillStyle = "#0000FF";
+                ctx!.fill();
+            }
         });
 
     }
