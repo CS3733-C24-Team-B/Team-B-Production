@@ -172,13 +172,6 @@ export default function HomePage() {
 
                 <div id="map-container">
                     <Canvas imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>
-                    {/*<img src={floorImages[selectedFloor]} alt="floor" id="map-image" />*/}
-                    {/*{clickPosition && (*/}
-                    {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
-                    {/*        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                    {/*        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                    {/*    </div>*/}
-                    {/*)}*/}
                 </div>
 
                 <Outlet/>
