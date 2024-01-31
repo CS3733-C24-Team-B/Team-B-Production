@@ -53,6 +53,7 @@ export default function HomePage() {
     const handleFloorChange = (floor: keyof FloorImages, level: string) => {
         setSelectedFloor(floor);
         setSelectedLevel(level);
+        console.log(selectedLevel);
     };
 
     // Mapping of floor names to their corresponding images
@@ -169,6 +170,7 @@ export default function HomePage() {
                         {arrayNode}
                     </div>
                 </div>
+                {/*<img src={floorImages[selectedFloor]}/>*/}
 
                 <div id="map-container">
                     <Canvas imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>

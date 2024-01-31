@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import axios from "axios";
+import "../css/home_page.css";
 
 interface CanvasProps {
     width: number;
@@ -59,7 +60,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 setDrawLine(!drawLine);
             }
         });
-    };
+    }
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
