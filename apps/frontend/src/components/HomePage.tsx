@@ -67,18 +67,11 @@ export default function HomePage() {
         thirdfloor,
     };
 
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        if (dropdown) {
-            dropdown.classList.toggle("show");
-        }
-    }
-
     function filterFunction() {
         let input: HTMLInputElement | null = document.getElementById("myInput") as HTMLInputElement;
         let div: HTMLElement | null = document.getElementById("myDropdown");
 
-        let visibleCount = 0;
+        let visibleCount = 5;
 
         if (input && div) {
             let filter = input.value.toUpperCase();
@@ -86,10 +79,11 @@ export default function HomePage() {
 
             for (let i = 0; i < a.length; i++) {
                 let txtValue = a[i].textContent || a[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    if (visibleCount < 5) { // Change 5 to your desired limit
+
+                if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
+                    if (visibleCount > 0) { // Change 5 to your desired limit
                         a[i].style.display = "";
-                        visibleCount++;
+                        visibleCount--;
                     }else
                         a[i].style.display = "none";
                 } else {
@@ -165,9 +159,14 @@ export default function HomePage() {
                         <a href="/">Log Out</a>
                     </div>
                 </div>
-                <div className="dropdown">
-                    <input onClick={myFunction} onKeyUp={filterFunction} type="text" placeholder="Search.."
-                           id="myInput"/>
+                <div className="manual-dropdown">
+                    <input
+                        onClick={filterFunction}
+                        onKeyUp={filterFunction}
+                        type="text"
+                        placeholder="Search.."
+                        id="myInput"
+                    />
                     <div id="myDropdown" className="dropdown-content">
                         {arrayNode}
                     </div>
