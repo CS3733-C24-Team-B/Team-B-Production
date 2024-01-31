@@ -100,7 +100,7 @@ export default function CSVEdgeData() {
             </div>
             <input onClick={downloadFromDB} type="button" value="Export"/>
             <br/>
-            <table>
+            <table className={"tables"}>
                 <tr>
                     <th>Edge ID</th>
                     <th>Start Room</th>

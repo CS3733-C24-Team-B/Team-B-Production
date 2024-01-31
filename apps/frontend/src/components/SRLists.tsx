@@ -16,7 +16,7 @@ export default function ServiceRequestLists() {
             <header className="App-header">Service Request Lists</header>
             <br/>
             <h3 className={"csv table"}> Active Service Requests </h3>
-            <table>
+            <table className={"tables"}>
                 <tr>
                     <th>Request</th>
                     <th>UserName</th>
