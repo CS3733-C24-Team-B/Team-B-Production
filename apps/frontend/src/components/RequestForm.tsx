@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import SideButtons from "./SideButtons.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -58,6 +59,7 @@ export default function LoginPage() {
             </form>
             <Outlet/>
             </body>
+            <SideButtons/>
         </div>
     );
 }

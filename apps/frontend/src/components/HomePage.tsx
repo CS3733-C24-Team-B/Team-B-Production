@@ -11,6 +11,7 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "./Canvas.tsx";
 import PathHandler from "./PathHandler.tsx";
+import SideButtons from "./SideButtons.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -181,6 +182,7 @@ export default function HomePage() {
             </div>
         </div>
         <PathHandler/>
+        <SideButtons/>
         </body>
     );
 }
