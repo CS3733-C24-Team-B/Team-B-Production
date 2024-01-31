@@ -182,7 +182,9 @@ export function breadthFirstSearch(){
     console.log(result);
     return result;
 }
-export function pathFindBFS(startNode:MapNode,endNode:MapNode){
+export function pathFindBFS(startingNode:string,endingNode:string){
+    const startNode = findNode(startingNode);
+    const endNode = findNode(endingNode);
     let graph : Graph = new Graph();
     for(const currentNode of createNodeList()){
         graph.addVertex(currentNode.nodeID);
