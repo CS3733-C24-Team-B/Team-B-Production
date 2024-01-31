@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
+import SideButtons from "./SideButtons.tsx";
 
 export default function CSVData() {
   //const nodes : MapNode[] = createNodeList();
@@ -97,6 +98,7 @@ export default function CSVData() {
                 </tr>
                 {arrayNode}</table>
             <br/>
+            <SideButtons/>
         </div>
     );
 }

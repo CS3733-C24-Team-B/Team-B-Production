@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
+import SideButtons from "./SideButtons.tsx";
 
 export default function CSVEdgeData() {
   //const nodes : MapNode[] = createNodeList();
@@ -107,6 +108,7 @@ export default function CSVEdgeData() {
                     <th>End Room</th>
                 </tr>
                 {arrayEdge}</table>
+            <SideButtons/>
         </div>
     );
 }

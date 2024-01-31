@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../index.css";
+import SideButtons from "./SideButtons.tsx";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Settings() {
         <input type="button" value="Return to Home" onClick={handleClick} />
       </form>
       <Outlet />
+        <SideButtons/>
     </div>
   );
 }
