@@ -17,11 +17,15 @@ const maxDrawSize = 8;
 const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
-    let startX = 0;
-    let startY = 0;
-    let drawLine = false;
+    // let startX = 0;
+    // let startY = 0;
+    const [nodeStart, setNodeStart] = useState("");
+    const [nodeEnd, setNodeEnd] = useState("");
+    const [drawLine, setDrawLine] = useState(false);
+    const [pathData, setPathData] = useState([]);
+    //const [words, setPath] = useState([""]);
     const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
-    let ctx = canvasCtxRef.current;
+    const [ctx, setCtx] = useState(canvasCtxRef.current);
 
     function getDrawSize() {
         let drawSize = (widthRatio + heightRatio) / 2500;
@@ -33,7 +37,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         return drawSize;
     }
 
-    const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
         const xPosition = e.clientX - rect.left;
         const yPosition = e.clientY - rect.top;
@@ -42,25 +46,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         //         return nc.roomName;
         //     }
         // });
-        console.log(width + " " + height);
-        nodeData.map(({longName, xcoord, ycoord}) => {
-            const xPos = xcoord * (window.innerWidth / widthRatio);
-            const yPos = ycoord * (window.innerHeight / heightRatio);
+        // console.log(width + " " + height);
+        nodeData.map(({nodeID, xcoord, ycoord}) => {
+            const xPos = xcoord * (width / widthRatio);
+            const yPos = ycoord * (height / heightRatio);
             if(Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-                console.log(longName);
                 if(drawLine) {
-                    ctx = canvasCtxRef.current;
-                    ctx!.beginPath();
-                    ctx?.moveTo(startX, startY);
-                    ctx?.lineTo(xPos, yPos);
-                    ctx!.strokeStyle = "green";
-                    ctx!.lineWidth = getDrawSize();
-                    ctx!.stroke();
+                    setNodeEnd(nodeID);
                 } else {
-                    startX = xPos;
-                    startY = yPos;
+                    setNodeStart(nodeID);
                 }
-                drawLine = !drawLine;
+                setDrawLine(!drawLine);
             }
         });
     };
@@ -114,15 +110,29 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         fetch().then();
     }, []);
 
+    useEffect(() => {
+        async function fetch() {
+            //  console.log(`${data.startNode}`);
+            const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
+            //console.log(res2.data);
+            //setPath(res2.data);
+            setPathData(res2.data);
+
+        }
+        fetch().then();
+    }, [nodeEnd, nodeStart]);
+
     const image = new Image();
     image.src = imageSource;
     setTimeout(draw, 100);
 
     function draw() {
-        ctx = canvasCtxRef.current;
+        setCtx(canvasCtxRef.current);
         if (ctx == null) {
             return;
         }
+
+        console.log(width + " " + height);
 
         ctx!.clearRect(0, 0, width, height);
 
@@ -136,6 +146,38 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 ctx!.fill();
             }
         });
+
+        const nameToXPos = (name : string) => {
+            return nodeData.find(({nodeID}) =>
+                name === nodeID
+            )!["xcoord"];
+        };
+
+        const nameToYPos = (name : string) => {
+            return nodeData.find(({nodeID}) =>
+                name === nodeID
+            )!["ycoord"];
+        };
+
+        if(pathData.length > 1) {
+            let startX = -1;
+            let startY = -1;
+            for (const nr of pathData) {
+                const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
+                const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+                console.log(nr + " " + xPos + " " + yPos);
+                if (startX != -1 && startY != -1) {
+                    ctx!.beginPath();
+                    ctx?.moveTo(startX, startY);
+                    ctx?.lineTo(xPos, yPos);
+                    ctx!.strokeStyle = "green";
+                    ctx!.lineWidth = getDrawSize();
+                    ctx!.stroke();
+                }
+                startX = xPos;
+                startY = yPos;
+            }
+        }
     }
 
     image.onload = () => {
@@ -148,7 +190,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         if (canvasRef.current) {
             canvasCtxRef.current = canvasRef.current.getContext("2d");
         }
-    }, [ctx]);
+    }, []);
 
     return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>;
 };

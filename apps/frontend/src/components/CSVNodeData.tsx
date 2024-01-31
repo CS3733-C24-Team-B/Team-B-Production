@@ -49,6 +49,35 @@ export default function CSVData() {
         }
     }
 
+    async function downloadFromDB() {
+        console.log("Running Download to DB");
+
+        try {
+            const res3 = await axios.get('/api/db-get-nodes');
+            console.log(res3);
+            let headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
+            let resCSV = res3.data.reduce((roomNode: string[], roomData: { nodeID: string; xcoord: number; ycoord: number; floor: string; building: string; nodeType: string; longName: string; shortName: string; }) => {
+                const { nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName } = roomData;
+                roomNode.push([nodeID, xcoord+"", ycoord+"", floor, building, nodeType, longName, shortName].join(','));
+                return roomNode;
+            }, []);
+            const data = [...headers, ...resCSV].join('\n');
+            const blob = new Blob([data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "NodeData.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            a.dispatchEvent(clickEvt);
+            a.remove();
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
         <div className="App">
@@ -58,6 +87,7 @@ export default function CSVData() {
                 <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
                 <input onClick={uploadToDB} type="button" value="Submit"/>
             </div>
+            <input onClick={downloadFromDB} type="button" value="Export"/>
             <br/>
             <table>
                 <tr>
