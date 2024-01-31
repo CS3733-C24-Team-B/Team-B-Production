@@ -23,7 +23,8 @@ interface FloorImages {
 
 export default function HomePage() {
     // State to keep track of the selected floor
-    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("groundfloor");
+    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("lowerlevel1");
+    const [selectedLevel, setSelectedLevel] = useState("L1");
     const [nodeData, setNodeData] = useState([]);
     useEffect(() => {
         async function fetch() {
@@ -49,8 +50,9 @@ export default function HomePage() {
     );
 
     // Function to handle floor selection change
-    const handleFloorChange = (floor: keyof FloorImages) => {
+    const handleFloorChange = (floor: keyof FloorImages, level: string) => {
         setSelectedFloor(floor);
+        setSelectedLevel(level);
     };
 
     // Mapping of floor names to their corresponding images
@@ -126,22 +128,22 @@ export default function HomePage() {
                     <button className="dropbtn">Floor</button>
                     <div className="dropdown-content">
                         {/* Dropdown options for selecting the floor */}
-                        <a onClick={() => handleFloorChange("lowerlevel1")}>
+                        <a onClick={() => handleFloorChange("lowerlevel1", "L1")}>
                             Lower Level 1
                         </a>
-                        <a onClick={() => handleFloorChange("lowerlevel2")}>
+                        <a onClick={() => handleFloorChange("lowerlevel2", "L2")}>
                             Lower Level 2
                         </a>
-                        <a onClick={() => handleFloorChange("groundfloor")}>
+                        <a onClick={() => handleFloorChange("groundfloor", "L3")}>
                             Ground Floor
                         </a>
-                        <a onClick={() => handleFloorChange("firstfloor")}>
+                        <a onClick={() => handleFloorChange("firstfloor", "L4")}>
                             First Floor
                         </a>
-                        <a onClick={() => handleFloorChange("secondfloor")}>
+                        <a onClick={() => handleFloorChange("secondfloor", "L5")}>
                             Second Floor
                         </a>
-                        <a onClick={() => handleFloorChange("thirdfloor")}>
+                        <a onClick={() => handleFloorChange("thirdfloor", "L6")}>
                             Third Floor
                         </a>
                     </div>
@@ -170,14 +172,7 @@ export default function HomePage() {
                 </div>
 
                 <div id="map-container">
-                    <Canvas imageSource={floorImages[selectedFloor]} width={window.innerWidth}/>
-                    {/*<img src={floorImages[selectedFloor]} alt="floor" id="map-image" />*/}
-                    {/*{clickPosition && (*/}
-                    {/*    <div style={{ position: 'absolute', left: clickPosition.x, top: clickPosition.y }}>*/}
-                    {/*        <div style={{ width: 20, height: 2, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                    {/*        <div style={{ width: 2, height: 20, backgroundColor: 'red', position: 'absolute', transform: 'translate(-50%, -50%)' }} />*/}
-                    {/*    </div>*/}
-                    {/*)}*/}
+                    <Canvas imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>
                 </div>
 
                 <Outlet/>
