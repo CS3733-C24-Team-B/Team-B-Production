@@ -35,4 +35,23 @@ router.post('/', async function (req: Request, res: Response){
         message: "added service request to db",
     });
 });
+
+router.delete('/', async function (req: Request, res: Response) {
+    try {
+        const serviceID: number = req.body.serviceID;
+        await client.serviceRequest.delete({
+            where: {
+                serviceID: serviceID
+            }
+        });
+        return res.status(200).json({
+            message: "deleted service request with ID " + serviceID
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400);
+    }
+});
+
 export default router;
