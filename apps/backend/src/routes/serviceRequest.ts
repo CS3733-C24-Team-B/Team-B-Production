@@ -18,11 +18,13 @@ router.get('/', async function (req: Request, res: Response) {
 
 router.post('/', async function (req: Request, res: Response){
     const serviceInfo = req.body;
-    console.log(serviceInfo);
     await client.serviceRequest.create({
         data: {
             roomNumber: parseInt(serviceInfo.roomNumber),
-            infoText: serviceInfo.infoText
+            infoText: serviceInfo.infoText,
+            requester: "admin",
+            receiver: "admin",
+            status: "received"
         }
     });
 
