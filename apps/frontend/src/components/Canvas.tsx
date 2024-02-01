@@ -39,8 +39,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + 10;
-        const yPosition = e.clientY - rect.top;
+        const xPosition = e.clientX - rect.left + (width/200);
+        const yPosition = e.clientY - rect.top + (height/100);
         nodeData.map(({nodeID, xcoord, ycoord}) => {
             const xPos = xcoord * (width / widthRatio);
             const yPos = ycoord * (height / heightRatio);
@@ -57,8 +57,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + 10;
-        const yPosition = e.clientY - rect.top;
+        const xPosition = e.clientX - rect.left + (width/200);
+        const yPosition = e.clientY - rect.top + (height/100);
         nodeData.map(({xcoord, ycoord, floor}) => {
             if(floor === currLevel) {
                 const xPos = xcoord * (window.innerWidth / widthRatio);
@@ -161,23 +161,31 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             )!["ycoord"];
         };
 
+        const nameToFloor = (name : string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["floor"];
+        };
+
         if(pathData.length > 1) {
             let startX = -1;
             let startY = -1;
             for (const nr of pathData) {
-                const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
-                const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
-                console.log(nr + " " + xPos + " " + yPos);
-                if (startX != -1 && startY != -1) {
-                    ctx!.beginPath();
-                    ctx?.moveTo(startX, startY);
-                    ctx?.lineTo(xPos, yPos);
-                    ctx!.strokeStyle = "green";
-                    ctx!.lineWidth = getDrawSize();
-                    ctx!.stroke();
+                if(nameToFloor(nr) === currLevel) {
+                    const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
+                    const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+                    console.log(nr + " " + xPos + " " + yPos);
+                    if (startX != -1 && startY != -1) {
+                        ctx!.beginPath();
+                        ctx?.moveTo(startX, startY);
+                        ctx?.lineTo(xPos, yPos);
+                        ctx!.strokeStyle = "green";
+                        ctx!.lineWidth = getDrawSize();
+                        ctx!.stroke();
+                    }
+                    startX = xPos;
+                    startY = yPos;
                 }
-                startX = xPos;
-                startY = yPos;
             }
         }
     }
