@@ -15,7 +15,7 @@ export default function ServiceRequestLists() {
             setSRData(res.data);
         }
         fetch().then();
-    }, []);
+    }, [srData]);
 
     const arraySR = srData.map(({serviceID, name, status, infoText}) =>
         <tr>
@@ -23,6 +23,14 @@ export default function ServiceRequestLists() {
             <td>{name}</td>
             <td>{status}</td>
             <td>{infoText}</td>
+            <button onClick={() => {
+                console.log("DELETE REQUEST " + serviceID);
+                axios.delete("/api/service-request", {
+                    data: {
+                        serviceID: serviceID
+                    }
+                }).then();
+            }}>Delete</button>
         </tr>
     );
 
