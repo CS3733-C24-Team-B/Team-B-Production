@@ -39,8 +39,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + (width/200);
-        const yPosition = e.clientY - rect.top + (height/100);
+        const xPosition = e.clientX - rect.left + (width/160);
+        const yPosition = e.clientY - rect.top + (height/120);
         nodeData.map(({nodeID, xcoord, ycoord}) => {
             const xPos = xcoord * (width / widthRatio);
             const yPos = ycoord * (height / heightRatio);
@@ -57,8 +57,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + (width/200);
-        const yPosition = e.clientY - rect.top + (height/100);
+        const xPosition = e.clientX - rect.left + (width/160);
+        const yPosition = e.clientY - rect.top + (height/120);
         nodeData.map(({xcoord, ycoord, floor}) => {
             if(floor === currLevel) {
                 const xPos = xcoord * (window.innerWidth / widthRatio);
