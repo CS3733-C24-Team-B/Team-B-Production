@@ -8,14 +8,18 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [errorShake, setErrorShake] = useState(false);
 
     const handleLogin = () => {
         if (username === "admin" && password === "admin") {
             navigate("/home");
         } else {
             setErrorMessage("Incorrect username or password. Please try again.");
+            setErrorShake(true); // Triggering the shake animation
+            setTimeout(() => setErrorShake(false), 500); // Resetting the shake animation after 500ms
         }
     };
+
 
     const handleCreateAcc = () => {
         navigate("/createacc");
@@ -47,8 +51,15 @@ export default function LoginPage() {
                     fullWidth
                     sx={{ mb: 2 }}
                     variant="outlined"
+                    className={errorShake ? "shake" : ""} // Applying the shake class conditionally
                 />
-                <Checkbox defaultChecked color="primary" sx={{ mb: 2 }} />
+
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Checkbox defaultChecked color="primary" />
+                    <Typography variant="body2" color="black">
+                        Remember me
+                    </Typography>
+                </Box>
                 <Button variant="contained" onClick={handleLogin} fullWidth>
                     Log In
                 </Button>
