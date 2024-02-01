@@ -12,7 +12,6 @@ import axios from "axios";
 import Canvas from "../components/Canvas.tsx";
 import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
-import SideButtons from "../components/SideButtons.tsx";
 
 interface FloorImages {
     groundfloor: string;
