@@ -13,8 +13,8 @@ export default function CSVEdgeData() {
     const [edgeData, setEdgeData] = useState([]);
   useEffect(() => {
       async function fetch() {
-          const res = await axios.get("/api/db-get-nodes");
-          const res3 = await axios.get("/api/db-get-edges");
+          const res = await axios.get("/api/db-load-nodes");
+          const res3 = await axios.get("/api/db-load-edges");
 
           console.log(res.data);
           setNodeData(res.data);
@@ -65,7 +65,7 @@ export default function CSVEdgeData() {
         console.log("Running Download to DB");
 
         try {
-            const res3 = await axios.get('/api/db-get-edges');
+            const res3 = await axios.get('/api/db-load-edges');
             console.log(res3);
             let headers = ['edgeID, startNodeID, endNodeID'];
             let resCSV = res3.data.reduce((edges: string[], edgeData: { edgeID: string, startNodeID: string, endNodeID: string}) => {
