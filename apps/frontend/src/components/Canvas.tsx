@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios from "axios";
 import "../css/home_page.css";
 
@@ -12,8 +12,8 @@ interface CanvasProps {
 const widthRatio = 5000;
 const heightRatio = 3400;
 const clickDist = 5;
-const minDrawSize = 3;
-const maxDrawSize = 8;
+// const minDrawSize = 3;
+// const maxDrawSize = 8;
 
 const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,13 +29,12 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const [ctx, setCtx] = useState(canvasCtxRef.current);
 
     function getDrawSize() {
-        let drawSize = (widthRatio + heightRatio) / 2500;
-        if(drawSize < minDrawSize) {
-            drawSize = minDrawSize;
-        } else if(drawSize > maxDrawSize) {
-            drawSize = maxDrawSize;
-        }
-        return drawSize;
+        // if(drawSize < minDrawSize) {
+        //     drawSize = minDrawSize;
+        // } else if(drawSize > maxDrawSize) {
+        //     drawSize = maxDrawSize;
+        // }
+        return (width + height) / 800;
     }
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -56,37 +55,45 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         });
     }
 
-    // const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    //     const rect = e.currentTarget.getBoundingClientRect();
-    //     const xPosition = e.clientX - rect.left + 10;
-    //     const yPosition = e.clientY - rect.top;
-    //     nodeData.map(({xcoord, ycoord, floor}) => {
-    //         if(floor === currLevel) {
-    //             const xPos = xcoord * (window.innerWidth / widthRatio);
-    //             const yPos = ycoord * (window.innerHeight / heightRatio);
-    //             if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-    //                 ctx!.beginPath();
-    //                 ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-    //                 ctx!.fillStyle = "green";
-    //                 ctx!.fill();
-    //             } else {
-    //                 ctx!.beginPath();
-    //                 ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-    //                 ctx!.fillStyle = "blue";
-    //                 ctx!.fill();
-    //             }
-    //         }
-    //     });
-    // };
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const xPosition = e.clientX - rect.left + 10;
+        const yPosition = e.clientY - rect.top;
+        nodeData.map(({xcoord, ycoord, floor}) => {
+            if(floor === currLevel) {
+                const xPos = xcoord * (window.innerWidth / widthRatio);
+                const yPos = ycoord * (window.innerHeight / heightRatio);
+                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                    ctx!.beginPath();
+                    ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                    ctx!.fillStyle = "green";
+                    ctx!.fill();
+                } else {
+                    ctx!.beginPath();
+                    ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                    ctx!.fillStyle = "blue";
+                    ctx!.fill();
+                }
+            }
+        });
+    };
 
-    // const handleResize = () => {
-    //     height = window.innerHeight;
-    //     width = window.innerWidth;
-    //     requestAnimationFrame(() => draw());
-    // };
-    //
-    // handleResize();
-    // window.addEventListener("resize", handleResize);
+    const handleResize = () => {
+        if(height != window.innerHeight || width != window.innerWidth) {
+            height = parent.innerHeight;
+            width = parent.innerWidth;
+            console.log("TEST: " + width + " " + parent.innerWidth + " " + ctx?.canvas.width);
+            if(ctx?.canvas != null) {
+                ctx!.canvas.width = width;
+                ctx!.canvas.height = height;
+                requestAnimationFrame(() => draw());
+            }
+        }
+        //requestAnimationFrame(() => draw());
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     useEffect(() => {
         async function fetch() {
@@ -187,7 +194,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         }
     }, []);
 
-    return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick}/>;
+    return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>;
 };
 
 Canvas.defaultProps = {
