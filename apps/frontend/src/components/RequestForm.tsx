@@ -5,6 +5,8 @@ import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
 import axios from "axios"
 import {request} from "common/src/requestType.ts";
+import Navbar from "./Navbar.tsx";
+import SideButtons from "./SideButtons.tsx";
 
 
 export default function LoginPage() {
@@ -40,6 +42,7 @@ export default function LoginPage() {
         <div className="service-form-container">
             <div className="container">
                 <h2>Service Request Form</h2>
+                <Navbar/>
                 <div className="input-field">
                     <input value = {name} onChange={(e) => {setName(e.target.value);}} type="text" required/>
                     <label>Name</label>
@@ -62,8 +65,7 @@ export default function LoginPage() {
                     <button onClick={submit}>Submit Request</button>
                 </div>
             </div>
+            <SideButtons/>
         </div>
     );
 }
-
-

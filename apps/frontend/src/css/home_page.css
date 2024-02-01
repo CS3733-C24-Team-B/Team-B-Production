@@ -30,6 +30,11 @@
     position: relative;
     display: inline-block;
 }
+/*for search*/
+.manual-dropdown {
+     position: relative;
+     display: inline-block;
+ }
 
 /* Dropdown Button */
 .dropbtn {
@@ -68,6 +73,9 @@
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
+    display: block;
+}
+.manual-dropdown:focus-within .dropdown-content {
     display: block;
 }
 

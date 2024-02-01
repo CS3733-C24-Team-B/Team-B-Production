@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios from "axios";
 import "../css/home_page.css";
 
@@ -12,8 +12,8 @@ interface CanvasProps {
 const widthRatio = 5000;
 const heightRatio = 3400;
 const clickDist = 5;
-const minDrawSize = 3;
-const maxDrawSize = 8;
+// const minDrawSize = 3;
+// const maxDrawSize = 8;
 
 const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,25 +29,18 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const [ctx, setCtx] = useState(canvasCtxRef.current);
 
     function getDrawSize() {
-        let drawSize = (widthRatio + heightRatio) / 2500;
-        if(drawSize < minDrawSize) {
-            drawSize = minDrawSize;
-        } else if(drawSize > maxDrawSize) {
-            drawSize = maxDrawSize;
-        }
-        return drawSize;
+        // if(drawSize < minDrawSize) {
+        //     drawSize = minDrawSize;
+        // } else if(drawSize > maxDrawSize) {
+        //     drawSize = maxDrawSize;
+        // }
+        return (width + height) / 800;
     }
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left;
-        const yPosition = e.clientY - rect.top;
-        // coords.forEach((nc) => {
-        //     if(Math.abs(nc.xPos - xPosition) < 10 && Math.abs(nc.yPos - yPosition) < 10) {
-        //         return nc.roomName;
-        //     }
-        // });
-        // console.log(width + " " + height);
+        const xPosition = e.clientX - rect.left + (width/160);
+        const yPosition = e.clientY - rect.top + (height/120);
         nodeData.map(({nodeID, xcoord, ycoord}) => {
             const xPos = xcoord * (width / widthRatio);
             const yPos = ycoord * (height / heightRatio);
@@ -64,8 +57,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left;
-        const yPosition = e.clientY - rect.top;
+        const xPosition = e.clientX - rect.left + (width/160);
+        const yPosition = e.clientY - rect.top + (height/120);
         nodeData.map(({xcoord, ycoord, floor}) => {
             if(floor === currLevel) {
                 const xPos = xcoord * (window.innerWidth / widthRatio);
@@ -86,9 +79,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     };
 
     const handleResize = () => {
-        height = window.innerHeight;
-        width = window.innerWidth;
-        requestAnimationFrame(() => draw());
+        if(height != window.innerHeight || width != window.innerWidth) {
+            height = parent.innerHeight;
+            width = parent.innerWidth;
+            console.log("TEST: " + width + " " + parent.innerWidth + " " + ctx?.canvas.width);
+            if(ctx?.canvas != null) {
+                ctx!.canvas.width = width;
+                ctx!.canvas.height = height;
+                requestAnimationFrame(() => draw());
+            }
+        }
+        //requestAnimationFrame(() => draw());
     };
 
     handleResize();
@@ -135,7 +136,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
         console.log(width + " " + height);
 
-        ctx!.clearRect(0, 0, width, height);
+        ctx!.clearRect(0, 0, width*10, height*10);
 
         ctx?.drawImage(image, 0, 0, width, height);
 
@@ -149,34 +150,42 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         });
 
         const nameToXPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["xcoord"];
         };
 
         const nameToYPos = (name : string) => {
-            return nodeData.find(({nodeID}) =>
-                name === nodeID
+            return nodeData.find(({longName}) =>
+                name === longName
             )!["ycoord"];
+        };
+
+        const nameToFloor = (name : string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["floor"];
         };
 
         if(pathData.length > 1) {
             let startX = -1;
             let startY = -1;
             for (const nr of pathData) {
-                const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
-                const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
-                console.log(nr + " " + xPos + " " + yPos);
-                if (startX != -1 && startY != -1) {
-                    ctx!.beginPath();
-                    ctx?.moveTo(startX, startY);
-                    ctx?.lineTo(xPos, yPos);
-                    ctx!.strokeStyle = "green";
-                    ctx!.lineWidth = getDrawSize();
-                    ctx!.stroke();
+                if(nameToFloor(nr) === currLevel) {
+                    const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
+                    const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+                    console.log(nr + " " + xPos + " " + yPos);
+                    if (startX != -1 && startY != -1) {
+                        ctx!.beginPath();
+                        ctx?.moveTo(startX, startY);
+                        ctx?.lineTo(xPos, yPos);
+                        ctx!.strokeStyle = "green";
+                        ctx!.lineWidth = getDrawSize();
+                        ctx!.stroke();
+                    }
+                    startX = xPos;
+                    startY = yPos;
                 }
-                startX = xPos;
-                startY = yPos;
             }
         }
     }

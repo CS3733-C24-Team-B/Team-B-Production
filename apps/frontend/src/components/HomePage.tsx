@@ -11,6 +11,8 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "./Canvas.tsx";
 import PathHandler from "./PathHandler.tsx";
+import Navbar from "./Navbar.tsx";
+import SideButtons from "./SideButtons.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -66,18 +68,11 @@ export default function HomePage() {
         thirdfloor,
     };
 
-    function myFunction() {
-        const dropdown = document.getElementById("myDropdown");
-        if (dropdown) {
-            dropdown.classList.toggle("show");
-        }
-    }
-
     function filterFunction() {
         let input: HTMLInputElement | null = document.getElementById("myInput") as HTMLInputElement;
         let div: HTMLElement | null = document.getElementById("myDropdown");
 
-        let visibleCount = 0;
+        let visibleCount = 5;
 
         if (input && div) {
             let filter = input.value.toUpperCase();
@@ -85,11 +80,12 @@ export default function HomePage() {
 
             for (let i = 0; i < a.length; i++) {
                 let txtValue = a[i].textContent || a[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    if (visibleCount < 5) { // Change 5 to your desired limit
+
+                if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
+                    if (visibleCount > 0) { // Change 5 to your desired limit
                         a[i].style.display = "";
-                        visibleCount++;
-                    }else
+                        visibleCount--;
+                    } else
                         a[i].style.display = "none";
                 } else {
                     a[i].style.display = "none";
@@ -104,27 +100,11 @@ export default function HomePage() {
             <header className="App-header">
                 <div className="title">Navigation Page</div>
                 <div className="logo">
-                    <img src={logo} alt="Hospital Logo" />
+                    <img src={logo} alt="Hospital Logo"/>
                 </div>
             </header>
             <div className="navbar">
-                <div className="navbar-butn">
-                    <a href="/home">Home</a>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">CSV Data</button>
-                    <div className="dropdown-content">
-                        <a href="/csvnodedata">Node Data</a>
-                        <a href="/csvedgedata">Edge Data</a>
-                    </div>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">Admin Options</button>
-                    <div className="dropdown-content">
-                        <a href="/requestForm">Service Request Form</a>
-                        <a href="/servicerequestlist">List of Service Requests</a>
-                    </div>
-                </div>
+                <Navbar/>
                 <div className="dropdown">
                     <button className="dropbtn">Floor</button>
                     <div className="dropdown-content">
@@ -149,24 +129,14 @@ export default function HomePage() {
                         </a>
                     </div>
                 </div>
-                <div className="dropdown">
-                    <button className="dropbtn">Profile</button>
-                    <div className="dropdown-content">
-                        <a href="/home">View Profile</a>
-                        <link
-                            rel="stylesheet"
-                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-                        />
-                        <a href="/settings">
-                            <div className="fa fa-gear fa-spin"></div>
-                            Settings
-                        </a>
-                        <a href="/">Log Out</a>
-                    </div>
-                </div>
-                <div className="dropdown">
-                    <input onClick={myFunction} onKeyUp={filterFunction} type="text" placeholder="Search.."
-                           id="myInput"/>
+                <div className="manual-dropdown">
+                    <input
+                        onClick={filterFunction}
+                        onKeyUp={filterFunction}
+                        type="text"
+                        placeholder="Search.."
+                        id="myInput"
+                    />
                     <div id="myDropdown" className="dropdown-content">
                         {arrayNode}
                     </div>
@@ -181,6 +151,7 @@ export default function HomePage() {
             </div>
         </div>
         <PathHandler/>
+        <SideButtons/>
         </body>
     );
 }
