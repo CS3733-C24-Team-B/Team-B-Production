@@ -36,6 +36,7 @@ model Edge {
 model ServiceRequest {
   serviceID   Int         @id @default(autoincrement())
   timeCreated DateTime    @default(now())
+  name        String
   roomNumber  Int
   infoText    String
   requester   String

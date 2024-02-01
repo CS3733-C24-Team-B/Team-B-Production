@@ -1,63 +1,46 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import "../index.css";
+/* eslint-disable */
+import React, {useState} from "react";
+import {Outlet} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import "../css/serviceform_page.css";
+
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const [reqName, setReqName] = useState("");
-    const [room, setRoom] = useState("");
-    const [addInfo, setAddInfo] = useState("");
+    const [roomNumber, setRoomNumber] = useState("");
 
     function homePage() {
         navigate("/home");
     }
 
     return (
-        <div className="App">
-            <body className="body">
-            <header className="App-header">Service Request Form</header>
-            <br />
-            <form>
-                <label htmlFor="reqName">Name of Requester:</label>
-                <br/>
-                <input
-                    type="text"
-                    id="reqName"
-                    name="reqName"
-                    value={reqName}
-                    onChange={(e) => setReqName(e.target.value)}
-                />
-                <br/>
-                <label htmlFor="password">Room:</label>
-                <br/>
-                <input
-                    type="text"
-                    id="room"
-                    name="room"
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
-                />
-                <br/>
-                <label htmlFor="addInfo">Additional Info (optional):</label>
-                <br/>
-                <textarea
-                    id="addInfo"
-                    name="addInfo"
-                    value={addInfo}
-                    onChange={(e) => setAddInfo(e.target.value)}
-                />
-                <div className="login-butn">
-                    <input
-                        type="button"
-                        value="Submit Form"
-                        name="submit"
-                        onClick={homePage}
-                    />
-                </div>
-            </form>
-            <Outlet/>
-            </body>
+        <div className="service-form-container">
+            <div className="container">
+                <form action="/api/service-request" method="POST">
+                    <h2>Service Request Form</h2>
+                    <div className="input-field">
+                        <input type="text" required/>
+                        <label>Name</label>
+                    </div>
+                    <div className="input-field">
+                        <input
+                            type="number"
+                            value={roomNumber}
+                            onChange={(e) => setRoomNumber(e.target.value)}
+                            required
+                        />
+                        <label>Room Number</label>
+                    </div>
+                    <div className="input-field">
+                        <input type="text" required/>
+                        <label>Enter request</label>
+                    </div>
+                    <br/>
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
         </div>
     );
 }
+
+

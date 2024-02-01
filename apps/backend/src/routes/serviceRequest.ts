@@ -20,6 +20,7 @@ router.post('/', async function (req: Request, res: Response){
     const serviceInfo = req.body;
     await client.serviceRequest.create({
         data: {
+            name: serviceInfo.name,
             roomNumber: parseInt(serviceInfo.roomNumber),
             infoText: serviceInfo.infoText,
             requester: "admin",
