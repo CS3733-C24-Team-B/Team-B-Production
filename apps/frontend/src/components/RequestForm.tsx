@@ -8,6 +8,7 @@ import {request} from "common/src/requestType.ts";
 
 
 export default function LoginPage() {
+    const navigate = useNavigate();
     const [name, setName] = useState("");
     const [roomNumber, setRoomNumber] = useState("");
     const [infoText, setInfoText] = useState("")
@@ -26,6 +27,7 @@ export default function LoginPage() {
         if(res.status == 200) {
             console.log("success");
         }
+        navigate("/home");
     }
 
     function clear() {

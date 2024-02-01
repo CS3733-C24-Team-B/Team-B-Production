@@ -1,11 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
+import axios from "axios";
 
 export default function ServiceRequestLists() {
     const navigate = useNavigate();
+    const [srData, setSRData] = useState([]);
+    useEffect(() => {
+        async function fetch() {
+            const res = await axios.get("/api/service-request");
+
+            setSRData(res.data);
+        }
+        fetch().then();
+    }, []);
+
+    const arraySR = srData.map(({serviceID, name, status, infoText}) =>
+        <tr>
+            <td>{serviceID}</td>
+            <td>{name}</td>
+            <td>{status}</td>
+            <td>{infoText}</td>
+        </tr>
+    );
 
     function handleClick() {
         navigate("/home");
@@ -23,6 +42,7 @@ export default function ServiceRequestLists() {
                     <th>Status</th>
                     <th>Request Notes</th>
                 </tr>
+                {arraySR}
             </table>
             <br/>
             <br/>
