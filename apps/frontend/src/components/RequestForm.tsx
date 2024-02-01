@@ -3,41 +3,62 @@ import React, {useState} from "react";
 import {Outlet} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
+import axios from "axios"
+import {request} from "common/src/requestType.ts";
 
 
 export default function LoginPage() {
-    const navigate = useNavigate();
+    const [name, setName] = useState("");
     const [roomNumber, setRoomNumber] = useState("");
+    const [infoText, setInfoText] = useState("")
 
-    function homePage() {
-        navigate("/home");
+    async function submit(){
+        const requestSent:request = {
+            name: name,
+            roomNumber: parseInt(roomNumber),
+            infoText: infoText
+        }
+        const res = await axios.post("/api/service-request", requestSent,{
+            headers: {
+                "Content-Type":"application/json"
+            }
+        });
+        if(res.status == 200) {
+            console.log("success");
+        }
+    }
+
+    function clear() {
+        setName("");
+        setRoomNumber("");
+        setInfoText("");
     }
 
     return (
         <div className="service-form-container">
             <div className="container">
-                <form action="/api/service-request" method="POST">
-                    <h2>Service Request Form</h2>
-                    <div className="input-field">
-                        <input type="text" required/>
-                        <label>Name</label>
-                    </div>
-                    <div className="input-field">
-                        <input
-                            type="number"
-                            value={roomNumber}
-                            onChange={(e) => setRoomNumber(e.target.value)}
-                            required
-                        />
-                        <label>Room Number</label>
-                    </div>
-                    <div className="input-field">
-                        <input type="text" required/>
-                        <label>Enter request</label>
-                    </div>
-                    <br/>
-                    <button type="submit">Submit Request</button>
-                </form>
+                <h2>Service Request Form</h2>
+                <div className="input-field">
+                    <input value = {name} onChange={(e) => {setName(e.target.value);}} type="text" required/>
+                    <label>Name</label>
+                </div>
+                <div className="input-field">
+                    <input
+                        type="number"
+                        value={roomNumber}
+                        onChange={(e) => setRoomNumber(e.target.value)}
+                        required
+                    />
+                    <label>Room Number</label>
+                </div>
+                <div className="input-field">
+                    <input type="text" value = {infoText} onChange={(e => {setInfoText(e.target.value);})} required/>
+                    <label>Enter request</label>
+                </div>
+                <br/>
+                <div>
+                    <button onClick={submit}>Submit Request</button>
+                </div>
             </div>
         </div>
     );

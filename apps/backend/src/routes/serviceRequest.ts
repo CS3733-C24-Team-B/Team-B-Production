@@ -1,6 +1,7 @@
 import express, {Router, Request, Response} from "express";
 import {ServiceRequest} from "database";
 import client from "../bin/database-connection.ts";
+import {request} from "common/src/requestType.ts";
 
 const router: Router = express.Router();
 
@@ -17,11 +18,11 @@ router.get('/', async function (req: Request, res: Response) {
 });
 
 router.post('/', async function (req: Request, res: Response){
-    const serviceInfo = req.body;
+    const serviceInfo:request = req.body;
     await client.serviceRequest.create({
         data: {
             name: serviceInfo.name,
-            roomNumber: parseInt(serviceInfo.roomNumber),
+            roomNumber: serviceInfo.roomNumber,
             infoText: serviceInfo.infoText,
             requester: "admin",
             receiver: "admin",
