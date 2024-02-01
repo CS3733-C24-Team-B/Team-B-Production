@@ -32,3 +32,9 @@ model Edge {
   endNode     Node        @relation("EndNode", fields: [endNodeID], references: [nodeID])
   endNodeID   String
 }
+
+model ServiceRequest {
+  serviceID   Int         @id @default(autoincrement())
+  roomNumber  Int
+  infoText    String
+}
