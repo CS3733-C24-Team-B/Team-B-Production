@@ -20,8 +20,7 @@ router.get("/", async function (req: Request, res: Response) {
     }
 
     console.info("Successfully exported edge data into CSV format.");
-
-    res.send(Buffer.from(csvString, 'utf8'));
+    res.send(new Blob([csvString], {type: 'text/csv'}));
     console.info("Successfully sent edge CSV string to frontend.");
 
 });

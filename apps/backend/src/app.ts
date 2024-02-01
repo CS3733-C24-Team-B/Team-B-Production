@@ -9,6 +9,7 @@ import pathRouter from "./routes/get_path.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import csvRouter from "./routes/upload_csv.ts";
+import router from "./routes/serviceRequest.ts";
 
 const app: Express = express(); // Setup the backend
 
@@ -34,6 +35,7 @@ app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/db-upload", csvRouter);
+app.use("/api/service-request", router);
 
 /**
  * Catch all 404 errors, and forward them to the error handler
