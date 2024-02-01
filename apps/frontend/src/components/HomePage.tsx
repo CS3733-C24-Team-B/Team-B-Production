@@ -11,6 +11,7 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "./Canvas.tsx";
 import PathHandler from "./PathHandler.tsx";
+import Navbar from "./Navbar.tsx";
 import SideButtons from "./SideButtons.tsx";
 
 interface FloorImages {
@@ -84,7 +85,7 @@ export default function HomePage() {
                     if (visibleCount > 0) { // Change 5 to your desired limit
                         a[i].style.display = "";
                         visibleCount--;
-                    }else
+                    } else
                         a[i].style.display = "none";
                 } else {
                     a[i].style.display = "none";
@@ -99,27 +100,11 @@ export default function HomePage() {
             <header className="App-header">
                 <div className="title">Navigation Page</div>
                 <div className="logo">
-                    <img src={logo} alt="Hospital Logo" />
+                    <img src={logo} alt="Hospital Logo"/>
                 </div>
             </header>
             <div className="navbar">
-                <div className="navbar-butn">
-                    <a href="/home">Home</a>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">CSV Data</button>
-                    <div className="dropdown-content">
-                        <a href="/csvnodedata">Node Data</a>
-                        <a href="/csvedgedata">Edge Data</a>
-                    </div>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">Admin Options</button>
-                    <div className="dropdown-content">
-                        <a href="/requestForm">Service Request Form</a>
-                        <a href="/servicerequestlist">List of Service Requests</a>
-                    </div>
-                </div>
+                <Navbar/>
                 <div className="dropdown">
                     <button className="dropbtn">Floor</button>
                     <div className="dropdown-content">
@@ -142,21 +127,6 @@ export default function HomePage() {
                         <a onClick={() => handleFloorChange("thirdfloor", "L6")}>
                             Third Floor
                         </a>
-                    </div>
-                </div>
-                <div className="dropdown">
-                    <button className="dropbtn">Profile</button>
-                    <div className="dropdown-content">
-                        <a href="/home">View Profile</a>
-                        <link
-                            rel="stylesheet"
-                            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-                        />
-                        <a href="/settings">
-                            <div className="fa fa-gear fa-spin"></div>
-                            Settings
-                        </a>
-                        <a href="/">Log Out</a>
                     </div>
                 </div>
                 <div className="manual-dropdown">

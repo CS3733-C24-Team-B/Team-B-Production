@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../index.css";
+import Navbar from "./Navbar.tsx";
 import SideButtons from "./SideButtons.tsx";
 
 export default function Settings() {
@@ -15,6 +16,7 @@ export default function Settings() {
   return (
     <div className="App">
       <header className="App-header">Settings</header>
+        <Navbar/>
       <br />
       <form>
         <label htmlFor="email">Change Email:</label>

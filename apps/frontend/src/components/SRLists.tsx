@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
+import Navbar from "./Navbar.tsx";
 import SideButtons from "./SideButtons.tsx";
 
 export default function ServiceRequestLists() {
@@ -15,6 +16,7 @@ export default function ServiceRequestLists() {
     return (
         <div className="App">
             <header className="App-header">Service Request Lists</header>
+            <Navbar/>
             <br/>
             <h3 className={"csv table"}> Active Service Requests </h3>
             <table className={"tables"}>

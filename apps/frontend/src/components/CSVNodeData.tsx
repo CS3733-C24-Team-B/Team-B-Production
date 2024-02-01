@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
+import Navbar from "./Navbar.tsx";
 import SideButtons from "./SideButtons.tsx";
 
 export default function CSVData() {
@@ -83,6 +84,7 @@ export default function CSVData() {
     return (
         <div className="App">
             <header className="App-header">CSV Data</header>
+            <Navbar/>
             <br/>
             <div>
                 <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
