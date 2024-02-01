@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
+import Navbar from "./Navbar.tsx";
+import SideButtons from "./SideButtons.tsx";
 
 export default function ServiceRequestLists() {
     const navigate = useNavigate();
@@ -14,24 +16,22 @@ export default function ServiceRequestLists() {
     return (
         <div className="App">
             <header className="App-header">Service Request Lists</header>
-            <br />
-            <form>
-                <label htmlFor="email">Change Email:</label>
-                <br />
-                <input type="email" id="email" name="email" />
-                <br />
-                <label htmlFor="password">Change Password:</label>
-                <br />
-                <input type="password" id="password" name="password" />
-                <br />
-                <label htmlFor="password">Retype Password:</label>
-                <br />
-                <input type="password" id="password" name="password" />
-                <br />
-                <br />
-                <input type="button" value="Return to Home" onClick={handleClick} />
-            </form>
-            <Outlet />
+            <Navbar/>
+            <br/>
+            <h3 className={"csv table"}> Active Service Requests </h3>
+            <table className={"tables"}>
+                <tr>
+                    <th>Request</th>
+                    <th>UserName</th>
+                    <th>Status</th>
+                    <th>Request Notes</th>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <input type="button" value="Return to Home" onClick={handleClick}/>
+            <Outlet/>
+            <SideButtons/>
         </div>
     );
 }

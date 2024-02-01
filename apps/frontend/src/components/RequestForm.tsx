@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
+import Navbar from "./Navbar.tsx";
+import SideButtons from "./SideButtons.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -15,9 +17,9 @@ export default function LoginPage() {
 
     return (
         <div className="App">
-            <body className="body">
             <header className="App-header">Service Request Form</header>
-            <br />
+            <Navbar/>
+            <br/>
             <form>
                 <label htmlFor="reqName">Name of Requester:</label>
                 <br/>
@@ -57,7 +59,7 @@ export default function LoginPage() {
                 </div>
             </form>
             <Outlet/>
-            </body>
+            <SideButtons/>
         </div>
     );
 }
