@@ -1,8 +1,6 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-//import ExampleRoute from "./routes/ExampleRoute.tsx";
+import React, { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { Box, Button, Checkbox, TextField, Typography, } from "@mui/material";
 import "../css/login_page.css";
 
 export default function LoginPage() {
@@ -10,79 +8,77 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [bodyHeight, setBodyHeight] = useState("300px"); // Set the default height here
+    const [errorShake, setErrorShake] = useState(false);
 
-    function homePage() {
-        if (username === 'admin' && password === 'admin') {
-            // Successful login
+    const handleLogin = () => {
+        if (username === "admin" && password === "admin") {
             navigate("/home");
         } else {
-            setErrorMessage('Incorrect username or password. Please try again.');
-            setBodyHeight("400px"); // Update the body height when an error message is added
+            setErrorMessage("Incorrect username or password. Please try again.");
+            setErrorShake(true); // Triggering the shake animation
+            setTimeout(() => setErrorShake(false), 500); // Resetting the shake animation after 500ms
         }
-    }
+    };
 
-  function createAcc() {
-    navigate("/createacc");
-  }
 
-  function forgotPass() {
-    navigate("/forgotpass");
-  }
+    const handleCreateAcc = () => {
+        navigate("/createacc");
+    };
+
+    const handleForgotPass = () => {
+        navigate("/forgotpass");
+    };
 
     return (
-        <div className="App">
-            <body className="body" style={{ maxHeight: bodyHeight, height: '100vh' }}>
-            <header className="App-header">Login</header>
-            <br />
-            <form>
-                <label htmlFor="username">Username:</label>
-                <br />
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
+        <Box className="App">
+            <Box className="login-box">
+                <Typography variant="h4" color="#115293" gutterBottom>
+                    Login
+                </Typography>
+                <TextField
+                    label="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                    variant="outlined"
                 />
-                <br />
-                <label htmlFor="password">Password:</label>
-                <br />
-                <input
+                <TextField
+                    label="Password"
                     type="password"
-                    id="password"
-                    name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                    variant="outlined"
+                    className={errorShake ? "shake" : ""} // Applying the shake class conditionally
                 />
-                <br />
-                <label className="Small-label" htmlFor="remember">
-                    Remember me:
-                </label>
-                <input type="checkbox" id="remember" name="remember" />
-                <br />
-                <div className="login-butn">
-                    <input
-                        type="button"
-                        value="Log In"
-                        name="login"
-                        onClick={homePage}
-                    />
-                    <p style={{ color: "red" }}>{errorMessage}</p>
-                </div>
-                <br />
-                <div className="create-butn">
-                    <input
-                        type="button"
-                        value="Forgot Password?"
-                        onClick={forgotPass}
-                    />
-                    <br />
-                    <input type="button" value="Create Account" onClick={createAcc} />
-                </div>
-            </form>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <Checkbox defaultChecked color="primary" />
+                    <Typography variant="body2" color="black">
+                        Remember me
+                    </Typography>
+                </Box>
+                <Button variant="contained" onClick={handleLogin} fullWidth>
+                    Log In
+                </Button>
+                {errorMessage && (
+                    <Typography key="error-message" variant="body2" color="error" sx={{ mt: 2 }}>
+                        {errorMessage}
+                    </Typography>
+                )}
+                <Box sx={{ mt: 2 }}>
+                    <Button variant="text" onClick={handleForgotPass} sx={{ mr: 1 }}>
+                        Forgot Password?
+                    </Button>
+                    <Button variant="text" onClick={handleCreateAcc}>
+                        Create Account
+                    </Button>
+                </Box>
+            </Box>
             <Outlet />
-            </body>
-        </div>
+        </Box>
     );
 }
+

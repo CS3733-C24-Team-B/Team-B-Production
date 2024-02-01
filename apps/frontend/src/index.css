@@ -45,9 +45,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("images/hpphoto.jpeg");
+  background-image: url("images/LoginBackground.jpg");
   background-size: cover;
-  opacity: 0.2;
+  opacity: 100;
   z-index: -1;
 }
 

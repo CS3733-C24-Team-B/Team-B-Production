@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Outlet} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
@@ -25,9 +25,12 @@ interface FloorImages {
 
 export default function HomePage() {
     // State to keep track of the selected floor
-    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>("lowerlevel1");
+    const [selectedFloor, setSelectedFloor] = useState<keyof FloorImages>(
+        "lowerlevel1"
+    );
     const [selectedLevel, setSelectedLevel] = useState("L1");
     const [nodeData, setNodeData] = useState([]);
+
     useEffect(() => {
         async function fetch() {
             try {
@@ -45,17 +48,46 @@ export default function HomePage() {
         fetch().then();
     }, []);
 
-    const arrayNode = nodeData.map(({longName}) =>
-        <a href="/home">
-            {longName}
-        </a>
-    );
-
     // Function to handle floor selection change
-    const handleFloorChange = (floor: keyof FloorImages, level: string) => {
+    const handleFloorChange = (
+        floor: keyof FloorImages,
+        level: string
+    ) => {
         setSelectedFloor(floor);
         setSelectedLevel(level);
         console.log(selectedLevel);
+    };
+
+    // Filter function
+    const filterFunction = () => {
+        let input: HTMLInputElement | null = document.getElementById(
+            "myInput"
+        ) as HTMLInputElement;
+        let div: HTMLElement | null = document.getElementById(
+            "myDropdown"
+        );
+
+        let visibleCount = 5;
+
+        if (input && div) {
+            let filter = input.value.toUpperCase();
+            let a = div.getElementsByTagName("a");
+
+            for (let i = 0; i < a.length; i++) {
+                let txtValue = a[i].textContent || a[i].innerText;
+
+                if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
+                    if (visibleCount > 0) {
+                        a[i].style.display = "";
+                        visibleCount--;
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
     };
 
     // Mapping of floor names to their corresponding images
@@ -68,90 +100,46 @@ export default function HomePage() {
         thirdfloor,
     };
 
-    function filterFunction() {
-        let input: HTMLInputElement | null = document.getElementById("myInput") as HTMLInputElement;
-        let div: HTMLElement | null = document.getElementById("myDropdown");
-
-        let visibleCount = 5;
-
-        if (input && div) {
-            let filter = input.value.toUpperCase();
-            let a = div.getElementsByTagName("a");
-
-            for (let i = 0; i < a.length; i++) {
-                let txtValue = a[i].textContent || a[i].innerText;
-
-                if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
-                    if (visibleCount > 0) { // Change 5 to your desired limit
-                        a[i].style.display = "";
-                        visibleCount--;
-                    } else
-                        a[i].style.display = "none";
-                } else {
-                    a[i].style.display = "none";
-                }
-            }
-        }
-    }
-
     return (
         <body>
         <div className="App">
             <header className="App-header">
                 <div className="title">Navigation Page</div>
                 <div className="logo">
-                    <img src={logo} alt="Hospital Logo"/>
+                    <img src={logo} alt="Hospital Logo" />
                 </div>
             </header>
-            <div className="navbar">
-                <Navbar/>
-                <div className="dropdown">
-                    <button className="dropbtn">Floor</button>
-                    <div className="dropdown-content">
-                        {/* Dropdown options for selecting the floor */}
-                        <a onClick={() => handleFloorChange("lowerlevel1", "L1")}>
-                            Lower Level 1
+            <Navbar
+                handleFloorChange={handleFloorChange}
+                filterFunction={filterFunction} // Pass the filterFunction prop
+                selectedFloor={selectedFloor}
+            />
+            <div className="manual-dropdown">
+                <input
+                    onClick={filterFunction}
+                    onKeyUp={filterFunction}
+                    type="text"
+                    placeholder="Search.."
+                    id="myInput"
+                />
+                <div id="myDropdown" className="dropdown-content">
+                    {nodeData.map(({ longName }, index) => (
+                        <a href="/home" key={index}>
+                            {longName}
                         </a>
-                        <a onClick={() => handleFloorChange("lowerlevel2", "L2")}>
-                            Lower Level 2
-                        </a>
-                        <a onClick={() => handleFloorChange("groundfloor", "L3")}>
-                            Ground Floor
-                        </a>
-                        <a onClick={() => handleFloorChange("firstfloor", "L4")}>
-                            First Floor
-                        </a>
-                        <a onClick={() => handleFloorChange("secondfloor", "L5")}>
-                            Second Floor
-                        </a>
-                        <a onClick={() => handleFloorChange("thirdfloor", "L6")}>
-                            Third Floor
-                        </a>
-                    </div>
+                    ))}
                 </div>
-                <div className="manual-dropdown">
-                    <input
-                        onClick={filterFunction}
-                        onKeyUp={filterFunction}
-                        type="text"
-                        placeholder="Search.."
-                        id="myInput"
-                    />
-                    <div id="myDropdown" className="dropdown-content">
-                        {arrayNode}
-                    </div>
-                </div>
-                {/*<img src={floorImages[selectedFloor]}/>*/}
-
-                <div id="map-container">
-                    <Canvas imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>
-                </div>
-
-                <Outlet/>
             </div>
+            <div id="map-container">
+                <Canvas
+                    imageSource={floorImages[selectedFloor]}
+                    currLevel={selectedLevel}
+                />
+            </div>
+            <Outlet />
+            <PathHandler />
         </div>
-        <PathHandler/>
-        <SideButtons/>
         </body>
     );
 }
+
