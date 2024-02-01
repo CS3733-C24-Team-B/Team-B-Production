@@ -4,8 +4,8 @@ import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
-import Navbar from "./Navbar.tsx";
-import SideButtons from "./SideButtons.tsx";
+import Navbar from "../components/Navbar.tsx";
+import SideButtons from "../components/SideButtons.tsx";
 
 export default function CSVData() {
   //const nodes : MapNode[] = createNodeList();

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
-import Navbar from "./Navbar.tsx";
-import SideButtons from "./SideButtons.tsx";
+import Navbar from "../components/Navbar.tsx";
+import SideButtons from "../components/SideButtons.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();

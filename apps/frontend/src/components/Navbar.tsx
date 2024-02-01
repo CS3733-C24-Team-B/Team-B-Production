@@ -18,8 +18,8 @@ const Navbar: React.FC = () => {
                 <div className="dropdown">
                     <button className="dropbtn">Admin Options</button>
                     <div className="dropdown-content">
-                        <a href="/requestForm">Service Request Form</a>
-                        <a href="/servicerequestlist">List of Service Requests</a>
+                        <a href="/requestform">Service Request Form</a>
+                        <a href="/requestlist">List of Service Requests</a>
                     </div>
                 </div>
                 <div className="dropdown">

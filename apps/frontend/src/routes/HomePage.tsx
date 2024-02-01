@@ -9,10 +9,10 @@ import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
-import Canvas from "./Canvas.tsx";
-import PathHandler from "./PathHandler.tsx";
-import Navbar from "./Navbar.tsx";
-import SideButtons from "./SideButtons.tsx";
+import Canvas from "../components/Canvas.tsx";
+import PathHandler from "../components/PathHandler.tsx";
+import Navbar from "../components/Navbar.tsx";
+import SideButtons from "../components/SideButtons.tsx";
 
 interface FloorImages {
     groundfloor: string;

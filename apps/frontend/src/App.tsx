@@ -1,15 +1,15 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import LoginPage from "./components/LoginPage.tsx";
+import LoginPage from "./routes/LoginPage.tsx";
 import "./index.css";
-import HomePage from "./components/HomePage.tsx";
-import CreateAccount from "./components/CreateAccount.tsx";
-import ForgotPassword from "./components/ForgotPassword.tsx";
-import Settings from "./components/Settings.tsx";
-import CSVNodeData from "./components/CSVNodeData.tsx";
-import CSVEdgeData from "./components/CSVEdgeData.tsx";
-import SRList from "./components/SRLists.tsx";
-import RequestForm from "./components/RequestForm.tsx";
+import HomePage from "./routes/HomePage.tsx";
+import CreateAccount from "./routes/CreateAccount.tsx";
+import ForgotPassword from "./routes/ForgotPassword.tsx";
+import Settings from "./routes/Settings.tsx";
+import CSVNodeData from "./routes/CSVNodeData.tsx";
+import CSVEdgeData from "./routes/CSVEdgeData.tsx";
+import RequestList from "./routes/RequestList.tsx";
+import RequestForm from "./routes/RequestForm.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -49,14 +49,14 @@ function App() {
             element: <CSVEdgeData/>,
         },
         {
-            path: "/requestForm",
+            path: "/requestform",
             errorElement: <div />,
             element: <RequestForm />,
         },
         {
-            path: "/servicerequestlist",
+            path: "/requestlist",
             errorElement: <div/>,
-            element: <SRList/>,
+            element: <RequestList/>,
         },
     ]);
 
