@@ -21,6 +21,7 @@ export default function LoginPage() {
             roomNumber: parseInt(roomNumber),
             infoText: infoText
         }
+        console.log(requestSent);
         const res = await axios.post("/api/service-request", requestSent,{
             headers: {
                 "Content-Type":"application/json"
@@ -29,7 +30,7 @@ export default function LoginPage() {
         if(res.status == 200) {
             console.log("success");
         }
-        navigate("/home");
+        navigate("/servicerequestlist");
     }
 
     function clear() {
@@ -42,7 +43,6 @@ export default function LoginPage() {
         <div className="service-form-container">
             <div className="container">
                 <h2>Service Request Form</h2>
-                <Navbar/>
                 <div className="input-field">
                     <input value = {name} onChange={(e) => {setName(e.target.value);}} type="text" required/>
                     <label>Name</label>

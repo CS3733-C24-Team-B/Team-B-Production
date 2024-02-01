@@ -10,6 +10,7 @@ import SideButtons from "./SideButtons.tsx";
 export default function ServiceRequestLists() {
     const navigate = useNavigate();
     const [srData, setSRData] = useState([]);
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/service-request");
@@ -17,7 +18,7 @@ export default function ServiceRequestLists() {
             setSRData(res.data);
         }
         fetch().then();
-    }, [srData]);
+    }, [refresh]);
 
     const arraySR = srData.map(({serviceID, name, status, infoText}) =>
         <tr>
@@ -32,6 +33,7 @@ export default function ServiceRequestLists() {
                         serviceID: serviceID
                     }
                 }).then();
+                setRefresh(!refresh);
             }}>Delete</button>
         </tr>
     );
