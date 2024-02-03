@@ -1,11 +1,11 @@
 import express, {Router, Request, Response} from "express";
 import client from "../bin/database-connection.ts";
-import {pathFindBFS} from "../utilities/algorithm.ts";
+import {pathfindAStar} from "../utilities/algorithm.ts";
 
 const router: Router = express.Router();
 router.get("/:startNode/:endNode/", async function (req: Request, res: Response) {
    let nodes  =[] ;
-    let path  =pathFindBFS(req.params.startNode, req.params.endNode)?.map(obj => obj);
+    let path  =pathfindAStar(req.params.startNode, req.params.endNode)?.map(obj => obj);
     path=path!.slice().reverse();
     while ((path as string[]).length>0){
        const node_data  = await client.node.findUnique({where: {nodeID: (path as string[]).pop()}});
