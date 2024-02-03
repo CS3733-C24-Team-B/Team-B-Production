@@ -218,3 +218,15 @@ canvas {
     color: white;
     font-family: Dubai;
 }
+
+.logo {
+    width: 20%;
+    height: auto;
+    margin-top: 1%;
+}
+
+.content {
+    margin-left: 240px; /* Adjust based on your drawer width */
+    padding: 20px;
+}
+
