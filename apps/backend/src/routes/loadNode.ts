@@ -8,7 +8,7 @@ const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
 router.get("/", async function (req: Request, res: Response) {
 
-    const node_data = await client.node.findMany();
+    const node_data: Node[] = await client.node.findMany();
     if (node_data === null) {
         console.error("No node data found in database");
         res.sendStatus(204);    // no data
