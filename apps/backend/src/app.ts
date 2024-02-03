@@ -6,8 +6,8 @@ import pathRouter from "./routes/getPath.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
-import serviceAssignmentRouter from "./routes/serviceRequestAssignment.ts"
-import serviceStatusRouter from "./routes/serviceRequestStatus.ts"
+import serviceAssignmentRouter from "./routes/serviceRequestAssignment.ts";
+import serviceStatusRouter from "./routes/serviceRequestStatus.ts";
 
 const app: Express = express(); // Setup the backend
 
