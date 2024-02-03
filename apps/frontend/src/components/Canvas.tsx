@@ -110,8 +110,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             catch{
                 console.log("post error");
             }
-            const res = await axios.get("/api/db-get-nodes");
-            const res3 = await axios.get("/api/db-get-edges");
+            const res = await axios.get("/api/db-load-nodes");
+            const res3 = await axios.get("/api/db-load-edges");
 
             console.log(res.data);
             console.log(res3.data);
