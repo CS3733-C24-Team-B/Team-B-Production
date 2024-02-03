@@ -4,7 +4,7 @@ import {Outlet} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
 import axios from "axios"
-import {request} from "common/src/requestType.ts";
+import {request} from "common/src/serviceRequestTypes.ts";
 import Navbar from "./Navbar.tsx";
 import SideButtons from "./SideButtons.tsx";
 
