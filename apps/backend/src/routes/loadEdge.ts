@@ -8,15 +8,20 @@ const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
 router.get("/", async function (req: Request, res: Response) {
 
-    const edge_data = await client.edge.findMany();
-    if (edge_data === null) {
-        console.error("No edge data found in database");
-        res.sendStatus(204);    // no data
+    // create a place to store CSV data
+    let csvString: string = "edgeID,startNode,endNode\n";
+
+    // get all edges from database
+    const edges: Edge[] = await client.edge.findMany();
+
+    for (let i: number = 0; i < edges.length; i++) {
+        const edge: Edge = edges[i];
+        csvString += edge.edgeID + "," + edge.startNodeID + "," + edge.endNodeID + "\n";
     }
-    else {
-        res.send(JSON.stringify(edge_data));
-        console.info("Successfully sent " + edge_data.length + " edges to frontend");
-    }
+
+    console.info("Successfully exported edge data into CSV format.");
+    res.send(new Blob([csvString], {type: 'text/csv'}));
+    console.info("Successfully sent edge CSV string to frontend.");
 
 });
 
