@@ -12,7 +12,7 @@ export default function CSVData() {
     const [nodeData, setNodeData] = useState([]);
   useEffect(() => {
       async function fetch() {
-          const res = await axios.get("/api/db-get-nodes");
+          const res = await axios.get("/api/db-load-nodes");
           console.log(res.data);
           setNodeData(res.data);
       }
@@ -55,7 +55,7 @@ export default function CSVData() {
         console.log("Running Download to DB");
 
         try {
-            const res3 = await axios.get('/api/db-get-nodes');
+            const res3 = await axios.get('/api/db-load-nodes');
             console.log(res3);
             let headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
             let resCSV = res3.data.reduce((roomNode: string[], roomData: { nodeID: string; xcoord: number; ycoord: number; floor: string; building: string; nodeType: string; longName: string; shortName: string; }) => {
