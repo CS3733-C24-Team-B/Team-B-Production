@@ -186,7 +186,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             edgeData.map(({startNodeID, endNodeID}) => {
                 const startName = nodeIDtoName(startNodeID);
                 const endName = nodeIDtoName(endNodeID);
-                if(nameToFloor(startName) === currLevel) {
+                if(nameToFloor(startName) === currLevel && nameToFloor(endName) === currLevel) {
                     const startX = nameToXPos(startName) * (width / widthRatio);
                     const startY = nameToYPos(startName) * (height / heightRatio);
                     const endX = nameToXPos(endName) * (width / widthRatio);
