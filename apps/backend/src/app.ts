@@ -6,6 +6,7 @@ import pathRouter from "./routes/getPath.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
+import employeeRouter from "./routes/employee.ts";
 
 const app: Express = express(); // Setup the backend
 
@@ -28,6 +29,7 @@ app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/service-request", serviceRouter);
+app.use("/api/employee", employeeRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler
