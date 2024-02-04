@@ -217,6 +217,10 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                     startX = xPos;
                     startY = yPos;
                 }
+                else {
+                    startX = -1;
+                    startY = -1;
+                }
             }
         }
     }
