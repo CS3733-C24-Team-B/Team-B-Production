@@ -20,7 +20,7 @@ router.post('/', async function (req: Request, res: Response){
     }
     catch (error) {
         console.error(error);
-        return res.status(400).send("Could not assign service request with ID " + serviceStatus.serviceID);
+        return res.status(400).send("Could not set status of service request with ID " + serviceStatus.serviceID);
     }
 });
 
