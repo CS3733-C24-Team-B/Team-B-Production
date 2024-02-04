@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+// import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import "../css/serviceform_page.css";
-import axios from "axios"
+import axios from "axios";
 import {request} from "common/src/requestType.ts";
-import Navbar from "../components/Navbar.tsx";
+// import Navbar from "../components/Navbar.tsx";
 import SideButtons from "../components/SideButtons.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [roomNumber, setRoomNumber] = useState("");
-    const [infoText, setInfoText] = useState("")
+    const [infoText, setInfoText] = useState("");
 
     async function submit(){
         const requestSent:request = {
             name: name,
             roomNumber: parseInt(roomNumber),
             infoText: infoText
-        }
+        };
         console.log(requestSent);
         const res = await axios.post("/api/service-request", requestSent,{
             headers: {
@@ -32,11 +32,11 @@ export default function LoginPage() {
         navigate("/servicerequestlist");
     }
 
-    function clear() {
-        setName("");
-        setRoomNumber("");
-        setInfoText("");
-    }
+    // function clear() {
+    //     setName("");
+    //     setRoomNumber("");
+    //     setInfoText("");
+    // };
 
     return (
         <div className="service-form-container">
