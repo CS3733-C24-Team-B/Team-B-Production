@@ -24,8 +24,6 @@ router.post('/', async function (req: Request, res: Response){
             name: serviceInfo.name,
             roomNumber: serviceInfo.roomNumber,
             infoText: serviceInfo.infoText,
-            requester: "admin",
-            receiver: "admin",
             status: "received"
         }
     });
