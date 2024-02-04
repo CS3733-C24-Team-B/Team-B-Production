@@ -8,8 +8,8 @@ const SideButtons: React.FC = () => {
             <a href="/csvnodedata">CSV Node Data</a>
             <a href="/csvedgedata">CSV Edge Data</a>
             <a href="/requestform">Service Request Form</a>
-            <a href="/servicerequestlist">Service Request List</a>
-            <a href="/Settings">Settings</a>
+            <a href="/requestlist">Service Request List</a>
+            <a href="/settings">Settings</a>
         </div>
     );
 };

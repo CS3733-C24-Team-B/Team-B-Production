@@ -8,6 +8,7 @@ import loadEdgesRouter from "./routes/loadEdge.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
 import serviceAssignmentRouter from "./routes/serviceRequestAssignment.ts";
 import serviceStatusRouter from "./routes/serviceRequestStatus.ts";
+import employeeRouter from "./routes/employee.ts";
 
 const app: Express = express(); // Setup the backend
 
@@ -32,6 +33,7 @@ app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/service-request", serviceRouter);
 app.use("/api/service-assignment", serviceAssignmentRouter);
 app.use("/api/service-status", serviceStatusRouter);
+app.use("/api/employee", employeeRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler
