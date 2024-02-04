@@ -214,6 +214,11 @@ canvas {
     max-height: 100%;
 }
 
+.small-label {
+    color: black;
+    font-family: Dubai;
+}
+
 .logo {
     width: 20%;
     height: auto;

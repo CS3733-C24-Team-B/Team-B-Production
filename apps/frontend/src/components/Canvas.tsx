@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios from "axios";
 import "../css/home_page.css";
 
@@ -12,12 +12,13 @@ interface CanvasProps {
 const widthRatio = 5000;
 const heightRatio = 3400;
 const clickDist = 5;
-const minDrawSize = 3;
-const maxDrawSize = 8;
+// const minDrawSize = 3;
+// const maxDrawSize = 8;
 
 const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
+    const [edgeData, setEdgeData] = useState([]);
     // let startX = 0;
     // let startY = 0;
     const [nodeStart, setNodeStart] = useState("");
@@ -27,66 +28,78 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     //const [words, setPath] = useState([""]);
     const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
     const [ctx, setCtx] = useState(canvasCtxRef.current);
+    const [showEdges, setShowEdges] = useState(false);
 
     function getDrawSize() {
-        let drawSize = (widthRatio + heightRatio) / 2500;
-        if(drawSize < minDrawSize) {
-            drawSize = minDrawSize;
-        } else if(drawSize > maxDrawSize) {
-            drawSize = maxDrawSize;
-        }
-        return drawSize;
+        // if(drawSize < minDrawSize) {
+        //     drawSize = minDrawSize;
+        // } else if(drawSize > maxDrawSize) {
+        //     drawSize = maxDrawSize;
+        // }
+        return (width + height) / 800;
     }
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + 10;
-        const yPosition = e.clientY - rect.top;
-        nodeData.map(({nodeID, xcoord, ycoord}) => {
-            const xPos = xcoord * (width / widthRatio);
-            const yPos = ycoord * (height / heightRatio);
-            if(Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-                if(drawLine) {
-                    setNodeEnd(nodeID);
-                } else {
-                    setNodeStart(nodeID);
+        if(!showEdges) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const xPosition = e.clientX - rect.left + (width / 160);
+            const yPosition = e.clientY - rect.top + (height / 120);
+            nodeData.map(({nodeID, xcoord, ycoord}) => {
+                const xPos = xcoord * (width / widthRatio);
+                const yPos = ycoord * (height / heightRatio);
+                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                    if (drawLine) {
+                        setNodeEnd(nodeID);
+                    } else {
+                        setNodeStart(nodeID);
+                    }
+                    setDrawLine(!drawLine);
                 }
-                setDrawLine(!drawLine);
-            }
-        });
+            });
+        }
     }
 
-    // const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    //     const rect = e.currentTarget.getBoundingClientRect();
-    //     const xPosition = e.clientX - rect.left + 10;
-    //     const yPosition = e.clientY - rect.top;
-    //     nodeData.map(({xcoord, ycoord, floor}) => {
-    //         if(floor === currLevel) {
-    //             const xPos = xcoord * (window.innerWidth / widthRatio);
-    //             const yPos = ycoord * (window.innerHeight / heightRatio);
-    //             if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-    //                 ctx!.beginPath();
-    //                 ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-    //                 ctx!.fillStyle = "green";
-    //                 ctx!.fill();
-    //             } else {
-    //                 ctx!.beginPath();
-    //                 ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-    //                 ctx!.fillStyle = "blue";
-    //                 ctx!.fill();
-    //             }
-    //         }
-    //     });
-    // };
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+        if(!showEdges) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const xPosition = e.clientX - rect.left + (width / 160);
+            const yPosition = e.clientY - rect.top + (height / 120);
+            nodeData.map(({xcoord, ycoord, floor}) => {
+                if (floor === currLevel) {
+                    const xPos = xcoord * (window.innerWidth / widthRatio);
+                    const yPos = ycoord * (window.innerHeight / heightRatio);
+                    if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                        ctx!.beginPath();
+                        ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                        ctx!.fillStyle = "green";
+                        ctx!.fill();
+                    } else {
+                        ctx!.beginPath();
+                        ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                        ctx!.fillStyle = "blue";
+                        ctx!.fill();
+                    }
+                }
+            });
+        }
+    };
 
-    // const handleResize = () => {
-    //     height = window.innerHeight;
-    //     width = window.innerWidth;
-    //     requestAnimationFrame(() => draw());
-    // };
-    //
-    // handleResize();
-    // window.addEventListener("resize", handleResize);
+    const handleResize = () => {
+        if(height != window.innerHeight || width != window.innerWidth) {
+            height = parent.innerHeight;
+            width = parent.innerWidth;
+            console.log("TEST: " + width + " " + parent.innerWidth + " " + ctx?.canvas.width);
+            if(ctx?.canvas != null) {
+                ctx!.canvas.width = width;
+                ctx!.canvas.height = height;
+                requestAnimationFrame(() => draw());
+            }
+        }
+        //requestAnimationFrame(() => draw());
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     useEffect(() => {
         async function fetch() {
@@ -97,10 +110,13 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             catch{
                 console.log("post error");
             }
-            const res = await axios.get("/api/db-get-nodes");
+            const res = await axios.get("/api/db-load-nodes");
+            const res3 = await axios.get("/api/db-load-edges");
 
             console.log(res.data);
+            console.log(res3.data);
             setNodeData(res.data);
+            setEdgeData(res3.data);
         }
         fetch().then();
     }, []);
@@ -154,23 +170,54 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             )!["ycoord"];
         };
 
-        if(pathData.length > 1) {
-            let startX = -1;
-            let startY = -1;
-            for (const nr of pathData) {
-                const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
-                const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
-                console.log(nr + " " + xPos + " " + yPos);
-                if (startX != -1 && startY != -1) {
+        const nameToFloor = (name : string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["floor"];
+        };
+
+        function nodeIDtoName(nId : string) {
+            return nodeData.find(({nodeID}) =>
+                nodeID === nId
+            )!["longName"];
+        }
+
+        if(showEdges) {
+            edgeData.map(({startNodeID, endNodeID}) => {
+                const startName = nodeIDtoName(startNodeID);
+                const endName = nodeIDtoName(endNodeID);
+                if(nameToFloor(startName) === currLevel && nameToFloor(endName) === currLevel) {
+                    const startX = nameToXPos(startName) * (width / widthRatio);
+                    const startY = nameToYPos(startName) * (height / heightRatio);
+                    const endX = nameToXPos(endName) * (width / widthRatio);
+                    const endY = nameToYPos(endName) * (height / heightRatio);
                     ctx!.beginPath();
                     ctx?.moveTo(startX, startY);
-                    ctx?.lineTo(xPos, yPos);
+                    ctx?.lineTo(endX, endY);
                     ctx!.strokeStyle = "green";
                     ctx!.lineWidth = getDrawSize();
                     ctx!.stroke();
                 }
-                startX = xPos;
-                startY = yPos;
+            });
+        } else if(pathData.length > 1) {
+            let startX = -1;
+            let startY = -1;
+            for (const nr of pathData) {
+                if(nameToFloor(nr) === currLevel) {
+                    const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
+                    const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+                    console.log(nr + " " + xPos + " " + yPos);
+                    if (startX != -1 && startY != -1) {
+                        ctx!.beginPath();
+                        ctx?.moveTo(startX, startY);
+                        ctx?.lineTo(xPos, yPos);
+                        ctx!.strokeStyle = "green";
+                        ctx!.lineWidth = getDrawSize();
+                        ctx!.stroke();
+                    }
+                    startX = xPos;
+                    startY = yPos;
+                }
             }
         }
     }
@@ -187,7 +234,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         }
     }, []);
 
-    return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick}/>;
+    return (
+        <div>
+            <label className="small-label">
+                <input type="checkbox" onClick={() => {
+                    setShowEdges(!showEdges);
+                }}/>
+                Show All Edges
+            </label>
+            <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
+        </div>
+    );
 };
 
 Canvas.defaultProps = {
