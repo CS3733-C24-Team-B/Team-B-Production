@@ -25,6 +25,39 @@ export default function ServiceRequestLists() {
         return isNaN(Number(item));
     });
 
+    //2024-02-04T18:29:26.694Z 2024-02-04T19:48:46.023Z
+    function sqlToDate(sqlDate:string){
+        //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
+        const sqlDateArrT = sqlDate.split("T");
+        const sqlDateArrCal = sqlDateArrT[0].split("-");
+        //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
+        const sYear = parseInt(sqlDateArrCal[0]);
+        const sMonth = parseInt(sqlDateArrCal[1]);
+        // const sqlDateArr2 = sqlDateArr1[2].split(" ");
+        // //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
+        const sDay = parseInt(sqlDateArrCal[2]);
+        const sqlDateArrTime = sqlDateArrT[1].split(":");
+        // //format of sqlDateArr3[] = ['hh','mm','ss.ms']
+        const sHour = parseInt(sqlDateArrTime[0]);
+        const sMinute = parseInt(sqlDateArrTime[1]);
+        const sqlDateArrSecs = sqlDateArrTime[2].split(".");
+        // //format of sqlDateArr4[] = ['ss','ms']
+        const sSecond = parseInt(sqlDateArrSecs[0]);
+        const sMillisecond = parseInt(sqlDateArrSecs[1].substring(0, sqlDateArrSecs[1].length-1));
+        //console.log(sYear + " " + sMonth + " " + sDay + " " + sHour + " " + sMinute + " " + sSecond + " " + sMillisecond);
+
+        return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond,sMillisecond);
+    }
+
+    srData.sort((srA : {timeCreated: string}, srB : {timeCreated: string}) => {
+        // console.log("TIME: " + srA.timeCreated + " " + srB.timeCreated);
+        // console.log(sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf());
+        return sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf();
+        //return timeCreatedA - timeCreatedB;
+    });
+    // srData.map(({name, timeCreated}) => {
+    //     console.log("TIME: " + name + " " + timeCreated);
+    // });
     const arraySR = srData.map(({serviceID, name, status, infoText}) =>
         <tr>
             <td>
@@ -42,13 +75,11 @@ export default function ServiceRequestLists() {
                 <button className="dropbtn">{status}</button>
                 <div className="dropdown-content">
                     {statuses.map((st) =>
-                        <a onClick={() => {
+                        <a onClick={async () => {
                             console.log("UPDATE STATUS " + serviceID + " " + st);
-                            axios.post("/api/service-status", {
-                                body: {
-                                    serviceID: serviceID,
-                                    status: StatusType.Completed
-                                }
+                            await axios.post("/api/service-status", {
+                                serviceID: serviceID,
+                                status: StatusType[st as keyof typeof StatusType]
                             }).then();
                             setRefresh(!refresh);
                         }}>{st}</a>
