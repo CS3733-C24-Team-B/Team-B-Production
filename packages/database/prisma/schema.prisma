@@ -40,9 +40,9 @@ model ServiceRequest {
   roomNumber  Int
   infoText    String
   requester   Employee @relation("Requester", fields: [requesterID], references: [username])
-  requesterID String
+  requesterID String   @default("admin")
   receiver    Employee @relation("Receiver", fields: [receiverID], references: [username])
-  receiverID  String
+  receiverID  String   @default("admin")
   status      String
 }
 
