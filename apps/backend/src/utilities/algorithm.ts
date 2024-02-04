@@ -1,9 +1,11 @@
 import { readFileSync } from "fs";
+import client from "../bin/database-connection.ts";
+import {Edge, Node, PrismaClient} from "database";
+import router from "../routes/loadNode.ts";
 // import * as path from "path";
 // import * as fs from "fs";
 // import {G} from "vitest/dist/types-198fd1d9";
 // import {start} from "http-errors";
-
 export class MapNode {
     nodeID: string;
     xcoord: number;
@@ -90,6 +92,33 @@ class Graph {
         this.adjacencyList.get(vertex2)?.push(vertex1);
     }
 }
+
+
+const prisma = new PrismaClient();
+let nodes:Node[]=[];
+
+const getAllNodes = async () => {
+    try {
+        nodes = await prisma.node.findMany();
+        console.log('All nodes:', nodes);
+    } catch (error) {
+        console.error('Error fetching nodes:', error);
+    } finally {
+        await prisma.$disconnect();
+    }
+};
+
+let edges:Edge[]=[];
+const getAllEdges = async () => {
+    try {
+        edges = await prisma.edge.findMany();
+        console.log('All edges:', edges);
+    } catch (error) {
+        console.error('Error fetching nodes:', error);
+    } finally {
+        await prisma.$disconnect();
+    }
+};
 export function findNode(nodeID: string) : MapNode{
     //return array.find(obj => obj.id === id);
     //console.log(createNodeList()[7]);
@@ -157,24 +186,22 @@ export function readEdgeCSV(filePath:string){
 
 //use to iterate/print out different values of each node
 export function createNodeList() {
-    const filePath = "src/csvs/L1Nodes.csv";
-    const nodes = readNodeCSV(filePath);
+    getAllNodes();
     const nodeList : MapNode[] = [];
     for (let i = 1; i<nodes.length;i++) {
         const node = nodes[i];
-        nodeList.push(new MapNode(node.data.nodeID,parseInt(node.data.xcoord),parseInt(node.data.ycoord),node.data.floor,node.data.building,node.data.nodeType,node.data.longName,node.data.shortName));
+        nodeList.push(new MapNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName));
     }
     //console.log(nodeList);
     return nodeList;
 }
 
 export function createEdgeList() {
-    const filePath = "src/csvs/L1Edges.csv";
-    const edges = readEdgeCSV(filePath);
+    getAllEdges();
     const edgeList : MapEdge[] = [];
-    for (let i = 1; i<edges.length;i++) {
+    for (let i = 0; i<edges.length;i++) {
         const edge = edges[i];
-        edgeList.push(new MapEdge(edge.data.edgeID,edge.data.startNode,edge.data.endNode));
+        edgeList.push(new MapEdge(edge.edgeID,edge.startNodeID,edge.endNodeID));
     }
    // console.log(edgeList);
     return edgeList;
@@ -255,6 +282,9 @@ export function pathfindAStar(startingNode:string,endingNode:string){
 
     const startNode = mapNodeToStar(findNode(startingNode));
     const endNode = mapNodeToStar(findNode(endingNode));
+    if(startingNode===endingNode){
+        return [startingNode];
+    }
     let graph : Graph = new Graph();
     for(const currentNode of createNodeList()){
         graph.addVertex(currentNode.nodeID);

@@ -8,7 +8,6 @@ interface CanvasProps {
     imageSource: string;
     currLevel: string;
 }
-
 const widthRatio = 5000;
 const heightRatio = 3400;
 const clickDist = 5;
@@ -242,8 +241,16 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 }}/>
                 Show All Edges
             </label>
+            <label className="small-label">
+                <input type="checkbox" onClick={() => {
+                    axios.post(`/api/db-get-path/change`);
+
+                }}/>
+                Use A*
+            </label>
             <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
         </div>
+
     );
 };
 
