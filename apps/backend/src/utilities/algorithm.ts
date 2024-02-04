@@ -278,22 +278,34 @@ export function pathFindBFS(startingNode:string,endingNode:string){
 function mapNodeToStar(node:MapNode){
     return new aStarNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName,0,0);
 }
-
+function nodeToFloor(node:MapNode){
+    if(node.floor.length>1){
+        return -parseInt(node.floor.substring(1));
+    }else{
+        return parseInt(node.floor);
+    }
+}
 export function pathfindAStar(startNode: string, goalNode: string): string[] | undefined {
     const nodeList = createNodeList();
     const edgeList = createEdgeList();
     const start =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===startNode)as MapNode);
     const goal =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===goalNode)as MapNode);
     const graph = createGraph(nodeList,edgeList);
+    //queue to search
     let openList= [start];
+    //already searched
     let closedList:aStarNode[] =[];
+    //while there are still nodes left to search
     while (openList.length > 0) {
+        //get currenet node
         const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
-
+        //remove current node from queue
         openList = openList.filter(node => !(node.nodeID === currentNode.nodeID));
+        //add current node to searched
         closedList.push(currentNode);
-
+        //if current node is the goal
         if (currentNode.nodeID === goal.nodeID) {
+            //return the path
             const path: aStarNode[] = [];
             let current = currentNode;
             while (current) {
@@ -302,22 +314,27 @@ export function pathfindAStar(startNode: string, goalNode: string): string[] | u
             }
             return path.reverse().map(obj => obj.nodeID);
         }
-
+        //get nodes with edges connected to current node
         const neighbors = (graph.adjacencyList.get(currentNode.nodeID) as string[]).map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===obj)as MapNode));
-
+        //go through the nodes connected to current
         for (const neighbor of neighbors) {
+            //skip if node is already searched
             if (closedList.some(node => node.nodeID === neighbor.nodeID)) {
                 continue;
             }
-
+            //g value is 1 greater than currents
             const tentativeG = currentNode.gvalue + 1;
-
+            //if openlist doesnt already have this node or the parent g is less than this nodes g
             if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
+                //set g to parent g+1
                 neighbor.gvalue = tentativeG;
-                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2);
+                //heuristic for current distance to goal node.
+                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 +(nodeToFloor(goal)*5000-nodeToFloor(neighbor)*5000)**2);
+                //f is g+h
                 neighbor.f = neighbor.gvalue + neighbor.hvalue;
+                //set nodes parent to current node
                 neighbor.parent = currentNode;
-
+                //if open list does not contain this node, add it.
                 if (!openList.some(node => node.nodeID === neighbor.nodeID )) {
                     openList.push(neighbor);
                 }
