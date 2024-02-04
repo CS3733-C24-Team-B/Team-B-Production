@@ -21,10 +21,13 @@ router.post('/', async function (req: Request, res: Response){
     try {
         await client.serviceRequest.create({
             data: {
-                name: serviceInfo.name,
+                name: {
+                    connect: {
+                        email: serviceInfo.name
+                    }
+                },
                 roomNumber: serviceInfo.roomNumber,
                 infoText: serviceInfo.infoText,
-                assignedTo: "",
                 status: StatusType.Unassigned
             }
         });

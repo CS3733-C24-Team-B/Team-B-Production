@@ -34,14 +34,14 @@ model Edge {
 }
 
 model ServiceRequest {
-  serviceID   Int      @id @default(autoincrement())
-  timeCreated DateTime @default(now())
-  name        Employee @relation("Requested", fields: [nameID], references: [email])
+  serviceID   Int       @id @default(autoincrement())
+  timeCreated DateTime  @default(now())
+  name        Employee  @relation("Requested", fields: [nameID], references: [email])
   nameID      String
   roomNumber  Int
   infoText    String
-  assignedTo  Employee @relation("Assigned", fields: [assignedID], references: [email])
-  assignedID  String
+  assignedTo  Employee? @relation("Assigned", fields: [assignedID], references: [email])
+  assignedID  String?
   status      String
 }
 
