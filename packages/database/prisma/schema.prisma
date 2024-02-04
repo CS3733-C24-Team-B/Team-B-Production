@@ -36,9 +36,19 @@ model Edge {
 model ServiceRequest {
   serviceID   Int      @id @default(autoincrement())
   timeCreated DateTime @default(now())
-  name        String
+  name        Employee @relation("Requested", fields: [nameID], references: [email])
+  nameID      String
   roomNumber  Int
   infoText    String
-  assignedTo  String
+  assignedTo  Employee @relation("Assigned", fields: [assignedID], references: [email])
+  assignedID  String
   status      String
+}
+
+model Employee {
+  email            String           @id
+  username         String           @default("admin")
+  password         String           @default("admin")
+  sentRequests     ServiceRequest[] @relation("Requested")
+  receivedRequests ServiceRequest[] @relation("Assigned")
 }

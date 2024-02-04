@@ -12,11 +12,15 @@ router.post('/', async function (req: Request, res: Response){
                 serviceID: serviceAssignment.serviceID
             },
             data: {
-                assignedTo: serviceAssignment.assignedTo
+                assignedTo: {
+                    connect: {
+                        email: serviceAssignment.assignedTo
+                    }
+                }
             }
         });
         return res.status(200).send("Successfully assigned service request with ID "
-            + serviceAssignment.serviceID + " to " + serviceAssignment.assignedTo);
+            + serviceAssignment.serviceID + " to employee " + serviceAssignment.assignedTo);
     }
     catch (error) {
         console.error(error);
