@@ -21,11 +21,7 @@ router.post('/', async function (req: Request, res: Response){
     try {
         await client.serviceRequest.create({
             data: {
-                name: {
-                    connect: {
-                        email: serviceInfo.name
-                    }
-                },
+                name: serviceInfo.name,
                 roomNumber: serviceInfo.roomNumber,
                 infoText: serviceInfo.infoText,
                 status: StatusType.Unassigned
