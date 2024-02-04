@@ -1,7 +1,5 @@
 import { readFileSync } from "fs";
-import client from "../bin/database-connection.ts";
 import {Edge, Node, PrismaClient} from "database";
-import router from "../routes/loadNode.ts";
 // import * as path from "path";
 // import * as fs from "fs";
 // import {G} from "vitest/dist/types-198fd1d9";
