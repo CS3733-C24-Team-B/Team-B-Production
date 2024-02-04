@@ -1,64 +1,69 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+// import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
-import Navbar from "../components/Navbar.tsx";
+import "../css/serviceform_page.css";
+import axios from "axios";
+import {request} from "common/src/requestType.ts";
+// import Navbar from "../components/Navbar.tsx";
 import SideButtons from "../components/SideButtons.tsx";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    const [reqName, setReqName] = useState("");
-    const [room, setRoom] = useState("");
-    const [addInfo, setAddInfo] = useState("");
+    const [name, setName] = useState("");
+    const [roomNumber, setRoomNumber] = useState("");
+    const [infoText, setInfoText] = useState("");
 
-    function homePage() {
-        navigate("/home");
+    async function submit(){
+        const requestSent:request = {
+            name: name,
+            roomNumber: parseInt(roomNumber),
+            infoText: infoText
+        };
+        console.log(requestSent);
+        const res = await axios.post("/api/service-request", requestSent,{
+            headers: {
+                "Content-Type":"application/json"
+            }
+        });
+        if(res.status == 200) {
+            console.log("success");
+        }
+        navigate("/servicerequestlist");
     }
 
+    // function clear() {
+    //     setName("");
+    //     setRoomNumber("");
+    //     setInfoText("");
+    // };
+
     return (
-        <div className="App">
-            <header className="App-header">Service Request Form</header>
-            <Navbar/>
-            <br/>
-            <form>
-                <label htmlFor="reqName">Name of Requester:</label>
-                <br/>
-                <input
-                    type="text"
-                    id="reqName"
-                    name="reqName"
-                    value={reqName}
-                    onChange={(e) => setReqName(e.target.value)}
-                />
-                <br/>
-                <label htmlFor="password">Room:</label>
-                <br/>
-                <input
-                    type="text"
-                    id="room"
-                    name="room"
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
-                />
-                <br/>
-                <label htmlFor="addInfo">Additional Info (optional):</label>
-                <br/>
-                <textarea
-                    id="addInfo"
-                    name="addInfo"
-                    value={addInfo}
-                    onChange={(e) => setAddInfo(e.target.value)}
-                />
-                <div className="login-butn">
-                    <input
-                        type="button"
-                        value="Submit Form"
-                        name="submit"
-                        onClick={homePage}
-                    />
+        <div className="service-form-container">
+            <div className="container">
+                <h2>Service Request Form</h2>
+                <div className="input-field">
+                    <input value = {name} onChange={(e) => {setName(e.target.value);}} type="text" required/>
+                    <label>Name</label>
                 </div>
-            </form>
-            <Outlet/>
+                <div className="input-field">
+                    <input
+                        type="number"
+                        value={roomNumber}
+                        onChange={(e) => setRoomNumber(e.target.value)}
+                        required
+                    />
+                    <label>Room Number</label>
+                </div>
+                <div className="input-field">
+                    <input type="text" value = {infoText} onChange={(e => {setInfoText(e.target.value);})} required/>
+                    <label>Enter request</label>
+                </div>
+                <br/>
+                <div>
+                    <button onClick={submit}>Submit Request</button>
+                </div>
+            </div>
             <SideButtons/>
         </div>
     );

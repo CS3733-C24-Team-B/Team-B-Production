@@ -12,6 +12,33 @@ type FloorImages = {
     thirdfloor: string;
 };
 
+const FloorLevel =  [
+    {
+        floor: "groundfloor",
+        level: "0"
+    },
+    {
+        floor: "lowerlevel1",
+        level: "L1"
+    },
+    {
+        floor: "lowerlevel2",
+        level: "L2"
+    },
+    {
+        floor: "firstfloor",
+        level: "1"
+    },
+    {
+        floor: "secondfloor",
+        level: "2"
+    },
+    {
+        floor: "thirdfloor",
+        level: "3"
+    }
+];
+
 interface NavbarProps {
     handleFloorChange: (floor: keyof FloorImages, level: string) => void;
     filterFunction: (event: React.ChangeEvent<HTMLInputElement>) => void; // Update the type to accept an event
@@ -21,6 +48,16 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ handleFloorChange, filterFunction, selectedFloor }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const floorToLevel = (inputFloor:string) => {
+        let output = "0";
+        FloorLevel.map(({floor, level}) => {
+            if(inputFloor === floor) {
+                output = level;
+            }
+        });
+        return output;
+    };
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -96,7 +133,9 @@ const Navbar: React.FC<NavbarProps> = ({ handleFloorChange, filterFunction, sele
                     <TextField
                         select
                         value={selectedFloor}
-                        onChange={(event) => handleFloorChange(event.target.value as keyof FloorImages, "L")}
+                        onChange={(event) => {
+                            handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
+                        }}
                         variant="outlined"
                         size="small"
                     >

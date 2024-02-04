@@ -8,22 +8,15 @@ const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
 router.get("/", async function (req: Request, res: Response) {
 
-    // create a place to store CSV data
-    let csvString: string = "nodeID,xcoord,ycoord,floor,building,nodeType,longName,shortName\n";
-
-    // get all nodes from database
-    const nodes: Node[] = await client.node.findMany();
-
-    for (let i: number = 0; i < nodes.length; i++) {
-        const node: Node = nodes[i];
-        csvString += node.nodeID + "," + node.xcoord + "," + node.ycoord + "," + node.floor + "," + node.building
-            + "," + node.nodeType + "," + node.longName + "," + node.shortName + "\n";
+    const node_data: Node[] = await client.node.findMany();
+    if (node_data === null) {
+        console.error("No node data found in database");
+        res.sendStatus(204);    // no data
     }
-
-    console.info("Successfully exported node data into CSV format.");
-
-    res.send(csvString);
-    console.info("Successfully sent node CSV string to frontend.");
+    else {
+        res.send(JSON.stringify(node_data));
+        console.info("Successfully sent " + node_data.length + " nodes to frontend");
+    }
 
 });
 

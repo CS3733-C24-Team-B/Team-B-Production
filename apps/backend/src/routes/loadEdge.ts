@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import multer from "multer";
-import { Prisma, Edge } from "database";
+import {Prisma, Edge} from "database";
 import client from "../bin/database-connection.ts";
 
 const router: Router = express.Router();
@@ -8,21 +8,15 @@ const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
 router.get("/", async function (req: Request, res: Response) {
 
-    // create a place to store CSV data
-    let csvString: string = "edgeID,startNode,endNode\n";
-
-    // get all edges from database
-    const edges: Edge[] = await client.edge.findMany();
-
-    for (let i: number = 0; i < edges.length; i++) {
-        const edge: Edge = edges[i];
-        csvString += edge.edgeID + "," + edge.startNodeID + "," + edge.endNodeID + "\n";
+    const edge_data: Edge[] = await client.edge.findMany();
+    if (edge_data === null) {
+        console.error("No edge data found in database");
+        res.sendStatus(204);    // no data
     }
-
-    console.info("Successfully exported edge data into CSV format.");
-
-    res.send(Buffer.from(csvString, 'utf8'));
-    console.info("Successfully sent edge CSV string to frontend.");
+    else {
+        res.send(JSON.stringify(edge_data));
+        console.info("Successfully sent " + edge_data.length + " edges to frontend");
+    }
 
 });
 
