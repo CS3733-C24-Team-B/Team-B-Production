@@ -1,7 +1,7 @@
 import express, {Router, Request, Response} from "express";
 import {Employee} from "database";
 import client from "../bin/database-connection.ts";
-import {employee} from "common/src/employee.ts";
+import {employee, employeeDelete} from "common/src/employee.ts";
 
 const router: Router = express.Router();
 
@@ -34,10 +34,10 @@ router.post('/', async function (req: Request, res: Response){
 
 router.delete('/', async function (req: Request, res: Response) {
     try {
-        const email: string = req.body.email;
+        const employeeDelete: employeeDelete = req.body;
         await client.employee.delete({
             where: {
-                email: email
+                email: employeeDelete.email
             }
         });
         return res.status(200).json({

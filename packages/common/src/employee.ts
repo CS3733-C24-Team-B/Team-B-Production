@@ -3,3 +3,7 @@ export type employee = {
     username: string,
     password: string
 }
+
+export type employeeDelete = {
+    email: string
+}
