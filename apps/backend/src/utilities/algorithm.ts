@@ -193,7 +193,6 @@ export function createNodeList() {
     //console.log(nodeList);
     return nodeList;
 }
-
 export function createEdgeList() {
     getAllEdges();
     const edgeList : MapEdge[] = [];
@@ -204,22 +203,30 @@ export function createEdgeList() {
    // console.log(edgeList);
     return edgeList;
 }
+function createGraph(nodeList:MapNode[],edgeList:MapEdge[]){
 
-
-export function breadthFirstSearch(){
     let graph : Graph = new Graph();
-    for(const currentNode of createNodeList()){
+    for(const currentNode of nodeList){
         graph.addVertex(currentNode.nodeID);
     }
-    for(const currentEdge of createEdgeList()){
+    for(const currentEdge of edgeList){
         graph.addEdge(currentEdge.endNode,currentEdge.startNode);
     }
+    return graph;
+}
+
+export function breadthFirstSearch(){
+
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const graph = createGraph(nodeList,edgeList);
+
     const visited: Set<string> = new Set();
     const queue: string[] = [];
     const result: string[] = [];
 
-    visited.add(createNodeList()[0].nodeID);
-    queue.push(createNodeList()[0].nodeID);
+    visited.add(nodeList[0].nodeID);
+    queue.push(nodeList[0].nodeID);
 
 
     while (queue.length > 0) {
@@ -239,16 +246,11 @@ export function breadthFirstSearch(){
     return result;
 }
 export function pathFindBFS(startingNode:string,endingNode:string){
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const graph = createGraph(nodeList,edgeList);
     const startNode = findNode(startingNode);
     const endNode = findNode(endingNode);
-    let graph : Graph = new Graph();
-    for(const currentNode of createNodeList()){
-        graph.addVertex(currentNode.nodeID);
-    }
-    for(const currentEdge of createEdgeList()){
-        graph.addEdge(currentEdge.endNode,currentEdge.startNode);
-        graph.addEdge(currentEdge.startNode,currentEdge.endNode);
-    }
     const visited: Set<string> = new Set();
     const queue: string[][] = [[startNode.nodeID]];
     visited.add(startNode.nodeID);
@@ -276,61 +278,53 @@ export function pathFindBFS(startingNode:string,endingNode:string){
 function mapNodeToStar(node:MapNode){
     return new aStarNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName,0,0);
 }
-export function pathfindAStar(startingNode:string,endingNode:string){
 
-    const startNode = mapNodeToStar(findNode(startingNode));
-    const endNode = mapNodeToStar(findNode(endingNode));
-    if(startingNode===endingNode){
-        return [startingNode];
+export function pathfindAStar(startNode: string, goalNode: string): string[] | undefined {
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const start =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===startNode)as MapNode);
+    const goal =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===goalNode)as MapNode);
+    const graph = createGraph(nodeList,edgeList);
+    let openList= [start];
+    let closedList:aStarNode[] =[];
+    while (openList.length > 0) {
+        const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
+
+        openList = openList.filter(node => !(node.nodeID === currentNode.nodeID));
+        closedList.push(currentNode);
+
+        if (currentNode.nodeID === goal.nodeID) {
+            const path: aStarNode[] = [];
+            let current = currentNode;
+            while (current) {
+                path.push(current);
+                current = current.parent!;
+            }
+            return path.reverse().map(obj => obj.nodeID);
+        }
+
+        const neighbors = (graph.adjacencyList.get(currentNode.nodeID) as string[]).map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===obj)as MapNode));
+
+        for (const neighbor of neighbors) {
+            if (closedList.some(node => node.nodeID === neighbor.nodeID)) {
+                continue;
+            }
+
+            const tentativeG = currentNode.gvalue + 1;
+
+            if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
+                neighbor.gvalue = tentativeG;
+                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2);
+                neighbor.f = neighbor.gvalue + neighbor.hvalue;
+                neighbor.parent = currentNode;
+
+                if (!openList.some(node => node.nodeID === neighbor.nodeID )) {
+                    openList.push(neighbor);
+                }
+            }
+        }
     }
-    let graph : Graph = new Graph();
-    for(const currentNode of createNodeList()){
-        graph.addVertex(currentNode.nodeID);
-    }
-    for(const currentEdge of createEdgeList()){
-        graph.addEdge(currentEdge.endNode,currentEdge.startNode);
-    }
-
-    let openList: aStarNode[] = [];
-    let closedList: aStarNode[] = [];
-    openList.push(startNode);
-
-
-    while (openList.length>0) {
-        const res = Math.min(...openList.map(o=>o.hvalue+o.gvalue));
-
-        const q  = openList.find(function(o){ return o.hvalue+o.gvalue == res; });
-       if(q !== undefined) {
-           openList = openList.filter(obj => obj.nodeID !== (q as aStarNode).nodeID);
-           if(graph!==null) {
-               if (graph.adjacencyList !== null) {
-                   if (graph.adjacencyList.has(q.nodeID)) {
-                       const childrenList: aStarNode[] = (graph.adjacencyList.get(q.nodeID) as string[]).map(obj => mapNodeToStar(findNode(obj)));
-                       childrenList.forEach(obj => obj.parent = q);
-                       for (const child of childrenList) {
-                           if (child.nodeID === endingNode) {
-                                const path:string[] = [];
-                                let node = child;
-                                path.push(node.nodeID);
-                                while(node.parent!=null){
-                                    path.push(node.parent.nodeID);
-                                    node=node.parent;
-                                }
-                                return path.reverse();
-                           } else {
-                               child.gvalue = q.gvalue + Math.sqrt((q.xcoord - child.xcoord) ** 2 + (q.ycoord - child.ycoord) ** 2);
-                               child.hvalue = Math.sqrt((endNode.xcoord - child.xcoord) ** 2 + (endNode.ycoord - child.ycoord) ** 2);
-                               child.f = child.gvalue + child.hvalue;
-                           }
-                           if (openList.filter(obj => ((obj.f < child.f)&&(obj.nodeID===child.nodeID))).length === 0 && closedList.filter(obj => (obj.nodeID===child.nodeID&&obj.f < child.f)).length === 0) {
-                               openList.push(child);
-                           }
-                       }
-                       closedList.push(q);
-                   }
-               }
-           }
-       }
-    }
+    return undefined;
 }
+
 
