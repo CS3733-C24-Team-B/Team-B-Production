@@ -18,6 +18,7 @@ const clickDist = 5;
 const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [nodeData, setNodeData] = useState([]);
+    const [edgeData, setEdgeData] = useState([]);
     // let startX = 0;
     // let startY = 0;
     const [nodeStart, setNodeStart] = useState("");
@@ -27,6 +28,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     //const [words, setPath] = useState([""]);
     const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
     const [ctx, setCtx] = useState(canvasCtxRef.current);
+    const [showEdges, setShowEdges] = useState(false);
 
     function getDrawSize() {
         // if(drawSize < minDrawSize) {
@@ -38,44 +40,48 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     }
 
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + (width/160);
-        const yPosition = e.clientY - rect.top + (height/120);
-        nodeData.map(({nodeID, xcoord, ycoord}) => {
-            const xPos = xcoord * (width / widthRatio);
-            const yPos = ycoord * (height / heightRatio);
-            if(Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-                if(drawLine) {
-                    setNodeEnd(nodeID);
-                } else {
-                    setNodeStart(nodeID);
+        if(!showEdges) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const xPosition = e.clientX - rect.left + (width / 160);
+            const yPosition = e.clientY - rect.top + (height / 120);
+            nodeData.map(({nodeID, xcoord, ycoord}) => {
+                const xPos = xcoord * (width / widthRatio);
+                const yPos = ycoord * (height / heightRatio);
+                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                    if (drawLine) {
+                        setNodeEnd(nodeID);
+                    } else {
+                        setNodeStart(nodeID);
+                    }
+                    setDrawLine(!drawLine);
                 }
-                setDrawLine(!drawLine);
-            }
-        });
+            });
+        }
     }
 
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const xPosition = e.clientX - rect.left + (width/160);
-        const yPosition = e.clientY - rect.top + (height/120);
-        nodeData.map(({xcoord, ycoord, floor}) => {
-            if(floor === currLevel) {
-                const xPos = xcoord * (window.innerWidth / widthRatio);
-                const yPos = ycoord * (window.innerHeight / heightRatio);
-                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
-                    ctx!.beginPath();
-                    ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-                    ctx!.fillStyle = "green";
-                    ctx!.fill();
-                } else {
-                    ctx!.beginPath();
-                    ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
-                    ctx!.fillStyle = "blue";
-                    ctx!.fill();
+        if(!showEdges) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const xPosition = e.clientX - rect.left + (width / 160);
+            const yPosition = e.clientY - rect.top + (height / 120);
+            nodeData.map(({xcoord, ycoord, floor}) => {
+                if (floor === currLevel) {
+                    const xPos = xcoord * (window.innerWidth / widthRatio);
+                    const yPos = ycoord * (window.innerHeight / heightRatio);
+                    if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                        ctx!.beginPath();
+                        ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                        ctx!.fillStyle = "green";
+                        ctx!.fill();
+                    } else {
+                        ctx!.beginPath();
+                        ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
+                        ctx!.fillStyle = "blue";
+                        ctx!.fill();
+                    }
                 }
-            }
-        });
+            });
+        }
     };
 
     const handleResize = () => {
@@ -105,9 +111,12 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 console.log("post error");
             }
             const res = await axios.get("/api/db-load-nodes");
+            const res3 = await axios.get("/api/db-load-edges");
 
             console.log(res.data);
+            console.log(res3.data);
             setNodeData(res.data);
+            setEdgeData(res3.data);
         }
         fetch().then();
     }, []);
@@ -167,7 +176,30 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             )!["floor"];
         };
 
-        if(pathData.length > 1) {
+        function nodeIDtoName(nId : string) {
+            return nodeData.find(({nodeID}) =>
+                nodeID === nId
+            )!["longName"];
+        }
+
+        if(showEdges) {
+            edgeData.map(({startNodeID, endNodeID}) => {
+                const startName = nodeIDtoName(startNodeID);
+                const endName = nodeIDtoName(endNodeID);
+                if(nameToFloor(startName) === currLevel && nameToFloor(endName) === currLevel) {
+                    const startX = nameToXPos(startName) * (width / widthRatio);
+                    const startY = nameToYPos(startName) * (height / heightRatio);
+                    const endX = nameToXPos(endName) * (width / widthRatio);
+                    const endY = nameToYPos(endName) * (height / heightRatio);
+                    ctx!.beginPath();
+                    ctx?.moveTo(startX, startY);
+                    ctx?.lineTo(endX, endY);
+                    ctx!.strokeStyle = "green";
+                    ctx!.lineWidth = getDrawSize();
+                    ctx!.stroke();
+                }
+            });
+        } else if(pathData.length > 1) {
             let startX = -1;
             let startY = -1;
             for (const nr of pathData) {
@@ -202,7 +234,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         }
     }, []);
 
-    return <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>;
+    return (
+        <div>
+            <label className="small-label">
+                <input type="checkbox" onClick={() => {
+                    setShowEdges(!showEdges);
+                }}/>
+                Show All Edges
+            </label>
+            <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
+        </div>
+    );
 };
 
 Canvas.defaultProps = {
