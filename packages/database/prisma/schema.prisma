@@ -13,22 +13,43 @@ datasource db {
 }
 
 model Node {
-  nodeID      String      @id
-  xcoord      Int
-  ycoord      Int
-  floor       String
-  building    String
-  nodeType    String
-  longName    String
-  shortName   String
-  startEdges  Edge[]      @relation("StartNode")
-  endEdges    Edge[]      @relation("EndNode")
+  nodeID     String @id
+  xcoord     Int
+  ycoord     Int
+  floor      String
+  building   String
+  nodeType   String
+  longName   String
+  shortName  String
+  startEdges Edge[] @relation("StartNode")
+  endEdges   Edge[] @relation("EndNode")
 }
 
 model Edge {
-  edgeID      String      @id
-  startNode   Node        @relation("StartNode", fields: [startNodeID], references: [nodeID])
+  edgeID      String @id
+  startNode   Node   @relation("StartNode", fields: [startNodeID], references: [nodeID])
   startNodeID String
-  endNode     Node        @relation("EndNode", fields: [endNodeID], references: [nodeID])
+  endNode     Node   @relation("EndNode", fields: [endNodeID], references: [nodeID])
   endNodeID   String
+}
+
+model ServiceRequest {
+  serviceID   Int      @id @default(autoincrement())
+  timeCreated DateTime @default(now())
+  name        String
+  roomNumber  Int
+  infoText    String
+  requester   Employee @relation("Requester", fields: [requesterID], references: [email])
+  requesterID String   @default("admin")
+  receiver    Employee @relation("Receiver", fields: [receiverID], references: [email])
+  receiverID  String   @default("admin")
+  status      String
+}
+
+model Employee {
+  email            String           @id
+  username         String           @default("admin")
+  password         String           @default("admin")
+  sentRequests     ServiceRequest[] @relation("Requester")
+  receivedRequests ServiceRequest[] @relation("Receiver")
 }
