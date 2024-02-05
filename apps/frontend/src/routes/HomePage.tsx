@@ -145,7 +145,6 @@ export default function HomePage() {
             </div>
 
             <div className="info-container">
-                <div className="topbar-container">
                     <div className="manual-dropdown">
                         <input
                             onClick={filterFunction}
@@ -161,29 +160,32 @@ export default function HomePage() {
                                 </a>
                             ))}
                         </div>
+                        <div className="floor-container">
+                            <TextField
+                                select
+                                value={selectedFloor}
+                                onChange={(event) => {
+                                    handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
+                                }}
+                                variant="outlined"
+                                size="small"
+                            >
+                                <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
+                                <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
+                                <MenuItem value="groundfloor">Ground Floor</MenuItem>
+                                <MenuItem value="firstfloor">First Floor</MenuItem>
+                                <MenuItem value="secondfloor">Second Floor</MenuItem>
+                                <MenuItem value="thirdfloor">Third Floor</MenuItem>
+                            </TextField>
+                        </div>
+
                     </div>
 
                     <div className="floor-container">
-                        <TextField
-                            select
-                            value={selectedFloor}
-                            onChange={(event) => {
-                                handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
-                            }}
-                            variant="outlined"
-                            size="small"
-                        >
-                            <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
-                            <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
-                            <MenuItem value="groundfloor">Ground Floor</MenuItem>
-                            <MenuItem value="firstfloor">First Floor</MenuItem>
-                            <MenuItem value="secondfloor">Second Floor</MenuItem>
-                            <MenuItem value="thirdfloor">Third Floor</MenuItem>
-                        </TextField>
-                    </div>
-                </div>
 
-                <div id="map-container">
+                    </div>
+
+                <div className="map-container">
                     <Canvas
                         imageSource={floorImages[selectedFloor]}
                         currLevel={selectedLevel}
