@@ -24,9 +24,9 @@
 /*for search*/
 .manual-dropdown {
     grid-area: s1;
-    justify-self: center;
+    justify-self: start;
     position: absolute;
-    width: 50%;
+    width: 20%;
     padding: 1%;
 }
 
