@@ -41,11 +41,13 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         if(!showEdges) {
             const rect = e.currentTarget.getBoundingClientRect();
-            const xPosition = e.clientX - rect.left + (width / 160);
-            const yPosition = e.clientY - rect.top + (height / 120);
+            // const xPosition = e.clientX - rect.left + (width / 160);
+            // const yPosition = e.clientY - rect.top + (height / 120);
             nodeData.map(({nodeID, xcoord, ycoord,floor}) => {
                 const xPos = xcoord * (width / widthRatio);
                 const yPos = ycoord * (height / heightRatio);
+                const xPosition = e.clientX - rect.left + (xPos / 26);
+                const yPosition = e.clientY - rect.top + (yPos / 20);
                 if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist&& floor===currLevel) {
                     if (drawLine) {
                             setNodeEnd(nodeID);
@@ -61,12 +63,14 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if(!showEdges) {
             const rect = e.currentTarget.getBoundingClientRect();
-            const xPosition = e.clientX - rect.left + (width / 160);
-            const yPosition = e.clientY - rect.top + (height / 120);
+            // const xPosition = e.clientX - rect.left + (width / 160);
+            // const yPosition = e.clientY - rect.top + (height / 120);
             nodeData.map(({xcoord, ycoord, floor}) => {
                 if (floor === currLevel) {
                     const xPos = xcoord * (window.innerWidth / widthRatio);
                     const yPos = ycoord * (window.innerHeight / heightRatio);
+                    const xPosition = e.clientX - rect.left + (xPos / 26);
+                    const yPosition = e.clientY - rect.top + (yPos / 20);
                     if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
                         ctx!.beginPath();
                         ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
