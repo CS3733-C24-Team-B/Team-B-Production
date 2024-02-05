@@ -1,92 +1,56 @@
-.navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: visible;
-    background-color: #333;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+.home-container {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 4vw 96vw;
+    grid-template-rows: auto;
+    grid-template-areas: "navbar main";
 }
 
-.navbar-butn {
-    float: left;
+.nav-container {
+    grid-area: navbar;
+    width: 100%;
+    height: 100%;
 }
 
-.navbar-butn a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+.info-container {
+    grid-template-rows: 10% 90%;
+    grid-template-columns: auto;
+    grid-template-areas:
+            "topbar map";
+    width: 100%;
+    height: 100%;
 }
 
-.navbar-butn a:hover {
-    background-color: #111;
+.topbar-container {
+    display: grid;
+    grid-area: topbar;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-areas: "a b c d";
 }
 
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
 /*for search*/
 .manual-dropdown {
-     position: relative;
-     display: inline-block;
- }
-
-/* Dropdown Button */
-.dropbtn {
-    font-family: "Times New Roman", serif;
-    font-size: 18px;
-    background-color: #333;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    border: none;
-    text-decoration: none;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-    display: none;
+    justify-self: center;
     position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    z-index: 1;
+    width: 15%;
 }
 
-/* Links inside the dropdown */
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+.manual-dropdown input {
+    width: 100%;
 }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: darkgrey;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
 .manual-dropdown:focus-within .dropdown-content {
     display: block;
 }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-    background-color: black;
-    cursor: pointer;
+.floor-container {
+    grid-area: d;
+    justify-self: center;
 }
 
 #map-container {
-    position: relative;
+    grid-area: map;
 }
 
 /*maps the image*/
@@ -104,11 +68,6 @@
     left: 8px;
     margin-top: 1%;
 }
-/*IGNORE THIS       \/     \/     \/    \/      */
-/*.topnav {*/
-/*    overflow: hidden;*/
-/*    !*background-color: #e9e9e9;*!*/
-/*}*/
 
 /* Style the links inside the navigation bar */
 .search a {
@@ -136,9 +95,10 @@
     margin-right: 16px;
     font-size: 17px;
 }
+
 /*IGNORE PLEEASSEE OFMG PLLLLLEEEEAASSE       \/   \/   \/   \/   \/      */
 
-#myInput {    /* The search field */
+#myInput { /* The search field */
     box-sizing: border-box;
     background-image: url('../images/searchIcon.png');
     background-position: 10px 10px;
@@ -151,13 +111,8 @@
     border-bottom: 1px solid #ddd;
 }
 
-#myInput:focus{ /* the highlight when you click it*/
+#myInput:focus { /* the highlight when you click it*/
     outline: 3px solid #ddd;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
 }
 
 .dropdown-content {
@@ -176,11 +131,14 @@
     text-decoration: none;
     display: block;
 }
+
 #myInput:focus + .dropdown-content {
     display: block;
 }
 
-.show {display: block;}
+.show {
+    display: block;
+}
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 700px) {
@@ -192,11 +150,13 @@
         margin-right: 8px;
         padding: 6px;
     }
-    .navbar-butn a{
+
+    .navbar-butn a {
         padding: 14px 16px;
 
     }
-    #myInput input[type=text]{
+
+    #myInput input[type=text] {
         display: block;
         width: 80%;
         margin-left: 3px;
@@ -204,6 +164,7 @@
         float: left;
 
     }
+
     #myInput input[type=text] {
         border: 1px solid #ddd;
     }
