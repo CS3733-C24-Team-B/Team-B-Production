@@ -87,6 +87,18 @@ export default function PersistentDrawerLeft() {
                         <MenuIcon />
                     </IconButton>
                 </Toolbar>
+                {/* Navbar Preview */}
+                {!open && (
+                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', mt: 2 }}>
+                        {icons.map((icon, index) => (
+                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
+                                <ListItemIcon>
+                                    {icon}
+                                </ListItemIcon>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
             </AppBar>
             <Drawer
                 sx={{
