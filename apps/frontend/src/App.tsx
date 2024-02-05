@@ -1,37 +1,31 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import LoginPage from "./routes/LoginPage.tsx";
 import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
-import CreateAccount from "./routes/CreateAccount.tsx";
-import ForgotPassword from "./routes/ForgotPassword.tsx";
 import Settings from "./routes/Settings.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
+import Profile from "./components/Profile.tsx";
+import LoginButton from "./components/LoginButton.tsx";
 
 function App() {
     const router = createBrowserRouter([
         {
             path: "/",
             errorElement: <div/>,
-            element: <LoginPage/>,
-        },
-        {
-            path: "/home",
-            errorElement: <div/>,
             element: <HomePage/>,
         },
         {
-            path: "/createacc",
-            errorElement: <div/>,
-            element: <CreateAccount/>,
+            path: "/login",
+            errorElement: <div><p>An error has occurred</p></div>,
+            element: <LoginButton/>
         },
         {
-            path: "/forgotpass",
-            errorElement: <div/>,
-            element: <ForgotPassword/>,
+            path: "/profile",
+            errorElement: <div><p>An error has occurred</p></div>,
+            element: <Profile/>
         },
         {
             path: "/settings",
