@@ -75,6 +75,7 @@ export default function PersistentDrawerLeft() {
             <CssBaseline />
             <AppBar position="relative" open={open} sx={{
                 width: 1,
+                boxShadow: 0,
             }}>
                 <Toolbar>
                     <IconButton
