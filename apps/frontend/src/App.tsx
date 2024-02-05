@@ -10,6 +10,8 @@ import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
+import ProfilePage from "./routes/ProfilePage.tsx";
+import ChangeProfile from "./routes/ChangeProfile.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -58,6 +60,17 @@ function App() {
             errorElement: <div/>,
             element: <RequestList/>,
         },
+        {
+            path: "/profile-info",
+            errorElement: <div/>,
+            element: <ProfilePage/>,
+        },
+        {
+            path: "/change-profile",
+            errorElement: <div/>,
+            element: <ChangeProfile/>,
+        },
+
     ]);
 
     return <RouterProvider router={router}/>;
