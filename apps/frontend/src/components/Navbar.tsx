@@ -89,14 +89,25 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
                 {/* Navbar Preview */}
                 {!open && (
-                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', mt: 2 }}>
-                        {icons.map((icon, index) => (
-                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
-                                <ListItemIcon>
-                                    {icon}
-                                </ListItemIcon>
-                            </ListItem>
-                        ))}
+                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+                        <div>
+                            {icons.map((icon, index) => (
+                                <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
+                                    <ListItemIcon>
+                                        {icon}
+                                    </ListItemIcon>
+                                </ListItem>
+                            ))}
+                        </div>
+                        <div>
+                            {adminIcons.map((icon, index) => (
+                                <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
+                                    <ListItemIcon>
+                                        {icon}
+                                    </ListItemIcon>
+                                </ListItem>
+                            ))}
+                        </div>
                     </List>
                 )}
             </AppBar>
