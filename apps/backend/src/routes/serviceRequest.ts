@@ -1,7 +1,7 @@
 import express, {Router, Request, Response} from "express";
 import {ServiceRequest} from "database";
 import client from "../bin/database-connection.ts";
-import {request} from "common/src/requestType.ts";
+import {NewRequest, ServiceID, StatusType} from "common/src/serviceRequestTypes.ts";
 
 const router: Router = express.Router();
 
@@ -9,48 +9,48 @@ router.get('/', async function (req: Request, res: Response) {
     const serviceData: ServiceRequest[] = await client.serviceRequest.findMany();
     if (serviceData === null) {
         console.error("No edge data found in database");
-        return res.sendStatus(204);
+        return res.status(204).send("Could not find edge data in database");
     }
     else {
-        console.info("Successfully sent " + serviceData.length + "service requests to frontend");
-        return res.send(JSON.stringify(serviceData));
+        return res.status(200).send(JSON.stringify(serviceData));
     }
 });
 
 router.post('/', async function (req: Request, res: Response){
-    const serviceInfo:request = req.body;
-    await client.serviceRequest.create({
-        data: {
-            name: serviceInfo.name,
-            roomNumber: serviceInfo.roomNumber,
-            infoText: serviceInfo.infoText,
-            requester: "admin",
-            receiver: "admin",
-            status: "received"
-        }
-    });
+    const serviceInfo: NewRequest = req.body;
+    try {
+        await client.serviceRequest.create({
+            data: {
+                name: serviceInfo.name,
+                roomNumber: serviceInfo.roomNumber,
+                infoText: serviceInfo.infoText,
+                status: StatusType.Unassigned
+            }
+        });
+        console.log(serviceInfo);
+        return res.status(200).send("Successfully added service request to database");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).send("Could not add service request to database");
+    }
 
-    console.log(serviceInfo);
-    res.status(200).json({
-        message: "added service request to db",
-    });
+
 });
 
 router.delete('/', async function (req: Request, res: Response) {
     try {
-        const serviceID: number = req.body.serviceID;
+        const serviceID: ServiceID = req.body;
         await client.serviceRequest.delete({
             where: {
-                serviceID: serviceID
+                serviceID: serviceID.serviceID
             }
         });
-        return res.status(200).json({
-            message: "deleted service request with ID " + serviceID
-        });
+        return res.status(200).send("Successfully deleted service request from database with ID " + serviceID);
     }
     catch (error) {
         console.error(error);
-        return res.status(400);
+        return res.status(400).send("Could not delete service request from database");
     }
 });
 

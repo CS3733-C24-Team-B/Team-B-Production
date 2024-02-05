@@ -15,6 +15,13 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.1.1",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.15.7",
+    "@mui/material": "^5.15.7",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.14",
+    "@mui/styles": "^5.15.7",
     "@popperjs/core": "^2.11.8",
     "@tanstack/react-table": "^8.9.3",
     "axios": "^1.4.0",
@@ -29,7 +36,8 @@
     "react-router-dom": "^6.11.2",
     "react-zoom-pan-pinch": "^3.1.0",
     "serve": "^14.2.0",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.6",
