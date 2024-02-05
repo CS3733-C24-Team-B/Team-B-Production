@@ -8,6 +8,9 @@ import {NewRequest} from "common/src/serviceRequestTypes.ts";
 import {employee} from "common/src/employee.ts";
 import Navbar from "../components/Navbar.tsx";
 import SideButtons from "../components/SideButtons.tsx";
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 
 export default function LoginPage() {
@@ -42,30 +45,44 @@ export default function LoginPage() {
     return (
         <div className="service-form-container">
             <div className="container">
-                <h2>Service Request Form</h2>
+                <h2>Create Service Request</h2>
+
+
+                {/*THis labels the Name of the emplyee to do the work*/}
                 <div className="input-field">
-                    <input value = {name} onChange={(e) => {setName(e.target.value);}} type="text" required/>
-                    <label>Name</label>
+                    <TextField id="standard-basic" label="Name" variant="standard"
+                    value = {name} onChange={(e) => {
+                        setName(e.target.value);}} type="text" required
+                />
                 </div>
+
+                {/*This lables the room number*/}
                 <div className="input-field">
-                    <input
-                        type="number"
-                        value={roomNumber}
-                        onChange={(e) => setRoomNumber(e.target.value)}
-                        required
+                    <TextField id="standard-basic" label="Room Number" variant="standard"
+                               type="number"
+                               value={roomNumber}
+                               onChange={(e) => setRoomNumber(e.target.value)}
+                               required
                     />
-                    <label>Room Number</label>
                 </div>
+
+                {/*This lables the room number*/}
                 <div className="input-field">
-                    <input type="text" value = {infoText} onChange={(e => {setInfoText(e.target.value);})} required/>
-                    <label>Enter request</label>
-                </div>
-                <br/>
+                    <TextField id="standard-basic" label="Request Detials" variant="standard"
+                               type="text" value = {infoText} onChange={(e =>
+                    {setInfoText(e.target.value);})} required
+                    />
+                </div> <br/>
+
                 <div>
-                    <button onClick={submit}>Submit Request</button>
+                    <Button
+                        style={{
+                            backgroundColor: "#012D5A",
+                        }}
+                        variant="contained" onClick={submit}> Submit Request </Button>
+                    {/*<button onClick={submit}>Submit Request</button>*/}
                 </div>
             </div>
-            <SideButtons/>
         </div>
     );
 }
