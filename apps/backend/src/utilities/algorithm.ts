@@ -278,7 +278,7 @@ export function pathFindBFS(startingNode:string,endingNode:string){
 function mapNodeToStar(node:MapNode){
     return new aStarNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName,0,0);
 }
-function nodeToFloor(node:MapNode){
+export function nodeToFloor(node:aStarNode){
     if(node.floor.length>1){
         return -parseInt(node.floor.substring(1));
     }else{
@@ -315,7 +315,10 @@ export function pathfindAStar(startNode: string, goalNode: string): string[] | u
             return path.reverse().map(obj => obj.nodeID);
         }
         //get nodes with edges connected to current node
-        const neighbors = (graph.adjacencyList.get(currentNode.nodeID) as string[]).map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===obj)as MapNode));
+        const neighborsNode = (graph.adjacencyList.get(currentNode.nodeID));
+        if (neighborsNode) {
+            const neighbors = neighborsNode.map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === obj) as MapNode));
+
         //go through the nodes connected to current
         for (const neighbor of neighbors) {
             //skip if node is already searched
@@ -328,18 +331,20 @@ export function pathfindAStar(startNode: string, goalNode: string): string[] | u
             if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
                 //set g to parent g+1
                 neighbor.gvalue = tentativeG;
+                const floorWeight = 300;
                 //heuristic for current distance to goal node.
-                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 +(nodeToFloor(goal)*5000-nodeToFloor(neighbor)*5000)**2);
+                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal)-nodeToFloor(neighbor))*floorWeight )** 2);
                 //f is g+h
                 neighbor.f = neighbor.gvalue + neighbor.hvalue;
                 //set nodes parent to current node
                 neighbor.parent = currentNode;
                 //if open list does not contain this node, add it.
-                if (!openList.some(node => node.nodeID === neighbor.nodeID )) {
+                if (!openList.some(node => node.nodeID === neighbor.nodeID)) {
                     openList.push(neighbor);
                 }
             }
         }
+    }
     }
     return undefined;
 }

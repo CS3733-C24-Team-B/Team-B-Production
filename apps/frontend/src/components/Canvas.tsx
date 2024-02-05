@@ -43,12 +43,12 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const xPosition = e.clientX - rect.left + (width / 160);
             const yPosition = e.clientY - rect.top + (height / 120);
-            nodeData.map(({nodeID, xcoord, ycoord}) => {
+            nodeData.map(({nodeID, xcoord, ycoord,floor}) => {
                 const xPos = xcoord * (width / widthRatio);
                 const yPos = ycoord * (height / heightRatio);
-                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist&& floor===currLevel) {
                     if (drawLine) {
-                        setNodeEnd(nodeID);
+                            setNodeEnd(nodeID);
                     } else {
                         setNodeStart(nodeID);
                     }
