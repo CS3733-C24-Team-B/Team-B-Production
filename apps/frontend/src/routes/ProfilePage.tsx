@@ -1,14 +1,41 @@
-import React from 'react';
-import { Container, Paper, Typography, Button } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Container, Paper, Typography, Button, TextField} from '@mui/material';
+import {useAuth0} from "@auth0/auth0-react";
+import axios from "axios";
+import {CreateEmployee} from "common/src/employee.ts";
+//import axios from "axios";
+//import {EmployeeID} from "common/src/employee.ts";
 
 export default function ProfilePage() {
+    const { user, isAuthenticated} = useAuth0();
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
 
+    useEffect(()=>{
+        async function submit() { ///copied
+            const res = await axios.get(`/api/employee/${user!.email!}`, {
+                params: {
+                    email: user!.email!
+                }
+            });
+
+            if (res.status == 200) {
+                console.log("Successfully submitted form");
+            }
+            console.log(res.data);
+            setEmail(res.data.email);
+            setFirstName(res.data.firstName);
+            setLastName(res.data.lastName);
+        }
+        submit().then();
+    },[user, isAuthenticated]);
     const profileData = {
-        firstName: 'John',
-        lastName: 'Doe',
+        firstName: firstName,
+        lastName: lastName,
         age: 30,
         phoneNumber: '123-456-7890',
-        username: 'example_user',
+        username: email,
         password: '********',
         ssn: '123-45-6789',
         serviceRequests: [
@@ -18,10 +45,26 @@ export default function ProfilePage() {
         ],
     };
 
-    const handlePasswordChange = () => {
-        // Implement the logic to redirect to the password change page
-        window.location.href = '/change-profile';
-    };
+    // const handlePasswordChange = () => {
+    //     // Implement the logic to redirect to the password change page
+    //     window.location.href = '/change-profile';
+    // };
+
+    async function submit() { ///copied
+        const employeeInfo: CreateEmployee = {
+            email: user!.email!,
+            firstName: firstName,
+            lastName: lastName
+        };
+        const res = await axios.post("/api/employee", employeeInfo, {
+            headers: {
+                "Content-Type":"application/json"
+            }
+        });
+        if (res.status == 200) {
+            console.log("Successfully submitted form");
+        }
+    }
 
     const listItemStyle = { marginLeft: '20px', marginBottom: '20px' };
 
@@ -33,17 +76,27 @@ export default function ProfilePage() {
                         Profile Information
                     </Typography>
                     <Typography variant="body1" style={listItemStyle}>
-                        <strong>First Name:</strong> {profileData.firstName}
+                        <strong>Email:</strong> {profileData.username}
                     </Typography>
-                    <Typography variant="body1" style={listItemStyle}>
-                        <strong>Last Name:</strong> {profileData.lastName}
-                    </Typography>
-                    <Typography variant="body1" style={listItemStyle}>
-                        <strong>Username:</strong> {profileData.username}
-                    </Typography>
+                    {/*<Typography variant="body1" style={listItemStyle}>*/}
+                    {/*    <strong>First Name:</strong> {profileData.firstName}*/}
+                    {/*</Typography>*/}
+                    <TextField id="standard-basic" label="First name" variant="standard"
+                               value={firstName}
+                               onChange={(e) => {setFirstName(e.target.value);}}
+                               required
+                    />
+                    {/*<Typography variant="body1" style={listItemStyle}>*/}
+                    {/*    <strong>Last Name:</strong> {profileData.lastName}*/}
+                    {/*</Typography>*/}
+                    <TextField id="standard-basic" label="Last name" variant="standard"
+                               value={lastName}
+                               onChange={(e) => {setLastName(e.target.value);}}
+                               required
+                    />
                     <div style={{ marginTop: '20px' }}>
-                        <Button variant="contained" color="primary" onClick={handlePasswordChange}>
-                            Change Password
+                        <Button variant="contained" color="primary" onClick={submit}>
+                            Update Info
                         </Button>
                     </div>
                 </Paper>

@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar.tsx";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
-export default function UpdateNameForm() {
+export default function UpdateNameForm() { ///copied
     const { user, isAuthenticated} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -26,7 +26,7 @@ export default function Profile() {
         console.log(error);
     });*/
 
-    async function submit() {
+    async function submit() { ///copied
         const employeeInfo: CreateEmployee = {
             email: user!.email!,
             firstName: firstName,
@@ -42,32 +42,7 @@ export default function Profile() {
         }
     }
 
-  return (
-    <div className="App">
-      <header className="App-header">Profile</header>
-        <Navbar/>
-      <br />
-      <form>
-        <label htmlFor="email">Change Email:</label>
-        <br />
-        <input type="email" id="email" name="email" />
-        <br />
-        <label htmlFor="password">Change Password:</label>
-        <br />
-        <input type="password" id="password" name="password" />
-        <br />
-        <label htmlFor="password">Retype Password:</label>
-        <br />
-        <input type="password" id="password" name="password" />
-        <br />
-        <br />
-        <input type="button" value="Return to Home" onClick={handleClick} />
-      </form>
-      <Outlet />
-        <SideButtons/>
-    </div>
-  );
-    return (
+     return (
         isAuthenticated && (
             <div className={"home-container"}>
                 <div className="nav-container">
