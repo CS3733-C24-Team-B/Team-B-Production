@@ -28,6 +28,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
     const [ctx, setCtx] = useState(canvasCtxRef.current);
     const [showEdges, setShowEdges] = useState(false);
+    const [useAStar, setUseAStar] = useState(false);
 
     function getDrawSize() {
         // if(drawSize < minDrawSize) {
@@ -258,6 +259,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
         }
     }, []);
 
+
+    useEffect(() => {
+        async function fetch() {
+            //  console.log(`${data.startNode}`);
+            const res2 = await axios.get(`/api/db-get-path/currentAlg`);
+            setUseAStar(res2.data);
+
+        }
+        fetch().then();
+    }, []);
+
     return (
         <div>
             <label className="small-label">
@@ -267,8 +279,9 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 Show All Edges
             </label>
             <label className="small-label">
-                <input type="checkbox" onClick={() => {
+                <input type="checkbox" checked={useAStar} onClick={() => {
                     axios.post(`/api/db-get-path/change`);
+                    setUseAStar(!useAStar);
 
                 }}/>
                 Use A*
