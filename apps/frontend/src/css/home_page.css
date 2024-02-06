@@ -18,26 +18,19 @@
 
 
 .info-container {
-    grid-template-rows: 10% 90%;
-    grid-template-columns: auto;
-    grid-template-areas:
-            "topbar map";
+    display: grid;
+    background-color: transparent;
     width: 100%;
     height: 100%;
 }
 
-.topbar-container {
-    display: grid;
-    grid-area: topbar;
-    grid-template-columns: 25% 25% 25% 25%;
-    grid-template-areas: "a b c d";
-}
-
 /*for search*/
 .manual-dropdown {
-    justify-self: center;
+    grid-area: s1;
+    justify-self: start;
     position: absolute;
-    width: 15%;
+    width: 20%;
+    padding: 1%;
 }
 
 .manual-dropdown input {
@@ -49,11 +42,12 @@
 }
 
 .floor-container {
-    grid-area: d;
-    justify-self: center;
+    grid-area: s2;
+    justify-self: start;
 }
 
-#map-container {
+.map-container {
+    height: 100%;
     grid-area: map;
 }
 

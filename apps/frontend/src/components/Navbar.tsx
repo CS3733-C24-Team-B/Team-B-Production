@@ -20,6 +20,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LanguageIcon from '@mui/icons-material/Language';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
@@ -122,11 +123,14 @@ export default function PersistentDrawerLeft() {
                 open={open}
             >
                 <DrawerHeader>
+                    <a href="/home">
+                        <img src={logo} alt="Hospital Logo" width={"100%"}/>
+                    </a>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                     </IconButton>
                 </DrawerHeader>
-                <Divider />
+                <Divider/>
                 <List>
                     {['Request Service', 'Saved Locations', 'Search Settings', 'Language'].map((text, index) => (
                         <ListItem key={text} disablePadding>
