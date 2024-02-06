@@ -46,9 +46,7 @@ router.post('/', async function (req: Request, res: Response){
                 lastName: employeeInfo.lastName
             },
             create: {
-                email: employeeInfo.email,
-                firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
+                email: employeeInfo.email
             }
         });
 
