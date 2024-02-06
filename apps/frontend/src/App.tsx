@@ -3,11 +3,16 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
 import Settings from "./routes/Settings.tsx";
+import CreateAccount from "./routes/CreateAccount.tsx";
+import ForgotPassword from "./routes/ForgotPassword.tsx";
+import Profile from "./routes/Profile.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
 import LoginButton from "./components/LoginButton.tsx";
+import ProfilePage from "./routes/ProfilePage.tsx";
+import ChangeProfile from "./routes/ChangeProfile.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -22,9 +27,9 @@ function App() {
             element: <LoginButton/>
         },
         {
-            path: "/settings",
+            path: "/profile",
             errorElement: <div/>,
-            element: <Settings/>,
+            element: <Profile/>,
         },
         {
             path: "/csvnodedata",
@@ -46,6 +51,17 @@ function App() {
             errorElement: <div/>,
             element: <RequestList/>,
         },
+        {
+            path: "/profile-info",
+            errorElement: <div/>,
+            element: <ProfilePage/>,
+        },
+        {
+            path: "/change-profile",
+            errorElement: <div/>,
+            element: <ChangeProfile/>,
+        },
+
     ]);
 
     return <RouterProvider router={router}/>;

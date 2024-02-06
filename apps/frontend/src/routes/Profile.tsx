@@ -12,6 +12,8 @@ export default function UpdateNameForm() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
+export default function Profile() {
+  const navigate = useNavigate();
 
     // trying to pre-populate form with data from db, but I'm doing something wrong
     /*axios.get("/api/employee", {
@@ -40,6 +42,31 @@ export default function UpdateNameForm() {
         }
     }
 
+  return (
+    <div className="App">
+      <header className="App-header">Profile</header>
+        <Navbar/>
+      <br />
+      <form>
+        <label htmlFor="email">Change Email:</label>
+        <br />
+        <input type="email" id="email" name="email" />
+        <br />
+        <label htmlFor="password">Change Password:</label>
+        <br />
+        <input type="password" id="password" name="password" />
+        <br />
+        <label htmlFor="password">Retype Password:</label>
+        <br />
+        <input type="password" id="password" name="password" />
+        <br />
+        <br />
+        <input type="button" value="Return to Home" onClick={handleClick} />
+      </form>
+      <Outlet />
+        <SideButtons/>
+    </div>
+  );
     return (
         isAuthenticated && (
             <div className={"home-container"}>
