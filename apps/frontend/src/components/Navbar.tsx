@@ -78,7 +78,8 @@ export default function PersistentDrawerLeft() {
                 width: 1,
                 boxShadow: 0,
             }}>
-                <Toolbar>
+                <Toolbar
+                    style={{backgroundColor: "#012d5a",}}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -91,7 +92,8 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
                 {/* Navbar Preview */}
                 {!open && (
-                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}
+                          style={{backgroundColor: "#012d5a"}}>
                         <div>
                             {icons.map((icon, index) => (
                                 <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
