@@ -1,0 +1,27 @@
+.footer-container {
+    width: 10%;
+    position: fixed;
+    z-index: 1;
+    top: 30%;
+    left: 10px;
+    background: #333;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+
+.footer-container a {
+    font-family: "Calibri", serif;
+    width: 100%;
+    color: white;
+    position: relative;
+    margin: auto;
+
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    display: block;
+}
+
+.footer-container a:hover {
+    color: lightskyblue;
+}
