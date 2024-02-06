@@ -1,9 +1,13 @@
-export type employee = {
+export type CreateEmployee = {
     email: string
-    username: string,
-    password: string
+    firstName: string,
+    lastName: string
 }
 
-export type employeeDelete = {
+export type EmployeeID = {
+    email: string
+}
+
+export type DeleteEmployee = {
     email: string
 }

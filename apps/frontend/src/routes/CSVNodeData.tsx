@@ -5,22 +5,38 @@ import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import SideButtons from "../components/SideButtons.tsx";
+import {Button} from "@mui/material";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import {styled} from "@mui/material/styles";
+// import SideButtons from "../components/SideButtons.tsx";
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 export default function CSVData() {
-  //const nodes : MapNode[] = createNodeList();
+    //const nodes : MapNode[] = createNodeList();
     const [nodeData, setNodeData] = useState([]);
-  useEffect(() => {
-      async function fetch() {
-          const res = await axios.get("/api/db-load-nodes");
-          console.log(res.data);
-          setNodeData(res.data);
-      }
-      fetch().then();
-  }, []);
+    useEffect(() => {
+        async function fetch() {
+            const res = await axios.get("/api/db-load-nodes");
+            console.log(res.data);
+            setNodeData(res.data);
+        }
+
+        fetch().then();
+    }, []);
 
     const arrayNode = nodeData.map(({floor, building, longName}, i) =>
-        <tr key={i} >
+        <tr key={i}>
             <td>{longName}</td>
             <td>{floor}</td>
             <td>{building}</td>
@@ -44,9 +60,7 @@ export default function CSVData() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-        }
-
-        catch (exception) {
+        } catch (exception) {
             console.log("post error: " + exception);
         }
     }
@@ -58,9 +72,18 @@ export default function CSVData() {
             const res3 = await axios.get('/api/db-load-nodes');
             console.log(res3);
             let headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
-            let resCSV = res3.data.reduce((roomNode: string[], roomData: { nodeID: string; xcoord: number; ycoord: number; floor: string; building: string; nodeType: string; longName: string; shortName: string; }) => {
-                const { nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName } = roomData;
-                roomNode.push([nodeID, xcoord+"", ycoord+"", floor, building, nodeType, longName, shortName].join(','));
+            let resCSV = res3.data.reduce((roomNode: string[], roomData: {
+                nodeID: string;
+                xcoord: number;
+                ycoord: number;
+                floor: string;
+                building: string;
+                nodeType: string;
+                longName: string;
+                shortName: string;
+            }) => {
+                const {nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName} = roomData;
+                roomNode.push([nodeID, xcoord + "", ycoord + "", floor, building, nodeType, longName, shortName].join(','));
                 return roomNode;
             }, []);
             const data = [...headers, ...resCSV].join('\n');
@@ -82,25 +105,40 @@ export default function CSVData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-        <div className="App">
-            <header className="App-header">CSV Data</header>
-            <Navbar/>
-            <br/>
-            <div>
-                <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
-                <input onClick={uploadToDB} type="button" value="Submit"/>
+        <div className="node-data-container">
+            <div className="nav-container">
+                <Navbar/>
             </div>
-            <input onClick={downloadFromDB} type="button" value="Export"/>
-            <br/>
-            <table className={"tables"}>
-                <tr>
-                    <th>Room Name</th>
-                    <th>Floor</th>
-                    <th>Building Name</th>
-                </tr>
-                {arrayNode}</table>
-            <br/>
-            <SideButtons/>
+            <div className="data-container">
+                <div className="topbar-container">
+                    <div  className="node-data-header">
+                        <header>CSV Data</header>
+                    </div>
+                    <br/>
+                    <div className="top-buttons-container">
+                        <div className="upload-buttons">
+                            {/*<input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>*/}
+                            <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}>
+                                Upload file
+                                <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                            </Button>
+                            {/*<input onClick={uploadToDB} type="button" value="Submit"/>*/}
+                            {/*<Button onClick={uploadToDB} variant="text">Submit</Button>*/}
+                        </div>
+                        {/*<input onClick={downloadFromDB} type="button" value="Export"/>*/}
+                        <Button onClick={downloadFromDB} variant="text" className="export-button">Export</Button>
+                    </div>
+                </div>
+                <br/>
+                <table className={"tables"}>
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Floor</th>
+                        <th>Building Name</th>
+                    </tr>
+                    {arrayNode}</table>
+                <br/>
+            </div>
         </div>
     );
 }

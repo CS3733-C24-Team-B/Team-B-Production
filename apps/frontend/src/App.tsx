@@ -7,7 +7,6 @@ import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
-import Profile from "./components/Profile.tsx";
 import LoginButton from "./components/LoginButton.tsx";
 
 function App() {
@@ -21,11 +20,6 @@ function App() {
             path: "/login",
             errorElement: <div><p>An error has occurred</p></div>,
             element: <LoginButton/>
-        },
-        {
-            path: "/profile",
-            errorElement: <div><p>An error has occurred</p></div>,
-            element: <Profile/>
         },
         {
             path: "/settings",
