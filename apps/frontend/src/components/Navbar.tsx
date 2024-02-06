@@ -73,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleFloorChange, filterFunction, sele
                         <a href="/requestlist">List of Service Requests</a>
                     </MenuItem>
                     <MenuItem>
-                        <a href="/home">View Profile</a>
+                        <a href="/profile-info">View Profile</a>
                     </MenuItem>
                     <MenuItem>
                         <a href="/settings">Settings</a>

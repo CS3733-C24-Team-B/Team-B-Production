@@ -32,8 +32,6 @@ export default function ProfilePage() {
                 </Typography>
                 <Typography variant="body1" style={listItemStyle}>
                     <strong>First Name:</strong> {profileData.firstName}
-                </Typography>
-                <Typography variant="body1" style={listItemStyle}>
                     <strong>Last Name:</strong> {profileData.lastName}
                 </Typography>
                 <Typography variant="body1" style={listItemStyle}>
