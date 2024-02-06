@@ -5,9 +5,9 @@ import {CreateEmployee, DeleteEmployee} from "common/src/employee.ts";
 
 const router: Router = express.Router();
 
-router.get("/profile-info/:employeeID", async function (req: Request, res: Response) {
+router.get("/:email", async function (req: Request, res: Response) {
 
-    const {employeeID} = req.params;
+    const employeeID: string = req.params.email;
 
     // query for single employee
     if (employeeID) {
