@@ -50,11 +50,12 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 const yPosition = e.clientY - rect.top + (yPos / 20);
                 if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist&& floor===currLevel) {
                     if (drawLine) {
-                            setNodeEnd(nodeID);
+                            setNodeEnd(nodeStart);
+                            setNodeStart(nodeID);
                     } else {
                         setNodeStart(nodeID);
+                        setDrawLine(!drawLine);
                     }
-                    setDrawLine(!drawLine);
                 }
             });
         }
@@ -209,6 +210,15 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 if(nameToFloor(nr) === currLevel) {
                     const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
                     const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+
+                    if(0<=pathData.indexOf(nr)-1&&nameToFloor(pathData[pathData.indexOf(nr)-1])!==currLevel){
+                        ctx!.beginPath();
+                        ctx.fillStyle="rgba(230,0,255,0.97)";
+                        ctx!.font="bold 13pt arial";
+                        ctx!.textAlign="center";
+                        ctx!.fillText("Go to floor "+nameToFloor(pathData[pathData.indexOf(nr)-1]),xPos ,yPos-(height/90));
+                        ctx!.stroke();
+                    }
                     console.log(nr + " " + xPos + " " + yPos);
                     if (startX != -1 && startY != -1) {
                         ctx!.beginPath();
@@ -222,6 +232,13 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                     startY = yPos;
                 }
                 else {
+                    ctx.beginPath();
+                    ctx.fillStyle="rgba(230,0,255,0.97)";
+                    ctx.textAlign="center";
+                    ctx!.font="bold 13pt arial";
+                    ctx.fillText("Arrive from floor "+nameToFloor(nr),startX,startY-(height/90));
+                    ctx.stroke();
+                    ctx.fillStyle="blue";
                     startX = -1;
                     startY = -1;
                 }
