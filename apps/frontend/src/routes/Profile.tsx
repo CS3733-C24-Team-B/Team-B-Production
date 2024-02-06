@@ -28,7 +28,7 @@ export default function Profile() {
 
     async function submit() {
         const employeeInfo: CreateEmployee = {
-            email: user.email,
+            email: user!.email!,
             firstName: firstName,
             lastName: lastName
         };
