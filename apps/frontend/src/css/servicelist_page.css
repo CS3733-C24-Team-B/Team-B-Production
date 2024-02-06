@@ -43,3 +43,31 @@
     text-decoration: none;
     display: block;
 }
+
+.request-container {
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    /*grid-template-columns: auto;*/
+    width: 100%;
+    height: 50%;
+    row-gap: 5vh;
+}
+
+.req-list-header {
+    justify-self: center;
+    font-family: "Open Sans";
+    font-size: 26px;
+    font-weight: bold;
+    grid-row-start: 1;
+    padding-top: 3vh;
+    grid-column-start: 2;
+}
+
+.home-button {
+    justify-self: center;
+    grid-column-start: 2;
+}
+
+.delete-button {
+    border-bottom: 0px;
+}
