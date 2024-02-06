@@ -19,15 +19,17 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LanguageIcon from '@mui/icons-material/Language';
-import TableChartIcon from '@mui/icons-material/TableChart';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
 const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
-const links = ['/requestform', '/saved-locations', '/search-settings', '/language'];
-const adminIcons = [<InboxIcon />, <TableChartIcon />, <TableChartIcon />, <SettingsIcon />];
-const adminLinks = ['/requestlist', '/csvnodedata', '/csvedgedata', '/settings'];
+const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
+const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
+const adminLinks = ['/profile', '/requestlist', '/csvnodedata', '/csvedgedata'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -136,7 +138,7 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider/>
                 <List>
-                    {['Create Request', 'Saved Locations', 'Search Settings', 'Language'].map((text, index) => (
+                    {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={links[index]}>
                                 <ListItemIcon>
@@ -149,7 +151,7 @@ export default function PersistentDrawerLeft() {
                 </List>
                 <Divider />
                 <List>
-                    {['View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Profile Settings'].map((text, index) => (
+                    {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={adminLinks[index]}>
                                 <ListItemIcon>

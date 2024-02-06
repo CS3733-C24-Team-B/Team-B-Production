@@ -5,7 +5,7 @@ import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
 import CreateAccount from "./routes/CreateAccount.tsx";
 import ForgotPassword from "./routes/ForgotPassword.tsx";
-import Settings from "./routes/Settings.tsx";
+import Profile from "./routes/Profile.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
@@ -34,9 +34,9 @@ function App() {
             element: <ForgotPassword/>,
         },
         {
-            path: "/settings",
+            path: "/profile",
             errorElement: <div/>,
-            element: <Settings/>,
+            element: <Profile/>,
         },
         {
             path: "/csvnodedata",

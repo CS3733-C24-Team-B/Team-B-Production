@@ -172,6 +172,7 @@ export default function HomePage() {
                                 }}
                                 variant="outlined"
                                 size="small"
+                                style={{backgroundColor: "white",}}
                             >
                                 <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
                                 <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
