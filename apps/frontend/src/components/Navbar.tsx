@@ -19,15 +19,17 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import MailIcon from '@mui/icons-material/Mail';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LanguageIcon from '@mui/icons-material/Language';
-import TableChartIcon from '@mui/icons-material/TableChart';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
 const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
-const links = ['/requestform', '/saved-locations', '/search-settings', '/language'];
-const adminIcons = [<InboxIcon />, <TableChartIcon />, <TableChartIcon />, <SettingsIcon />];
-const adminLinks = ['/requestlist', '/csvnodedata', '/csvedgedata', '/settings'];
+const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
+const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
+const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -41,8 +43,6 @@ const AppBar = styled(MuiAppBar, {
         duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
@@ -78,7 +78,8 @@ export default function PersistentDrawerLeft() {
                 width: 1,
                 boxShadow: 0,
             }}>
-                <Toolbar>
+                <Toolbar
+                    style={{backgroundColor: "#012d5a",}}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -91,7 +92,8 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
                 {/* Navbar Preview */}
                 {!open && (
-                    <List className="preview-icons-container" sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                    <List className="preview-icons-container" sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+                          style={{backgroundColor: "#012d5a",}}>
                         {icons.map((icon, index) => (
                             <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
                                 <ListItemIcon sx={{ color: 'white' }}>
@@ -132,7 +134,7 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider/>
                 <List>
-                    {['Request Service', 'Saved Locations', 'Search Settings', 'Language'].map((text, index) => (
+                    {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={links[index]}>
                                 <ListItemIcon>
@@ -145,7 +147,7 @@ export default function PersistentDrawerLeft() {
                 </List>
                 <Divider />
                 <List>
-                    {['Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Profile Settings'].map((text, index) => (
+                    {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={adminLinks[index]}>
                                 <ListItemIcon>

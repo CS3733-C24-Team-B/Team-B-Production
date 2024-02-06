@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Box, Button, Checkbox, TextField, Typography, } from "@mui/material";
 import "../css/login_page.css";
 
+
 export default function LoginPage() {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");

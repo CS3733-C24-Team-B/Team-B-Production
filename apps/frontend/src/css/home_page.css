@@ -11,39 +11,45 @@
     grid-area: navbar;
     width: 100%;
     height: 100%;
-    align-items: start; /* Align items vertically */
-    justify-content: space-between; /* Space items horizontally */
-    background-color: #1976D2;
+    background-color: #012d5a;
 }
-
 
 .info-container {
     display: grid;
-    background-color: transparent;
     width: 100%;
     height: 100%;
 }
 
 /*for search*/
 .manual-dropdown {
-    grid-area: s1;
-    justify-self: start;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: auto;
+    grid-template-areas: "s1 s2 s3 s4";
     position: absolute;
-    width: 20%;
-    padding: 1%;
+    top: 3%;
+    width: 96%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    background-color: transparent;
 }
 
 .manual-dropdown input {
-    width: 100%;
+    grid-area: s1;
+    width: 80%;
+    justify-self: end;
 }
 
 .manual-dropdown:focus-within .dropdown-content {
-    display: block;
+    position: relative;
+    display: inline-block;
 }
 
 .floor-container {
     grid-area: s2;
-    justify-self: start;
+    justify-self: center;
+    width: 20%;
 }
 
 .map-container {
@@ -113,30 +119,6 @@
     outline: 3px solid #ddd;
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f6f6f6;
-    min-width: 230px;
-    overflow: auto;
-    border: 1px solid #ddd;
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-#myInput:focus + .dropdown-content {
-    display: block;
-}
-
-.show {
-    display: block;
-}
 
 /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
 @media screen and (max-width: 700px) {

@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {Outlet} from "react-router-dom";
+//import {Outlet} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 //import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import SideButtons from "../components/SideButtons.tsx";
+//import SideButtons from "../components/SideButtons.tsx";
 import {StatusType} from "common/src/serviceRequestTypes.ts";
+import {Button, MenuItem} from "@mui/material";
 //import {employee} from "common/src/employee.ts";
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 
 export default function RequestList() {
     const navigate = useNavigate();
@@ -80,68 +82,110 @@ export default function RequestList() {
     // srData.map(({name, timeCreated}) => {
     //     console.log("TIME: " + name + " " + timeCreated);
     // });
-    const idToUser = (id: string) => {
-        return employeeData.find(({email}) =>
-            email === id
-        )!["username"];
-    };
+    // const idToUser = (id: string) => {
+    //     return employeeData.find(({email}) =>
+    //         email === id
+    //     )!["username"];
+    // };
     const arraySR = srData.map(({serviceID, name, status, infoText, assignedID}) =>
         <tr>
             <td>
-                <div className="dropdown">
-                    <button className="dropbtn">{(assignedID !== null) ? idToUser(assignedID) : "Choose Employee"}</button>
-                    <div className="dropdown-content">
-                        {employeeData.map(({email, username}) =>
-                            <a onClick={async () => {
-                                console.log("CHANGE ASSIGNMENT: " + serviceID + " " + email);
-                                const resSR = await axios.post("/api/service-assignment", {
-                                    serviceID: serviceID,
-                                    assignedTo: email
-                                }).then();
-                                if(status === StatusType.Unassigned) {
-                                    await axios.post("/api/service-status", {
-                                        serviceID: serviceID,
-                                        status: StatusType.Assigned
-                                    }).then();
-                                }
-                                console.log(resSR);
-                                setRefresh(!refresh);
-                            }}>
-                                {username}
-                            </a>
-                        )}
-                    </div>
-                </div>
+                {/*<div className="dropdown">*/}
+                {/*    <button*/}
+                {/*        className="dropbtn">{(assignedID !== null) ? idToUser(assignedID) : "Choose Employee"}</button>*/}
+                {/*    <div className="dropdown-content">*/}
+                {/*        {employeeData.map(({email, username}) =>*/}
+                {/*            <a onClick={async () => {*/}
+                {/*                console.log("CHANGE ASSIGNMENT: " + serviceID + " " + email);*/}
+                {/*                const resSR = await axios.post("/api/service-assignment", {*/}
+                {/*                    serviceID: serviceID,*/}
+                {/*                    assignedTo: email*/}
+                {/*                }).then();*/}
+                {/*                if (status === StatusType.Unassigned) {*/}
+                {/*                    await axios.post("/api/service-status", {*/}
+                {/*                        serviceID: serviceID,*/}
+                {/*                        status: StatusType.Assigned*/}
+                {/*                    }).then();*/}
+                {/*                }*/}
+                {/*                console.log(resSR);*/}
+                {/*                setRefresh(!refresh);*/}
+                {/*            }}>*/}
+                {/*                {username}*/}
+                {/*            </a>*/}
+                {/*        )}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <Select
+                    value={(assignedID !== null) ? assignedID : "Choose Employee"}
+                    onChange={async (event: SelectChangeEvent) => {
+                        console.log("CHANGE ASSIGNMENT: " + serviceID + " " + event.target.value);
+                        const resSR = await axios.post("/api/service-assignment", {
+                            serviceID: serviceID,
+                            assignedTo: event.target.value
+                        }).then();
+                        if (status === StatusType.Unassigned) {
+                            await axios.post("/api/service-status", {
+                                serviceID: serviceID,
+                                status: StatusType.Assigned
+                            }).then();
+                        }
+                        console.log(resSR);
+                        setRefresh(!refresh);
+                    }}>
+                    {employeeData.map(({email, username}) =>
+                        <MenuItem value={email}>{username}</MenuItem>
+                    )}
+                </Select>
             </td>
             <td>{name}</td>
             <td>
-                <div className="dropdown">
-                    <button className="dropbtn">{status}</button>
-                    <div className="dropdown-content">
-                        {statuses.map((st) =>
-                            <a onClick={async () => {
-                                console.log("UPDATE STATUS " + serviceID + " " + st);
-                                await axios.post("/api/service-status", {
-                                    serviceID: serviceID,
-                                    status: StatusType[st as keyof typeof StatusType]
-                                }).then();
-                                setRefresh(!refresh);
-                            }}>{StatusType[st as keyof typeof StatusType]}</a>
-                        )}
-                    </div>
-                </div>
+                {/*<div className="dropdown">*/}
+                {/*    <button className="dropbtn">{status}</button>*/}
+                {/*    <div className="dropdown-content">*/}
+                {/*        {statuses.map((st) =>*/}
+                {/*            <a onClick={async () => {*/}
+                {/*                console.log("UPDATE STATUS " + serviceID + " " + st);*/}
+                {/*                await axios.post("/api/service-status", {*/}
+                {/*                    serviceID: serviceID,*/}
+                {/*                    status: StatusType[st as keyof typeof StatusType]*/}
+                {/*                }).then();*/}
+                {/*                setRefresh(!refresh);*/}
+                {/*            }}>{StatusType[st as keyof typeof StatusType]}</a>*/}
+                {/*        )}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+                <Select
+                    defaultValue={StatusType.Unassigned}
+                    value={StatusType[status as keyof typeof StatusType] ? StatusType[status as keyof typeof StatusType] : "InProgress"}
+                    onChange={async (event: SelectChangeEvent) => {
+                        console.log(status as keyof typeof StatusType);
+                        console.log("UPDATE STATUS " + serviceID + " " + event.target.value);
+                        await axios.post("/api/service-status", {
+                            serviceID: serviceID,
+                            status: StatusType[event.target.value as keyof typeof StatusType]
+                        }).then();
+                        setRefresh(!refresh);
+                    }}>
+                    {statuses.map((st) =>
+                        <MenuItem value={st}>{StatusType[st as keyof typeof StatusType]}</MenuItem>
+                    )}
+                </Select>
             </td>
             <td>{infoText}</td>
-            <button onClick={() => {
-                console.log("DELETE REQUEST " + serviceID);
-                axios.delete("/api/service-request", {
-                    data: {
-                        serviceID: serviceID
-                    }
-                }).then();
-                setRefresh(!refresh);
-            }}>Delete
-            </button>
+            <td className="delete-button">
+                <Button
+                    variant="outlined"
+                    onClick={() => {
+                        console.log("DELETE REQUEST " + serviceID);
+                        axios.delete("/api/service-request", {
+                            data: {
+                                serviceID: serviceID
+                            }
+                        }).then();
+                        setRefresh(!refresh);
+                    }}>Delete
+                </Button>
+            </td>
         </tr>
     );
 
@@ -150,25 +194,29 @@ export default function RequestList() {
     }
 
     return (
-        <div className="App">
-            <header className="App-header">Service Request Lists</header>
-            <Navbar/>
-            <br/>
-            <h3 className={"csv table"}> Active Service Requests </h3>
-            <table className={"tables"}>
-                <tr>
-                    <th>Assigned To</th>
-                    <th>UserName</th>
-                    <th>Status</th>
-                    <th>Request Notes</th>
-                </tr>
-                {arraySR}
-            </table>
-            <br/>
-            <br/>
-            <input type="button" value="Return to Home" onClick={handleClick}/>
-            <Outlet/>
-            <SideButtons/>
+        <div className="node-data-container">
+            <div className="nav-container">
+                <Navbar/>
+            </div>
+            <div className="request-container">
+                <div className="req-list-header">
+                    <header>Service Request List</header>
+                </div>
+                <br/>
+                <table className={"tables"}>
+                    <tr>
+                        <th>Assigned To</th>
+                        <th>UserName</th>
+                        <th>Status</th>
+                        <th>Request Notes</th>
+                    </tr>
+                    {arraySR}
+                </table>
+                <br/>
+                <div className="home-button">
+                    <Button variant="contained" onClick={handleClick}>Return to Home</Button>
+                </div>
+            </div>
         </div>
     );
 }
