@@ -43,8 +43,6 @@ const AppBar = styled(MuiAppBar, {
         duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
@@ -80,7 +78,8 @@ export default function PersistentDrawerLeft() {
                 width: 1,
                 boxShadow: 0,
             }}>
-                <Toolbar>
+                <Toolbar
+                    style={{backgroundColor: "#012d5a",}}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -93,7 +92,8 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
                 {/* Navbar Preview */}
                 {!open && (
-                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}
+                          style={{backgroundColor: "#012d5a"}}>
                         <div>
                             {icons.map((icon, index) => (
                                 <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
