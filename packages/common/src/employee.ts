@@ -4,6 +4,10 @@ export type CreateEmployee = {
     lastName: string
 }
 
+export type EmployeeID = {
+    email: string
+}
+
 export type DeleteEmployee = {
     email: string
 }
