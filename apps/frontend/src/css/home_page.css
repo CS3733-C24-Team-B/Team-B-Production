@@ -23,15 +23,20 @@
 
 /*for search*/
 .manual-dropdown {
-    grid-area: s1;
-    justify-self: start;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: auto;
+    grid-template-areas: "s1 s2 s3 s4";
     position: absolute;
-    width: 20%;
-    padding: 1%;
+    width: 96%;
+    padding-top: 1%;
+    padding-left: 2%;
 }
 
 .manual-dropdown input {
-    width: 100%;
+    grid-area: s1;
+    width: 80%;
+    justify-self: end;
 }
 
 .manual-dropdown:focus-within .dropdown-content {
@@ -40,7 +45,8 @@
 
 .floor-container {
     grid-area: s2;
-    justify-self: start;
+    justify-self: center;
+    width: 20%;
 }
 
 .map-container {

@@ -10,7 +10,7 @@ import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "../components/Canvas.tsx";
-import PathHandler from "../components/PathHandler.tsx";
+//import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
 
@@ -153,7 +153,7 @@ export default function HomePage() {
                             placeholder="Search.."
                             id="myInput"
                         />
-                        <div id="myDropdown" className="dropdown-content">
+                        <div className="dropdown-content">
                             {nodeData.map(({longName}, index) => (
                                 <a href="/home" key={index}>
                                     {longName}
@@ -181,17 +181,13 @@ export default function HomePage() {
 
                     </div>
 
-                    <div className="floor-container">
-
-                    </div>
-
                 <div className="map-container">
                     <Canvas
                         imageSource={floorImages[selectedFloor]}
                         currLevel={selectedLevel}
                     />
                     <Outlet/>
-                    <PathHandler/>
+                    {/*<PathHandler/>*/}
                 </div>
             </div>
         </div>
