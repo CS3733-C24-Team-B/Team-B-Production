@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
+import React, {useEffect, useState} from "react";
+import {Outlet} from "react-router-dom";
+//import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -12,6 +12,7 @@ import axios from "axios";
 import Canvas from "../components/Canvas.tsx";
 import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
+import {MenuItem, TextField} from "@mui/material";
 
 interface FloorImages {
     groundfloor: string;
@@ -21,6 +22,33 @@ interface FloorImages {
     secondfloor: string;
     thirdfloor: string;
 }
+
+const FloorLevel =  [
+    {
+        floor: "groundfloor",
+        level: "0"
+    },
+    {
+        floor: "lowerlevel1",
+        level: "L1"
+    },
+    {
+        floor: "lowerlevel2",
+        level: "L2"
+    },
+    {
+        floor: "firstfloor",
+        level: "1"
+    },
+    {
+        floor: "secondfloor",
+        level: "2"
+    },
+    {
+        floor: "thirdfloor",
+        level: "3"
+    }
+];
 
 export default function HomePage() {
     // State to keep track of the selected floor
@@ -38,7 +66,7 @@ export default function HomePage() {
             } catch {
                 console.log("post error");
             }
-            const res = await axios.get("/api/db-get-nodes");
+            const res = await axios.get("/api/db-load-nodes");
 
             console.log(res.data);
             setNodeData(res.data);
@@ -99,46 +127,72 @@ export default function HomePage() {
         thirdfloor,
     };
 
+    // floor to level change
+    const floorToLevel = (inputFloor:string) => {
+        let output = "0";
+        FloorLevel.map(({floor, level}) => {
+            if(inputFloor === floor) {
+                output = level;
+            }
+        });
+        return output;
+    };
+
     return (
-        <body>
-        <div className="App">
-            <header className="App-header">
-                <div className="title">Navigation Page</div>
-                <div className="logo">
-                    <img src={logo} alt="Hospital Logo" />
+        <div className="home-container">
+            <div className="nav-container">
+                <Navbar/>
+            </div>
+
+            <div className="info-container">
+                <div className="topbar-container">
+                    <div className="manual-dropdown">
+                        <input
+                            onClick={filterFunction}
+                            onKeyUp={filterFunction}
+                            type="text"
+                            placeholder="Search.."
+                            id="myInput"
+                        />
+                        <div id="myDropdown" className="dropdown-content">
+                            {nodeData.map(({longName}, index) => (
+                                <a href="/home" key={index}>
+                                    {longName}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="floor-container">
+                        <TextField
+                            select
+                            value={selectedFloor}
+                            onChange={(event) => {
+                                handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
+                            }}
+                            variant="outlined"
+                            size="small"
+                        >
+                            <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
+                            <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
+                            <MenuItem value="groundfloor">Ground Floor</MenuItem>
+                            <MenuItem value="firstfloor">First Floor</MenuItem>
+                            <MenuItem value="secondfloor">Second Floor</MenuItem>
+                            <MenuItem value="thirdfloor">Third Floor</MenuItem>
+                        </TextField>
+                    </div>
                 </div>
-            </header>
-            <Navbar
-                handleFloorChange={handleFloorChange}
-                filterFunction={filterFunction} // Pass the filterFunction prop
-                selectedFloor={selectedFloor}
-            />
-            <div className="manual-dropdown">
-                <input
-                    onClick={filterFunction}
-                    onKeyUp={filterFunction}
-                    type="text"
-                    placeholder="Search.."
-                    id="myInput"
-                />
-                <div id="myDropdown" className="dropdown-content">
-                    {nodeData.map(({ longName }, index) => (
-                        <a href="/home" key={index}>
-                            {longName}
-                        </a>
-                    ))}
+
+                <div id="map-container">
+                    <Canvas
+                        imageSource={floorImages[selectedFloor]}
+                        currLevel={selectedLevel}
+                    />
+                    <Outlet/>
+                    <PathHandler/>
                 </div>
             </div>
-            <div id="map-container">
-                <Canvas
-                    imageSource={floorImages[selectedFloor]}
-                    currLevel={selectedLevel}
-                />
-            </div>
-            <Outlet />
-            <PathHandler />
         </div>
-        </body>
     );
 }
 

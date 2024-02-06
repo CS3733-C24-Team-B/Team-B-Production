@@ -13,22 +13,40 @@ datasource db {
 }
 
 model Node {
-  nodeID      String      @id
-  xcoord      Int
-  ycoord      Int
-  floor       String
-  building    String
-  nodeType    String
-  longName    String
-  shortName   String
-  startEdges  Edge[]      @relation("StartNode")
-  endEdges    Edge[]      @relation("EndNode")
+  nodeID     String @id
+  xcoord     Int
+  ycoord     Int
+  floor      String
+  building   String
+  nodeType   String
+  longName   String
+  shortName  String
+  startEdges Edge[] @relation("StartNode")
+  endEdges   Edge[] @relation("EndNode")
 }
 
 model Edge {
-  edgeID      String      @id
-  startNode   Node        @relation("StartNode", fields: [startNodeID], references: [nodeID])
+  edgeID      String @id
+  startNode   Node   @relation("StartNode", fields: [startNodeID], references: [nodeID])
   startNodeID String
-  endNode     Node        @relation("EndNode", fields: [endNodeID], references: [nodeID])
+  endNode     Node   @relation("EndNode", fields: [endNodeID], references: [nodeID])
   endNodeID   String
+}
+
+model ServiceRequest {
+  serviceID   Int       @id @default(autoincrement())
+  timeCreated DateTime  @default(now())
+  name        String
+  roomNumber  Int
+  infoText    String
+  assignedTo  Employee? @relation("Assigned", fields: [assignedID], references: [email])
+  assignedID  String?
+  status      String
+}
+
+model Employee {
+  email            String           @id
+  username         String           @default("admin")
+  password         String           @default("admin")
+  receivedRequests ServiceRequest[] @relation("Assigned")
 }
