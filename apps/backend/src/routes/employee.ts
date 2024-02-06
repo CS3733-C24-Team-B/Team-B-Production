@@ -1,23 +1,23 @@
 import express, {Router, Request, Response} from "express";
 import {Employee} from "database";
 import client from "../bin/database-connection.ts";
-import {CreateEmployee, EmployeeID, DeleteEmployee} from "common/src/employee.ts";
+import {CreateEmployee, DeleteEmployee} from "common/src/employee.ts";
 
 const router: Router = express.Router();
 
-router.get("/", async function (req: Request, res: Response) {
+router.get("/profile-info/:employeeID", async function (req: Request, res: Response) {
 
-    const employeeID: EmployeeID = req.body;
+    const {employeeID} = req.params;
 
     // query for single employee
-    if (employeeID.email) {
+    if (employeeID) {
         const employee = await client.employee.findUnique({
             where: {
-                email: employeeID.email
+                email: employeeID
             }
         });
         if (employee === null) {
-            return res.status(204).send("Could not find employee with email " + employeeID.email);
+            return res.status(204).send("Could not find employee with email " + employeeID);
         }
         return res.status(200).send(JSON.stringify(employee));
     }
