@@ -146,20 +146,23 @@ export default function HomePage() {
 
             <div className="info-container">
                     <div className="manual-dropdown">
-                        <input
-                            onClick={filterFunction}
-                            onKeyUp={filterFunction}
-                            type="text"
-                            placeholder="Search.."
-                            id="myInput"
-                        />
-                        <div className="dropdown-content">
-                            {nodeData.map(({longName}, index) => (
-                                <a href="/home" key={index}>
-                                    {longName}
-                                </a>
-                            ))}
+                        <div className="search">
+                            <input
+                                onClick={filterFunction}
+                                onKeyUp={filterFunction}
+                                type="text"
+                                placeholder="Search.."
+                                id="myInput"
+                            />
+                            <div className="dropdown-content">
+                                {nodeData.map(({longName}, index) => (
+                                    <a href="/home" key={index}>
+                                        {longName}
+                                    </a>
+                                ))}
+                            </div>
                         </div>
+
                         <div className="floor-container">
                             <TextField
                                 select

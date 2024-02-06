@@ -136,7 +136,7 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider/>
                 <List>
-                    {['Request Service', 'Saved Locations', 'Search Settings', 'Language'].map((text, index) => (
+                    {['Create Request', 'Saved Locations', 'Search Settings', 'Language'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={links[index]}>
                                 <ListItemIcon>
@@ -149,7 +149,7 @@ export default function PersistentDrawerLeft() {
                 </List>
                 <Divider />
                 <List>
-                    {['Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Profile Settings'].map((text, index) => (
+                    {['View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Profile Settings'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton component="a" href={adminLinks[index]}>
                                 <ListItemIcon>
