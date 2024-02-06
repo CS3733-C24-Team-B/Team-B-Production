@@ -2,10 +2,10 @@ import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
-import Settings from "./routes/Settings.tsx";
-import CreateAccount from "./routes/CreateAccount.tsx";
-import ForgotPassword from "./routes/ForgotPassword.tsx";
-import Profile from "./routes/Profile.tsx";
+// import Settings from "./routes/Settings.tsx";
+// import CreateAccount from "./routes/CreateAccount.tsx";
+// import ForgotPassword from "./routes/ForgotPassword.tsx";
+// import Profile from "./routes/Profile.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
@@ -26,11 +26,11 @@ function App() {
             errorElement: <div><p>An error has occurred</p></div>,
             element: <LoginButton/>
         },
-        {
-            path: "/profile",
-            errorElement: <div/>,
-            element: <Profile/>,
-        },
+        // {
+        //     path: "/profile",
+        //     errorElement: <div/>,
+        //     element: <Profile/>,
+        // },
         {
             path: "/csvnodedata",
             errorElement: <div/>,
