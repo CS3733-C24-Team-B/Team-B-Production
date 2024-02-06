@@ -92,26 +92,22 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
                 {/* Navbar Preview */}
                 {!open && (
-                    <List sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}
-                          style={{backgroundColor: "#012d5a"}}>
-                        <div>
-                            {icons.map((icon, index) => (
-                                <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
-                                    <ListItemIcon>
-                                        {icon}
-                                    </ListItemIcon>
-                                </ListItem>
-                            ))}
-                        </div>
-                        <div>
-                            {adminIcons.map((icon, index) => (
-                                <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
-                                    <ListItemIcon>
-                                        {icon}
-                                    </ListItemIcon>
-                                </ListItem>
-                            ))}
-                        </div>
+                    <List className="preview-icons-container" sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+                          style={{backgroundColor: "#012d5a",}}>
+                        {icons.map((icon, index) => (
+                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
+                                <ListItemIcon sx={{ color: 'white' }}>
+                                    {icon}
+                                </ListItemIcon>
+                            </ListItem>
+                        ))}
+                        {adminIcons.map((icon, index) => (
+                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
+                                <ListItemIcon sx={{ color: 'white' }}>
+                                    {icon}
+                                </ListItemIcon>
+                            </ListItem>
+                        ))}
                     </List>
                 )}
             </AppBar>
