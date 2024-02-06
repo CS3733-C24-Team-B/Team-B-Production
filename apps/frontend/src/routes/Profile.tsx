@@ -6,7 +6,7 @@ import "../index.css";
 import Navbar from "../components/Navbar.tsx";
 import SideButtons from "../components/SideButtons.tsx";
 
-export default function Settings() {
+export default function Profile() {
   const navigate = useNavigate();
 
   function handleClick() {
@@ -15,7 +15,7 @@ export default function Settings() {
 
   return (
     <div className="App">
-      <header className="App-header">Settings</header>
+      <header className="App-header">Profile</header>
         <Navbar/>
       <br />
       <form>

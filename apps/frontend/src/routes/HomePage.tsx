@@ -10,7 +10,7 @@ import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Canvas from "../components/Canvas.tsx";
-import PathHandler from "../components/PathHandler.tsx";
+//import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
 
@@ -145,51 +145,53 @@ export default function HomePage() {
             </div>
 
             <div className="info-container">
-                <div className="topbar-container">
                     <div className="manual-dropdown">
-                        <input
-                            onClick={filterFunction}
-                            onKeyUp={filterFunction}
-                            type="text"
-                            placeholder="Search.."
-                            id="myInput"
-                        />
-                        <div id="myDropdown" className="dropdown-content">
-                            {nodeData.map(({longName}, index) => (
-                                <a href="/home" key={index}>
-                                    {longName}
-                                </a>
-                            ))}
+                        <div className="search">
+                            <input
+                                onClick={filterFunction}
+                                onKeyUp={filterFunction}
+                                type="text"
+                                placeholder="Search.."
+                                id="myInput"
+                            />
+                            <div className="dropdown-content">
+                                {nodeData.map(({longName}, index) => (
+                                    <a href="/home" key={index}>
+                                        {longName}
+                                    </a>
+                                ))}
+                            </div>
                         </div>
+
+                        <div className="floor-container">
+                            <TextField
+                                select
+                                value={selectedFloor}
+                                onChange={(event) => {
+                                    handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
+                                }}
+                                variant="outlined"
+                                size="small"
+                                style={{backgroundColor: "white",}}
+                            >
+                                <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
+                                <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
+                                <MenuItem value="groundfloor">Ground Floor</MenuItem>
+                                <MenuItem value="firstfloor">First Floor</MenuItem>
+                                <MenuItem value="secondfloor">Second Floor</MenuItem>
+                                <MenuItem value="thirdfloor">Third Floor</MenuItem>
+                            </TextField>
+                        </div>
+
                     </div>
 
-                    <div className="floor-container">
-                        <TextField
-                            select
-                            value={selectedFloor}
-                            onChange={(event) => {
-                                handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
-                            }}
-                            variant="outlined"
-                            size="small"
-                        >
-                            <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
-                            <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
-                            <MenuItem value="groundfloor">Ground Floor</MenuItem>
-                            <MenuItem value="firstfloor">First Floor</MenuItem>
-                            <MenuItem value="secondfloor">Second Floor</MenuItem>
-                            <MenuItem value="thirdfloor">Third Floor</MenuItem>
-                        </TextField>
-                    </div>
-                </div>
-
-                <div id="map-container">
+                <div className="map-container">
                     <Canvas
                         imageSource={floorImages[selectedFloor]}
                         currLevel={selectedLevel}
                     />
                     <Outlet/>
-                    <PathHandler/>
+                    {/*<PathHandler/>*/}
                 </div>
             </div>
         </div>
