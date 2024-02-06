@@ -1,13 +1,72 @@
 table {
     margin: auto;
-    border:1px solid black;
+}
+
+.node-data-header {
+    justify-self: center;
+    font-family: "Open Sans";
+    font-size: 26px;
+    font-weight: bold;
+    grid-row-start: 1;
+    padding-top: 3vh;
+}
+
+.topbar-container {
+    display: grid;
+    grid-area: topbar;
+    grid-column-start: 1;
+    grid-template-columns: 100%;
+    grid-row-start: 1;
+    gap: 5vh;
+    /*grid-template-columns: 25% 25% 25% 25%;*/
+    /*grid-template-areas: "a b c d";*/
+}
+
+.upload-buttons {
+    justify-self: center;
+}
+
+.export-button {
+    width: 100px;
+    justify-self: center;
+}
+
+.top-buttons-container {
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 100%;
+    /*grid-template-columns: 33% 33% 33%;*/
+    /*grid-template-areas: "a b c";*/
+    grid-row-start: 2;
+    gap: 1vh;
+}
+
+.node-data-container {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 4vw 96vw;
+    grid-template-rows: auto;
+    grid-template-areas: "navbar main";
+    justify-items: center;
+}
+
+.data-container {
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    /*grid-template-columns: auto;*/
+    width: 100%;
+    height: 50%;
+    row-gap: 10vh;
 }
 
 td,
 th {
     padding-left: 3vw;
     padding-right: 3vw;
-    border:1px solid black;
+    /*border:1px solid black;*/
+    border-bottom: 1px solid #ddd;
+    text-align: left;
 }
 
 .file button{
@@ -16,4 +75,5 @@ th {
 }
 .tables{
     background-color: white;
+    grid-column-start: 2;
 }
