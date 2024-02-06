@@ -29,7 +29,7 @@ const drawerWidth = 240;
 const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
 const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
 const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
-const adminLinks = ['/profile', '/requestlist', '/csvnodedata', '/csvedgedata'];
+const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;

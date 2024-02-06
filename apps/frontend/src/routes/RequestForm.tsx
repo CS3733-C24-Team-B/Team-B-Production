@@ -73,7 +73,7 @@ export default function LoginPage() {
 
                     {/*This lables the room number*/}
                     <div className="input-field">
-                        <TextField id="standard-basic" label="Request Detials" variant="standard"
+                        <TextField id="standard-basic" label="Request Details" variant="standard"
                                    type="text" value={infoText} onChange={(e => {
                             setInfoText(e.target.value);
                         })} required
