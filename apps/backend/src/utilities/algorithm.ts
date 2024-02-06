@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
+import {Edge, Node, PrismaClient} from "database";
 // import * as path from "path";
 // import * as fs from "fs";
 // import {G} from "vitest/dist/types-198fd1d9";
 // import {start} from "http-errors";
-
 export class MapNode {
     nodeID: string;
     xcoord: number;
@@ -23,6 +23,37 @@ export class MapNode {
         this.nodeType = nodeType;
         this.shortName = shortName;
         this.longName = longName;
+    }
+}
+export class aStarNode {
+    nodeID: string;
+    xcoord: number;
+    ycoord: number;
+    floor: string;
+    building: string;
+    nodeType: string;
+    longName: string;
+    shortName: string;
+    gvalue: number;
+    hvalue: number;
+    f: number;
+    parent: aStarNode | undefined;
+
+    constructor(nodeID: string, xcoord: number, ycoord: number, floor: string, building: string, nodeType: string, longName: string, shortName: string, gvalue:number,hvalue:number) {
+        this.nodeID = nodeID;
+        this.xcoord = xcoord;
+        this.ycoord = ycoord;
+        this.floor = floor;
+        this.building = building;
+        this.nodeType = nodeType;
+        this.shortName = shortName;
+        this.longName = longName;
+        this.gvalue = gvalue;
+        this.hvalue = hvalue;
+        this.f=0;
+    }
+    setParent(parent:aStarNode){
+        this.parent=parent;
     }
 }
 export class MapEdge {
@@ -59,6 +90,33 @@ class Graph {
         this.adjacencyList.get(vertex2)?.push(vertex1);
     }
 }
+
+
+const prisma = new PrismaClient();
+let nodes:Node[]=[];
+
+const getAllNodes = async () => {
+    try {
+        nodes = await prisma.node.findMany();
+        console.log('All nodes:', nodes);
+    } catch (error) {
+        console.error('Error fetching nodes:', error);
+    } finally {
+        await prisma.$disconnect();
+    }
+};
+
+let edges:Edge[]=[];
+const getAllEdges = async () => {
+    try {
+        edges = await prisma.edge.findMany();
+        console.log('All edges:', edges);
+    } catch (error) {
+        console.error('Error fetching nodes:', error);
+    } finally {
+        await prisma.$disconnect();
+    }
+};
 export function findNode(nodeID: string) : MapNode{
     //return array.find(obj => obj.id === id);
     //console.log(createNodeList()[7]);
@@ -126,44 +184,49 @@ export function readEdgeCSV(filePath:string){
 
 //use to iterate/print out different values of each node
 export function createNodeList() {
-    const filePath = "src/csvs/L1Nodes.csv";
-    const nodes = readNodeCSV(filePath);
+    getAllNodes();
     const nodeList : MapNode[] = [];
     for (let i = 1; i<nodes.length;i++) {
         const node = nodes[i];
-        nodeList.push(new MapNode(node.data.nodeID,parseInt(node.data.xcoord),parseInt(node.data.ycoord),node.data.floor,node.data.building,node.data.nodeType,node.data.longName,node.data.shortName));
+        nodeList.push(new MapNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName));
     }
     //console.log(nodeList);
     return nodeList;
 }
-
 export function createEdgeList() {
-    const filePath = "src/csvs/L1Edges.csv";
-    const edges = readEdgeCSV(filePath);
+    getAllEdges();
     const edgeList : MapEdge[] = [];
-    for (let i = 1; i<edges.length;i++) {
+    for (let i = 0; i<edges.length;i++) {
         const edge = edges[i];
-        edgeList.push(new MapEdge(edge.data.edgeID,edge.data.startNode,edge.data.endNode));
+        edgeList.push(new MapEdge(edge.edgeID,edge.startNodeID,edge.endNodeID));
     }
    // console.log(edgeList);
     return edgeList;
 }
+function createGraph(nodeList:MapNode[],edgeList:MapEdge[]){
 
-
-export function breadthFirstSearch(){
     let graph : Graph = new Graph();
-    for(const currentNode of createNodeList()){
+    for(const currentNode of nodeList){
         graph.addVertex(currentNode.nodeID);
     }
-    for(const currentEdge of createEdgeList()){
+    for(const currentEdge of edgeList){
         graph.addEdge(currentEdge.endNode,currentEdge.startNode);
     }
+    return graph;
+}
+
+export function breadthFirstSearch(){
+
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const graph = createGraph(nodeList,edgeList);
+
     const visited: Set<string> = new Set();
     const queue: string[] = [];
     const result: string[] = [];
 
-    visited.add(createNodeList()[0].nodeID);
-    queue.push(createNodeList()[0].nodeID);
+    visited.add(nodeList[0].nodeID);
+    queue.push(nodeList[0].nodeID);
 
 
     while (queue.length > 0) {
@@ -183,16 +246,11 @@ export function breadthFirstSearch(){
     return result;
 }
 export function pathFindBFS(startingNode:string,endingNode:string){
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const graph = createGraph(nodeList,edgeList);
     const startNode = findNode(startingNode);
     const endNode = findNode(endingNode);
-    let graph : Graph = new Graph();
-    for(const currentNode of createNodeList()){
-        graph.addVertex(currentNode.nodeID);
-    }
-    for(const currentEdge of createEdgeList()){
-        graph.addEdge(currentEdge.endNode,currentEdge.startNode);
-        graph.addEdge(currentEdge.startNode,currentEdge.endNode);
-    }
     const visited: Set<string> = new Set();
     const queue: string[][] = [[startNode.nodeID]];
     visited.add(startNode.nodeID);
@@ -217,32 +275,78 @@ export function pathFindBFS(startingNode:string,endingNode:string){
     }
     return null;
 }
-//const filePath = "src/csvs/L1Nodes.csv";
-//console.log(readCSV(filePath));
-//const filePath = "src/csvs/L1Edges.csv";
-//console.log(readCSV(filePath));
-/*bfs(startingVertex: number): number[] {
-    const visited: Set<number> = new Set();
-    const queue: number[] = [];
-    const result: number[] = [];
-
-    visited.add(startingVertex);
-    queue.push(startingVertex);
-
-    while (queue.length > 0) {
-      const currentVertex = queue.shift()!;
-      result.push(currentVertex);
-
-      const neighbors = this.adjacencyList.get(currentVertex) || [];
-
-      for (const neighbor of neighbors) {
-        if (!visited.has(neighbor)) {
-          visited.add(neighbor);
-          queue.push(neighbor);
-        }
-      }
+function mapNodeToStar(node:MapNode){
+    return new aStarNode(node.nodeID,node.xcoord,node.ycoord,node.floor,node.building,node.nodeType,node.longName,node.shortName,0,0);
+}
+export function nodeToFloor(node:aStarNode){
+    if(node.floor.length>1){
+        return -parseInt(node.floor.substring(1));
+    }else{
+        return parseInt(node.floor);
     }
+}
+export function pathfindAStar(startNode: string, goalNode: string): string[] | undefined {
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const start =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===startNode)as MapNode);
+    const goal =mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID===goalNode)as MapNode);
+    const graph = createGraph(nodeList,edgeList);
+    //queue to search
+    let openList= [start];
+    //already searched
+    let closedList:aStarNode[] =[];
+    //while there are still nodes left to search
+    while (openList.length > 0) {
+        //get currenet node
+        const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
+        //remove current node from queue
+        openList = openList.filter(node => !(node.nodeID === currentNode.nodeID));
+        //add current node to searched
+        closedList.push(currentNode);
+        //if current node is the goal
+        if (currentNode.nodeID === goal.nodeID) {
+            //return the path
+            const path: aStarNode[] = [];
+            let current = currentNode;
+            while (current) {
+                path.push(current);
+                current = current.parent!;
+            }
+            return path.reverse().map(obj => obj.nodeID);
+        }
+        //get nodes with edges connected to current node
+        const neighborsNode = (graph.adjacencyList.get(currentNode.nodeID));
+        if (neighborsNode) {
+            const neighbors = neighborsNode.map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === obj) as MapNode));
 
-    return result;
-  }
-}*/
+        //go through the nodes connected to current
+        for (const neighbor of neighbors) {
+            //skip if node is already searched
+            if (closedList.some(node => node.nodeID === neighbor.nodeID)) {
+                continue;
+            }
+            //g value is 1 greater than currents
+            const tentativeG = currentNode.gvalue + 1;
+            //if openlist doesnt already have this node or the parent g is less than this nodes g
+            if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
+                //set g to parent g+1
+                neighbor.gvalue = tentativeG;
+                const floorWeight = 300;
+                //heuristic for current distance to goal node.
+                neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal)-nodeToFloor(neighbor))*floorWeight )** 2);
+                //f is g+h
+                neighbor.f = neighbor.gvalue + neighbor.hvalue;
+                //set nodes parent to current node
+                neighbor.parent = currentNode;
+                //if open list does not contain this node, add it.
+                if (!openList.some(node => node.nodeID === neighbor.nodeID)) {
+                    openList.push(neighbor);
+                }
+            }
+        }
+    }
+    }
+    return undefined;
+}
+
+

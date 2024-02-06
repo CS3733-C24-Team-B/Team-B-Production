@@ -8,7 +8,6 @@ interface CanvasProps {
     imageSource: string;
     currLevel: string;
 }
-
 const widthRatio = 5000;
 const heightRatio = 3400;
 const clickDist = 5;
@@ -42,18 +41,21 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
         if(!showEdges) {
             const rect = e.currentTarget.getBoundingClientRect();
-            const xPosition = e.clientX - rect.left + (width / 160);
-            const yPosition = e.clientY - rect.top + (height / 120);
-            nodeData.map(({nodeID, xcoord, ycoord}) => {
+            // const xPosition = e.clientX - rect.left + (width / 160);
+            // const yPosition = e.clientY - rect.top + (height / 120);
+            nodeData.map(({nodeID, xcoord, ycoord,floor}) => {
                 const xPos = xcoord * (width / widthRatio);
                 const yPos = ycoord * (height / heightRatio);
-                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
+                const xPosition = e.clientX - rect.left + (xPos / 26);
+                const yPosition = e.clientY - rect.top + (yPos / 20);
+                if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist&& floor===currLevel) {
                     if (drawLine) {
-                        setNodeEnd(nodeID);
+                            setNodeEnd(nodeStart);
+                            setNodeStart(nodeID);
                     } else {
                         setNodeStart(nodeID);
+                        setDrawLine(!drawLine);
                     }
-                    setDrawLine(!drawLine);
                 }
             });
         }
@@ -62,12 +64,14 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
     const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if(!showEdges) {
             const rect = e.currentTarget.getBoundingClientRect();
-            const xPosition = e.clientX - rect.left + (width / 160);
-            const yPosition = e.clientY - rect.top + (height / 120);
+            // const xPosition = e.clientX - rect.left + (width / 160);
+            // const yPosition = e.clientY - rect.top + (height / 120);
             nodeData.map(({xcoord, ycoord, floor}) => {
                 if (floor === currLevel) {
                     const xPos = xcoord * (window.innerWidth / widthRatio);
                     const yPos = ycoord * (window.innerHeight / heightRatio);
+                    const xPosition = e.clientX - rect.left + (xPos / 26);
+                    const yPosition = e.clientY - rect.top + (yPos / 20);
                     if (Math.abs(xPos - xPosition) < clickDist && Math.abs(yPos - yPosition) < clickDist) {
                         ctx!.beginPath();
                         ctx!.arc(xPos, yPos, getDrawSize(), 0, 2 * Math.PI, false);
@@ -206,6 +210,15 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 if(nameToFloor(nr) === currLevel) {
                     const xPos = nameToXPos(nr) * (window.innerWidth / widthRatio);
                     const yPos = nameToYPos(nr) * (window.innerHeight / heightRatio);
+
+                    if(0<=pathData.indexOf(nr)-1&&nameToFloor(pathData[pathData.indexOf(nr)-1])!==currLevel){
+                        ctx!.beginPath();
+                        ctx.fillStyle="rgba(230,0,255,0.97)";
+                        ctx!.font="bold 13pt arial";
+                        ctx!.textAlign="center";
+                        ctx!.fillText("Go to floor "+nameToFloor(pathData[pathData.indexOf(nr)-1]),xPos ,yPos-(height/90));
+                        ctx!.stroke();
+                    }
                     console.log(nr + " " + xPos + " " + yPos);
                     if (startX != -1 && startY != -1) {
                         ctx!.beginPath();
@@ -217,6 +230,17 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                     }
                     startX = xPos;
                     startY = yPos;
+                }
+                else {
+                    ctx.beginPath();
+                    ctx.fillStyle="rgba(230,0,255,0.97)";
+                    ctx.textAlign="center";
+                    ctx!.font="bold 13pt arial";
+                    ctx.fillText("Arrive from floor "+nameToFloor(nr),startX,startY-(height/90));
+                    ctx.stroke();
+                    ctx.fillStyle="blue";
+                    startX = -1;
+                    startY = -1;
                 }
             }
         }
@@ -242,8 +266,16 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                 }}/>
                 Show All Edges
             </label>
+            <label className="small-label">
+                <input type="checkbox" onClick={() => {
+                    axios.post(`/api/db-get-path/change`);
+
+                }}/>
+                Use A*
+            </label>
             <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
         </div>
+
     );
 };
 
