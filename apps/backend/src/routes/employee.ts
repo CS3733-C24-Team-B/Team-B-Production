@@ -37,18 +37,33 @@ router.get("/:email", async function (req: Request, res: Response) {
 router.post('/', async function (req: Request, res: Response){
     const employeeInfo: CreateEmployee = req.body;
     try {
-        await client.employee.upsert({
+        if (!await client.employee.findUnique({
             where: {
                 email: employeeInfo.email
-            },
-            update: {
-                firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
-            },
-            create: {
-                email: employeeInfo.email
             }
-        });
+        })) {
+            await client.employee.create({
+                data: {
+                    email: employeeInfo.email
+                }
+            });
+        }
+        else {
+            await client.employee.upsert({
+                where: {
+                    email: employeeInfo.email
+                },
+                update: {
+                    firstName: employeeInfo.firstName,
+                    lastName: employeeInfo.lastName
+                },
+                create: {
+                    email: employeeInfo.email,
+                    firstName: employeeInfo.firstName,
+                    lastName: employeeInfo.lastName
+                }
+            });
+        }
 
         console.log(employeeInfo);
         res.status(200).send("Created/updated employee with email " + employeeInfo.email);
