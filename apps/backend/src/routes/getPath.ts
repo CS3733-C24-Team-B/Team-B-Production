@@ -7,7 +7,7 @@ router.post("/change",async function (req: Request, res: Response){
     console.log("TEST 1");
     changeSearch();
     req;
-    res;
+    res.sendStatus(200);
 });
 
 
