@@ -13,6 +13,8 @@ import Canvas from "../components/Canvas.tsx";
 //import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
+import {useAuth0} from "@auth0/auth0-react";
+import {CreateEmployee} from "common/src/employee.ts";
 
 interface FloorImages {
     groundfloor: string;
@@ -57,6 +59,7 @@ export default function HomePage() {
     );
     const [selectedLevel, setSelectedLevel] = useState("L1");
     const [nodeData, setNodeData] = useState([]);
+    const { user, isAuthenticated} = useAuth0();
 
     useEffect(() => {
         async function fetch() {
@@ -74,6 +77,27 @@ export default function HomePage() {
 
         fetch().then();
     }, []);
+    
+    useEffect(() => {
+        async function createAuthenticatedEmployee() {
+            const employeeInfo: CreateEmployee = {
+                email: user!.email!,
+                firstName: "",
+                lastName: ""
+            };
+            const res = await axios.post("/api/employee", employeeInfo, {
+                headers: {
+                    "Content-Type":"application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("Successfully submitted form");
+            }
+        }
+        if(isAuthenticated) {
+            createAuthenticatedEmployee().then();
+        }
+    }, [isAuthenticated, user]);
 
     // Function to handle floor selection change
     const handleFloorChange = (
