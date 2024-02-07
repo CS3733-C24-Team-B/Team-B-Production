@@ -22,14 +22,16 @@ import LanguageIcon from '@mui/icons-material/Language';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
 const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
 const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
-const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
-const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata'];
+const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />, <LogoutIcon/>];
+const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata', '/login'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -71,6 +73,10 @@ export default function PersistentDrawerLeft() {
         setOpen(false);
     };
 
+    const handleHomeClick = () => {
+        window.location.href = "/home"; // Redirect to home page
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -78,8 +84,7 @@ export default function PersistentDrawerLeft() {
                 width: 1,
                 boxShadow: 0,
             }}>
-                <Toolbar
-                    style={{backgroundColor: "#012d5a",}}>
+                <Toolbar style={{ backgroundColor: "#012d5a" }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -90,75 +95,64 @@ export default function PersistentDrawerLeft() {
                         <MenuIcon />
                     </IconButton>
                 </Toolbar>
-                {/* Navbar Preview */}
-                {!open && (
-                    <List className="preview-icons-container" sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
-                          style={{backgroundColor: "#012d5a",}}>
-                        {icons.map((icon, index) => (
-                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
-                                <ListItemIcon sx={{ color: 'white' }}>
-                                    {icon}
-                                </ListItemIcon>
-                            </ListItem>
-                        ))}
-                        {adminIcons.map((icon, index) => (
-                            <ListItem key={index} disablePadding sx={{ pl: 2, pr: 2 }}>
-                                <ListItemIcon sx={{ color: 'white' }}>
-                                    {icon}
-                                </ListItemIcon>
+                <Drawer
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
+                            boxSizing: 'border-box',
+                        },
+                    }}
+                    variant="persistent"
+                    anchor="left"
+                    open={open}
+                >
+                    <DrawerHeader>
+                        <a href="/home">
+                            <img src={logo} alt="Hospital Logo" width={"100%"} />
+                        </a>
+                        <IconButton onClick={handleDrawerClose}>
+                            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        </IconButton>
+                    </DrawerHeader>
+                    <Divider />
+                    <List>
+                        {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
+                            <ListItem key={text} disablePadding>
+                                <ListItemButton component="a" href={links[index]}>
+                                    <ListItemIcon>
+                                        {icons[index]}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text} />
+                                </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
-                )}
+                    <Divider />
+                    <List>
+                        {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Logout'].map((text, index) => (
+                            <ListItem key={text} disablePadding>
+                                <ListItemButton component="a" href={adminLinks[index]}>
+                                    <ListItemIcon>
+                                        {adminIcons[index]}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
             </AppBar>
-            <Drawer
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: drawerWidth,
-                        boxSizing: 'border-box',
-                    },
-                }}
-                variant="persistent"
-                anchor="left"
-                open={open}
+            <IconButton
+                color="inherit"
+                aria-label="home"
+                onClick={handleHomeClick}
+                sx={{ position: 'absolute', bottom: 0, left: 0 }}
+                style={{ color: 'white' }} // Add this line to set the color to white
             >
-                <DrawerHeader>
-                    <a href="/home">
-                        <img src={logo} alt="Hospital Logo" width={"100%"}/>
-                    </a>
-                    <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-                    </IconButton>
-                </DrawerHeader>
-                <Divider/>
-                <List>
-                    {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton component="a" href={links[index]}>
-                                <ListItemIcon>
-                                    {icons[index]}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton component="a" href={adminLinks[index]}>
-                                <ListItemIcon>
-                                    {adminIcons[index]}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </Drawer>
+                <HomeIcon />
+            </IconButton>
         </Box>
     );
 }
