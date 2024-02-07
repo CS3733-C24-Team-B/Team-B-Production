@@ -2,6 +2,15 @@ import React, {useEffect, useRef, useState} from 'react';
 import axios from "axios";
 import "../css/canvas.css";
 import { Button } from '@mui/material'; // Import Button component from Material UI
+import LoginButton from './LoginButton.tsx';
+import LogoutButton from './LogoutButton.tsx';
+import { useAuth0 } from '@auth0/auth0-react';
+
+const AuthenticationButton = () => {
+    const { isAuthenticated } = useAuth0();
+
+    return isAuthenticated ? <LogoutButton /> : <LoginButton />;
+};
 
 interface CanvasProps {
     width: number;
@@ -292,6 +301,7 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                     >
                         Use A*
                     </Button>
+                    <AuthenticationButton/>
                 </div>
             </div>
             <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
