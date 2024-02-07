@@ -23,7 +23,7 @@ interface FloorImages {
     thirdfloor: string;
 }
 
-const FloorLevel =  [
+const FloorLevel = [
     {
         floor: "groundfloor",
         level: "0"
@@ -128,10 +128,10 @@ export default function HomePage() {
     };
 
     // floor to level change
-    const floorToLevel = (inputFloor:string) => {
+    const floorToLevel = (inputFloor: string) => {
         let output = "0";
         FloorLevel.map(({floor, level}) => {
-            if(inputFloor === floor) {
+            if (inputFloor === floor) {
                 output = level;
             }
         });
@@ -144,56 +144,56 @@ export default function HomePage() {
                 <Navbar/>
             </div>
 
-            <div className="info-container">
-                    <div className="manual-dropdown">
-                        <div className="search">
-                            <input
-                                onClick={filterFunction}
-                                onKeyUp={filterFunction}
-                                type="text"
-                                placeholder="Search.."
-                                id="myInput"
-                            />
-                            <div className="dropdown-content">
-                                {nodeData.map(({longName}, index) => (
-                                    <a href="/home" key={index}>
-                                        {longName}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
 
-                        <div className="floor-container">
-                            <TextField
-                                select
-                                value={selectedFloor}
-                                onChange={(event) => {
-                                    handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
-                                }}
-                                variant="outlined"
-                                size="small"
-                                style={{backgroundColor: "white",}}
-                            >
-                                <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
-                                <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
-                                <MenuItem value="groundfloor">Ground Floor</MenuItem>
-                                <MenuItem value="firstfloor">First Floor</MenuItem>
-                                <MenuItem value="secondfloor">Second Floor</MenuItem>
-                                <MenuItem value="thirdfloor">Third Floor</MenuItem>
-                            </TextField>
-                        </div>
-
-                    </div>
-
-                <div className="map-container">
-                    <Canvas
-                        imageSource={floorImages[selectedFloor]}
-                        currLevel={selectedLevel}
+            <div className="manual-dropdown">
+                <div className="search">
+                    <input
+                        onClick={filterFunction}
+                        onKeyUp={filterFunction}
+                        type="text"
+                        placeholder="Search.."
+                        id="myInput"
                     />
-                    <Outlet/>
-                    {/*<PathHandler/>*/}
+                    <div className="dropdown-content">
+                        {nodeData.map(({longName}, index) => (
+                            <a href="/home" key={index}>
+                                {longName}
+                            </a>
+                        ))}
+                    </div>
                 </div>
+
+                <div className="floor-container">
+                    <TextField
+                        select
+                        value={selectedFloor}
+                        onChange={(event) => {
+                            handleFloorChange(event.target.value as keyof FloorImages, floorToLevel(event.target.value));
+                        }}
+                        variant="outlined"
+                        size="small"
+                        style={{backgroundColor: "white",}}
+                    >
+                        <MenuItem value="lowerlevel1">Lower Level 1</MenuItem>
+                        <MenuItem value="lowerlevel2">Lower Level 2</MenuItem>
+                        <MenuItem value="groundfloor">Ground Floor</MenuItem>
+                        <MenuItem value="firstfloor">First Floor</MenuItem>
+                        <MenuItem value="secondfloor">Second Floor</MenuItem>
+                        <MenuItem value="thirdfloor">Third Floor</MenuItem>
+                    </TextField>
+                </div>
+
             </div>
+
+
+                <Canvas
+                    imageSource={floorImages[selectedFloor]}
+                    currLevel={selectedLevel}
+                />
+                <Outlet/>
+                {/*<PathHandler/>*/}
+
+
         </div>
     );
 }
