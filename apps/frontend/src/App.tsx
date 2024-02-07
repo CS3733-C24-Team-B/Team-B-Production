@@ -22,6 +22,11 @@ function App() {
             element: <HomePage/>,
         },
         {
+            path: "/home",
+            errorElement: <div/>,
+            element: <HomePage/>,
+        },
+        {
             path: "/login",
             errorElement: <div><p>An error has occurred</p></div>,
             element: <LoginButton/>

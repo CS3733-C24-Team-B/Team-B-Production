@@ -3,16 +3,17 @@ import {Container, Paper, Typography, Button, TextField} from '@mui/material';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
 import {CreateEmployee} from "common/src/employee.ts";
+import Navbar from "../components/Navbar.tsx";
 //import axios from "axios";
 //import {EmployeeID} from "common/src/employee.ts";
 
 export default function ProfilePage() {
-    const { user, isAuthenticated} = useAuth0();
+    const {user, isAuthenticated} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
 
-    useEffect(()=>{
+    useEffect(() => {
         async function submit() { ///copied
             const res = await axios.get(`/api/employee/${user!.email!}`, {
                 params: {
@@ -28,8 +29,9 @@ export default function ProfilePage() {
             setFirstName(res.data.firstName);
             setLastName(res.data.lastName);
         }
+
         submit().then();
-    },[user, isAuthenticated]);
+    }, [user, isAuthenticated]);
     const profileData = {
         firstName: firstName,
         lastName: lastName,
@@ -39,9 +41,9 @@ export default function ProfilePage() {
         password: '********',
         ssn: '123-45-6789',
         serviceRequests: [
-            { id: 1, description: 'Request 1', status: 'Fulfilled' },
-            { id: 2, description: 'Request 2', status: 'In Progress' },
-            { id: 3, description: 'Request 3', status: 'Submitted' },
+            {id: 1, description: 'Request 1', status: 'Fulfilled'},
+            {id: 2, description: 'Request 2', status: 'In Progress'},
+            {id: 3, description: 'Request 3', status: 'Submitted'},
         ],
     };
 
@@ -58,7 +60,7 @@ export default function ProfilePage() {
         };
         const res = await axios.post("/api/employee", employeeInfo, {
             headers: {
-                "Content-Type":"application/json"
+                "Content-Type": "application/json"
             }
         });
         if (res.status == 200) {
@@ -66,58 +68,67 @@ export default function ProfilePage() {
         }
     }
 
-    const listItemStyle = { marginLeft: '20px', marginBottom: '20px' };
+    const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
 
     return (
-        <Container maxWidth="md" style={{ display: 'flex' }}>
-            <Container style={{ marginRight: '40px' }}> {/* Increased marginRight */}
-                <Paper elevation={3} style={{ padding: '30px', width: '100%', marginTop: '20px' }}>
-                    <Typography variant="h5" gutterBottom>
-                        Profile Information
-                    </Typography>
-                    <Typography variant="body1" style={listItemStyle}>
-                        <strong>Email:</strong> {profileData.username}
-                    </Typography>
-                    {/*<Typography variant="body1" style={listItemStyle}>*/}
-                    {/*    <strong>First Name:</strong> {profileData.firstName}*/}
-                    {/*</Typography>*/}
-                    <TextField id="standard-basic" label="First name" variant="standard"
-                               value={firstName}
-                               onChange={(e) => {setFirstName(e.target.value);}}
-                               required
-                    />
-                    {/*<Typography variant="body1" style={listItemStyle}>*/}
-                    {/*    <strong>Last Name:</strong> {profileData.lastName}*/}
-                    {/*</Typography>*/}
-                    <TextField id="standard-basic" label="Last name" variant="standard"
-                               value={lastName}
-                               onChange={(e) => {setLastName(e.target.value);}}
-                               required
-                    />
-                    <div style={{ marginTop: '20px' }}>
-                        <Button variant="contained" color="primary" onClick={submit}>
-                            Update Info
-                        </Button>
-                    </div>
-                </Paper>
-            </Container>
-            <Container style={{ marginTop: '20px' }}> {/* Increased marginTop */}
-                <Paper elevation={3} style={{ padding: '30px', width: '100%' }}>
-                    <Typography variant="h5" gutterBottom>
-                        Service Requests
-                    </Typography>
-                    {profileData.serviceRequests.map((request) => (
-                        <div key={request.id} style={listItemStyle}>
-                            <Typography>
-                                <strong>Description:</strong> {request.description}
-                            </Typography>
-                            <Typography>
-                                <strong>Status:</strong> {request.status}
-                            </Typography>
+        <div className="home-container">
+            <div className="nav-container">
+                <Navbar/>
+            </div>
+            <div className="profile-data">
+                <Container> {/* Increased marginRight */}
+                    <Paper elevation={3} style={{padding: '30px', width: '45%', marginTop: '20px', marginRight: '10%', float: 'left'}}>
+                        <Typography variant="h5" gutterBottom>
+                            Profile Information
+                        </Typography>
+                        <Typography variant="body1" style={listItemStyle}>
+                            <strong>Email:</strong> {profileData.username}
+                        </Typography>
+                        {/*<Typography variant="body1" style={listItemStyle}>*/}
+                        {/*    <strong>First Name:</strong> {profileData.firstName}*/}
+                        {/*</Typography>*/}
+                        <TextField style={listItemStyle} id="standard-basic" label="First name" variant="standard"
+                                   value={firstName}
+                                   onChange={(e) => {
+                                       setFirstName(e.target.value);
+                                   }}
+                                   required
+                        />
+                        {/*<Typography variant="body1" style={listItemStyle}>*/}
+                        {/*    <strong>Last Name:</strong> {profileData.lastName}*/}
+                        {/*</Typography>*/}
+                        <TextField style={listItemStyle} id="standard-basic" label="Last name" variant="standard"
+                                   value={lastName}
+                                   onChange={(e) => {
+                                       setLastName(e.target.value);
+                                   }}
+                                   required
+                        />
+                        <div style={{marginTop: '20px'}}>
+                            <Button variant="contained" color="primary" onClick={submit}>
+                                Update Info
+                            </Button>
                         </div>
-                    ))}
-                </Paper>
-            </Container>
-        </Container>
+                    </Paper>
+                </Container>
+                <Container style={{marginTop: '20px'}}> {/* Increased marginTop */}
+                    <Paper elevation={3} style={{padding: '30px', width: '45%', float: 'right'}}>
+                        <Typography variant="h5" gutterBottom>
+                            Service Requests
+                        </Typography>
+                        {profileData.serviceRequests.map((request) => (
+                            <div key={request.id} style={listItemStyle}>
+                                <Typography>
+                                    <strong>Description:</strong> {request.description}
+                                </Typography>
+                                <Typography>
+                                    <strong>Status:</strong> {request.status}
+                                </Typography>
+                            </div>
+                        ))}
+                    </Paper>
+                </Container>
+            </div>
+        </div>
     );
 }
