@@ -5,7 +5,22 @@ import "../css/csvdata_page.css";
 // import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import SideButtons from "../components/SideButtons.tsx";
+//import SideButtons from "../components/SideButtons.tsx";
+import {Button} from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import {styled} from "@mui/material/styles";
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 export default function CSVEdgeData() {
   //const nodes : MapNode[] = createNodeList();
@@ -93,24 +108,41 @@ export default function CSVEdgeData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-        <div className="App">
-            <header className="App-header">CSV Data</header>
-            <Navbar/>
-            <br/>
-            <div>
-                <input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>
-                <input onClick={uploadToDB} type="button" value="Submit"/>
+        <div className="node-data-container">
+            <div className="nav-container">
+                <Navbar/>
             </div>
-            <input onClick={downloadFromDB} type="button" value="Export"/>
-            <br/>
-            <table className={"tables"}>
-                <tr>
-                    <th>Edge ID</th>
-                    <th>Start Room</th>
-                    <th>End Room</th>
-                </tr>
-                {arrayEdge}</table>
-            <SideButtons/>
+            <div className="data-container">
+                <div className="topbar-container">
+                    <div  className="node-data-header">
+                        <header>CSV Edge Data</header>
+                    </div>
+                    <br/>
+                    <div className="top-buttons-container">
+                        <div className="upload-buttons">
+                            {/*<input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>*/}
+                            <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}
+                                    style={{backgroundColor: "#012D5A"}}>
+                                Upload file
+                                <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                            </Button>
+                            {/*<input onClick={uploadToDB} type="button" value="Submit"/>*/}
+                            {/*<Button onClick={uploadToDB} variant="text">Submit</Button>*/}
+                        </div>
+                        {/*<input onClick={downloadFromDB} type="button" value="Export"/>*/}
+                        <Button onClick={downloadFromDB} variant="text" className="export-button">Export</Button>
+                    </div>
+                </div>
+                <br/>
+                <table className={"tables"}>
+                    <tr>
+                        <th>Edge ID</th>
+                        <th>Start Room</th>
+                        <th>End Room</th>
+                    </tr>
+                    {arrayEdge}</table>
+                <br/>
+            </div>
         </div>
     );
 }

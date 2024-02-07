@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
             <a href="/csvedgedata">CSV Edge Data</a>
             <a href="/requestform">Service Request Form</a>
             <a href="/servicerequestlist">Service Request List</a>
-            <a href="/Settings">Settings</a>
+            <a href="/apps/frontend/src/routes/Profile">Settings</a>
         </div>
     );
 };

@@ -45,8 +45,8 @@ model ServiceRequest {
 }
 
 model Employee {
-  email            String           @id
-  username         String           @default("admin")
-  password         String           @default("admin")
-  receivedRequests ServiceRequest[] @relation("Assigned")
+  email     String           @id
+  firstName String?
+  lastName  String?
+  requests  ServiceRequest[] @relation("Assigned")
 }

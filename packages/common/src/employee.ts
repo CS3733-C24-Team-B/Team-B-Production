@@ -1,9 +1,9 @@
-export type employee = {
+export type CreateEmployee = {
     email: string
-    username: string,
-    password: string
+    firstName: string,
+    lastName: string
 }
 
-export type employeeDelete = {
+export type DeleteEmployee = {
     email: string
 }

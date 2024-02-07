@@ -1,6 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import axios from "axios";
-import "../css/home_page.css";
+import "../css/canvas.css";
+import { Button } from '@mui/material'; // Import Button component from Material UI
+import LoginButton from './LoginButton.tsx';
+import LogoutButton from './LogoutButton.tsx';
+import { useAuth0 } from '@auth0/auth0-react';
+
+const AuthenticationButton = () => {
+    const { isAuthenticated } = useAuth0();
+
+    return isAuthenticated ? <LogoutButton /> : <LoginButton />;
+};
 
 interface CanvasProps {
     width: number;
@@ -272,20 +282,28 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
 
     return (
         <div>
-            <label className="small-label">
-                <input type="checkbox" onClick={() => {
-                    setShowEdges(!showEdges);
-                }}/>
-                Show All Edges
-            </label>
-            <label className="small-label">
-                <input type="checkbox" checked={useAStar} onClick={() => {
-                    axios.post(`/api/db-get-path/change`);
-                    setUseAStar(!useAStar);
-
-                }}/>
-                Use A*
-            </label>
+            <div className="manual-dropdown2">
+                <div className="map-options">
+                    {/* Convert checkboxes into buttons */}
+                    <Button variant="contained" onClick={() => setShowEdges(!showEdges)}
+                            style={{backgroundColor: "white", color: "black"}}>
+                        {showEdges ? "Hide All Edges" : "Show All Edges"}
+                    </Button>
+                </div>
+                <div className="button2">
+                    <Button
+                        variant="contained"
+                        style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
+                        onClick={() => {
+                            axios.post(`/api/db-get-path/change`);
+                            setUseAStar(!useAStar);
+                        }}
+                    >
+                        Use A*
+                    </Button>
+                    <AuthenticationButton/>
+                </div>
+            </div>
             <canvas ref={canvasRef} height={height} width={width} onClick={handleClick} onMouseMove={handleMouseMove}/>
         </div>
 
