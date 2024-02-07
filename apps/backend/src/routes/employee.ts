@@ -1,23 +1,23 @@
 import express, {Router, Request, Response} from "express";
 import {Employee} from "database";
 import client from "../bin/database-connection.ts";
-import {CreateEmployee, EmployeeID, DeleteEmployee} from "common/src/employee.ts";
+import {CreateEmployee, DeleteEmployee} from "common/src/employee.ts";
 
 const router: Router = express.Router();
 
-router.get("/", async function (req: Request, res: Response) {
+router.get("/:email", async function (req: Request, res: Response) {
 
-    const employeeID: EmployeeID = req.body;
+    const employeeID: string = req.params.email;
 
     // query for single employee
-    if (employeeID.email) {
+    if (employeeID) {
         const employee = await client.employee.findUnique({
             where: {
-                email: employeeID.email
+                email: employeeID
             }
         });
         if (employee === null) {
-            return res.status(204).send("Could not find employee with email " + employeeID.email);
+            return res.status(204).send("Could not find employee with email " + employeeID);
         }
         return res.status(200).send(JSON.stringify(employee));
     }
@@ -37,20 +37,33 @@ router.get("/", async function (req: Request, res: Response) {
 router.post('/', async function (req: Request, res: Response){
     const employeeInfo: CreateEmployee = req.body;
     try {
-        await client.employee.upsert({
-            where: {
-                email: employeeInfo.email
-            },
-            update: {
-                firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
-            },
-            create: {
-                email: employeeInfo.email,
-                firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
-            }
-        });
+        if (employeeInfo.firstName === "" && employeeInfo.lastName === "") {
+            await client.employee.upsert({
+               where: {
+                   email: employeeInfo.email
+               },
+               update: {},
+                create: {
+                   email: employeeInfo.email
+                }
+            });
+        }
+        else {
+            await client.employee.upsert({
+                where: {
+                    email: employeeInfo.email
+                },
+                update: {
+                    firstName: employeeInfo.firstName,
+                    lastName: employeeInfo.lastName
+                },
+                create: {
+                    email: employeeInfo.email,
+                    firstName: employeeInfo.firstName,
+                    lastName: employeeInfo.lastName
+                }
+            });
+        }
 
         console.log(employeeInfo);
         res.status(200).send("Created/updated employee with email " + employeeInfo.email);

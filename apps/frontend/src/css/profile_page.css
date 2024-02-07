@@ -1,0 +1,14 @@
+.profile-data {
+    display: flex;
+}
+
+.user-data {
+    grid-row-start: 1;
+    padding: 30px;
+    width: 50%;
+    marginTop: 20px;
+}
+
+.user-req-data {
+    grid-row-start: 2;
+}
