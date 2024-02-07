@@ -5,7 +5,7 @@ import {CreateEmployee, DeleteEmployee} from "common/src/employee.ts";
 
 const router: Router = express.Router();
 
-router.get("/:email", async function (req: Request, res: Response) {
+router.get("/:email?", async function (req: Request, res: Response) {
 
     const employeeID: string = req.params.email;
 
