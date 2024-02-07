@@ -14,11 +14,6 @@
     background-color: #012d5a;
 }
 
-.info-container {
-    display: grid;
-    width: 100%;
-    height: 100%;
-}
 
 .manual-dropdown {
     display: grid;
@@ -51,10 +46,7 @@
     width: 20%;
 }
 
-.map-container {
-    height: 100%;
-    grid-area: map;
-}
+
 
 /*maps the image*/
 #map-image {
@@ -71,6 +63,7 @@
     left: 8px;
     margin-top: 1%;
 }
+
 
 /* Style the links inside the navigation bar */
 .search a {
