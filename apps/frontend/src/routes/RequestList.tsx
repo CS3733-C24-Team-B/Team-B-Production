@@ -133,8 +133,8 @@ export default function RequestList() {
                         console.log(resSR);
                         setRefresh(!refresh);
                     }}>
-                    {employeeData.map(({email, firstName}) =>
-                        <MenuItem value={email}>{firstName}</MenuItem>
+                    {employeeData.map(({email, firstName, lastName}) =>
+                        <MenuItem value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
                     )}
                 </Select>
             </td>

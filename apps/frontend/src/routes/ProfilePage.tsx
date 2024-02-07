@@ -15,7 +15,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         async function submit() { ///copied
-            const res = await axios.get(`/api/employee/${user!.email!}`, {
+            const res = await axios.get(`/api/user/${user!.email!}`, {
                 params: {
                     email: user!.email!
                 }
@@ -58,7 +58,7 @@ export default function ProfilePage() {
             firstName: firstName,
             lastName: lastName
         };
-        const res = await axios.post("/api/employee", employeeInfo, {
+        const res = await axios.post("/api/user", employeeInfo, {
             headers: {
                 "Content-Type": "application/json"
             }
