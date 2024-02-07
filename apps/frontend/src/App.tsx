@@ -1,15 +1,16 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import LoginPage from "./routes/LoginPage.tsx";
 import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
-import CreateAccount from "./routes/CreateAccount.tsx";
-import ForgotPassword from "./routes/ForgotPassword.tsx";
-import Profile from "./routes/Profile.tsx";
+// import Settings from "./routes/Settings.tsx";
+// import CreateAccount from "./routes/CreateAccount.tsx";
+// import ForgotPassword from "./routes/ForgotPassword.tsx";
+// import Profile from "./routes/Profile.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
+import LoginButton from "./components/LoginButton.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
 import ChangeProfile from "./routes/ChangeProfile.tsx";
 
@@ -18,7 +19,7 @@ function App() {
         {
             path: "/",
             errorElement: <div/>,
-            element: <LoginPage/>,
+            element: <HomePage/>,
         },
         {
             path: "/home",
@@ -26,20 +27,15 @@ function App() {
             element: <HomePage/>,
         },
         {
-            path: "/createacc",
-            errorElement: <div/>,
-            element: <CreateAccount/>,
+            path: "/login",
+            errorElement: <div><p>An error has occurred</p></div>,
+            element: <LoginButton/>
         },
-        {
-            path: "/forgotpass",
-            errorElement: <div/>,
-            element: <ForgotPassword/>,
-        },
-        {
-            path: "/profile",
-            errorElement: <div/>,
-            element: <Profile/>,
-        },
+        // {
+        //     path: "/profile",
+        //     errorElement: <div/>,
+        //     element: <Profile/>,
+        // },
         {
             path: "/csvnodedata",
             errorElement: <div/>,

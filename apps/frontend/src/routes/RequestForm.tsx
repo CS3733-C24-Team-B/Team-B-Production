@@ -1,15 +1,10 @@
-/* eslint-disable */
 import React, {useState} from "react";
-import {Outlet} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
 import axios from "axios";
 import {NewRequest} from "common/src/serviceRequestTypes.ts";
-import {employee} from "common/src/employee.ts";
 import Navbar from "../components/Navbar.tsx";
-import SideButtons from "../components/SideButtons.tsx";
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 
@@ -34,12 +29,6 @@ export default function LoginPage() {
             console.log("success");
         }
         navigate("/requestlist");
-    }
-
-    function clear() {
-        setName("");
-        setRoomNumber("");
-        setInfoText("");
     }
 
     return (
