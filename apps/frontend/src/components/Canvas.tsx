@@ -301,6 +301,8 @@ const Canvas = ({ width, height, imageSource, currLevel }: CanvasProps) => {
                     >
                         Use A*
                     </Button>
+                </div>
+                <div className="button3">
                     <AuthenticationButton/>
                 </div>
             </div>
