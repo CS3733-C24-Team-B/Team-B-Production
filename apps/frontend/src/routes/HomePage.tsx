@@ -58,7 +58,7 @@ export default function HomePage() {
         "lowerlevel1"
     );
     const [selectedLevel, setSelectedLevel] = useState("L1");
-    const [nodeData, setNodeData] = useState([]);
+    // const [nodeData, setNodeData] = useState([]);
     const { user, isAuthenticated} = useAuth0();
 
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function HomePage() {
             const res = await axios.get("/api/db-load-nodes");
 
             console.log(res.data);
-            setNodeData(res.data);
+            //setNodeData(res.data);
         }
 
         fetch().then();
@@ -110,36 +110,36 @@ export default function HomePage() {
     };
 
     // Filter function
-    const filterFunction = () => {
-        let input: HTMLInputElement | null = document.getElementById(
-            "myInput"
-        ) as HTMLInputElement;
-        let div: HTMLElement | null = document.getElementById(
-            "myDropdown"
-        );
-
-        let visibleCount = 5;
-
-        if (input && div) {
-            let filter = input.value.toUpperCase();
-            let a = div.getElementsByTagName("a");
-
-            for (let i = 0; i < a.length; i++) {
-                let txtValue = a[i].textContent || a[i].innerText;
-
-                if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
-                    if (visibleCount > 0) {
-                        a[i].style.display = "";
-                        visibleCount--;
-                    } else {
-                        a[i].style.display = "none";
-                    }
-                } else {
-                    a[i].style.display = "none";
-                }
-            }
-        }
-    };
+    // const filterFunction = () => {
+    //     let input: HTMLInputElement | null = document.getElementById(
+    //         "myInput"
+    //     ) as HTMLInputElement;
+    //     let div: HTMLElement | null = document.getElementById(
+    //         "myDropdown"
+    //     );
+    //
+    //     let visibleCount = 5;
+    //
+    //     if (input && div) {
+    //         let filter = input.value.toUpperCase();
+    //         let a = div.getElementsByTagName("a");
+    //
+    //         for (let i = 0; i < a.length; i++) {
+    //             let txtValue = a[i].textContent || a[i].innerText;
+    //
+    //             if (filter === "" || txtValue.toUpperCase().indexOf(filter) > -1) {
+    //                 if (visibleCount > 0) {
+    //                     a[i].style.display = "";
+    //                     visibleCount--;
+    //                 } else {
+    //                     a[i].style.display = "none";
+    //                 }
+    //             } else {
+    //                 a[i].style.display = "none";
+    //             }
+    //         }
+    //     }
+    // };
 
     // Mapping of floor names to their corresponding images
     const floorImages: FloorImages = {
@@ -172,19 +172,19 @@ export default function HomePage() {
                     <div className="manual-dropdown">
                         <div className="search">
                             <input
-                                onClick={filterFunction}
-                                onKeyUp={filterFunction}
+                                // onClick={filterFunction}
+                                // onKeyUp={filterFunction}
                                 type="text"
                                 placeholder="Search.."
                                 id="myInput"
                             />
-                            <div className="dropdown-content">
-                                {nodeData.map(({longName}, index) => (
-                                    <a href="/home" key={index}>
-                                        {longName}
-                                    </a>
-                                ))}
-                            </div>
+                            {/*<div className="dropdown-content">*/}
+                            {/*    {nodeData.map(({longName}, index) => (*/}
+                            {/*        <a href="/home" key={index}>*/}
+                            {/*            {longName}*/}
+                            {/*        </a>*/}
+                            {/*    ))}*/}
+                            {/*</div>*/}
                         </div>
 
                         <div className="floor-container">
