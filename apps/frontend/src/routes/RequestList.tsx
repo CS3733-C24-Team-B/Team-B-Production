@@ -19,27 +19,28 @@ export default function RequestList() {
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/service-request");
-            const res2 = await axios.get("/api/employee");
+            const res2 = await axios.get(`/api/employee`);
 
             setSRData(res.data);
             setEmployeeData(res2.data);
-            if (employeeData.length == 0) {
-                axios.post("/api/employee", {
-                    email: "johndoe@gmail.com",
-                    username: "John Doe",
-                    password: "123"
-                }).then();
-                axios.post("/api/employee", {
-                    email: "ccrane@yahoo.mail",
-                    username: "Cameron Crane",
-                    password: "abc"
-                }).then();
-                axios.post("/api/employee", {
-                    email: "wwong2@wpi.edu",
-                    username: "Professor Wong",
-                    password: "softeng"
-                }).then();
-            }
+            console.log(res2.data);
+            // if (employeeData.length == 0) {
+            //     axios.post("/api/employee", {
+            //         email: "johndoe@gmail.com",
+            //         username: "John Doe",
+            //         password: "123"
+            //     }).then();
+            //     axios.post("/api/employee", {
+            //         email: "ccrane@yahoo.mail",
+            //         username: "Cameron Crane",
+            //         password: "abc"
+            //     }).then();
+            //     axios.post("/api/employee", {
+            //         email: "wwong2@wpi.edu",
+            //         username: "Professor Wong",
+            //         password: "softeng"
+            //     }).then();
+            // }
         }
 
         fetch().then();
@@ -132,8 +133,8 @@ export default function RequestList() {
                         console.log(resSR);
                         setRefresh(!refresh);
                     }}>
-                    {employeeData.map(({email, username}) =>
-                        <MenuItem value={email}>{username}</MenuItem>
+                    {employeeData.map(({email, firstName, lastName}) =>
+                        <MenuItem value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
                     )}
                 </Select>
             </td>
