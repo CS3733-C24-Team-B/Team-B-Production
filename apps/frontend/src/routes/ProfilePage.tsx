@@ -105,7 +105,8 @@ export default function ProfilePage() {
                                    required
                         />
                         <div style={{marginTop: '20px'}}>
-                            <Button variant="contained" color="primary" onClick={submit}>
+                            <Button variant="contained" color="primary" onClick={submit}
+                                    style={{backgroundColor: "#012D5A"}}>
                                 Update Info
                             </Button>
                         </div>

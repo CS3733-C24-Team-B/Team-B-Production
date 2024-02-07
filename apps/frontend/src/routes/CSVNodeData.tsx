@@ -112,13 +112,14 @@ export default function CSVData() {
             <div className="data-container">
                 <div className="topbar-container">
                     <div  className="node-data-header">
-                        <header>CSV Data</header>
+                        <header>CSV Node Data</header>
                     </div>
                     <br/>
                     <div className="top-buttons-container">
                         <div className="upload-buttons">
                             {/*<input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>*/}
-                            <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}>
+                            <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}
+                                    style={{backgroundColor: "#012D5A"}}>
                                 Upload file
                                 <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
                             </Button>
