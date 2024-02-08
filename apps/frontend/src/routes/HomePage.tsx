@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from "react";
-import {Outlet} from "react-router-dom";
+//import {Outlet} from "react-router-dom";
 //import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
-import groundfloor from "../images/00_thegroundfloor.png";
-import lowerlevel1 from "../images/00_thelowerlevel1.png";
-import lowerlevel2 from "../images/00_thelowerlevel2.png";
-import firstfloor from "../images/01_thefirstfloor.png";
-import secondfloor from "../images/02_thesecondfloor.png";
-import thirdfloor from "../images/03_thethirdfloor.png";
+// import groundfloor from "../images/00_thegroundfloor.png";
+// import lowerlevel1 from "../images/00_thelowerlevel1.png";
+// import lowerlevel2 from "../images/00_thelowerlevel2.png";
+// import firstfloor from "../images/01_thefirstfloor.png";
+// import secondfloor from "../images/02_thesecondfloor.png";
+// import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
-import Canvas from "../components/Canvas.tsx";
+// import Canvas from "../components/Canvas.tsx";
 //import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import {CreateEmployee} from "common/src/employee.ts";
+import LeafletMap from "../components/LeafletMap.tsx";
 
 interface FloorImages {
     groundfloor: string;
@@ -142,14 +143,14 @@ export default function HomePage() {
     // };
 
     // Mapping of floor names to their corresponding images
-    const floorImages: FloorImages = {
-        groundfloor,
-        lowerlevel1,
-        lowerlevel2,
-        firstfloor,
-        secondfloor,
-        thirdfloor,
-    };
+    // const floorImages: FloorImages = {
+    //     groundfloor,
+    //     lowerlevel1,
+    //     lowerlevel2,
+    //     firstfloor,
+    //     secondfloor,
+    //     thirdfloor,
+    // };
 
     // floor to level change
     const floorToLevel = (inputFloor:string) => {
@@ -210,11 +211,12 @@ export default function HomePage() {
                     </div>
 
                 <div className="map-container">
-                    <Canvas
-                        imageSource={floorImages[selectedFloor]}
-                        currLevel={selectedLevel}
-                    />
-                    <Outlet/>
+                    {/*<Canvas*/}
+                    {/*    imageSource={floorImages[selectedFloor]}*/}
+                    {/*    currLevel={selectedLevel}*/}
+                    {/*/>*/}
+                    {/*<Outlet/>*/}
+                    <LeafletMap />
                     {/*<PathHandler/>*/}
                 </div>
             </div>

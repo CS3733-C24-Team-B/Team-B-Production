@@ -1,0 +1,17 @@
+.map-body {
+    margin: 0;
+    padding: 0;
+}
+
+.map {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    style: "transform: translate3d";
+}
+
+.leaflet-container {
+    margin-top: 10vh;
+    width: 100vw;
+    height: 90vh;
+}
