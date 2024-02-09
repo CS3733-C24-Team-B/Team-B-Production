@@ -1,26 +1,37 @@
-import {MapContainer, Tooltip, ImageOverlay, CircleMarker} from 'react-leaflet';
+import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup} from 'react-leaflet';
 import "../css/leaflet.css";
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
+import AuthenticationButton from "./AuthenticationButton.tsx";
+import {Button, Autocomplete} from "@mui/material";
+import TextField from "@mui/material/TextField";
 // import L from "leaflet";
-//import {CircleMarker, Tooltip} from "react-leaflet";
 
-export default function LeafletMap() {
+// type LineData = {
+//     x1: number,
+//     y1: number,
+//     x2: number,
+//     y2: number
+// }
+
+interface MapProps {
+    imageSource: string;
+    currLevel: string;
+}
+
+export default function LeafletMap({imageSource, currLevel}: MapProps) {
     const [nodeData, setNodeData] = useState([]);
-    //const [edgeData, setEdgeData] = useState([]);
+    const [edgeData, setEdgeData] = useState([]);
     const [nodeStart, setNodeStart] = useState("");
     const [nodeEnd, setNodeEnd] = useState("");
-    const [drawLine, setDrawLine] = useState(false);
-    //const [pathData, setPathData] = useState([]);
-    // const [map] = useState(L.map("mapid", {
-    //     scrollWheelZoom: true,
-    //     maxBoundsViscosity: 1.0,
-    // }));
-    // map.setView([17, 25], 5);
-    // map.setMinZoom(5);
-    // map.setMaxBounds([[0, 0], [34, 50]]);
-    // map.addLayer(L.imageOverlay("src/images/00_thelowerlevel1.png", [[0, 0], [34, 50]]));
+    //const [drawLine, setDrawLine] = useState(false);
+    const [pathData, setPathData] = useState([]);
+    const [lineData, setLineData] = useState<JSX.Element[]>([]);
+    // const [selectedNodes, setSelectedNodes] = useState<LeafletMouseEvent[]>([]);
+    const [showEdges, setShowEdges] = useState(false);
+    const [useAStar, setUseAStar] = useState(false);
+
 
     useEffect(() => {
         async function fetch() {
@@ -31,114 +42,247 @@ export default function LeafletMap() {
                 console.log("post error");
             }
             const res = await axios.get("/api/db-load-nodes");
-            //const res3 = await axios.get("/api/db-load-edges");
+            const res3 = await axios.get("/api/db-load-edges");
 
             setNodeData(res.data);
-            //setEdgeData(res3.data);
+            setEdgeData(res3.data);
         }
 
         fetch().then();
     }, []);
-    
-    // useEffect(() => {
-    //     async function fetch() {
-    //         const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
-    //         setPathData(res2.data);
-    //     }
-    //     fetch().then();
-    // }, [nodeEnd, nodeStart]);
 
-    // useEffect(() => {
-    //     // setMap(L.map("mapid", {
-    //     //               scrollWheelZoom: true,
-    //     //               maxBoundsViscosity: 1.0,
-    //     // }));
-    //
-    //     const nameToXPos = (name : string) => {
-    //         return nodeData.find(({longName}) =>
-    //             name === longName
-    //         )!["xcoord"];
-    //     };
-    //
-    //     const nameToYPos = (name : string) => {
-    //         return nodeData.find(({longName}) =>
-    //             name === longName
-    //         )!["ycoord"];
-    //     };
-    //
-    //     const nameToFloor = (name : string) => {
-    //         return nodeData.find(({longName}) =>
-    //             name === longName
-    //         )!["floor"];
-    //     };
-    //
-    //     let startX = -1;
-    //     let startY = -1;
-    //     pathData.map((nr) => {
-    //         if(nameToFloor(nr) === "L1") {
-    //             if(startX >= 0 && startY >= 0) {
-    //                 new L.Polyline([new LatLng(startX, startY), new LatLng(nameToXPos(nr), nameToYPos(nr))]).addTo(map);
-    //             }
-    //             startX = nameToXPos(nr);
-    //             startY = nameToYPos(nr);
-    //         }
-    //     });
-    // }, [nodeData, pathData]);
+    useEffect(() => {
+        async function fetch() {
+            const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
+            setPathData(res2.data);
+        }
 
-    console.log(nodeStart);
-    
-    return (
-        // <div id="mapid">
-        //     {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
-        //                 (floor === "L1" ?
-        //                 <CircleMarker center={new LatLng(34.8-(ycoord*34/3400), xcoord*50/5000)} radius={6} eventHandlers={{
-        //                     click: () => {
-        //                         console.log("TEST: " + longName);
-        //                         if(drawLine) {
-        //                             setNodeStart(nodeEnd);
-        //                             setNodeEnd(nodeID);
-        //                         } else {
-        //                             setNodeEnd(nodeID);
-        //                             setDrawLine(true);
-        //                         }
-        //                     }
-        //                 }}>
-        //                     <Tooltip>
-        //                         {longName + ": " + xcoord + ", " + ycoord}
-        //                     </Tooltip>
-        //                 </CircleMarker> : <></>)
-        //             ))}
-        // </div>
-        <MapContainer center={[17, 25]} zoom={5}
-                      minZoom={5}
-                      scrollWheelZoom={true}
-                      maxBoundsViscosity={1.0}
-                      maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
-                      id={"mapid"}
-        >
-            <ImageOverlay
-                url="src/images/00_thelowerlevel1.png"
-                bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
-            />
-            {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
-                (floor === "L1" ?
-                <CircleMarker center={new LatLng(34.8-(ycoord*34/3400), xcoord*50/5000)} radius={6} eventHandlers={{
-                    click: () => {
-                        console.log("TEST: " + longName);
-                        if(drawLine) {
-                            setNodeStart(nodeEnd);
-                            setNodeEnd(nodeID);
-                        } else {
-                            setNodeEnd(nodeID);
-                            setDrawLine(true);
-                        }
+        fetch().then();
+    }, [nodeEnd, nodeStart]);
+
+    useEffect(() => {
+        const nameToXPos = (name: string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["xcoord"];
+        };
+
+        const nameToYPos = (name: string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["ycoord"];
+        };
+
+        const nameToFloor = (name: string) => {
+            return nodeData.find(({longName}) =>
+                name === longName
+            )!["floor"];
+        };
+
+        const transX = (xp: number) => {
+            return xp * 50 / 5000;
+        };
+
+        const transY = (yp: number) => {
+            return 34.8 - (yp * 34 / 3400);
+        };
+
+        function nodeIDtoName(nId: string) {
+            return nodeData.find(({nodeID}) =>
+                nodeID === nId
+            )!["longName"];
+        }
+
+        let startX = -1;
+        let startY = -1;
+        let prevFloor = "";
+        const temp: JSX.Element[] = [];
+        if (showEdges) {
+            edgeData.map(({startNodeID, endNodeID}) => {
+                const startName = nodeIDtoName(startNodeID);
+                const endName = nodeIDtoName(endNodeID);
+                if (nameToFloor(startName) === currLevel && nameToFloor(endName) === currLevel) {
+                    const x1 = transX(nameToXPos(startName));
+                    const y1 = transY(nameToYPos(startName));
+                    const x2 = transX(nameToXPos(endName));
+                    const y2 = transY(nameToYPos(endName));
+                    temp.push(<Polyline
+                        positions={[[y1, x1], [y2, x2]]}
+                        color={"green"} weight={5}></Polyline>);
+                }
+            });
+        } else {
+            pathData.map((nr) => {
+                if (nameToFloor(nr) === currLevel) {
+                    if (startX >= 0 && startY >= 0) {
+                        temp.push(<Polyline
+                            positions={[[transY(startY), transX(startX)], [transY(nameToYPos(nr)), transX(nameToXPos(nr))]]}
+                            color={"green"} weight={5}></Polyline>);
+                    } else if (prevFloor !== "") {
+                        temp.push(
+                            <Popup position={[transY(nameToYPos(nr)), transX(nameToXPos(nr))]} autoClose={false}>
+                                {"Arrive from floor " + prevFloor}
+                            </Popup>
+                        );
                     }
-                }}>
-                    <Tooltip>
-                        {longName + ": " + xcoord + ", " + ycoord}
-                    </Tooltip>
-                </CircleMarker> : <></>)
-            ))}
-        </MapContainer>
+                    startX = nameToXPos(nr);
+                    startY = nameToYPos(nr);
+                } else {
+                    if (startX >= 0 && startY >= 0) {
+                        temp.push(
+                            <Popup position={[transY(startY), transX(startX)]} autoClose={false}>
+                                {"Go to floor " + nameToFloor(nr)}
+                            </Popup>
+                        );
+                    }
+                    prevFloor = nameToFloor(nr);
+                    startX = -1;
+                    startY = -1;
+                }
+            });
+        }
+        setLineData(temp);
+    }, [currLevel, edgeData, nodeData, pathData, showEdges]);
+
+    useEffect(() => {
+        async function fetch() {
+            //  console.log(`${data.startNode}`);
+            const res2 = await axios.get(`/api/db-get-path/currentAlg`);
+            setUseAStar(res2.data);
+
+        }
+
+        fetch().then();
+    }, []);
+
+    // function selectNode(event: LeafletMouseEvent) {
+    //     event.target.setStyle({
+    //         color: "green"
+    //     });
+    //     if (selectedNodes.length >= 2) {
+    //         selectedNodes[0]!.sourceTarget.setStyle({
+    //             color: "#3388ff"
+    //         });
+    //         selectedNodes.splice(0, 1);
+    //     }
+    //     selectedNodes.push(event);
+    //     setSelectedNodes(selectedNodes);
+    // }
+
+    function nametoNodeID(name: string) {
+        return nodeData.find(({longName}) =>
+            longName === name
+        )!["nodeID"];
+    }
+
+    function nodeIDtoName(nId: string) {
+        const node = nodeData.find(({nodeID}) =>
+            nodeID === nId
+        );
+        if(node !== undefined) {
+            return node!["longName"];
+        } else {
+            return "";
+        }
+    }
+
+    const currNodes = nodeData.filter(({floor}) => {
+        return floor === currLevel;
+    });
+
+    return (
+        <div>
+            <div className="map-buttons">
+                <Autocomplete
+                    disablePortal
+                    options={currNodes.map(({longName}) => (
+                        {label: longName}
+                    ))}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Start Node..." />}
+                    value={nodeIDtoName(nodeStart)}
+                    onChange={(newValue) => {
+                        if(newValue !== null && newValue.target.innerText !== undefined) {
+                            const nId = nametoNodeID(newValue.target.innerText);
+                            setNodeStart(nId);
+                        } else {
+                            setNodeStart("");
+                        }
+                    }}
+                />
+                <Autocomplete
+                    disablePortal
+                    options={currNodes.map(({longName}) => (
+                        {label: longName}
+                    ))}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                    value={nodeIDtoName(nodeEnd)}
+                    onChange={(newValue) => {
+                        if(newValue !== null && newValue.target.innerText !== undefined) {
+                            const nId = nametoNodeID(newValue.target.innerText);
+                            setNodeEnd(nId);
+                        } else {
+                            setNodeEnd("");
+                        }
+                    }}
+                />
+                <div className="map-options">
+                    {/* Convert checkboxes into buttons */}
+                    <Button variant="contained" onClick={() => setShowEdges(!showEdges)}
+                            style={{backgroundColor: "white", color: "black"}}>
+                        {showEdges ? "Hide All Edges" : "Show All Edges"}
+                    </Button>
+                </div>
+                <div className="button2">
+                    <Button
+                        variant="contained"
+                        style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
+                        onClick={() => {
+                            axios.post(`/api/db-get-path/change`);
+                            setUseAStar(!useAStar);
+                        }}
+                    >
+                        Use A*
+                    </Button>
+                </div>
+                <div className="button3">
+                    <AuthenticationButton/>
+                </div>
+            </div>
+            <MapContainer center={[17, 25]} zoom={5}
+                          minZoom={5}
+                          maxZoom={8}
+                          scrollWheelZoom={true}
+                          maxBoundsViscosity={1.0}
+                          maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+            >
+                <ImageOverlay
+                    url={imageSource} //"src/images/00_thelowerlevel1.png"
+                    bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+                />
+                {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
+                    (floor === currLevel ?
+                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6}
+                                      eventHandlers={{
+                                          click: () => {
+                                              if (!showEdges) {
+                                                  if (nodeEnd !== "") {
+                                                      setNodeStart(nodeEnd);
+                                                      setNodeEnd(nodeID);
+                                                  } else {
+                                                      setNodeEnd(nodeID);
+                                                  }
+                                              }
+                                          }
+                                      }}>
+                            <Tooltip>
+                                {longName + ": " + xcoord + ", " + ycoord}
+                            </Tooltip>
+                        </CircleMarker> : <></>)
+                ))}
+                {lineData}
+            </MapContainer>
+        </div>
     );
 };
