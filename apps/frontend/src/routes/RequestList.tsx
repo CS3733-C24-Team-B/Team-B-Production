@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from "react";
-//import {Outlet} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
-//import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-//import SideButtons from "../components/SideButtons.tsx";
-import {StatusType} from "common/src/serviceRequestTypes.ts";
+import {StatusType, UpdateRequest} from "common/src/serviceRequestTypes.ts";
 import {Button, MenuItem} from "@mui/material";
-//import {employee} from "common/src/employeeTypes.ts";
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 
 export default function RequestList() {
@@ -24,23 +20,6 @@ export default function RequestList() {
             setSRData(res.data);
             setEmployeeData(res2.data);
             console.log(res2.data);
-            // if (employeeData.length == 0) {
-            //     axios.post("/api/employee", {
-            //         email: "johndoe@gmail.com",
-            //         username: "John Doe",
-            //         password: "123"
-            //     }).then();
-            //     axios.post("/api/employee", {
-            //         email: "ccrane@yahoo.mail",
-            //         username: "Cameron Crane",
-            //         password: "abc"
-            //     }).then();
-            //     axios.post("/api/employee", {
-            //         email: "wwong2@wpi.edu",
-            //         username: "Professor Wong",
-            //         password: "softeng"
-            //     }).then();
-            // }
         }
 
         fetch().then();
@@ -91,45 +70,23 @@ export default function RequestList() {
     const arraySR = srData.map(({serviceID, name, status, infoText, assignedID}) =>
         <tr>
             <td>
-                {/*<div className="dropdown">*/}
-                {/*    <button*/}
-                {/*        className="dropbtn">{(assignedID !== null) ? idToUser(assignedID) : "Choose Employee"}</button>*/}
-                {/*    <div className="dropdown-content">*/}
-                {/*        {employeeData.map(({email, username}) =>*/}
-                {/*            <a onClick={async () => {*/}
-                {/*                console.log("CHANGE ASSIGNMENT: " + serviceID + " " + email);*/}
-                {/*                const resSR = await axios.post("/api/service-assignment", {*/}
-                {/*                    serviceID: serviceID,*/}
-                {/*                    assignedTo: email*/}
-                {/*                }).then();*/}
-                {/*                if (status === StatusType.Unassigned) {*/}
-                {/*                    await axios.post("/api/service-status", {*/}
-                {/*                        serviceID: serviceID,*/}
-                {/*                        status: StatusType.Assigned*/}
-                {/*                    }).then();*/}
-                {/*                }*/}
-                {/*                console.log(resSR);*/}
-                {/*                setRefresh(!refresh);*/}
-                {/*            }}>*/}
-                {/*                {username}*/}
-                {/*            </a>*/}
-                {/*        )}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <Select
                     value={(assignedID !== null) ? assignedID : "Choose Employee"}
                     onChange={async (event: SelectChangeEvent) => {
                         console.log("CHANGE ASSIGNMENT: " + serviceID + " " + event.target.value);
-                        const resSR = await axios.post("/api/service-assignment", {
+
+                        const serviceRequest: UpdateRequest = {
                             serviceID: serviceID,
-                            assignedTo: event.target.value
-                        }).then();
+                            assignedTo: event.target.value,
+                            status: status
+                        };
+
                         if (status === StatusType.Unassigned) {
-                            await axios.post("/api/service-status", {
-                                serviceID: serviceID,
-                                status: StatusType.Assigned
-                            }).then();
+                            serviceRequest.status = StatusType.Assigned;
                         }
+
+                        const resSR = await axios.put("/api/service-request", serviceRequest).then();
+
                         console.log(resSR);
                         setRefresh(!refresh);
                     }}>
@@ -140,31 +97,20 @@ export default function RequestList() {
             </td>
             <td>{name}</td>
             <td>
-                {/*<div className="dropdown">*/}
-                {/*    <button className="dropbtn">{status}</button>*/}
-                {/*    <div className="dropdown-content">*/}
-                {/*        {statuses.map((st) =>*/}
-                {/*            <a onClick={async () => {*/}
-                {/*                console.log("UPDATE STATUS " + serviceID + " " + st);*/}
-                {/*                await axios.post("/api/service-status", {*/}
-                {/*                    serviceID: serviceID,*/}
-                {/*                    status: StatusType[st as keyof typeof StatusType]*/}
-                {/*                }).then();*/}
-                {/*                setRefresh(!refresh);*/}
-                {/*            }}>{StatusType[st as keyof typeof StatusType]}</a>*/}
-                {/*        )}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <Select
                     defaultValue={StatusType.Unassigned}
                     value={StatusType[status as keyof typeof StatusType] ? StatusType[status as keyof typeof StatusType] : "InProgress"}
                     onChange={async (event: SelectChangeEvent) => {
                         console.log(status as keyof typeof StatusType);
                         console.log("UPDATE STATUS " + serviceID + " " + event.target.value);
-                        await axios.post("/api/service-status", {
+
+                        const serviceRequest: UpdateRequest = {
                             serviceID: serviceID,
+                            assignedTo: assignedID,
                             status: StatusType[event.target.value as keyof typeof StatusType]
-                        }).then();
+                        };
+
+                        await axios.put("/api/service-request", serviceRequest).then();
                         setRefresh(!refresh);
                     }}>
                     {statuses.map((st) =>
