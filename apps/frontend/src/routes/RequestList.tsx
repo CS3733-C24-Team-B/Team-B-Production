@@ -8,7 +8,7 @@ import Navbar from "../components/Navbar.tsx";
 //import SideButtons from "../components/SideButtons.tsx";
 import {StatusType} from "common/src/serviceRequestTypes.ts";
 import {Button, MenuItem} from "@mui/material";
-//import {employee} from "common/src/employee.ts";
+//import {employee} from "common/src/employeeTypes.ts";
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 
 export default function RequestList() {
