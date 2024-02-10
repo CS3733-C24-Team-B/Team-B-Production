@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import "../css/serviceform_page.css";
 import { useAuth0 } from "@auth0/auth0-react";
-import { CreateEmployee } from "common/src/employee.ts";
+import { CreateEmployee } from "common/src/employeeTypes.ts";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
 import Button from "@mui/material/Button";
