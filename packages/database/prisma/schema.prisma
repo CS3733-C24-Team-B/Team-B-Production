@@ -53,21 +53,21 @@ model ServiceRequest {
 
 model SanitationRequest {
   sanitationID   Int            @id @default(autoincrement())
-  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
   serviceID      Int            @unique
   hazards        String
 }
 
 model MaintenanceRequest {
   maintenanceID  Int            @id @default(autoincrement())
-  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
   serviceID      Int            @unique
   details        String
 }
 
 model InternalTransportRequest {
   internalTransportID Int            @id @default(autoincrement())
-  serviceRequest      ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceRequest      ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
   serviceID           Int            @unique
   toLocation          String
   mobilityAid         String
@@ -76,7 +76,7 @@ model InternalTransportRequest {
 
 model MedicineRequest {
   medicineID     Int            @id @default(autoincrement())
-  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
   serviceID      Int            @unique
   medicineType   String
   amount         String
@@ -84,7 +84,7 @@ model MedicineRequest {
 
 model LanguageRequest {
   languageID     Int            @id @default(autoincrement())
-  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
   serviceID      Int            @unique
   language1      String
   language2      String
