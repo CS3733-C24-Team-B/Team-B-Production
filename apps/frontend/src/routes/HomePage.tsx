@@ -14,8 +14,8 @@ import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
-import {CreateEmployee} from "common/src/employee.ts";
 import LeafletMap from "../components/LeafletMap.tsx";
+import {CreateEmployee} from "common/src/employeeTypes.ts";
 
 interface FloorImages {
     groundfloor: string;
