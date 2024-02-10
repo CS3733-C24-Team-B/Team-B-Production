@@ -10,6 +10,7 @@ export default function ProfilePage() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [srData, setSRData] = useState([]);
 
     useEffect(() => {
         async function submit() { ///copied
@@ -18,6 +19,7 @@ export default function ProfilePage() {
                     email: user!.email!
                 }
             });
+            const res2 = await axios.get("/api/service-request");
 
             if (res.status == 200) {
                 console.log("Successfully submitted form");
@@ -26,29 +28,56 @@ export default function ProfilePage() {
             setEmail(res.data.email);
             setFirstName(res.data.firstName);
             setLastName(res.data.lastName);
+            setSRData(res2.data);
         }
 
         submit().then();
     }, [user, isAuthenticated]);
-    const profileData = {
-        firstName: firstName,
-        lastName: lastName,
-        age: 30,
-        phoneNumber: '123-456-7890',
-        username: email,
-        password: '********',
-        ssn: '123-45-6789',
-        serviceRequests: [
-            {id: 1, description: 'Request 1', status: 'Fulfilled'},
-            {id: 2, description: 'Request 2', status: 'In Progress'},
-            {id: 3, description: 'Request 3', status: 'Submitted'},
-        ],
-    };
+
+    const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
+
+    const arrayReq = srData.map(({serviceID, name, status, infoText, assignedID}) =>
+        ((assignedID === email) ? <div key={serviceID} style={listItemStyle}>
+            <Typography>
+                <strong>Requester:</strong> {name}
+            </Typography>
+            <Typography>
+                <strong>Description:</strong> {infoText}
+            </Typography>
+            <Typography>
+                <strong>Status:</strong> {status}
+            </Typography>
+        </div> : null)
+    );
+    // const profileData = {
+    //     firstName: firstName,
+    //     lastName: lastName,
+    //     age: 30,
+    //     phoneNumber: '123-456-7890',
+    //     username: email,
+    //     password: '********',
+    //     ssn: '123-45-6789',
+    //     serviceRequests: [
+    //         reqList
+    //         // {id: 1, description: 'Request 1', status: 'Fulfilled'},
+    //         // {id: 2, description: 'Request 2', status: 'In Progress'},
+    //         // {id: 3, description: 'Request 3', status: 'Submitted'},
+    //     ],
+    // };
 
     // const handlePasswordChange = () => {
     //     // Implement the logic to redirect to the password change page
     //     window.location.href = '/change-profile';
     // };
+
+    function allNull(arr:(object|null)[]) {
+        for(const obj of arr) {
+            if(obj !== null) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     async function submit() { ///copied
         const employeeInfo: UpdateEmployee = {
@@ -66,8 +95,6 @@ export default function ProfilePage() {
         }
     }
 
-    const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
-
     return (
         <div className="home-container">
             <div className="nav-container">
@@ -80,7 +107,7 @@ export default function ProfilePage() {
                             Profile Information
                         </Typography>
                         <Typography variant="body1" style={listItemStyle}>
-                            <strong>Email:</strong> {profileData.username}
+                            <strong>Email:</strong> {email}
                         </Typography>
                         {/*<Typography variant="body1" style={listItemStyle}>*/}
                         {/*    <strong>First Name:</strong> {profileData.firstName}*/}
@@ -115,16 +142,17 @@ export default function ProfilePage() {
                         <Typography variant="h5" gutterBottom>
                             Service Requests
                         </Typography>
-                        {profileData.serviceRequests.map((request) => (
-                            <div key={request.id} style={listItemStyle}>
-                                <Typography>
-                                    <strong>Description:</strong> {request.description}
-                                </Typography>
-                                <Typography>
-                                    <strong>Status:</strong> {request.status}
-                                </Typography>
-                            </div>
-                        ))}
+                        {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
+                        {/*{reqList.map(({id, description, status}) => (*/}
+                        {/*    <div key={id} style={listItemStyle}>*/}
+                        {/*        <Typography>*/}
+                        {/*            <strong>Description:</strong> {description}*/}
+                        {/*        </Typography>*/}
+                        {/*        <Typography>*/}
+                        {/*            <strong>Status:</strong> {status}*/}
+                        {/*        </Typography>*/}
+                        {/*    </div>*/}
+                        {/*))}*/}
                     </Paper>
                 </Container>
             </div>
