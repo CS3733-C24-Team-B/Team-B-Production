@@ -83,8 +83,6 @@ export default function HomePage() {
         async function createAuthenticatedEmployee() {
             const employeeInfo: CreateEmployee = {
                 email: user!.email!,
-                firstName: "",
-                lastName: ""
             };
             const res = await axios.post("/api/employee", employeeInfo, {
                 headers: {
