@@ -8,16 +8,6 @@ export type DeleteRequest = {
     serviceID: number
 }
 
-export type ServiceAssignment = {
-    serviceID: number,
-    assignedTo: string
-}
-
-export type ServiceStatus = {
-    serviceID: number,
-    status: StatusType
-}
-
 export type UpdateRequest = {
     serviceID: number,
     assignedTo: string,
@@ -28,5 +18,13 @@ export enum StatusType {
     Unassigned = "Unassigned",
     Assigned = "Assigned",
     InProgress = "In Progress",
-    Completed = "Completed"
+    Completed = "Completed",
+    Paused = "Paused"
+}
+
+export enum PriorityType {
+    Low = "Low",
+    Medium = "Medium",
+    High = "High",
+    Emergency = "Emergency"
 }

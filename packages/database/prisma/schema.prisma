@@ -34,19 +34,67 @@ model Edge {
 }
 
 model ServiceRequest {
-  serviceID   Int       @id @default(autoincrement())
-  timeCreated DateTime  @default(now())
-  name        String
-  roomNumber  Int
-  infoText    String
-  assignedTo  Employee? @relation("Assigned", fields: [assignedID], references: [email])
-  assignedID  String?
-  status      String
+  serviceID         Int                       @id @default(autoincrement())
+  timeCreated       DateTime                  @default(now())
+  createdBy         Employee                  @relation("Created", fields: [createdByID], references: [email])
+  createdByID       String
+  locationID        String
+  priority          String
+  status            String
+  assignedTo        Employee?                 @relation("Assigned", fields: [assignedID], references: [email])
+  assignedID        String?
+  notes             String
+  sanitation        SanitationRequest?
+  maintenance       MaintenanceRequest?
+  internalTransport InternalTransportRequest?
+  medicine          MedicineRequest?
+  language          LanguageRequest?
+}
+
+model SanitationRequest {
+  sanitationID   Int            @id @default(autoincrement())
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceID      Int            @unique
+  hazards        String
+}
+
+model MaintenanceRequest {
+  maintenanceID  Int            @id @default(autoincrement())
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceID      Int            @unique
+  details        String
+}
+
+model InternalTransportRequest {
+  internalTransportID Int            @id @default(autoincrement())
+  serviceRequest      ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceID           Int            @unique
+  toLocation          String
+  mobilityAid         String
+  patientName         String
+}
+
+model MedicineRequest {
+  medicineID     Int            @id @default(autoincrement())
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceID      Int            @unique
+  medicineType   String
+  amount         String
+}
+
+model LanguageRequest {
+  languageID     Int            @id @default(autoincrement())
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID])
+  serviceID      Int            @unique
+  language1      String
+  language2      String
+  when           DateTime
 }
 
 model Employee {
-  email     String           @id
-  firstName String?
-  lastName  String?
-  requests  ServiceRequest[] @relation("Assigned")
+  email            String           @id
+  firstName        String?
+  lastName         String?
+  requestsCreated  ServiceRequest[] @relation("Created")
+  requestsAssigned ServiceRequest[] @relation("Assigned")
 }
