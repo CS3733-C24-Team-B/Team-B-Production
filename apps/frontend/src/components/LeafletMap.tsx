@@ -267,10 +267,12 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {
-                                                  if (nodeEnd !== "") {
-                                                      setNodeStart(nodeEnd);
+                                                  if(nodeStart === "") {
+                                                      setNodeStart(nodeID);
+                                                  } else if(nodeEnd === "") {
                                                       setNodeEnd(nodeID);
                                                   } else {
+                                                      setNodeStart(nodeEnd);
                                                       setNodeEnd(nodeID);
                                                   }
                                               }
