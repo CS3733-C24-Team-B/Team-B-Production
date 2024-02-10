@@ -4,7 +4,7 @@ export type NewRequest = {
     infoText: string
 }
 
-export type ServiceID = {
+export type DeleteRequest = {
     serviceID: number
 }
 
@@ -15,6 +15,12 @@ export type ServiceAssignment = {
 
 export type ServiceStatus = {
     serviceID: number,
+    status: StatusType
+}
+
+export type UpdateRequest = {
+    serviceID: number,
+    assignedTo: string,
     status: StatusType
 }
 

@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Container, Paper, Typography, Button, TextField} from '@mui/material';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
-import {CreateEmployee} from "common/src/employee.ts";
+import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import Navbar from "../components/Navbar.tsx";
-//import axios from "axios";
-//import {EmployeeID} from "common/src/employee.ts";
 
 export default function ProfilePage() {
     const {user, isAuthenticated} = useAuth0();
@@ -16,7 +14,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         async function submit() { ///copied
-            const res = await axios.get(`/api/user/${user!.email!}`, {
+            const res = await axios.get(`/api/employee/${user!.email!}`, {
                 params: {
                     email: user!.email!
                 }
@@ -82,12 +80,12 @@ export default function ProfilePage() {
     }
 
     async function submit() { ///copied
-        const employeeInfo: CreateEmployee = {
+        const employeeInfo: UpdateEmployee = {
             email: user!.email!,
             firstName: firstName,
             lastName: lastName
         };
-        const res = await axios.post("/api/user", employeeInfo, {
+        const res = await axios.put("/api/employee", employeeInfo, {
             headers: {
                 "Content-Type": "application/json"
             }
