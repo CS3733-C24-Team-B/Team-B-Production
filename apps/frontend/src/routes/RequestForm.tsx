@@ -71,7 +71,6 @@ export default function RequestForm() {
                             }
 
                             setSanPressed(!sanPressed);
-                            /*bruh*/
                             setMedPressed(false);
                         }}
                         className={requestType === "sanitation" ? "selected" : ""}
