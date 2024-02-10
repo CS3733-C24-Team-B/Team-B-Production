@@ -18,6 +18,16 @@ export type ServiceStatus = {
     status: StatusType
 }
 
+export type InternalTransportationRequestType = {
+    employee: string;
+    location: string;
+    priority: PriorityType;
+    status: StatusType;
+    toLocation: string;
+    mobilityAid: string;
+    patientName: string;
+}
+
 export type UpdateRequest = {
     serviceID: number,
     assignedTo: string,
@@ -29,4 +39,12 @@ export enum StatusType {
     Assigned = "Assigned",
     InProgress = "In Progress",
     Completed = "Completed"
+}
+
+
+export enum PriorityType {
+    Low = "Low",
+    Medium = "Medium",
+    High = "High",
+    Emergency = "Emergency"
 }
