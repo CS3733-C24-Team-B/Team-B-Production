@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Container, Paper, Typography, Button, TextField} from '@mui/material';
+import {Container, Paper, Typography, Button, TextField, CircularProgress, Snackbar, Alert} from '@mui/material';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
@@ -11,6 +11,8 @@ export default function ProfilePage() {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [srData, setSRData] = useState([]);
+    const [receivedSR, setReceivedSR] = useState(false);
+    const [submitAlert, setSubmitAlert] = useState(false);
 
     useEffect(() => {
         async function submit() { ///copied
@@ -29,6 +31,7 @@ export default function ProfilePage() {
             setFirstName(res.data.firstName);
             setLastName(res.data.lastName);
             setSRData(res2.data);
+            setReceivedSR(true);
         }
 
         submit().then();
@@ -49,26 +52,6 @@ export default function ProfilePage() {
             </Typography>
         </div> : null)
     );
-    // const profileData = {
-    //     firstName: firstName,
-    //     lastName: lastName,
-    //     age: 30,
-    //     phoneNumber: '123-456-7890',
-    //     username: email,
-    //     password: '********',
-    //     ssn: '123-45-6789',
-    //     serviceRequests: [
-    //         reqList
-    //         // {id: 1, description: 'Request 1', status: 'Fulfilled'},
-    //         // {id: 2, description: 'Request 2', status: 'In Progress'},
-    //         // {id: 3, description: 'Request 3', status: 'Submitted'},
-    //     ],
-    // };
-
-    // const handlePasswordChange = () => {
-    //     // Implement the logic to redirect to the password change page
-    //     window.location.href = '/change-profile';
-    // };
 
     function allNull(arr:(object|null)[]) {
         for(const obj of arr) {
@@ -92,6 +75,7 @@ export default function ProfilePage() {
         });
         if (res.status == 200) {
             console.log("Successfully submitted form");
+            setSubmitAlert(true);
         }
     }
 
@@ -102,39 +86,41 @@ export default function ProfilePage() {
             </div>
             <div className="profile-data">
                 <Container> {/* Increased marginRight */}
-                    <Paper elevation={3} style={{padding: '30px', width: '45%', marginTop: '20px', marginRight: '10%', float: 'left'}}>
+                    <Paper elevation={3} style={{
+                        padding: '30px',
+                        width: '45%',
+                        marginTop: '20px',
+                        marginRight: '10%',
+                        float: 'left'
+                    }}>
                         <Typography variant="h5" gutterBottom>
                             Profile Information
                         </Typography>
-                        <Typography variant="body1" style={listItemStyle}>
-                            <strong>Email:</strong> {email}
-                        </Typography>
-                        {/*<Typography variant="body1" style={listItemStyle}>*/}
-                        {/*    <strong>First Name:</strong> {profileData.firstName}*/}
-                        {/*</Typography>*/}
-                        <TextField style={listItemStyle} id="standard-basic" label="First name" variant="standard"
-                                   value={firstName}
-                                   onChange={(e) => {
-                                       setFirstName(e.target.value);
-                                   }}
-                                   required
-                        />
-                        {/*<Typography variant="body1" style={listItemStyle}>*/}
-                        {/*    <strong>Last Name:</strong> {profileData.lastName}*/}
-                        {/*</Typography>*/}
-                        <TextField style={listItemStyle} id="standard-basic" label="Last name" variant="standard"
-                                   value={lastName}
-                                   onChange={(e) => {
-                                       setLastName(e.target.value);
-                                   }}
-                                   required
-                        />
-                        <div style={{marginTop: '20px'}}>
-                            <Button variant="contained" color="primary" onClick={submit}
-                                    style={{backgroundColor: "#012D5A"}}>
-                                Update Info
-                            </Button>
-                        </div>
+                        {(user === undefined) ? <CircularProgress /> : <div>
+                            <Typography variant="body1" style={listItemStyle}>
+                                <strong>Email:</strong> {email}
+                            </Typography>
+                            <TextField style={listItemStyle} id="standard-basic" label="First name" variant="standard"
+                                       value={firstName}
+                                       onChange={(e) => {
+                                           setFirstName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <TextField style={listItemStyle} id="standard-basic" label="Last name" variant="standard"
+                                       value={lastName}
+                                       onChange={(e) => {
+                                           setLastName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <div style={{marginTop: '20px'}}>
+                                <Button variant="contained" color="primary" onClick={submit}
+                                        style={{backgroundColor: "#012D5A"}}>
+                                    Update Info
+                                </Button>
+                            </div>
+                        </div>}
                     </Paper>
                 </Container>
                 <Container style={{marginTop: '20px'}}> {/* Increased marginTop */}
@@ -142,20 +128,25 @@ export default function ProfilePage() {
                         <Typography variant="h5" gutterBottom>
                             Service Requests
                         </Typography>
-                        {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
-                        {/*{reqList.map(({id, description, status}) => (*/}
-                        {/*    <div key={id} style={listItemStyle}>*/}
-                        {/*        <Typography>*/}
-                        {/*            <strong>Description:</strong> {description}*/}
-                        {/*        </Typography>*/}
-                        {/*        <Typography>*/}
-                        {/*            <strong>Status:</strong> {status}*/}
-                        {/*        </Typography>*/}
-                        {/*    </div>*/}
-                        {/*))}*/}
+                        {(!receivedSR) ? <CircularProgress /> :
+                            (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
                     </Paper>
                 </Container>
             </div>
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={submitAlert}
+                autoHideDuration={2000}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity="success"
+                    sx={{ width: '100%' }}
+                >
+                    Profile info updated.
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
