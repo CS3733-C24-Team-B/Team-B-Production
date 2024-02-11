@@ -98,7 +98,7 @@ export default function PersistentDrawerLeft() {
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        sx={{ position: 'absolute', top: 45, left: 12 }}
+                        sx={{ position: 'absolute', top: 55, left: 12 }}
                         style={{ color: 'white' }} // Add this line to set the color to white
                     >
                         <HomeIcon />
