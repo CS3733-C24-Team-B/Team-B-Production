@@ -7,6 +7,11 @@ export type NewServiceRequest = {
     notes: string
 }
 
+export type UpdateServiceRequest = NewServiceRequest & {
+    serviceID: number
+    timeCreated: Date
+}
+
 export type SanitationRequest = NewServiceRequest & {
     hazards: string
 }
