@@ -94,6 +94,15 @@ export default function PersistentDrawerLeft() {
                     >
                         <MenuIcon />
                     </IconButton>
+                    <IconButton
+                        color="inherit"
+                        aria-label="home"
+                        onClick={handleHomeClick}
+                        sx={{ position: 'absolute', top: 45, left: 12 }}
+                        style={{ color: 'white' }} // Add this line to set the color to white
+                    >
+                        <HomeIcon />
+                    </IconButton>
                 </Toolbar>
                 <Drawer
                     sx={{
@@ -144,15 +153,6 @@ export default function PersistentDrawerLeft() {
                     </List>
                 </Drawer>
             </AppBar>
-            <IconButton
-                color="inherit"
-                aria-label="home"
-                onClick={handleHomeClick}
-                sx={{ position: 'absolute', bottom: 0, left: 0 }}
-                style={{ color: 'white' }} // Add this line to set the color to white
-            >
-                <HomeIcon />
-            </IconButton>
         </Box>
     );
 }
