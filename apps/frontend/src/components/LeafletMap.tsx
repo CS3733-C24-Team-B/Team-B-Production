@@ -148,11 +148,11 @@ export default function LeafletMap() {
                         console.log("ANGLE: " + angle);
                         if(pathLength > 0.2) {
                             temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.2 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.2 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
+                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
+                                color={"black"} weight={5}></Polyline>);
                             temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.2 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.2 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
+                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
+                                color={"black"} weight={5}></Polyline>);
                         }
                     } else if (prevFloor !== "") {
                         temp.push(
