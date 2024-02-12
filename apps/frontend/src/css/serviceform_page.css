@@ -21,6 +21,7 @@
     align-items: start;
     min-height: 100vh;
     padding-top: 2%;
+    background-color: lightsteelblue;
 }
 
 .header-container {
@@ -31,11 +32,19 @@
 }
 
 .button-container {
-    display: inline-flex;
+    display: grid;
     grid-area: s1;
     justify-self: center;
+    justify-items: center;
     align-self: center;
     column-gap: 10vw;
+
+    border-radius: 25px;
+    border: 3px solid #115293;
+    padding: 20px;
+}
+
+.carousel-button {
 }
 
 .form-container {
