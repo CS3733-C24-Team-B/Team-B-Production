@@ -1,40 +1,31 @@
-import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup} from 'react-leaflet';
+import { MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup } from 'react-leaflet';
 import "../css/leaflet.css";
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {LatLng, LatLngBounds} from "leaflet";
+import { LatLng, LatLngBounds } from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import {Button, Autocomplete} from "@mui/material";
+import { Button, Autocomplete, Drawer } from "@mui/material";
 import TextField from "@mui/material/TextField";
-// import L from "leaflet";
-
-// type LineData = {
-//     x1: number,
-//     y1: number,
-//     x2: number,
-//     y2: number
-// }
 
 interface MapProps {
     imageSource: string;
     currLevel: string;
 }
 
-export default function LeafletMap({imageSource, currLevel}: MapProps) {
+export default function LeafletMap({ imageSource, currLevel }: MapProps) {
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
     const [nodeStart, setNodeStart] = useState("");
     const [nodeEnd, setNodeEnd] = useState("");
-    //const [drawLine, setDrawLine] = useState(false);
     const [pathData, setPathData] = useState([]);
     const [lineData, setLineData] = useState<JSX.Element[]>([]);
-    // const [selectedNodes, setSelectedNodes] = useState<LeafletMouseEvent[]>([]);
     const [showEdges, setShowEdges] = useState(false);
     const [useAStar, setUseAStar] = useState(false);
-
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
 
     useEffect(() => {
-        async function fetch() {
+        // Fetch data from APIs
+        async function fetchData() {
             try {
                 const res2 = await axios.post("/api/db-insert");
                 console.log(res2.data);
@@ -48,7 +39,7 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
             setEdgeData(res3.data);
         }
 
-        fetch().then();
+        fetchData();
     }, []);
 
     useEffect(() => {
@@ -179,7 +170,7 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
         const node = nodeData.find(({nodeID}) =>
             nodeID === nId
         );
-        if(node !== undefined) {
+        if (node !== undefined) {
             return node!["longName"];
         } else {
             return "";
@@ -190,36 +181,78 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
         return floor === currLevel;
     });
 
+    useEffect(() => {
+        // Open the drawer automatically when nodeEnd is selected
+        if (nodeEnd) {
+            setIsDrawerOpen(true);
+        }
+    }, [nodeEnd]);
+
+
+    useEffect(() => {
+        // Open the drawer automatically when nodeEnd is selected
+        if (nodeEnd) {
+            setIsDrawerOpen(true);
+        }
+    }, [nodeEnd]);
+
     return (
         <div>
+            <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
+                    ModalProps={{BackdropProps: {invisible: true}}}>
+                <nav className="navbar" style={{width: '250px'}}>
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <Button variant="contained" onClick={() => console.log("Text Directions clicked")}>Text
+                                Directions</Button>
+                        </li>
+                    </ul>
+                </nav>
+                <div className="map-buttons">
+                    <Autocomplete
+                        disablePortal
+                        options={currNodes.map(({longName}) => ({label: longName}))}
+                        sx={{width: 300}}
+                        renderInput={(params) => <TextField {...params} label="Start Node..."/>}
+                        value={nodeIDtoName(nodeStart)}
+                        onChange={(newValue) => {
+                            if (newValue !== null && newValue.target.innerText !== undefined) {
+                                const nId = nametoNodeID(newValue.target.innerText);
+                                setNodeStart(nId);
+                            } else {
+                                setNodeStart("");
+                            }
+                        }}
+                    />
+                </div>
+                <div style={{ marginTop: "10px" }}></div>
+                <div className="map-buttons">
+                    <Autocomplete
+                        disablePortal
+                        options={currNodes.map(({longName}) => ({label: longName}))}
+                        sx={{width: 300}}
+                        renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                        value={nodeIDtoName(nodeEnd)}
+                        onChange={(newValue) => {
+                            if (newValue !== null && newValue.target.innerText !== undefined) {
+                                const nId = nametoNodeID(newValue.target.innerText);
+                                setNodeEnd(nId);
+                            } else {
+                                setNodeEnd("");
+                            }
+                        }}
+                    />
+                </div>
+            </Drawer>
             <div className="map-buttons">
                 <Autocomplete
                     disablePortal
-                    options={currNodes.map(({longName}) => (
-                        {label: longName}
-                    ))}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Start Node..." />}
-                    value={nodeIDtoName(nodeStart)}
-                    onChange={(newValue) => {
-                        if(newValue !== null && newValue.target.innerText !== undefined) {
-                            const nId = nametoNodeID(newValue.target.innerText);
-                            setNodeStart(nId);
-                        } else {
-                            setNodeStart("");
-                        }
-                    }}
-                />
-                <Autocomplete
-                    disablePortal
-                    options={currNodes.map(({longName}) => (
-                        {label: longName}
-                    ))}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                    options={currNodes.map(({longName}) => ({label: longName}))}
+                    sx={{width: 300}}
+                    renderInput={(params) => <TextField {...params} label="Search"/>}
                     value={nodeIDtoName(nodeEnd)}
                     onChange={(newValue) => {
-                        if(newValue !== null && newValue.target.innerText !== undefined) {
+                        if (newValue !== null && newValue.target.innerText !== undefined) {
                             const nId = nametoNodeID(newValue.target.innerText);
                             setNodeEnd(nId);
                         } else {
@@ -228,7 +261,6 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                     }}
                 />
                 <div className="map-options">
-                    {/* Convert checkboxes into buttons */}
                     <Button variant="contained" onClick={() => setShowEdges(!showEdges)}
                             style={{backgroundColor: "white", color: "black"}}>
                         {showEdges ? "Hide All Edges" : "Show All Edges"}
@@ -250,41 +282,46 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                     <AuthenticationButton/>
                 </div>
             </div>
-            <MapContainer center={[17, 25]} zoom={5}
-                          minZoom={5}
-                          maxZoom={8}
-                          scrollWheelZoom={true}
-                          maxBoundsViscosity={1.0}
-                          maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+            <MapContainer
+                center={[17, 25]}
+                zoom={5}
+                minZoom={5}
+                maxZoom={8}
+                scrollWheelZoom={true}
+                maxBoundsViscosity={1.0}
+                maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
             >
                 <ImageOverlay
                     url={imageSource} //"src/images/00_thelowerlevel1.png"
                     bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
-                    (floor === currLevel ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6}
-                                      eventHandlers={{
-                                          click: () => {
-                                              if (!showEdges) {
-                                                  if(nodeStart === "") {
-                                                      setNodeStart(nodeID);
-                                                  } else if(nodeEnd === "") {
-                                                      setNodeEnd(nodeID);
-                                                  } else {
-                                                      setNodeStart(nodeEnd);
-                                                      setNodeEnd(nodeID);
-                                                  }
-                                              }
-                                          }
-                                      }}>
-                            <Tooltip>
-                                {longName + ": " + xcoord + ", " + ycoord}
-                            </Tooltip>
-                        </CircleMarker> : <></>)
+                    floor === currLevel ? (
+                        <CircleMarker
+                            key={nodeID}
+                            center={[34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000]}
+                            radius={6}
+                            eventHandlers={{
+                                click: () => {
+                                    if (!showEdges) {
+                                        if (nodeStart === "") {
+                                            setNodeStart(nodeID);
+                                        } else if (nodeEnd === "") {
+                                            setNodeEnd(nodeID);
+                                        } else {
+                                            setNodeStart(nodeEnd);
+                                            setNodeEnd(nodeID);
+                                        }
+                                    }
+                                }
+                            }}
+                        >
+                            <Tooltip>{`${longName}: ${xcoord}, ${ycoord}`}</Tooltip>
+                        </CircleMarker>
+                    ) : null
                 ))}
                 {lineData}
             </MapContainer>
         </div>
     );
-};
+}
