@@ -5,7 +5,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Open Sans", sans-serif;
-
 }
 
 .service-form-container {
@@ -15,13 +14,11 @@
     grid-template-rows: auto;
     grid-template-areas:
             "s1 s1 s1 s1"
-            "s2 s2 s2 s2"
-            "s3 s3 s3 s3"
-            "s4 s4 s4 s4";
+            "s2 s2 s2 s2";
     align-items: start;
-    min-height: 100vh;
-    padding-top: 2%;
-    background-color: lightsteelblue;
+    height: 100vh;
+    padding-top: 1%;
+    background-color: #F1F1F1;
 }
 
 .header-container {
@@ -38,20 +35,19 @@
     justify-items: center;
     align-self: center;
     column-gap: 10vw;
-
-    border-radius: 25px;
-    border: 3px solid #115293;
-    padding: 20px;
+    width: 90%;
+    height: 70%;
 }
 
-.carousel-button {
+.carousel-button .MuiButton-root {
+    border-radius: 30px;
 }
 
 .form-container {
     display: grid;
     grid-area: s2;
-    justify-self: center;
-    align-self: center;
+    justify-self: start;
+    align-self: end;
 }
 
 .service-form-container .container {
@@ -72,12 +68,14 @@
 
 }
 
-.service-form-container h2 {
+.service-form-container h1 {
     /*font-size: 2rem;*/
     margin-bottom: 5vh;
-
+    font-family: "Open Sans", sans-serif;
+    color: #012d5a;
 }
-.buttonColor{
+
+.buttonColor {
     background-color: #115293;
     align-items: center;
 

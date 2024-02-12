@@ -12,17 +12,19 @@ interface RequestCarouselProps {
 const RequestCarouselContainer = styled(Box)(() => ({
     overflow: 'hidden',
     position: 'relative',
-    width: '100%',
+    width: '90%',
+    padding: '1%',
 }));
 
 const RequestCarouselWrapper = styled(Box)(() => ({
     display: 'flex',
-    width: '40%',
+    width: '50%',
+    alignContent: 'center',
 }));
 
 const SlideContainer = styled(Box)({
     flex: '0 0 auto',
-    width: '100%',
+    width: '70%',
 });
 
 const PrevNextButton = styled(Button)(() => ({
@@ -30,31 +32,52 @@ const PrevNextButton = styled(Button)(() => ({
     top: '50%',
     transform: 'translateY(-50%)',
     zIndex: 1,
+    backgroundColor: 'grey',
+    color: 'white',
+    borderRadius: '80%',
 }));
 
 const PrevButton = styled(PrevNextButton)({
-    left: '-1%',
+    left: '5%',
 });
 
 const NextButton = styled(PrevNextButton)({
-    left: '86%',
+    left: '93%',
 });
+
+const PositionIndicators = styled(Box)({
+    display: 'flex',
+    justifyContent: 'center', // Center horizontally
+    position: 'relative',
+    top: '30%',
+    width: '100%', // Full width
+});
+
+const IndicatorDot = styled(Box)(({isActive}: boolean) => ({
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    margin: '0 10px',
+    backgroundColor: isActive ? "lightgrey" : "grey",
+    cursor: 'pointer',
+}));
 
 const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
     const [isAnimating, setIsAnimating] = React.useState(false);
+    const totalSlides = 3; // Total number of slides
 
     const handleNext = () => {
         if (!isAnimating) {
             setIsAnimating(true);
-            setActiveIndex((prevIndex) => (prevIndex === children.length - 1 ? 0 : prevIndex + 1));
+            setActiveIndex((prevIndex) => (prevIndex === totalSlides - 1 ? 0 : prevIndex + 1));
         }
     };
 
     const handlePrev = () => {
         if (!isAnimating) {
             setIsAnimating(true);
-            setActiveIndex((prevIndex) => (prevIndex === 0 ? children.length - 1 : prevIndex - 1));
+            setActiveIndex((prevIndex) => (prevIndex === 0 ? totalSlides - 1 : prevIndex - 1));
         }
     };
 
@@ -68,7 +91,7 @@ const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     };
 
     return (
-        <RequestCarouselContainer>
+        <div style={{width: '90vw'}}>
             <PrevButton onClick={handlePrev}>
                 <ArrowBackIcon />
             </PrevButton>
@@ -76,14 +99,26 @@ const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
                 <ArrowForwardIcon />
             </NextButton>
 
-            <RequestCarouselWrapper style={slideStyle} onTransitionEnd={handleTransitionEnd}>
-                {React.Children.map(children, (child, index) => (
-                    <SlideContainer key={index}>
-                        {child}
-                    </SlideContainer>
+            <RequestCarouselContainer>
+                <RequestCarouselWrapper style={slideStyle} onTransitionEnd={handleTransitionEnd}>
+                    {React.Children.map(children, (child, index) => (
+                        <SlideContainer key={index}>
+                            {child}
+                        </SlideContainer>
+                    ))}
+                </RequestCarouselWrapper>
+            </RequestCarouselContainer>
+
+            <PositionIndicators>
+                {[...Array(totalSlides)].map((_, index) => (
+                    <IndicatorDot
+                        key={index}
+                        isActive={index === activeIndex}
+                        onClick={() => setActiveIndex(index)}
+                    />
                 ))}
-            </RequestCarouselWrapper>
-        </RequestCarouselContainer>
+            </PositionIndicators>
+        </div>
     );
 };
 

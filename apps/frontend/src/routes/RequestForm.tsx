@@ -59,7 +59,7 @@ export default function RequestForm() {
             </div>
             <div className="service-form-container">
                 <div className="header-container">
-                    <h2>Create Service Request</h2>
+                    <h1>Create Service Request</h1>
                 </div>
 
                 <div className="button-container">
@@ -78,7 +78,7 @@ export default function RequestForm() {
                                     setMedPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
-                                sx={{left: '33%', width: '10vw', height: '15vh'}}
+                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
                                 startIcon={<SanitizerIcon/>}
                             >
@@ -99,11 +99,32 @@ export default function RequestForm() {
                                     setSanPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
-                                sx={{left: '33%', width: '10vw', height: '15vh'}}
+                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
                                 startIcon={<MedicationIcon/>}
                             >
                                 Medicine Delivery
+                            </Button>
+                        </div>
+                        <div className="carousel-button">
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    if (requestType === "sanitation") {
+                                        setRequestType("");
+                                    } else {
+                                        setRequestType("sanitation");
+                                    }
+
+                                    setSanPressed(!sanPressed);
+                                    setMedPressed(false);
+                                }}
+                                className={requestType === "sanitation" ? "selected" : ""}
+                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
+                                startIcon={<SanitizerIcon/>}
+                            >
+                                Sanitization Request (duplicate)
                             </Button>
                         </div>
                         <div className="carousel-button">
@@ -120,7 +141,7 @@ export default function RequestForm() {
                                     setSanPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
-                                sx={{left: '33%', width: '10vw', height: '15vh'}}
+                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
                                 startIcon={<MedicationIcon/>}
                             >
@@ -128,57 +149,83 @@ export default function RequestForm() {
                                 (duplicate)
                             </Button>
                         </div>
+                        <div className="carousel-button">
+                            <Button
+                                variant="outlined"
+                                onClick={() => {
+                                    if (requestType === "sanitation") {
+                                        setRequestType("");
+                                    } else {
+                                        setRequestType("sanitation");
+                                    }
+
+                                    setSanPressed(!sanPressed);
+                                    setMedPressed(false);
+                                }}
+                                className={requestType === "sanitation" ? "selected" : ""}
+                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
+                                startIcon={<SanitizerIcon/>}
+                            >
+                                Sanitization Request (2nd duplicate)
+                            </Button>
+                        </div>
                     </RequestCarousel>
                 </div>
 
                 <div className="form-container">
-                    <div className="input-field">
-                        <TextField
-                            id="standard-basic"
-                            label="Name"
-                            variant="standard"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            type="text"
-                            required
-                        />
-                    </div>
-                    <div className="input-field">
-                        <TextField
-                            id="standard-basic"
-                            label="Room Number"
-                            variant="standard"
-                            type="number"
-                            value={roomNumber}
-                            onChange={(e) => setRoomNumber(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="input-field">
-                        <TextField
-                            id="standard-basic"
-                            label="Request Details"
-                            variant="standard"
-                            type="text"
-                            value={infoText}
-                            onChange={(e) => setInfoText(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {/* Render the appropriate service request component */}
-                    {renderServiceRequestComponent()}
-                    <br/>
-                    <div>
-                        <Button
-                            style={{
-                                backgroundColor: "#012D5A",
-                            }}
-                            variant="contained"
-                            onClick={submit}
-                        >
-                            Submit Request
-                        </Button>
-                    </div>
+                    {/* Render the form contents only if a service request type is selected */}
+                    {requestType && (
+                        <>
+                            <div className="input-field">
+                                <TextField
+                                    id="standard-basic"
+                                    label="Name"
+                                    variant="standard"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    type="text"
+                                    required
+                                />
+                            </div>
+                            <div className="input-field">
+                                <TextField
+                                    id="standard-basic"
+                                    label="Room Number"
+                                    variant="standard"
+                                    type="number"
+                                    value={roomNumber}
+                                    onChange={(e) => setRoomNumber(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="input-field">
+                                <TextField
+                                    id="standard-basic"
+                                    label="Request Details"
+                                    variant="standard"
+                                    type="text"
+                                    value={infoText}
+                                    onChange={(e) => setInfoText(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {/* Render the appropriate service request component */}
+                            {renderServiceRequestComponent()}
+                            <br/>
+                            <div>
+                                <Button
+                                    style={{
+                                        backgroundColor: "#012D5A",
+                                    }}
+                                    variant="contained"
+                                    onClick={submit}
+                                >
+                                    Submit Request
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
