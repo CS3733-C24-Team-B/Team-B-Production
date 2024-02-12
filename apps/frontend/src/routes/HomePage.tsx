@@ -12,8 +12,8 @@ import LeafletMap from "../components/LeafletMap.tsx";
 import {CreateEmployee} from "common/src/employeeTypes.ts";
 
 export default function HomePage() {
-    const { user, isAuthenticated} = useAuth0();
-    
+    const {user, isAuthenticated} = useAuth0();
+
     useEffect(() => {
         async function createAuthenticatedEmployee() {
             const employeeInfo: CreateEmployee = {
@@ -21,24 +21,24 @@ export default function HomePage() {
             };
             const res = await axios.post("/api/employee", employeeInfo, {
                 headers: {
-                    "Content-Type":"application/json"
+                    "Content-Type": "application/json"
                 }
             });
             if (res.status == 200) {
                 console.log("Successfully submitted form");
             }
         }
-        if(isAuthenticated) {
+
+        if (isAuthenticated) {
             createAuthenticatedEmployee().then();
         }
     }, [isAuthenticated, user]);
 
     return (
         <div className="home-container">
-            <div className="nav-container">
-                <Navbar/>
-            </div>
-            <LeafletMap />
+            <Navbar/>
+            <LeafletMap/>
+            {/*someone should delete this if you know what it was for and we dont need it*/}
             {/*<div className="info-container">*/}
             {/*    <div className="map-container">*/}
             {/*        /!*<PathHandler/>*!/*/}

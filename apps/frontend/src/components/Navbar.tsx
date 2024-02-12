@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import {styled, useTheme} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -28,9 +28,9 @@ import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
-const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
+const icons = [<InboxIcon/>, <MailIcon/>, <SettingsIcon/>, <LanguageIcon/>];
 const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
-const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />, <LogoutIcon/>];
+const adminIcons = [<AccountBoxIcon/>, <InboxIcon/>, <ScatterPlotIcon/>, <TimelineIcon/>, <LogoutIcon/>];
 const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata', '/login'];
 
 interface AppBarProps extends MuiAppBarProps {
@@ -39,7 +39,7 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({theme, open}) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -52,7 +52,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({theme}) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -78,30 +78,36 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
+        <Box sx={{ display: 'flex', flexDirection: 'column', }}>
+            <CssBaseline/>
             <AppBar position="relative" open={open} sx={{
-                width: 1,
-                boxShadow: 0,
+                zIndex: theme.zIndex.drawer + 1, // keeps icons centered when screen size changes
+                backgroundColor: '#012d5a', //Background color
             }}>
-                <Toolbar style={{ backgroundColor: "#012d5a" }}>
+                <Toolbar style={{
+                    backgroundColor: "#012d5a", //Background color
+                    flexDirection: 'column', //makes it so icons are displayed vertically
+                    alignItems: 'center',
+                    width: `calc(100% - ${drawerWidth}px)`, //slightly shifts icons to left
+                    height: '10000px', //makes navbar go all the way down. technically max height of 10000px
+                }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                        sx={{ml:0.08, mt:1,...(open && {display: 'none'})}}
+                        style={{marginBottom: '3px'}} // Add margin to separate the icons
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <IconButton
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        sx={{ position: 'absolute', top: 55, left: 12 }}
-                        style={{ color: 'white' }} // Add this line to set the color to white
+                        style={{color: 'white'}}
                     >
-                        <HomeIcon />
+                        <HomeIcon/>
                     </IconButton>
                 </Toolbar>
                 <Drawer
@@ -117,15 +123,15 @@ export default function PersistentDrawerLeft() {
                     anchor="left"
                     open={open}
                 >
-                    <DrawerHeader>
+                    <DrawerHeader >
                         <a href="/home">
-                            <img src={logo} alt="Hospital Logo" width={"100%"} />
+                            <img src={logo} alt="Hospital Logo" width={"100%"}/>
                         </a>
                         <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                            {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                         </IconButton>
                     </DrawerHeader>
-                    <Divider />
+                    <Divider/>
                     <List>
                         {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
                             <ListItem key={text} disablePadding>
@@ -133,12 +139,12 @@ export default function PersistentDrawerLeft() {
                                     <ListItemIcon>
                                         {icons[index]}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary={text}/>
                                 </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
-                    <Divider />
+                    <Divider/>
                     <List>
                         {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Logout'].map((text, index) => (
                             <ListItem key={text} disablePadding>
@@ -146,7 +152,7 @@ export default function PersistentDrawerLeft() {
                                     <ListItemIcon>
                                         {adminIcons[index]}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary={text}/>
                                 </ListItemButton>
                             </ListItem>
                         ))}
