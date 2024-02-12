@@ -9,7 +9,7 @@ import HomePage from "./routes/HomePage.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
-import RequestForm from "./routes/ServiceRequestOptions.tsx";
+import RequestForm from "./routes/RequestForm.tsx";
 import LoginButton from "./components/LoginButton.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
 import ChangeProfile from "./routes/ChangeProfile.tsx";
