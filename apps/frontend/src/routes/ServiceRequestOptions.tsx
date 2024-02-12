@@ -8,18 +8,15 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SanitationRequest from "../components/SanitationRequest.tsx";
 import MedicineRequest from "../components/MedicineRequest.tsx";
-import SanitizerIcon from '@mui/icons-material/Sanitizer';
-import MedicationIcon from '@mui/icons-material/Medication';
+import ServiceRequestButtons, {useServiceRequest} from "../components/ServiceRequestButtons.tsx";
 
 export default function RequestForm() {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [roomNumber, setRoomNumber] = useState("");
     const [infoText, setInfoText] = useState("");
-    const [requestType, setRequestType] = useState("");
+    const [requestType, setRequestType] = useServiceRequest();
 
-    const [sanPressed, setSanPressed] = useState(false);
-    const [medPressed, setMedPressed] = useState(false);
 
     async function submit() {
         const requestSent: NewRequest = {
@@ -60,47 +57,7 @@ export default function RequestForm() {
                 <div className="header-container">
                     <h2>Create Service Request</h2>
                 </div>
-                <div className="button-container">
-                    <Button
-                        variant="outlined"
-                        onClick={() => {
-                            if (requestType === "sanitation") {
-                                setRequestType("");
-                            } else {
-                                setRequestType("sanitation");
-                            }
-
-                            setSanPressed(!sanPressed);
-                            setMedPressed(false);
-                        }}
-                        className={requestType === "sanitation" ? "selected" : ""}
-                        sx={{height: '15vh'}}
-                        style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
-                        startIcon={<SanitizerIcon/>}
-                    >
-                        Sanitization Request
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        onClick={() => {
-                            if (requestType === "medicine") {
-                                setRequestType("");
-                            } else {
-                                setRequestType("medicine");
-                            }
-
-                            setMedPressed(!medPressed);
-                            setSanPressed(false);
-                        }}
-                        className={requestType === "medicine" ? "selected" : ""}
-                        sx={{height: '15vh'}}
-                        style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
-                        startIcon={<MedicationIcon/>}
-                    >
-                        Medicine Delivery
-                    </Button>
-                    {/* Add more buttons for other service request types */}
-                </div>
+                <ServiceRequestButtons />
                 <div className="form-container">
                     <div className="input-field">
                         <TextField
