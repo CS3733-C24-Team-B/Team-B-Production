@@ -35,7 +35,7 @@ export default function HomePage() {
 
     return (
         <div className="home-container">
-            <div className="nav-container">
+            <div>
                 <Navbar/>
             </div>
             <LeafletMap />

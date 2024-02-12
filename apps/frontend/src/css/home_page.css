@@ -9,7 +9,9 @@
 
 .nav-container {
     grid-area: navbar;
-    width: 100%;
+    width: 300px; /* Set a fixed width */
+    min-width: 200px; /* Set minimum width to fixed value */
+    max-width: 200px;
     height: 100%;
     background-color: #012d5a;
 }
