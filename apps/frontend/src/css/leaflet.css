@@ -1,12 +1,12 @@
 .leaflet-container {
     width: 100%;
-    height: 93.8vh;
+    height: 100vh;
 }
 
 .map-buttons {
-    position: absolute;
+    position: fixed;
     top: 10px;
-    left: 10px; /* adjust left positioning as needed */
+    left: 10%; /* adjust left positioning as needed */
     z-index: 1000; /* ensure it's above the Leaflet map */
     display: flex;
     flex-direction: row;

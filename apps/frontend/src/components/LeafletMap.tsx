@@ -260,7 +260,7 @@ export default function LeafletMap() {
                     ModalProps={{BackdropProps: {invisible: true}}}>
                 <div className="drawer-content">
                     <div className="drawer-search-bars">
-                        <div className="map-buttons" style={{marginBottom: "10px"}}>
+                        <div className="nav-buttons" style={{marginTop: '20px', marginBottom: "10px"}}>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -277,7 +277,7 @@ export default function LeafletMap() {
                                 }}
                             />
                         </div>
-                        <div className="map-buttons">
+                        <div className="nav-buttons">
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -313,6 +313,7 @@ export default function LeafletMap() {
                     </div>
                 </div>
             </Drawer>
+
             <div className="map-buttons">
                 <TextField
                     select
