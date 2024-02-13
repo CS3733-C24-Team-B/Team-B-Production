@@ -200,51 +200,66 @@ export default function LeafletMap({ imageSource, currLevel }: MapProps) {
         <div>
             <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
                     ModalProps={{BackdropProps: {invisible: true}}}>
-                <nav className="navbar" style={{width: '250px'}}>
-                    <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <Button variant="contained" onClick={() => console.log("Text Directions clicked")}>Text
-                                Directions</Button>
-                        </li>
-                    </ul>
-                </nav>
-                <div className="map-buttons">
-                    <Autocomplete
-                        disablePortal
-                        options={currNodes.map(({longName}) => ({label: longName}))}
-                        sx={{width: 300}}
-                        renderInput={(params) => <TextField {...params} label="Start Node..."/>}
-                        value={nodeIDtoName(nodeStart)}
-                        onChange={(newValue) => {
-                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                const nId = nametoNodeID(newValue.target.innerText);
-                                setNodeStart(nId);
-                            } else {
-                                setNodeStart("");
-                            }
-                        }}
-                    />
-                </div>
-                <div style={{ marginTop: "10px" }}></div>
-                <div className="map-buttons">
-                    <Autocomplete
-                        disablePortal
-                        options={currNodes.map(({longName}) => ({label: longName}))}
-                        sx={{width: 300}}
-                        renderInput={(params) => <TextField {...params} label="End Node..."/>}
-                        value={nodeIDtoName(nodeEnd)}
-                        onChange={(newValue) => {
-                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                const nId = nametoNodeID(newValue.target.innerText);
-                                setNodeEnd(nId);
-                            } else {
-                                setNodeEnd("");
-                            }
-                        }}
-                    />
+                <div className="drawer-content">
+                    <div className="drawer-search-bars">
+                        <div className="map-buttons" style={{marginBottom: "10px"}}>
+                            <Autocomplete
+                                disablePortal
+                                options={currNodes.map(({longName}) => ({label: longName}))}
+                                sx={{width: 300}}
+                                renderInput={(params) => <TextField {...params} label="Start Node..."/>}
+                                value={nodeIDtoName(nodeStart)}
+                                onChange={(newValue) => {
+                                    if (newValue !== null && newValue.target.innerText !== undefined) {
+                                        const nId = nametoNodeID(newValue.target.innerText);
+                                        setNodeStart(nId);
+                                    } else {
+                                        setNodeStart("");
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div className="map-buttons">
+                            <Autocomplete
+                                disablePortal
+                                options={currNodes.map(({longName}) => ({label: longName}))}
+                                sx={{width: 300}}
+                                renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                                value={nodeIDtoName(nodeEnd)}
+                                onChange={(newValue) => {
+                                    if (newValue !== null && newValue.target.innerText !== undefined) {
+                                        const nId = nametoNodeID(newValue.target.innerText);
+                                        setNodeEnd(nId);
+                                    } else {
+                                        setNodeEnd("");
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className="drawer-buttons">
+                        <Button variant="contained" size="small" onClick={() => console.log("Text Directions clicked")}>
+                            Text Directions
+                        </Button>
+                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)}
+                                style={{backgroundColor: "white", color: "black"}}>
+                            {showEdges ? "Hide All Edges" : "Show All Edges"}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
+                            onClick={() => {
+                                axios.post(`/api/db-get-path/change`);
+                                setUseAStar(!useAStar);
+                            }}
+                        >
+                            Use A*
+                        </Button>
+                    </div>
                 </div>
             </Drawer>
-            <div className="map-buttons">
+            <div className="map-buttons" style={{ marginTop: "10px" }}>
                 <Autocomplete
                     disablePortal
                     options={currNodes.map(({longName}) => ({label: longName}))}
@@ -260,24 +275,6 @@ export default function LeafletMap({ imageSource, currLevel }: MapProps) {
                         }
                     }}
                 />
-                <div className="map-options">
-                    <Button variant="contained" onClick={() => setShowEdges(!showEdges)}
-                            style={{backgroundColor: "white", color: "black"}}>
-                        {showEdges ? "Hide All Edges" : "Show All Edges"}
-                    </Button>
-                </div>
-                <div className="button2">
-                    <Button
-                        variant="contained"
-                        style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
-                        onClick={() => {
-                            axios.post(`/api/db-get-path/change`);
-                            setUseAStar(!useAStar);
-                        }}
-                    >
-                        Use A*
-                    </Button>
-                </div>
                 <div className="button3">
                     <AuthenticationButton/>
                 </div>
