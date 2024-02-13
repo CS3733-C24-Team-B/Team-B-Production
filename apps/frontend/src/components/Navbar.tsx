@@ -79,22 +79,25 @@ export default function PersistentDrawerLeft() {
 
     return (
         <Box sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            flexDirection: 'column', }}>
+           display: 'flex',
+            // position: 'absolute',
+            // top: 0,
+            // left: 0,
+            // flexDirection: 'column',
+            }}>
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{
                 width: '10px',
-                zIndex: theme.zIndex.drawer + 1, // keeps icons centered when screen size changes
+                boxShadow: 0,
+                // zIndex: theme.zIndex.drawer + 1, // keeps icons centered when screen size changes
                 backgroundColor: '#012d5a', //Background color
             }}>
                 <Toolbar style={{
                     backgroundColor: "#012d5a", //Background color
-                    flexDirection: 'column', //makes it so icons are displayed vertically
-                    alignItems: 'center',
-                    width: `calc(100% - ${drawerWidth}px)`, //slightly shifts icons to left
-                    height: '10000px', //makes navbar go all the way down. technically max height of 10000px
+                    // flexDirection: 'column', //makes it so icons are displayed vertically
+                    // alignItems: 'center',
+                    // width: `calc(100% - ${drawerWidth}px)`, //slightly shifts icons to left
+                    // height: '10000px', //makes navbar go all the way down. technically max height of 10000px
                 }}>
                     <IconButton
                         color="inherit"
