@@ -82,11 +82,15 @@
 }
 
 .req-list-container {
-    min-width: 110%;
+    min-width: 140%;
     height: 100vh;
     display: grid;
     grid-template-columns: 4% 96%;
     grid-template-rows: auto;
     grid-template-areas: "navbar main";
-    background-image: linear-gradient(lightgray 0%, white 25vh);
+    background-image: linear-gradient(lightgray 0%, white 20vh);
+}
+
+.icon-column {
+    justify-content: left;
 }

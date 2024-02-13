@@ -11,6 +11,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Divider from "@mui/material/Divider";
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
+import ReportIcon from '@mui/icons-material/Report';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 
 export default function RequestList() {
     const navigate = useNavigate();
@@ -65,8 +69,11 @@ export default function RequestList() {
         const sSecond = parseInt(sqlDateArrSecs[0]);
         const sMillisecond = parseInt(sqlDateArrSecs[1].substring(0, sqlDateArrSecs[1].length - 1));
         //console.log(sYear + " " + sMonth + " " + sDay + " " + sHour + " " + sMinute + " " + sSecond + " " + sMillisecond);
+        const utc = new Date(sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond);
+        const offset = utc.getTimezoneOffset() + 60;
+        const local = new Date(utc.getTime() - offset * 60000);
 
-        return new Date(sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond);
+        return local;
     }
 
     srData.sort((srA: { timeCreated: string }, srB: { timeCreated: string }) => {
@@ -76,11 +83,26 @@ export default function RequestList() {
         //return timeCreatedA - timeCreatedB;
     });
 
+    function getNameOrEmail(userEmail: string) {
+        let outFirst = "";
+        let outLast = "";
+        let outEmail = "";
+        employeeData.find(({email, firstName, lastName}) => {
+            if (userEmail === email) {
+                outFirst = firstName;
+                outLast = lastName;
+                outEmail = email;
+                return true;
+            }
+        });
+        return (outFirst === "" || outLast === "") ? outEmail : outFirst + " " + outLast;
+    }
+
     const filterSR = srData.filter(filterFunction);
 
     const arraySR = filterSR.map((nsr: UpdateServiceRequest, index) =>
         <tr>
-            <td><IconButton onClick={() => {
+            <td className="icon-column"><IconButton onClick={() => {
                 if (clickedRows.has(index)) {
                     clickedRows.delete(index);
                 } else {
@@ -98,15 +120,25 @@ export default function RequestList() {
             }}>
                 {(clickedRows.has(index)) ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
             </IconButton></td>
-            <td>{sqlToDate(nsr.timeCreated.toString()).toDateString()}</td>
-            <td>{nsr.createdByID}</td>
-            <td>{nsr.locationID}</td>
             <td style={{
-                'Low': {color: "green"},
-                'Medium': {color: "blue"},
-                'High': {color: "orange"},
-                'Emergency': {color: "red"}
-            }[nsr.priority]}>{nsr.priority}</td>
+                    'Low': {color: "darkolivegreen"},
+                    'Medium': {color: "midnightblue"},
+                    'High': {color: "maroon"},
+                    'Emergency': {color: "crimson"}
+                }[nsr.priority]}> {nsr.priority}
+                {{
+                    'Low': <div><ErrorIcon/></div>,
+                    'Medium': <div><WarningIcon/></div>,
+                    'High': <div><ReportIcon/></div>,
+                    'Emergency': <div><NewReleasesIcon/></div>
+                }[nsr.priority]}
+            </td>
+            <td>{sqlToDate(nsr.timeCreated.toString()).getMonth() + "/" + sqlToDate(nsr.timeCreated.toString()).getDate() + "/" + sqlToDate(nsr.timeCreated.toString()).getFullYear() +
+                "\n" + (sqlToDate(nsr.timeCreated.toString()).getHours()) + ":" + sqlToDate(nsr.timeCreated.toString()).getMinutes().toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false
+                })}</td>
+            <td>{nsr.notes.split(",")[0]}</td>
             <td>
                 <Select
                     value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
@@ -158,7 +190,7 @@ export default function RequestList() {
                     }}>
                     {statuses.map((st) =>
                         <MenuItem value={st} style={{
-                            'Unassigned': {color: "crimson"},
+                            'Unassigned': {color: "lightcoral"},
                             'Assigned': {color: "deepskyblue"},
                             'InProgress': {color: "turquoise"},
                             'Completed': {color: "limegreen"},
@@ -167,12 +199,13 @@ export default function RequestList() {
                     )}
                 </Select>
             </td>
-            <td>{nsr.notes.split(",")[0]}</td>
+            <td>{nsr.locationID}</td>
+            <td>{getNameOrEmail(nsr.createdByID)}</td>
             <td className="delete-button">
                 <Button
                     variant="outlined"
                     onClick={() => {
-                        if(clickedRows.has(index)) {
+                        if (clickedRows.has(index)) {
                             clickedRows.delete(index);
                         }
                         axios.delete("/api/service-request", {
@@ -238,26 +271,26 @@ export default function RequestList() {
                             </Select>
                             {((filterType === "Filter by...") ? <></> :
                                 ((filterType === "Type") ?
-                                <>
-                                    <Divider/>
-                                    <Select
-                                        value={typeFilter}
-                                        label=""
-                                        onChange={(e) => {
-                                            setTypeFilter(e.target.value);
-                                            setFilterFunction(() => (nsr: UpdateServiceRequest) => {
-                                                return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
-                                            });
-                                        }}
-                                    >
-                                        <MenuItem value={"Choose Type"}>None</MenuItem>
-                                        <MenuItem value={"sanitation"}>Sanitation</MenuItem>
-                                        <MenuItem value={"medicine"}>Medicine</MenuItem>
-                                        <MenuItem value={"transport"}>Transport</MenuItem>
-                                        <MenuItem value={"language"}>Language</MenuItem>
-                                        <MenuItem value={"maintenance"}>Maintenance</MenuItem>
-                                    </Select>
-                                </> :
+                                    <>
+                                        <Divider/>
+                                        <Select
+                                            value={typeFilter}
+                                            label=""
+                                            onChange={(e) => {
+                                                setTypeFilter(e.target.value);
+                                                setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                    return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
+                                                });
+                                            }}
+                                        >
+                                            <MenuItem value={"Choose Type"}>None</MenuItem>
+                                            <MenuItem value={"sanitation"}>Sanitation</MenuItem>
+                                            <MenuItem value={"medicine"}>Medicine</MenuItem>
+                                            <MenuItem value={"transport"}>Transport</MenuItem>
+                                            <MenuItem value={"language"}>Language</MenuItem>
+                                            <MenuItem value={"maintenance"}>Maintenance</MenuItem>
+                                        </Select>
+                                    </> :
                                     ((filterType === "Status") ?
                                         <>
                                             <Divider/>
@@ -312,14 +345,14 @@ export default function RequestList() {
                     <br/>
                     <table className={"service-tables"}>
                         <tr>
-                            <th></th>
-                            <th>Time Created</th>
-                            <th>Created by</th>
-                            <th>Location</th>
+                            <th className="icon-column"></th>
                             <th>Priority</th>
+                            <th>Time Created</th>
+                            <th>Type</th>
                             <th>Assigned To</th>
                             <th>Status</th>
-                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Created by</th>
                             <th className={"delete-button"}></th>
                         </tr>
                         {arraySR}
