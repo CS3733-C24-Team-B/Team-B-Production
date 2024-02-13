@@ -273,18 +273,19 @@ export default function LeafletMap() {
     setDirections(!directions);
     }
     return (
-        <div style={{position: 'relative', width: '100%', height: '100%'}}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             {/* Drawer for additional controls */}
             <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
-                    ModalProps={{BackdropProps: {invisible: true}}}>
-                <div className="drawer-content">
-                    <div className="drawer-search-bars">
-                        <div className="nav-buttons" style={{marginTop: '20px', marginBottom: "10px"}}>
+                    ModalProps={{ BackdropProps: { invisible: true } }}>
+                <div className="drawer-content" style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
+                    <div className="drawer-search-bars" style={{ marginBottom: '10px', width: '100%' }}>
+                        <div className="nav-buttons" style={{ marginBottom: '10px', width: '100%', maxWidth: '300px' }}>
+                            {/* Start Node */}
                             <Autocomplete
                                 disablePortal
-                                options={currNodes.map(({longName}) => ({label: longName}))}
-                                sx={{width: 300}}
-                                renderInput={(params) => <TextField {...params} label="Start Node..."/>}
+                                options={currNodes.map(({ longName }) => ({ label: longName }))}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} label="Start Node..." />}
                                 value={nodeIDtoName(nodeStart)}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -296,12 +297,13 @@ export default function LeafletMap() {
                                 }}
                             />
                         </div>
-                        <div className="nav-buttons">
+                        <div className="nav-buttons" style={{ width: '100%', maxWidth: '300px' }}>
+                            {/* End Node */}
                             <Autocomplete
                                 disablePortal
-                                options={currNodes.map(({longName}) => ({label: longName}))}
-                                sx={{width: 300}}
-                                renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                                options={currNodes.map(({ longName }) => ({ label: longName }))}
+                                sx={{ width: '100%' }}
+                                renderInput={(params) => <TextField {...params} label="End Node..." />}
                                 value={nodeIDtoName(nodeEnd)}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -314,62 +316,78 @@ export default function LeafletMap() {
                             />
                         </div>
                     </div>
-                    <div className="drawer-buttons">
-                        <ul>
-                            <Button variant="contained" onClick={handleDirections}>Text
-                                Directions</Button>
-                            {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
-                        </ul>
-                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)}
-                                style={{backgroundColor: "white", color: "black"}}>
+                    {/* Show/Hide Edges */}
+                    <div style={{ marginBottom: '20px', width: '100%', maxWidth: '300px' }}>
+                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{ backgroundColor: "white", color: "black", marginRight: '20px' }}>
                             {showEdges ? "Hide All Edges" : "Show All Edges"}
                         </Button>
-                        <Button variant="contained" size="small"
-                                style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}} onClick={() => {
+                        {/* Use A* */}
+                        <Button variant="contained" size="small" style={{ backgroundColor: useAStar ? "grey" : "white", color: "black" }} onClick={() => {
                             axios.post(`/api/db-get-path/change`);
                             setUseAStar(!useAStar);
                         }}>
                             Use A*
                         </Button>
                     </div>
+                    {/* Text Directions */}
+                    <div>
+                        <Button variant="contained" size="small" onClick={handleDirections}
+                                style={{backgroundColor: "#012D5A", width: '5vw', marginBottom: '20px' , marginRight: '20px', fontSize: '13px'}}>
+                            Text Directions
+                        </Button>
+                        <Button variant="contained" size="small"
+                                style={{backgroundColor: "#012D5A", width: '5vw', marginBottom: '20px', fontSize: '13px'}}>
+                            Route Directions
+                        </Button>
+                    </div>
+
+                    <div style={{display: 'grid', maxWidth: '100%'}}>
+
+                        {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
+                    </div>
                 </div>
             </Drawer>
-
             <div className="map-buttons">
-                <TextField
-                    select
-                    value={selectedFloor}
-                    onChange={(event) => {
-                        setSelectedFloor(event.target.value);
-                        setCurrLevel(floorToLevel(event.target.value));
-                    }}
-                    variant="outlined"
-                    size="small"
-                    style={{backgroundColor: "white",}}
-                >
-                    <MenuItem value={lowerlevel1}>Lower Level 1</MenuItem>
-                    <MenuItem value={lowerlevel2}>Lower Level 2</MenuItem>
-                    {/*<MenuItem value="groundfloor">Ground Floor</MenuItem>*/}
-                    <MenuItem value={firstfloor}>First Floor</MenuItem>
-                    <MenuItem value={secondfloor}>Second Floor</MenuItem>
-                    <MenuItem value={thirdfloor}>Third Floor</MenuItem>
-                </TextField>
-                <Autocomplete
-                    disablePortal
-                    options={currNodes.map(({longName}) => ({label: longName}))}
-                    sx={{width: 300}}
-                    renderInput={(params) => <TextField {...params} label="Search"/>}
-                    value={nodeIDtoName(nodeEnd)}
-                    size={"small"}
-                    onChange={(newValue) => {
-                        if (newValue !== null && newValue.target.innerText !== undefined) {
-                            const nId = nametoNodeID(newValue.target.innerText);
-                            setNodeEnd(nId);
-                        } else {
-                            setNodeEnd("");
-                        }
-                    }}
-                />
+                <div className="floor-button">
+                    <TextField
+                        select
+                        value={selectedFloor}
+                        onChange={(event) => {
+                            setSelectedFloor(event.target.value);
+                            setCurrLevel(floorToLevel(event.target.value));
+                        }}
+                        variant="outlined"
+                        size="small"
+                        style={{backgroundColor: "white",}}
+                    >
+                        <MenuItem value={lowerlevel1}>Lower Level 1</MenuItem>
+                        <MenuItem value={lowerlevel2}>Lower Level 2</MenuItem>
+                        {/*<MenuItem value="groundfloor">Ground Floor</MenuItem>*/}
+                        <MenuItem value={firstfloor}>First Floor</MenuItem>
+                        <MenuItem value={secondfloor}>Second Floor</MenuItem>
+                        <MenuItem value={thirdfloor}>Third Floor</MenuItem>
+                    </TextField>
+                </div>
+
+                <div className="search-button">
+                    <Autocomplete
+                        disablePortal
+                        options={currNodes.map(({longName}) => ({label: longName}))}
+                        sx={{backgroundColor: 'white'}}
+                        renderInput={(params) => <TextField {...params} label="Search"/>}
+                        value={nodeIDtoName(nodeEnd)}
+                        size={"small"}
+                        onChange={(newValue) => {
+                            if (newValue !== null && newValue.target.innerText !== undefined) {
+                                const nId = nametoNodeID(newValue.target.innerText);
+                                setNodeEnd(nId);
+                            } else {
+                                setNodeEnd("");
+                            }
+                        }}
+                    />
+                </div>
+
                 <div className="button3">
                     <AuthenticationButton/>
                 </div>

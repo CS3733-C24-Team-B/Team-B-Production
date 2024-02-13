@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
+import { Button } from "@mui/material";
 
 function calculateSlope(x1:number,x2:number,y1:number,y2:number): number {
     // Calculate the slope of the line passing through two points
@@ -91,7 +92,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     // Join the array of words into a single string
 
     const [speaking, setSpeaking] = useState(false);
-    const [words, setPath] = useState([""]);
+    // const [words, setPath] = useState([""]);
     const [coordinates, setCoords] = useState([""]);
     useEffect(() => {
         async function fetch() {
@@ -132,7 +133,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
             console.log(coords);
             setCoords(coords);
             let joinedwords:string[] = ["You have arrived at "+nodeIDs[nodeIDs.length-1]];
-            setPath(nodeIDs);
+            // setPath(nodeIDs);
             for( let i = coords.length-2; i >0;i--){
                 const direction =directNode(coords[i-1],coords[i],coords[i+1]);
                 if(direction!="") {
@@ -151,11 +152,11 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
         if (!speaking && window.speechSynthesis) {
             setSpeaking(true);
 
-            const utterance = new SpeechSynthesisUtterance(words.join(" to "));
+            const utterance = new SpeechSynthesisUtterance(coordinates.join(" "));
             utterance.onend = () => {
                 setSpeaking(false);
             };
-            utterance.rate=0.5;
+            utterance.rate=1;
             window.speechSynthesis.speak(utterance);
         }
         else{
@@ -169,8 +170,9 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
         <div>
             <h2>Hospital Path</h2>
             <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
-            <button onClick={speakArray} >
+            <Button variant="contained" size="small" onClick={speakArray}
+                    style={{backgroundColor: "#012D5A"}}>
                 {speaking ? 'Stop Speaking' : 'Speak Array'}
-            </button>
+            </Button>
         </div>);
 };

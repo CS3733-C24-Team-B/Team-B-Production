@@ -7,7 +7,7 @@ const LogoutButton = () => {
 
     return (
         <Button variant="contained" color="primary" onClick={() => logout({ returnTo: window.location.origin })}
-                style={{ backgroundColor: "white" , color: "black", height: "43px"}}>
+                style={{ backgroundColor: "white" , color: "#012D5A", height: "43px"}}>
             Log Out
         </Button>
     );
