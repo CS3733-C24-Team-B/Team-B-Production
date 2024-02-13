@@ -4,6 +4,8 @@ import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import Navbar from "../components/Navbar.tsx";
+import AuthenticationButton from "../components/AuthenticationButton.tsx";
+// import AuthenticationButton from "../components/AuthenticationButton.tsx";
 
 export default function ProfilePage() {
     const {user, isAuthenticated} = useAuth0();
@@ -56,9 +58,9 @@ export default function ProfilePage() {
         </div> : null)
     );
 
-    function allNull(arr:(object|null)[]) {
-        for(const obj of arr) {
-            if(obj !== null) {
+    function allNull(arr: (object | null)[]) {
+        for (const obj of arr) {
+            if (obj !== null) {
                 return false;
             }
         }
@@ -93,7 +95,7 @@ export default function ProfilePage() {
                         <header className={'headerblue'}>Profile</header>
                     </div>
                 </div>
-                <Container> {/* Increased marginRight */}
+                <Container> {/* Profile Information */}
                     <Paper elevation={3} style={{
                         padding: '30px',
                         width: '45%',
@@ -104,18 +106,20 @@ export default function ProfilePage() {
                         <Typography variant="h5" gutterBottom>
                             Profile Information
                         </Typography>
-                        {(user === undefined) ? <CircularProgress /> : <div>
+                        {(user === undefined) ? <CircularProgress/> : <div>
                             <Typography variant="body1" style={listItemStyle}>
                                 <strong>Email:</strong> {email}
                             </Typography>
-                            <TextField style={listItemStyle} id="standard-basic" label="First name" variant="standard"
+                            <TextField style={listItemStyle} id="standard-basic" label="First name"
+                                       variant="standard"
                                        value={firstName}
                                        onChange={(e) => {
                                            setFirstName(e.target.value);
                                        }}
                                        required
                             />
-                            <TextField style={listItemStyle} id="standard-basic" label="Last name" variant="standard"
+                            <TextField style={listItemStyle} id="standard-basic" label="Last name"
+                                       variant="standard"
                                        value={lastName}
                                        onChange={(e) => {
                                            setLastName(e.target.value);
@@ -131,26 +135,37 @@ export default function ProfilePage() {
                         </div>}
                     </Paper>
                 </Container>
-                <Container style={{marginTop: '20px'}}> {/* Increased marginTop */}
+
+                <Container style={{marginTop: '20px'}}> {/* Service Requests */}
                     <Paper elevation={3} style={{padding: '30px', width: '45%', float: 'right'}}>
                         <Typography variant="h5" gutterBottom>
                             Service Requests
                         </Typography>
-                        {(!receivedSR) ? <CircularProgress /> :
+                        {(!receivedSR) ? <CircularProgress/> :
                             (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
                     </Paper>
                 </Container>
+                <div
+                     style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginBottom: '20px',
+                }}>
+                    <AuthenticationButton/>
+                </div>
             </div>
             <Snackbar
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
                 open={submitAlert}
                 autoHideDuration={2000}
                 onClose={() => {
                     setSubmitAlert(false);
                 }}>
-                <Alert
+            <Alert
                     severity="success"
-                    sx={{ width: '100%' }}
+                    sx={{width: '100%'}}
                 >
                     Profile info updated.
                 </Alert>

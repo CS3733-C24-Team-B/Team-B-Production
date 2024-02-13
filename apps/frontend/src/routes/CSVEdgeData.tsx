@@ -114,6 +114,7 @@ export default function CSVEdgeData() {
             <div className="nav-container">
                 <Navbar/>
             </div>
+
             <div className="data-container">
                 <div className="topbar-container">
                     <div  className="node-data-header">
