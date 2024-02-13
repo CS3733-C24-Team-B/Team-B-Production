@@ -70,8 +70,8 @@ export default function RequestForm() {
     };
 
     return (
-        <div className={"home-container"}>
-            <div>
+        <div className="home-container">
+            <div className="nav-container">
                 <Navbar/>
             </div>
             <div className="service-form-container">
