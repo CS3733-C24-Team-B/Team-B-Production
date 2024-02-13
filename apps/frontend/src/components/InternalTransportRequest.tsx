@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import {InternalTransportationRequestType, PriorityType, StatusType} from "common/src/serviceRequestTypes.ts";
 
-export function InternalTransportationRequestForm() {
+const InternalTransportationRequest = () => {
     const [employee, setEmployee] = useState("");
     const [location, setLocation] = useState("");
     const [priority, setPriority] = useState(PriorityType.Low);
@@ -113,4 +113,6 @@ export function InternalTransportationRequestForm() {
 
         </div>
     );
-}
+};
+
+export default InternalTransportationRequest;

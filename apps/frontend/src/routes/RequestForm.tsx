@@ -9,9 +9,13 @@ import TextField from '@mui/material/TextField';
 import SanitationRequest from "../components/SanitationRequest.tsx";
 import MedicineRequest from "../components/MedicineRequest.tsx";
 import MaintenanceRequest from "../components/MaintenanceRequest.tsx";
+import InternalTransportationRequest from "../components/InternalTransportRequest.tsx";
+import LanguageRequest from "../components/LanguageRequest.tsx";
 import SanitizerIcon from '@mui/icons-material/Sanitizer';
 import MedicationIcon from '@mui/icons-material/Medication';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
+import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
 
 export default function RequestForm() {
@@ -24,6 +28,8 @@ export default function RequestForm() {
     const [sanPressed, setSanPressed] = useState(false);
     const [medPressed, setMedPressed] = useState(false);
     const [mainPressed, setMainPressed] = useState(false);
+    const [transPressed, setTransPressed] = useState(false);
+    const [langPressed, setLangPressed] = useState(false);
 
     async function submit() {
         const requestSent: NewRequest = {
@@ -51,6 +57,10 @@ export default function RequestForm() {
                 return <MedicineRequest/>;
             case "maintenance":
                 return <MaintenanceRequest/>;
+            case "transport":
+                return <InternalTransportationRequest/>;
+            case "language":
+                return <LanguageRequest/>;
             // Add cases for other service request types
             default:
                 return null;
@@ -83,6 +93,8 @@ export default function RequestForm() {
                                     setSanPressed(!sanPressed);
                                     setMedPressed(false);
                                     setMainPressed(false);
+                                    setTransPressed(false);
+                                    setLangPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -107,6 +119,8 @@ export default function RequestForm() {
                                     setMedPressed(!medPressed);
                                     setSanPressed(false);
                                     setMainPressed(false);
+                                    setTransPressed(false);
+                                    setLangPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -131,6 +145,8 @@ export default function RequestForm() {
                                     setMainPressed(!mainPressed);
                                     setSanPressed(false);
                                     setMedPressed(false);
+                                    setTransPressed(false);
+                                    setLangPressed(false);
                                 }}
                                 className={requestType === "maintenance" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -140,49 +156,57 @@ export default function RequestForm() {
                                 Maintenance Request
                             </Button>
                         </div>
+
+                        {/*Internal Transportation Button*/}
                         <div className="carousel-button">
                             <Button
                                 variant="outlined"
                                 onClick={() => {
-                                    if (requestType === "medicine") {
+                                    if (requestType === "transport") {
                                         setRequestType("");
                                     } else {
-                                        setRequestType("medicine");
+                                        setRequestType("transport");
                                     }
 
-                                    setMedPressed(!medPressed);
+                                    setTransPressed(!transPressed);
+                                    setMedPressed(false);
                                     setSanPressed(false);
                                     setMainPressed(false);
+                                    setLangPressed(false);
                                 }}
-                                className={requestType === "medicine" ? "selected" : ""}
+                                className={requestType === "transport" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
-                                startIcon={<MedicationIcon/>}
+                                style={{backgroundColor: transPressed ? "lightgreen" : "white"}}
+                                startIcon={<CompareArrowsIcon/>}
                             >
-                                Medicine Delivery <br/>
-                                (duplicate)
+                                Internal Transportation <br/>
+                                Request
                             </Button>
                         </div>
+
+                        {/*Language Button*/}
                         <div className="carousel-button">
                             <Button
                                 variant="outlined"
                                 onClick={() => {
-                                    if (requestType === "sanitation") {
+                                    if (requestType === "language") {
                                         setRequestType("");
                                     } else {
-                                        setRequestType("sanitation");
+                                        setRequestType("language");
                                     }
 
-                                    setSanPressed(!sanPressed);
+                                    setLangPressed(!langPressed);
+                                    setSanPressed(false);
                                     setMedPressed(false);
                                     setMainPressed(false);
+                                    setTransPressed(false);
                                 }}
-                                className={requestType === "sanitation" ? "selected" : ""}
+                                className={requestType === "language" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
-                                startIcon={<SanitizerIcon/>}
+                                style={{backgroundColor: langPressed ? "lightcyan" : "white"}}
+                                startIcon={<TranslateIcon/>}
                             >
-                                Sanitization Request (2nd duplicate)
+                                Language Request
                             </Button>
                         </div>
                     </RequestCarousel>
