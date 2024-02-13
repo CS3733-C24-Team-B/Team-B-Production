@@ -34,11 +34,12 @@ export default function HomePage() {
     }, [isAuthenticated, user]);
 
     return (
-        <div className="Nav-container-white">
-            <div className="nav-container">
+        <div className = "home-container">
+            <div className = 'nav-container'>
                 <Navbar/>
             </div>
-            <LeafletMap />
+            <LeafletMap/>
+            {/*someone should delete this if you know what it was for and we dont need it*/}
             {/*<div className="info-container">*/}
             {/*    <div className="map-container">*/}
             {/*        /!*<PathHandler/>*!/*/}
