@@ -34,7 +34,7 @@ export default function HomePage() {
     }, [isAuthenticated, user]);
 
     return (
-        <div className="home-container">
+        <div className="Nav-container-white">
             <div className="nav-container">
                 <Navbar/>
             </div>
