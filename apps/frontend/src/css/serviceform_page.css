@@ -36,10 +36,18 @@
     column-gap: 10vw;
     width: 90%;
     height: 70%;
+
 }
 
 .carousel-button {
     display: inline-grid;
+    background-image: linear-gradient(
+            #012d5a,
+            #0C4682 75%,
+            white 25%,
+            white);
+    border-radius: 30px;
+
 }
 
 .carousel-button .MuiButton-root {

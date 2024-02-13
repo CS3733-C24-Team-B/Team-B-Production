@@ -17,6 +17,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
+import Box from "@mui/material/Box";
 
 export default function RequestForm() {
     const navigate = useNavigate();
@@ -100,11 +101,29 @@ export default function RequestForm() {
                                     setLangPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
-                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
-                                startIcon={<SanitizerIcon/>}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start', // Ensure the icon is aligned at the top
+                                    alignItems: 'center',
+                                    height: '50vh',
+                                    width: '15vw',
+                                    boxShadow: 4,
+                                    padding: 1, // Adjust padding as needed
+                                    color: '#012d5a', // Sets the text color to dark blue
+                                    position: 'relative', // To position the icon absolutely within the button
+                                    '&:hover': {
+                                        backgroundColor: 'transparent', // Maintain transparency on hover
+                                        opacity: 0.8,
+                                    },
+                                }}
                             >
-                                Sanitization Request
+                                {/* Place icon at the top */}
+                                <SanitizerIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute', top: '15%', left: '55%', transform: 'translateX(-50%)' }} />
+                                {/* Text positioned at the bottom within the button */}
+                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                    Sanitization Request
+                                </Box>
                             </Button>
                         </div>
 
@@ -126,11 +145,30 @@ export default function RequestForm() {
                                     setLangPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
-                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
-                                startIcon={<MedicationIcon/>}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start', // Ensure the icon is aligned at the top
+                                    alignItems: 'center',
+                                    height: '50vh',
+                                    width: '15vw',
+                                    boxShadow: 4,
+                                    padding: 1, // Adjust padding as needed
+                                    color: '#012d5a', // Sets the text color to dark blue
+                                    position: 'relative', // To position the icon absolutely within the button
+                                    '&:hover': {
+                                        backgroundColor: 'transparent', // Maintain transparency on hover
+                                        opacity: 0.8,
+                                    },
+                                }}
                             >
-                                Medicine Delivery
+                                {/* Place icon at the top */}
+                                <MedicationIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                {/* Text positioned at the bottom within the button */}
+                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                    Medicine Delivery
+                                </Box>
                             </Button>
                         </div>
 
@@ -152,11 +190,31 @@ export default function RequestForm() {
                                     setLangPressed(false);
                                 }}
                                 className={requestType === "maintenance" ? "selected" : ""}
-                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: mainPressed ? "lightcyan" : "white"}}
-                                startIcon={<WarningAmberIcon/>}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start', // Ensure the icon is aligned at the top
+                                    alignItems: 'center',
+                                    height: '50vh',
+                                    width: '15vw',
+                                    boxShadow: 4,
+                                    padding: 1, // Adjust padding as needed
+                                    color: '#012d5a', // Sets the text color to dark blue
+                                    position: 'relative', // To position the icon absolutely within the button
+                                    '&:hover': {
+                                        backgroundColor: 'transparent', // Maintain transparency on hover
+                                        opacity: 0.8,
+                                    },
+                                }}
                             >
-                                Maintenance Request
+                                {/* Place icon at the top */}
+                                <WarningAmberIcon
+                                    sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                {/* Text positioned at the bottom within the button */}
+                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                    Maintenance Request
+                                </Box>
                             </Button>
                         </div>
 
@@ -178,12 +236,31 @@ export default function RequestForm() {
                                     setLangPressed(false);
                                 }}
                                 className={requestType === "transport" ? "selected" : ""}
-                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: transPressed ? "lightgreen" : "white"}}
-                                startIcon={<CompareArrowsIcon/>}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start', // Ensure the icon is aligned at the top
+                                    alignItems: 'center',
+                                    height: '50vh',
+                                    width: '15vw',
+                                    boxShadow: 4,
+                                    padding: 1, // Adjust padding as needed
+                                    color: '#012d5a', // Sets the text color to dark blue
+                                    position: 'relative', // To position the icon absolutely within the button
+                                    '&:hover': {
+                                        backgroundColor: 'transparent', // Maintain transparency on hover
+                                        opacity: 0.8,
+                                    },
+                                }}
                             >
-                                Internal Transportation <br/>
-                                Request
+                                {/* Place icon at the top */}
+                                <CompareArrowsIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                {/* Text positioned at the bottom within the button */}
+                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                    Int. Tranportation
+                                    Request
+                                </Box>
                             </Button>
                         </div>
 
@@ -197,7 +274,6 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("language");
                                     }
-
                                     setLangPressed(!langPressed);
                                     setSanPressed(false);
                                     setMedPressed(false);
@@ -205,11 +281,31 @@ export default function RequestForm() {
                                     setTransPressed(false);
                                 }}
                                 className={requestType === "language" ? "selected" : ""}
-                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: langPressed ? "lightcyan" : "white"}}
-                                startIcon={<TranslateIcon/>}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'flex-start', // Ensure the icon is aligned at the top
+                                    alignItems: 'center',
+                                    height: '50vh',
+                                    width: '15vw',
+                                    boxShadow: 4,
+                                    padding: 1, // Adjust padding as needed
+                                    color: '#012d5a', // Sets the text color to dark blue
+                                    position: 'relative', // To position the icon absolutely within the button
+                                    '&:hover': {
+                                        backgroundColor: 'transparent', // Maintain transparency on hover
+                                        opacity: 0.8,
+                                    },
+                                }}
                             >
-                                Language Request
+                                {/* Place icon at the top */}
+                                <TranslateIcon
+                                    sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                {/* Text positioned at the bottom within the button */}
+                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                    Language Request
+                                </Box>
                             </Button>
                         </div>
                     </RequestCarousel>
