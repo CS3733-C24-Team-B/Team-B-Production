@@ -75,19 +75,23 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            <AppBar position="relative" open={open} sx={{
-                width: 1,
-                boxShadow: 0,
-            }}>
-                <Toolbar style={{ backgroundColor: "#012d5a" }}>
+        <Box sx={{display: 'block', position: 'fixed', width: '4%', zIndex: '1001'}}>
+            <CssBaseline/>
+            <AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
+                <Toolbar style={{
+                    backgroundColor: "#012d5a", //Background color
+                    flexDirection: 'column', //makes it so icons are displayed vertically
+                    minHeight: "100vh", //makes navbar go all the way down.
+                }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         onMouseEnter={handleDrawerOpen}
                         edge="start"
-                        sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                        sx={{ml:0.075, //margin left
+                            mt:1.5, //margin top
+                            ...(open && {display: 'none'})}} //handles the opening properties
+                        style={{marginBottom: '2px', position: 'fixed'}} // Add margin to separate the icons
                     >
                         <MenuIcon />
                     </IconButton>
@@ -95,8 +99,7 @@ export default function PersistentDrawerLeft() {
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        sx={{ position: 'absolute', top: 55, left: 12 }}
-                        style={{ color: 'white' }} // Add this line to set the color to white
+                        style={{color: 'white', position: 'fixed', top: '60px'}}
                     >
                         <HomeIcon />
                     </IconButton>

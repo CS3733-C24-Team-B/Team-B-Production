@@ -39,13 +39,16 @@ export default function ProfilePage() {
 
     const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
 
-    const arrayReq = srData.map(({serviceID, name, status, infoText, assignedID}) =>
+    const arrayReq = srData.map(({serviceID, createdByID, status, notes, assignedID, priority}) =>
         ((assignedID === email) ? <div key={serviceID} style={listItemStyle}>
             <Typography>
-                <strong>Requester:</strong> {name}
+                <strong>Requester:</strong> {createdByID}
             </Typography>
             <Typography>
-                <strong>Description:</strong> {infoText}
+                <strong>Type:</strong> {notes.split(",")[0]}
+            </Typography>
+            <Typography>
+                <strong>Priority:</strong> {priority}
             </Typography>
             <Typography>
                 <strong>Status:</strong> {status}
