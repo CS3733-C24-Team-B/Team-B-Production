@@ -316,7 +316,7 @@ export default function LeafletMap() {
                     </div>
                 </div>
             </Drawer>
-            <div className="map-buttons" style={{ marginTop: "10px" }}>
+            <div className="map-buttons">
                 <TextField
                     select
                     value={selectedFloor}
@@ -341,6 +341,7 @@ export default function LeafletMap() {
                     sx={{width: 300}}
                     renderInput={(params) => <TextField {...params} label="Search"/>}
                     value={nodeIDtoName(nodeEnd)}
+                    size={"small"}
                     onChange={(newValue) => {
                         if (newValue !== null && newValue.target.innerText !== undefined) {
                             const nId = nametoNodeID(newValue.target.innerText);
