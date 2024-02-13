@@ -3,15 +3,27 @@ import {useNavigate} from "react-router-dom";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import {StatusType, UpdateRequest} from "common/src/serviceRequestTypes.ts";
-import {Button, MenuItem} from "@mui/material";
+import {StatusType, UpdateRequest, UpdateServiceRequest} from "common/src/serviceRequestTypes.ts";
+import {Button, FormControl, Menu, MenuItem} from "@mui/material";
 import Select, {SelectChangeEvent} from '@mui/material/Select';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import IconButton from "@mui/material/IconButton";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Divider from "@mui/material/Divider";
 
 export default function RequestList() {
     const navigate = useNavigate();
     const [srData, setSRData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const [clickedRows, setClickedRows] = useState<Map<number, JSX.Element>>(new Map<number, JSX.Element>);
+    const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [filterType, setFilterType] = useState("Filter by...");
+    const [filterFunction, setFilterFunction] = useState<(nsr: UpdateServiceRequest) => boolean>(() => () => { return true; });
+    const openMenu = Boolean(menuAnchor);
+
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/service-request");
@@ -59,29 +71,41 @@ export default function RequestList() {
         return sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf();
         //return timeCreatedA - timeCreatedB;
     });
-    // srData.map(({name, timeCreated}) => {
-    //     console.log("TIME: " + name + " " + timeCreated);
-    // });
-    // const idToUser = (id: string) => {
-    //     return employeeData.find(({email}) =>
-    //         email === id
-    //     )!["username"];
-    // };
-    const arraySR = srData.map(({serviceID, name, status, infoText, assignedID}) =>
+
+    const filterSR = srData.filter(filterFunction);
+
+    const arraySR = filterSR.map((nsr: UpdateServiceRequest, index) =>
         <tr>
+            <td><IconButton onClick={() => {
+                if (clickedRows.has(index)) {
+                    clickedRows.delete(index);
+                } else {
+                    clickedRows.set(index, <tr style={{height: "128px"}}>
+                        <td></td>
+                        <td className={"info-cell"} colSpan={7}> {"Notes: " + nsr.notes} </td>
+                    </tr>);
+                }
+                setClickedRows(clickedRows);
+                setRefresh(!refresh);
+            }}>
+                {(clickedRows.has(index)) ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
+            </IconButton></td>
+            <td>{sqlToDate(nsr.timeCreated.toString()).toDateString()}</td>
+            <td>{nsr.createdByID}</td>
+            <td>{nsr.locationID}</td>
+            <td>{nsr.priority}</td>
             <td>
                 <Select
-                    value={(assignedID !== null) ? assignedID : "Choose Employee"}
+                    value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
                     onChange={async (event: SelectChangeEvent) => {
-                        console.log("CHANGE ASSIGNMENT: " + serviceID + " " + event.target.value);
 
                         const serviceRequest: UpdateRequest = {
-                            serviceID: serviceID,
+                            serviceID: nsr.serviceID,
                             assignedTo: event.target.value,
-                            status: status
+                            status: nsr.status
                         };
 
-                        if (status === StatusType.Unassigned) {
+                        if (nsr.status === StatusType.Unassigned) {
                             serviceRequest.status = StatusType.Assigned;
                         }
 
@@ -91,22 +115,21 @@ export default function RequestList() {
                         setRefresh(!refresh);
                     }}>
                     {employeeData.map(({email, firstName, lastName}) =>
-                        <MenuItem value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                        <MenuItem
+                            value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
                     )}
                 </Select>
             </td>
-            <td>{name}</td>
             <td>
                 <Select
                     defaultValue={StatusType.Unassigned}
-                    value={StatusType[status as keyof typeof StatusType] ? StatusType[status as keyof typeof StatusType] : "InProgress"}
+                    value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                     onChange={async (event: SelectChangeEvent) => {
-                        console.log(status as keyof typeof StatusType);
-                        console.log("UPDATE STATUS " + serviceID + " " + event.target.value);
+                        console.log(nsr.status as keyof typeof StatusType);
 
                         const serviceRequest: UpdateRequest = {
-                            serviceID: serviceID,
-                            assignedTo: assignedID,
+                            serviceID: nsr.serviceID,
+                            assignedTo: nsr.assignedID,
                             status: StatusType[event.target.value as keyof typeof StatusType]
                         };
 
@@ -118,15 +141,14 @@ export default function RequestList() {
                     )}
                 </Select>
             </td>
-            <td>{infoText}</td>
+            <td>{typeof nsr}</td>
             <td className="delete-button">
                 <Button
                     variant="outlined"
                     onClick={() => {
-                        console.log("DELETE REQUEST " + serviceID);
                         axios.delete("/api/service-request", {
                             data: {
-                                serviceID: serviceID
+                                serviceID: nsr.serviceID
                             }
                         }).then();
                         setRefresh(!refresh);
@@ -135,9 +157,20 @@ export default function RequestList() {
             </td>
         </tr>
     );
+    let prevMax = arraySR.length;
+    clickedRows.forEach((elem) => {
+        let rowInd: number = 0;
+        clickedRows.forEach((e, k) => {
+            if (k > rowInd && k < prevMax) {
+                rowInd = k;
+            }
+        });
+        prevMax = rowInd;
+        arraySR.splice(rowInd + 1, 0, elem);
+    });
 
     function handleClick() {
-        navigate("/home");
+        navigate("/requestform");
     }
 
     return (
@@ -146,22 +179,76 @@ export default function RequestList() {
                 <Navbar/>
             </div>
             <div className="request-container">
+                <Menu
+                    open={openMenu}
+                    onClose={() => {
+                        setMenuAnchor(null);
+                    }}
+                    anchorEl={menuAnchor}>
+                    <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
+                        <Select
+                            value={filterType}
+                            label=""
+                            onChange={(e) => {
+                                setFilterType(e.target.value);
+                                setFilterFunction(() => () => {
+                                    return true;
+                                });
+                            }}
+                        >
+                            <MenuItem value={"Filter by..."}>None</MenuItem>
+                            <MenuItem value={"Status"}>Status</MenuItem>
+                            <MenuItem value={"Type"}>Request Type</MenuItem>
+                        </Select>
+                        {((filterType === "Filter by...") ? <></> :
+                            <>
+                                <Divider/>
+                                <Select
+                                    value={statusFilter}
+                                    label=""
+                                    onChange={(e) => {
+                                        setStatusFilter(e.target.value);
+                                        setFilterFunction(() => (nsr:UpdateServiceRequest) => {
+                                            return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value={"Choose Status"}>None</MenuItem>
+                                    <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
+                                    <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
+                                    <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
+                                    <MenuItem value={StatusType.Completed}>Completed</MenuItem>
+                                    <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                </Select>
+                            </>)}
+                    </FormControl>
+                </Menu>
+                <IconButton onClick={(e) => {
+                    setMenuAnchor(e.currentTarget);
+                }} style={{borderRadius: 0, width: 72}}>
+                    <FilterListIcon/>
+                </IconButton>
+                <br/>
                 <div className="req-list-header">
                     <header>Service Request List</header>
                 </div>
                 <br/>
-                <table className={"tables"}>
+                <table className={"service-tables"}>
                     <tr>
+                        <th></th>
+                        <th>Time Created</th>
+                        <th>Created by</th>
+                        <th>Location</th>
+                        <th>Priority</th>
                         <th>Assigned To</th>
-                        <th>UserName</th>
                         <th>Status</th>
-                        <th>Request Notes</th>
+                        <th>Type</th>
                     </tr>
                     {arraySR}
                 </table>
                 <br/>
                 <div className="home-button">
-                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Return to Home</Button>
+                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a Request</Button>
                 </div>
             </div>
         </div>
