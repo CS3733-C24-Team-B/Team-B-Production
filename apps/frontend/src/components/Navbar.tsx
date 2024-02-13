@@ -75,7 +75,7 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{display: 'block',}}>
+        <Box sx={{display: 'block', position: 'fixed', width: '4%', zIndex: '1001'}}>
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
                 <Toolbar style={{
@@ -91,7 +91,7 @@ export default function PersistentDrawerLeft() {
                         sx={{ml:0.075, //margin left
                             mt:1.5, //margin top
                             ...(open && {display: 'none'})}} //handles the opening properties
-                        style={{marginBottom: '2px'}} // Add margin to separate the icons
+                        style={{marginBottom: '2px', position: 'fixed'}} // Add margin to separate the icons
                     >
                         <MenuIcon />
                     </IconButton>
@@ -99,7 +99,7 @@ export default function PersistentDrawerLeft() {
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        style={{color: 'white'}}
+                        style={{color: 'white', position: 'fixed', top: '60px'}}
                     >
                         <HomeIcon />
                     </IconButton>
