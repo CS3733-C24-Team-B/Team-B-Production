@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar.tsx";
 import {Button} from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {styled} from "@mui/material/styles";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -104,16 +106,15 @@ export default function CSVEdgeData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-        <div className="node-data-container">
+        <div className="node-data-container2">
             <div className="nav-container">
                 <Navbar/>
             </div>
             <div className="data-container">
                 <div className="topbar-container">
                     <div  className="node-data-header">
-                        <header>CSV Edge Data</header>
+                        <header className={'headerblue'}>CSV Edge Data</header>
                     </div>
-                    <br/>
                     <div className="top-buttons-container">
                         <div className="upload-buttons">
                             {/*<input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>*/}
@@ -125,8 +126,26 @@ export default function CSVEdgeData() {
                             {/*<input onClick={uploadToDB} type="button" value="Submit"/>*/}
                             {/*<Button onClick={uploadToDB} variant="text">Submit</Button>*/}
                         </div>
+
+                        <div className={'upload-buttons'}>
+                            <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                                    style={{backgroundColor: "#012D5A"}}>
+                                Delete Data
+                                {/*<VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>*/}
+                            </Button>
+                        </div>
+
+
                         {/*<input onClick={downloadFromDB} type="button" value="Export"/>*/}
-                        <Button onClick={downloadFromDB} variant="text" className="export-button">Export</Button>
+                        <div className={'upload-buttons'}>
+                            <Button onClick={downloadFromDB} component="label" variant="contained"
+                                    startIcon={<IosShareIcon/>}
+                                    className="export-button"
+                                    style={{backgroundColor: "#012D5A"}}>
+                                Export
+                            </Button>
+                        </div>
+
                     </div>
                 </div>
                 <br/>

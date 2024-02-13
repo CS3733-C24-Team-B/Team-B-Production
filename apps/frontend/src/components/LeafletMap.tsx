@@ -4,23 +4,39 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import {Button, Autocomplete} from "@mui/material";
+import {Button, Autocomplete, MenuItem} from "@mui/material";
 import TextField from "@mui/material/TextField";
-// import L from "leaflet";
+// import groundfloor from "../images/00_thegroundfloor.png";
+import lowerlevel1 from "../images/00_thelowerlevel1.png";
+import lowerlevel2 from "../images/00_thelowerlevel2.png";
+import firstfloor from "../images/01_thefirstfloor.png";
+import secondfloor from "../images/02_thesecondfloor.png";
+import thirdfloor from "../images/03_thethirdfloor.png";
 
-// type LineData = {
-//     x1: number,
-//     y1: number,
-//     x2: number,
-//     y2: number
-// }
+const FloorLevel = [
+    {
+        floor: lowerlevel1,
+        level: "L1"
+    },
+    {
+        floor: lowerlevel2,
+        level: "L2"
+    },
+    {
+        floor: firstfloor,
+        level: "1"
+    },
+    {
+        floor: secondfloor,
+        level: "2"
+    },
+    {
+        floor: thirdfloor,
+        level: "3"
+    }
+];
 
-interface MapProps {
-    imageSource: string;
-    currLevel: string;
-}
-
-export default function LeafletMap({imageSource, currLevel}: MapProps) {
+export default function LeafletMap() {
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
     const [nodeStart, setNodeStart] = useState("");
@@ -31,6 +47,8 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
     // const [selectedNodes, setSelectedNodes] = useState<LeafletMouseEvent[]>([]);
     const [showEdges, setShowEdges] = useState(false);
     const [useAStar, setUseAStar] = useState(false);
+    const [currLevel, setCurrLevel] = useState("L1");
+    const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
 
 
     useEffect(() => {
@@ -112,18 +130,37 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                 }
             });
         } else {
+            let floorChanges:number = 1;
             pathData.map((nr) => {
                 if (nameToFloor(nr) === currLevel) {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
                             positions={[[transY(startY), transX(startX)], [transY(nameToYPos(nr)), transX(nameToXPos(nr))]]}
                             color={"green"} weight={5}></Polyline>);
+                        const dx = transX(nameToXPos(nr)) - transX(startX);
+                        const dy = transY(nameToYPos(nr)) - transY(startY);
+                        const midX = transX(startX) + dx/2;
+                        const midY = transY(startY) + dy/2;
+                        const angle = Math.atan(dy/dx);
+                        const xMod = (dx === 0) ? 1 : -dx/Math.abs(dx);
+                        const yMod = (dx >= 0) ? -1 : 1;
+                        const pathLength = Math.sqrt(dx*dx + dy*dy);
+                        console.log("ANGLE: " + angle);
+                        if(pathLength > 0.2) {
+                            temp.push(<Polyline
+                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
+                                color={"green"} weight={5}></Polyline>);
+                            temp.push(<Polyline
+                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
+                                color={"green"} weight={5}></Polyline>);
+                        }
                     } else if (prevFloor !== "") {
                         temp.push(
                             <Popup position={[transY(nameToYPos(nr)), transX(nameToXPos(nr))]} autoClose={false}>
-                                {"Arrive from floor " + prevFloor}
+                                {floorChanges + ". Arrive from floor " + prevFloor}
                             </Popup>
                         );
+                        floorChanges++;
                     }
                     startX = nameToXPos(nr);
                     startY = nameToYPos(nr);
@@ -131,9 +168,10 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(
                             <Popup position={[transY(startY), transX(startX)]} autoClose={false}>
-                                {"Go to floor " + nameToFloor(nr)}
+                                {floorChanges + ". Go to floor " + nameToFloor(nr)}
                             </Popup>
                         );
+                        floorChanges++;
                     }
                     prevFloor = nameToFloor(nr);
                     startX = -1;
@@ -179,12 +217,22 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
         const node = nodeData.find(({nodeID}) =>
             nodeID === nId
         );
-        if(node !== undefined) {
+        if (node !== undefined) {
             return node!["longName"];
         } else {
             return "";
         }
     }
+
+    const floorToLevel = (inputFloor: string) => {
+        let output = "0";
+        FloorLevel.map(({floor, level}) => {
+            if (inputFloor === floor) {
+                output = level;
+            }
+        });
+        return output;
+    };
 
     const currNodes = nodeData.filter(({floor}) => {
         return floor === currLevel;
@@ -193,16 +241,35 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
     return (
         <div>
             <div className="map-buttons">
+                <TextField
+                    select
+                    value={selectedFloor}
+                    onChange={(event) => {
+                        setSelectedFloor(event.target.value);
+                        setCurrLevel(floorToLevel(event.target.value));
+                    }}
+                    variant="outlined"
+                    size="small"
+                    style={{backgroundColor: "white",}}
+                >
+                    <MenuItem value={lowerlevel1}>Lower Level 1</MenuItem>
+                    <MenuItem value={lowerlevel2}>Lower Level 2</MenuItem>
+                    {/*<MenuItem value="groundfloor">Ground Floor</MenuItem>*/}
+                    <MenuItem value={firstfloor}>First Floor</MenuItem>
+                    <MenuItem value={secondfloor}>Second Floor</MenuItem>
+                    <MenuItem value={thirdfloor}>Third Floor</MenuItem>
+                </TextField>
                 <Autocomplete
                     disablePortal
                     options={currNodes.map(({longName}) => (
                         {label: longName}
                     ))}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Start Node..." />}
+                    size={"small"}
+                    sx={{width: 300}}
+                    renderInput={(params) => <TextField {...params} label="Start Node..."/>}
                     value={nodeIDtoName(nodeStart)}
                     onChange={(newValue) => {
-                        if(newValue !== null && newValue.target.innerText !== undefined) {
+                        if (newValue !== null && newValue.target.innerText !== undefined) {
                             const nId = nametoNodeID(newValue.target.innerText);
                             setNodeStart(nId);
                         } else {
@@ -215,11 +282,12 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                     options={currNodes.map(({longName}) => (
                         {label: longName}
                     ))}
-                    sx={{ width: 300 }}
+                    size={"small"}
+                    sx={{width: 300}}
                     renderInput={(params) => <TextField {...params} label="End Node..."/>}
                     value={nodeIDtoName(nodeEnd)}
                     onChange={(newValue) => {
-                        if(newValue !== null && newValue.target.innerText !== undefined) {
+                        if (newValue !== null && newValue.target.innerText !== undefined) {
                             const nId = nametoNodeID(newValue.target.innerText);
                             setNodeEnd(nId);
                         } else {
@@ -230,14 +298,14 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                 <div className="map-options">
                     {/* Convert checkboxes into buttons */}
                     <Button variant="contained" onClick={() => setShowEdges(!showEdges)}
-                            style={{backgroundColor: "white", color: "black"}}>
+                            style={{backgroundColor: "white", color: "black", height: "43px"}}>
                         {showEdges ? "Hide All Edges" : "Show All Edges"}
                     </Button>
                 </div>
                 <div className="button2">
                     <Button
                         variant="contained"
-                        style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
+                        style={{backgroundColor: useAStar ? "grey" : "white", color: "black", height: "43px"}}
                         onClick={() => {
                             axios.post(`/api/db-get-path/change`);
                             setUseAStar(!useAStar);
@@ -247,10 +315,10 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                     </Button>
                 </div>
                 <div className="button3">
-                    <AuthenticationButton/>
+                    <AuthenticationButton />
                 </div>
             </div>
-            <MapContainer center={[17, 25]} zoom={5}
+            <MapContainer center={[34, 25]} zoom={5}
                           minZoom={5}
                           maxZoom={8}
                           scrollWheelZoom={true}
@@ -258,7 +326,7 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                           maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
             >
                 <ImageOverlay
-                    url={imageSource} //"src/images/00_thelowerlevel1.png"
+                    url={selectedFloor} //"src/images/00_thelowerlevel1.png"
                     bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
@@ -267,9 +335,9 @@ export default function LeafletMap({imageSource, currLevel}: MapProps) {
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {
-                                                  if(nodeStart === "") {
+                                                  if (nodeStart === "") {
                                                       setNodeStart(nodeID);
-                                                  } else if(nodeEnd === "") {
+                                                  } else if (nodeEnd === "") {
                                                       setNodeEnd(nodeID);
                                                   } else {
                                                       setNodeStart(nodeEnd);
