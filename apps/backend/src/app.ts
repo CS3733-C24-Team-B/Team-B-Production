@@ -6,6 +6,11 @@ import pathRouter from "./routes/getPath.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
+import sanitationRouter from "./routes/serviceRequestSanitation.ts";
+import maintenanceRouter from "./routes/serviceRequestMaintenance.ts";
+import internalTransportRouter from "./routes/serviceRequestInternalTransport.ts";
+import medicineRouter from "./routes/serviceRequestMedicine.ts";
+import languageRouter from "./routes/serviceRequestLanguage.ts";
 import employeeRouter from "./routes/employee.ts";
 
 const app: Express = express(); // Set up the backend
@@ -29,6 +34,11 @@ app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/service-request", serviceRouter);
+app.use("/api/service-request/sanitation", sanitationRouter);
+app.use("/api/service-request/maintenance", maintenanceRouter);
+app.use("/api/service-request/internal-transport", internalTransportRouter);
+app.use("/api/service-request/medicine", medicineRouter);
+app.use("/api/service-request/language", languageRouter);
 app.use("/api/employee", employeeRouter);
 
 /**

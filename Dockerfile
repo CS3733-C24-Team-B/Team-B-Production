@@ -6,13 +6,6 @@ ENV WORKDIR=app
 # Default backend port (necessary for both frontend and backend)
 ARG BACKEND_PORT
 
-# DB information
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
-ARG POSTGRES_DB
-ARG POSTGRES_CONTAINER
-ARG POSTGRES_PORT
-
 # Setup basic node structure
 WORKDIR /$WORKDIR
 
@@ -102,14 +95,6 @@ HEALTHCHECK CMD wget --spider localhost:$PORT || bash -c 'kill -s 15 -1 && (slee
 FROM prod-base AS prod-backend
 WORKDIR /$WORKDIR
 
-# PG User Info
-ENV POSTGRES_USER=$POSTGRES_USER
-ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-ENV POSTGRES_DB=$POSTGRES_DB
-ENV POSTGRES_CONTAINER=$POSTGRES_CONTAINER
-ENV POSTGRES_PORT=$POSTGRES_PORT
-ENV POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_CONTAINER}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
-
 # Copy the packages from production to our working directory
 COPY --from=prod-backend-builder ["/$WORKDIR/out/json", "/$WORKDIR/out/yarn.lock", "/$WORKDIR/out/full", "./"]
 
@@ -145,14 +130,6 @@ EXPOSE $PORT
 
 # Expose the default DEBUGGER port
 EXPOSE 9229
-
-# PG User Info
-ENV POSTGRES_USER=$POSTGRES_USER
-ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-ENV POSTGRES_DB=$POSTGRES_DB
-ENV POSTGRES_CONTAINER=$POSTGRES_CONTAINER
-ENV POSTGRES_PORT=$POSTGRES_PORT
-ENV POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_CONTAINER}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
 
 # Run with CMD, since dev may want to use other commands
 CMD ["yarn", "turbo", "run", "dev", "--filter=backend"]

@@ -7,7 +7,7 @@ const LoginButton = () => {
     console.log(user);
     return (
         <Button variant="contained" color="primary" onClick={() => loginWithRedirect({ returnTo: window.location.origin })}
-                style={{ backgroundColor: "white" , color: "black"}}>
+                style={{ backgroundColor: "white" , color: "black", height: "43px"}}>
             Login
         </Button>
     );
