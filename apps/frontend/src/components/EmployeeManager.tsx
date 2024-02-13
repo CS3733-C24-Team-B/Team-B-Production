@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import SignupButton from "./SignupButton.tsx";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,6 +10,7 @@ import {UpdateEmployee} from "common/src/employeeTypes.ts";
 
 export default function EmployeeManager() {
 
+    const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
 
@@ -24,6 +24,37 @@ export default function EmployeeManager() {
     useEffect(() => {
         refresh().then();
     }, []);
+
+    const addEmployeeEmail = (
+        <TextField inputMode="email"
+            id="standard-basic" label="New employee email" variant="standard"
+                   value={newEmployeeEmail}
+                   onChange={(e) => {
+                       /*
+                       const alreadyExists = employees.find(({email}) => {
+                           return email === e.target.value;
+                       });
+                       if (alreadyExists === undefined) {
+                           setNewEmployeeEmail(e.target.value);
+                       }*/
+                       setNewEmployeeEmail(e.target.value);
+                   }}
+        />
+    );
+
+    const addEmployeeButton = (
+        <Button variant="contained" color="primary" onClick={() => {
+            axios.post("/api/employee", {
+                email: newEmployeeEmail
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then();
+            refresh().then();
+        }}>
+            Invite Employee
+        </Button>);
 
     const employeeList = employees.map((employee: UpdateEmployee, index: number) => {
         return (
@@ -101,7 +132,10 @@ export default function EmployeeManager() {
                 <header>Employees</header>
             </div>
             <br/>
-            <SignupButton/>
+            <div className="tables">
+                {addEmployeeEmail}
+                {addEmployeeButton}
+            </div>
             <table className={"tables"}>
                 <thead>
                 <tr>
