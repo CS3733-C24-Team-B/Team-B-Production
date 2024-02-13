@@ -119,7 +119,6 @@ export default function CSVEdgeData() {
                     <div  className="node-data-header">
                         <header className={'headerblue'}>CSV Edge Data</header>
                     </div>
-                    <br/>
                     <div className="top-buttons-container">
                         <div className="upload-buttons">
                             {/*<input className={"file button"} type="file" id="myFile" name="filename" accept=".csv"/>*/}

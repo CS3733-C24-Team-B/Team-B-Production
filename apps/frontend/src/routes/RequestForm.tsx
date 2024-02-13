@@ -76,9 +76,11 @@ export default function RequestForm() {
             <div className="service-form-container">
                 <div className="header-container">
                     <h1>Create Service Request</h1>
+                    <br/>
                 </div>
 
                 <div className="button-container">
+                    <br/><br/>
                     <RequestCarousel>
                         {/*Sanitation Button*/}
                         <div className="carousel-button">
