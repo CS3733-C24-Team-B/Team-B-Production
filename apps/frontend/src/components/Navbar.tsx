@@ -14,22 +14,20 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LanguageIcon from '@mui/icons-material/Language';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import HomeIcon from '@mui/icons-material/Home';
-import LogoutIcon from '@mui/icons-material/Logout';
-import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
+// import HomeIcon from '@mui/icons-material/Home';
+import logo from "../images/BandW-Logo-White.png";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import NavigationIcon from '@mui/icons-material/Navigation';
 
 const drawerWidth = 240;
 
-const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
-const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
-const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />, <LogoutIcon/>];
-const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata', '/login'];
+const icons = [<AccountBoxIcon />, <AdminPanelSettingsIcon/>];
+const links = ['/profile-info', '/admin-viewer'];
+const adminIcons = [<NavigationIcon />,<InboxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
+const adminLinks = ['/','/requestform', '/requestlist', '/csvnodedata', '/csvedgedata'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -101,16 +99,18 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '60px'}}
                     >
-                        <HomeIcon />
+                        <NavigationIcon />
                     </IconButton>
                 </Toolbar>
                 <Drawer
                     sx={{
                         width: drawerWidth,
                         flexShrink: 0,
+                        // backgroundColor: 'green',
                         '& .MuiDrawer-paper': {
                             width: drawerWidth,
                             boxSizing: 'border-box',
+                            backgroundColor: '#012d5a',
                         },
                     }}
                     variant="persistent"
@@ -125,11 +125,19 @@ export default function PersistentDrawerLeft() {
                         </a>
                     </DrawerHeader>
                     <Divider />
-                    <List>
-                        {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
+                    <List
+                        sx={{
+                            color: 'white',
+                        }}
+                    >
+                        {['Profile', 'Admin'].map((text, index) => (
                             <ListItem key={text} disablePadding>
-                                <ListItemButton component="a" href={links[index]}>
-                                    <ListItemIcon>
+                                <ListItemButton  component="a" href={links[index]}>
+                                    <ListItemIcon
+                                        sx={{
+                                            color: 'white',
+                                        }}
+                                    >
                                         {icons[index]}
                                     </ListItemIcon>
                                     <ListItemText primary={text} />
@@ -137,12 +145,20 @@ export default function PersistentDrawerLeft() {
                             </ListItem>
                         ))}
                     </List>
-                    <Divider />
-                    <List>
-                        {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Logout'].map((text, index) => (
+                    <Divider  />
+                    <List
+                        sx={{
+                            color: 'white',
+                        }}
+                    >
+                        {['Navigation', 'Create Request', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data'].map((text, index) => (
                             <ListItem key={text} disablePadding>
                                 <ListItemButton component="a" href={adminLinks[index]}>
-                                    <ListItemIcon>
+                                    <ListItemIcon
+                                        sx={{
+                                            color: 'white',
+                                        }}
+                                    >
                                         {adminIcons[index]}
                                     </ListItemIcon>
                                     <ListItemText primary={text} />

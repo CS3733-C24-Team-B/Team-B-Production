@@ -82,7 +82,7 @@
 }
 
 .req-list-container {
-    min-width: 110%;
+    min-width: 140vw;
     height: 100vh;
     display: grid;
     grid-template-columns: 4% 96%;
