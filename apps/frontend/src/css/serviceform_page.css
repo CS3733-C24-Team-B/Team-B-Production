@@ -56,8 +56,9 @@
 .form-container {
     display: grid;
     grid-area: s2;
-    justify-self: start;
+    justify-self: center;
     align-self: end;
+    padding-top: 64px;
 }
 
 .service-form-container .container {
