@@ -1,67 +1,183 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
 import axios from "axios";
-import {NewRequest} from "common/src/serviceRequestTypes.ts";
+import {PriorityType, StatusType, SanitationRequest, MedicineRequest, InternalTransportRequest, LanguageRequest, MaintenanceRequest} from "common/src/serviceRequestTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import SanitationRequest from "../components/SanitationRequest.tsx";
-import MedicineRequest from "../components/MedicineRequest.tsx";
-import MaintenanceRequest from "../components/MaintenanceRequest.tsx";
-import InternalTransportationRequest from "../components/InternalTransportRequest.tsx";
-import LanguageRequest from "../components/LanguageRequest.tsx";
+import SanitationReq from "../components/SanitationRequest.tsx";
+import MedicineReq from "../components/MedicineRequest.tsx";
+import MaintenanceReq from "../components/MaintenanceRequest.tsx";
+import InternalTransportationReq from "../components/InternalTransportRequest.tsx";
+import LanguageReq from "../components/LanguageRequest.tsx";
 import SanitizerIcon from '@mui/icons-material/Sanitizer';
 import MedicationIcon from '@mui/icons-material/Medication';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
+import {Autocomplete} from "@mui/material";
 
 export default function RequestForm() {
     const navigate = useNavigate();
     const [name, setName] = useState("");
-    const [roomNumber, setRoomNumber] = useState("");
+    const [location, setLocation] = useState("");
     const [infoText, setInfoText] = useState("");
+    const [option1, setOption1] = useState("");
+    const [option2, setOption2] = useState("");
+    const [option3, setOption3] = useState("");
     const [requestType, setRequestType] = useState("");
-
+    const [typeReq, setTypeReq] = useState("");
+    const [assignTo, setAssignTo] = useState("");
+    const [nodeData, setNodeData] = useState([]);
     const [sanPressed, setSanPressed] = useState(false);
     const [medPressed, setMedPressed] = useState(false);
     const [mainPressed, setMainPressed] = useState(false);
     const [transPressed, setTransPressed] = useState(false);
     const [langPressed, setLangPressed] = useState(false);
 
+    useEffect(() => {
+        async function fetch() {
+            try {
+                const res2 = await axios.post("/api/db-insert");
+                console.log(res2.data);
+            } catch {
+                console.log("post error");
+            }
+            const res = await axios.get("/api/db-load-nodes");
+
+            setNodeData(res.data);
+        }
+
+        fetch().then();
+    }, []);
 
     async function submit() {
-        const requestSent: NewRequest = {
-            name: name,
-            roomNumber: parseInt(roomNumber),
-            infoText: infoText
-        };
-        const res = await axios.post("/api/service-request", requestSent, {
-            headers: {
-                "Content-Type": "application/json"
+        if(typeReq === "sanitation") {
+            const requestSent: SanitationRequest = {
+                createdByID: name,
+                locationID: location,
+                notes: typeReq + ", " + infoText + ", Hazards: " + option1,
+                priority: PriorityType.Low,
+                status: StatusType.Assigned,
+                assignedID: assignTo,
+                hazards: option1
+            };
+            const res = await axios.post("/api/service-request", requestSent, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
             }
-        });
-        if (res.status == 200) {
-            console.log("success");
+        } else if(typeReq === "medicine") {
+            const requestSent: MedicineRequest = {
+                createdByID: name,
+                locationID: location,
+                notes: typeReq + ", " + infoText + ", Medicine Type: " + option1 + "+Amount: " + option2,
+                priority: PriorityType.Low,
+                status: StatusType.Assigned,
+                assignedID: assignTo,
+                medicineType: option1,
+                amount: option2
+            };
+            const res = await axios.post("/api/service-request", requestSent, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
+            }
+        } else if(typeReq === "transport") {
+            const requestSent: InternalTransportRequest = {
+                createdByID: name,
+                locationID: location,
+                notes: typeReq + ", " + infoText + ", To Location: " + option1 + "+Patient Name: " + option2 + "+Mobility Aid: " + option3,
+                priority: PriorityType.Low,
+                status: StatusType.Assigned,
+                assignedID: assignTo,
+                toLocation: option1,
+                patientName: option2,
+                mobilityAid: option3
+            };
+            const res = await axios.post("/api/service-request", requestSent, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
+            }
+        } else if(typeReq === "language") {
+            const requestSent: LanguageRequest = {
+                createdByID: name,
+                locationID: location,
+                notes: typeReq + ", " + infoText + ", From Language: " + option1 + "+To Language: " + option2,
+                priority: PriorityType.Low,
+                status: StatusType.Assigned,
+                assignedID: assignTo,
+                language1: option1,
+                language2: option2,
+                when: new Date()
+            };
+            const res = await axios.post("/api/service-request", requestSent, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
+            }
+        } else if(typeReq === "maintenance") {
+            const requestSent: MaintenanceRequest = {
+                createdByID: name,
+                locationID: location,
+                notes: typeReq + ", " + infoText + ", Details: " + option1,
+                priority: PriorityType.Low,
+                status: StatusType.Assigned,
+                assignedID: assignTo,
+                details: option1
+            };
+            const res = await axios.post("/api/service-request", requestSent, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
+            }
         }
         navigate("/requestlist");
+    }
+
+    function handleChange1(newVal:string) {
+        setOption1(newVal);
+    }
+
+    function handleChange2(new2:string) {
+        setOption2(new2);
+    }
+
+    function handleChange3(new3:string) {
+        setOption3(new3);
     }
 
     // Function to render the appropriate service request component based on the selected request type
     const renderServiceRequestComponent = () => {
         switch (requestType) {
             case "sanitation":
-                return <SanitationRequest/>;
+                return <SanitationReq change={handleChange1}/>;
             case "medicine":
-                return <MedicineRequest/>;
+                return <MedicineReq change1={handleChange1} change2={handleChange2}/>;
             case "maintenance":
-                return <MaintenanceRequest/>;
+                return <MaintenanceReq change={handleChange1}/>;
             case "transport":
-                return <InternalTransportationRequest/>;
+                return <InternalTransportationReq change1={handleChange1} change2={handleChange2} change3={handleChange3}/>;
             case "language":
-                return <LanguageRequest/>;
+                return <LanguageReq change1={handleChange1} change2={handleChange2}/>;
             // Add cases for other service request types
             default:
                 return null;
@@ -90,7 +206,7 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("sanitation");
                                     }
-
+                                    setTypeReq("sanitation");
                                     setSanPressed(!sanPressed);
                                     setMedPressed(false);
                                     setMainPressed(false);
@@ -116,7 +232,7 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("medicine");
                                     }
-
+                                    setTypeReq("medicine");
                                     setMedPressed(!medPressed);
                                     setSanPressed(false);
                                     setMainPressed(false);
@@ -142,7 +258,7 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("maintenance");
                                     }
-
+                                    setTypeReq("maintenance");
                                     setMainPressed(!mainPressed);
                                     setSanPressed(false);
                                     setMedPressed(false);
@@ -168,7 +284,7 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("transport");
                                     }
-
+                                    setTypeReq("transport");
                                     setTransPressed(!transPressed);
                                     setMedPressed(false);
                                     setSanPressed(false);
@@ -195,7 +311,7 @@ export default function RequestForm() {
                                     } else {
                                         setRequestType("language");
                                     }
-
+                                    setTypeReq("language");
                                     setLangPressed(!langPressed);
                                     setSanPressed(false);
                                     setMedPressed(false);
@@ -229,13 +345,30 @@ export default function RequestForm() {
                                 />
                             </div>
                             <div className="input-field">
+                                <Autocomplete
+                                    disablePortal
+                                    options={nodeData.map(({longName}): { label: string } => (
+                                        {label: longName}
+                                    ))}
+                                    size={"small"}
+                                    renderInput={(params) =>
+                                        <TextField {...params} label="Location" variant="standard"/>}
+                                    value={{label: location}}
+                                    onChange={(newValue) => {
+                                        if (newValue !== null && newValue.target.innerText !== undefined) {
+                                            setLocation(newValue.target.innerText);
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <div className="input-field">
                                 <TextField
                                     id="standard-basic"
-                                    label="Room Number"
+                                    label="Assign To"
                                     variant="standard"
-                                    type="number"
-                                    value={roomNumber}
-                                    onChange={(e) => setRoomNumber(e.target.value)}
+                                    type="text"
+                                    value={assignTo}
+                                    onChange={(e) => setAssignTo(e.target.value)}
                                     required
                                 />
                             </div>

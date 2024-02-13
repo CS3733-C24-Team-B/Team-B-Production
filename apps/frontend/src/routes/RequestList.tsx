@@ -19,6 +19,7 @@ export default function RequestList() {
     const [refresh, setRefresh] = useState(false);
     const [clickedRows, setClickedRows] = useState<Map<number, JSX.Element>>(new Map<number, JSX.Element>);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
+    const [typeFilter, setTypeFilter] = useState<string>("Choose Type");
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [filterType, setFilterType] = useState("Filter by...");
     const [filterFunction, setFilterFunction] = useState<(nsr: UpdateServiceRequest) => boolean>(() => () => {
@@ -33,7 +34,7 @@ export default function RequestList() {
 
             setSRData(res.data);
             setEmployeeData(res2.data);
-            console.log(res2.data);
+            console.log(res.data);
         }
 
         fetch().then();
@@ -84,7 +85,11 @@ export default function RequestList() {
                 } else {
                     clickedRows.set(index, <tr style={{height: "128px"}}>
                         <td></td>
-                        <td className={"info-cell"} colSpan={7}> {"Notes: " + nsr.notes} </td>
+                        <td className={"info-cell"} colSpan={7}>
+                            <p>{"Notes: " + nsr.notes.split(",")[1]}</p>
+                            {nsr.notes.split(",")[2].split("+").map((str) => (
+                                <p>{str}</p>
+                            ))} </td>
                     </tr>);
                 }
                 setClickedRows(clickedRows);
@@ -143,7 +148,7 @@ export default function RequestList() {
                     )}
                 </Select>
             </td>
-            <td>{typeof nsr}</td>
+            <td>{nsr.notes.split(",")[0]}</td>
             <td className="delete-button">
                 <Button
                     variant="outlined"
@@ -159,16 +164,20 @@ export default function RequestList() {
             </td>
         </tr>
     );
-    let prevMax = arraySR.length;
-    clickedRows.forEach((elem) => {
-        let rowInd: number = 0;
+    let prevMin = -1;
+    let rowInc = 1;
+    clickedRows.forEach(() => {
+        let rowInd: number = arraySR.length;
+        let rowElem = <></>;
         clickedRows.forEach((e, k) => {
-            if (k > rowInd && k < prevMax) {
+            if (k < rowInd && k > prevMin) {
                 rowInd = k;
+                rowElem = e;
             }
         });
-        prevMax = rowInd;
-        arraySR.splice(rowInd + 1, 0, elem);
+        prevMin = rowInd;
+        arraySR.splice(rowInd + rowInc, 0, rowElem);
+        rowInc++;
     });
 
     function handleClick() {
@@ -205,26 +214,47 @@ export default function RequestList() {
                                 <MenuItem value={"Type"}>Request Type</MenuItem>
                             </Select>
                             {((filterType === "Filter by...") ? <></> :
+                                ((filterType === "Type") ?
                                 <>
                                     <Divider/>
                                     <Select
-                                        value={statusFilter}
+                                        value={typeFilter}
                                         label=""
                                         onChange={(e) => {
-                                            setStatusFilter(e.target.value);
+                                            setTypeFilter(e.target.value);
                                             setFilterFunction(() => (nsr: UpdateServiceRequest) => {
-                                                return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                                return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
                                             });
                                         }}
                                     >
-                                        <MenuItem value={"Choose Status"}>None</MenuItem>
-                                        <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
-                                        <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
-                                        <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
-                                        <MenuItem value={StatusType.Completed}>Completed</MenuItem>
-                                        <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                        <MenuItem value={"Choose Type"}>None</MenuItem>
+                                        <MenuItem value={"sanitation"}>Sanitation</MenuItem>
+                                        <MenuItem value={"medicine"}>Medicine</MenuItem>
+                                        <MenuItem value={"transport"}>Transport</MenuItem>
+                                        <MenuItem value={"language"}>Language</MenuItem>
+                                        <MenuItem value={"maintenance"}>Maintenance</MenuItem>
                                     </Select>
-                                </>)}
+                                </> :
+                                    <>
+                                        <Divider/>
+                                        <Select
+                                            value={statusFilter}
+                                            label=""
+                                            onChange={(e) => {
+                                                setStatusFilter(e.target.value);
+                                                setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                    return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                                });
+                                            }}
+                                        >
+                                            <MenuItem value={"Choose Status"}>None</MenuItem>
+                                            <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
+                                            <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
+                                            <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
+                                            <MenuItem value={StatusType.Completed}>Completed</MenuItem>
+                                            <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                        </Select>
+                                    </>))}
                         </FormControl>
                     </Menu>
                     <IconButton onClick={(e) => {
