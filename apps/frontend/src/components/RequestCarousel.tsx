@@ -12,7 +12,7 @@ interface RequestCarouselProps {
 const RequestCarouselContainer = styled(Box)(() => ({
     overflow: 'hidden',
     position: 'relative',
-    width: '90%',
+    width: '96%',
     padding: '1%',
 }));
 
@@ -25,7 +25,7 @@ const RequestCarouselWrapper = styled(Box)(() => ({
 
 const SlideContainer = styled(Box)({
     flex: '0 0 auto',
-    width: '70%',
+    width: '50%',
 });
 
 const PrevNextButton = styled(Button)(() => ({
@@ -33,30 +33,30 @@ const PrevNextButton = styled(Button)(() => ({
     top: '50%',
     transform: 'translateY(-50%)',
     zIndex: 1,
-    backgroundColor: 'grey',
-    color: 'white',
-    borderRadius: '80%',
+    backgroundColor: 'white',
+    color: '#012d5a',
+    width: '1vw',
 }));
 
 const PrevButton = styled(PrevNextButton)({
-    left: '5%',
+    left: '4.5%',
 });
 
 const NextButton = styled(PrevNextButton)({
-    left: '93%',
+    left: '96.2%',
 });
 
 const PositionIndicators = styled(Box)({
     display: 'flex',
-    justifyContent: 'center', // Center horizontally
     position: 'relative',
-    top: '30%',
+    top: '20%',
     width: '100%', // Full width
+    left: '44.25%',
 });
 
 const IndicatorDot = styled(Box)(({isActive}: boolean) => ({
-    width: '20px',
-    height: '20px',
+    width: '10px',
+    height: '10px',
     borderRadius: '50%',
     margin: '0 10px',
     backgroundColor: isActive ? "lightgrey" : "grey",
@@ -66,7 +66,7 @@ const IndicatorDot = styled(Box)(({isActive}: boolean) => ({
 const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     const [activeIndex, setActiveIndex] = React.useState(0);
     const [isAnimating, setIsAnimating] = React.useState(false);
-    const totalSlides = 3; // Total number of slides
+    const totalSlides = 2; // Total number of slides
 
     const handleNext = () => {
         if (!isAnimating) {
@@ -87,7 +87,7 @@ const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     };
 
     const slideStyle = {
-        transform: `translateX(-${activeIndex * 70}%)`,
+        transform: `translateX(-${activeIndex * 50}%)`,
         transition: isAnimating ? 'transform 0.5s ease' : 'none',
     };
 

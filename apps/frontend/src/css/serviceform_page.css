@@ -36,7 +36,6 @@
     column-gap: 10vw;
     width: 90%;
     height: 70%;
-
 }
 
 .carousel-button {
@@ -47,12 +46,12 @@
             white 25%,
             white);
     border-radius: 30px;
-
 }
 
 .carousel-button .MuiButton-root {
     border-radius: 30px;
 }
+
 
 .form-container {
     display: grid;
