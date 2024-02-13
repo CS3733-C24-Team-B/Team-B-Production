@@ -86,7 +86,7 @@ export default function PersistentDrawerLeft() {
             // flexDirection: 'column',
             }}>
             <CssBaseline/>
-            <AppBar position="relative" open={open} sx={{boxShadow: 0,}}>
+            <AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
                 <Toolbar style={{
                     backgroundColor: "#012d5a", //Background color
                     flexDirection: 'column', //makes it so icons are displayed vertically
@@ -97,8 +97,10 @@ export default function PersistentDrawerLeft() {
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        sx={{ml:0.08, mt:1,...(open && {display: 'none'})}}
-                        style={{marginBottom: '3px'}} // Add margin to separate the icons
+                        sx={{ml:0.075, //margin left
+                            mt:1.5, //margin top
+                            ...(open && {display: 'none'})}} //handles the opening properties
+                        style={{marginBottom: '2px'}} // Add margin to separate the icons
                     >
                         <MenuIcon/>
                     </IconButton>
