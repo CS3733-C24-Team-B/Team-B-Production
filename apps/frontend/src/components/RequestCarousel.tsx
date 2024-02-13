@@ -20,12 +20,12 @@ const RequestCarouselWrapper = styled(Box)(() => ({
     display: 'flex',
     width: '50%',
     alignSelf: 'start',
-    alignContent: 'center',
+    alignContent: 'center'
 }));
 
 const SlideContainer = styled(Box)({
     flex: '0 0 auto',
-    width: '50%',
+    width: '50%'
 });
 
 const PrevNextButton = styled(Button)(() => ({
@@ -59,7 +59,7 @@ const IndicatorDot = styled(Box)(({isActive}: boolean) => ({
     height: '10px',
     borderRadius: '50%',
     margin: '0 10px',
-    backgroundColor: isActive ? "lightgrey" : "grey",
+    backgroundColor: !isActive ? "lightgrey" : "grey",
     cursor: 'pointer',
 }));
 
@@ -92,7 +92,7 @@ const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     };
 
     return (
-        <div style={{width: '90vw'}}>
+        <div style={{width: '90vw', height: '60vh', overflow: 'hidden'}}>
             <PrevButton onClick={handlePrev}>
                 <ArrowBackIcon />
             </PrevButton>
