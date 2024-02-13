@@ -234,9 +234,9 @@ export default function LeafletMap() {
         return output;
     };
 
-    const currNodes = nodeData.filter(({floor}) => {
-        return floor === currLevel;
-    });
+    // const currNodes = nodeData.filter(({floor}) => {
+    //     return floor === currLevel;
+    // });
 
     return (
         <div>
@@ -261,7 +261,7 @@ export default function LeafletMap() {
                 </TextField>
                 <Autocomplete
                     disablePortal
-                    options={currNodes.map(({longName}) => (
+                    options={nodeData.map(({longName}) => (
                         {label: longName}
                     ))}
                     size={"small"}
@@ -279,7 +279,7 @@ export default function LeafletMap() {
                 />
                 <Autocomplete
                     disablePortal
-                    options={currNodes.map(({longName}) => (
+                    options={nodeData.map(({longName}) => (
                         {label: longName}
                     ))}
                     size={"small"}
