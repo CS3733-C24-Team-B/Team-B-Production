@@ -71,3 +71,12 @@
 .delete-button {
     border-bottom: 0px;
 }
+
+.service-tables{
+    background-color: white;
+    grid-column-start: 1;
+}
+
+.info-cell {
+    vertical-align: middle;
+}
