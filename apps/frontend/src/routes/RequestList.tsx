@@ -39,7 +39,7 @@ export default function RequestList() {
         }
 
         fetch().then();
-    }, [employeeData.length, refresh]);
+    }, [refresh]);
 
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
@@ -172,6 +172,9 @@ export default function RequestList() {
                 <Button
                     variant="outlined"
                     onClick={() => {
+                        if(clickedRows.has(index)) {
+                            clickedRows.delete(index);
+                        }
                         axios.delete("/api/service-request", {
                             data: {
                                 serviceID: nsr.serviceID
@@ -204,7 +207,7 @@ export default function RequestList() {
     }
 
     return (
-        <div className="home-container2">
+        <div className="req-list-container">
             <div className="node-data-container">
                 <div className="nav-container">
                     <Navbar/>
@@ -317,6 +320,7 @@ export default function RequestList() {
                             <th>Assigned To</th>
                             <th>Status</th>
                             <th>Type</th>
+                            <th className={"delete-button"}></th>
                         </tr>
                         {arraySR}
                     </table>

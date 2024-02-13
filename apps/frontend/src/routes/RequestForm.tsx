@@ -2,7 +2,15 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import "../css/serviceform_page.css";
 import axios from "axios";
-import {PriorityType, StatusType, SanitationRequest, MedicineRequest, InternalTransportRequest, LanguageRequest, MaintenanceRequest} from "common/src/serviceRequestTypes.ts";
+import {
+    PriorityType,
+    StatusType,
+    SanitationRequest,
+    MedicineRequest,
+    InternalTransportRequest,
+    LanguageRequest,
+    MaintenanceRequest
+} from "common/src/serviceRequestTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -17,13 +25,15 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
-import {Autocomplete, FormControl, InputLabel, MenuItem} from "@mui/material";
+import {Alert, Autocomplete, FormControl, InputLabel, MenuItem, Snackbar} from "@mui/material";
 import Box from "@mui/material/Box";
-import Select from "@mui/material/Select";
+import Select, {SelectChangeEvent} from "@mui/material/Select";
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function RequestForm() {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
+    const {user, isAuthenticated} = useAuth0();
+    //const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [prio, setPrio] = useState("");
     const [infoText, setInfoText] = useState("");
@@ -34,11 +44,13 @@ export default function RequestForm() {
     const [typeReq, setTypeReq] = useState("");
     const [assignTo, setAssignTo] = useState("");
     const [nodeData, setNodeData] = useState([]);
+    const [employeeData, setEmployeeData] = useState([]);
     const [sanPressed, setSanPressed] = useState(false);
     const [medPressed, setMedPressed] = useState(false);
     const [mainPressed, setMainPressed] = useState(false);
     const [transPressed, setTransPressed] = useState(false);
     const [langPressed, setLangPressed] = useState(false);
+    const [submitAlert, setSubmitAlert] = useState(false);
 
     useEffect(() => {
         async function fetch() {
@@ -49,17 +61,21 @@ export default function RequestForm() {
                 console.log("post error");
             }
             const res = await axios.get("/api/db-load-nodes");
+            const res3 = await axios.get(`/api/employee`);
 
             setNodeData(res.data);
+            setEmployeeData(res3.data);
         }
 
         fetch().then();
     }, []);
 
+    console.log(isAuthenticated);
+
     async function submit() {
         if(typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
-                createdByID: name,
+                createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Hazards: " + option1,
                 priority: prio,
@@ -77,7 +93,7 @@ export default function RequestForm() {
             }
         } else if(typeReq === "medicine") {
             const requestSent: MedicineRequest = {
-                createdByID: name,
+                createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Medicine Type: " + option1 + "+Amount: " + option2,
                 priority: prio,
@@ -96,7 +112,7 @@ export default function RequestForm() {
             }
         } else if(typeReq === "transport") {
             const requestSent: InternalTransportRequest = {
-                createdByID: name,
+                createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", To Location: " + option1 + "+Patient Name: " + option2 + "+Mobility Aid: " + option3,
                 priority: prio,
@@ -116,7 +132,7 @@ export default function RequestForm() {
             }
         } else if(typeReq === "language") {
             const requestSent: LanguageRequest = {
-                createdByID: name,
+                createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", From Language: " + option1 + "+To Language: " + option2,
                 priority: prio,
@@ -136,7 +152,7 @@ export default function RequestForm() {
             }
         } else if(typeReq === "maintenance") {
             const requestSent: MaintenanceRequest = {
-                createdByID: name,
+                createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Details: " + option1,
                 priority: prio,
@@ -151,6 +167,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         }
         navigate("/requestlist");
@@ -434,17 +451,17 @@ export default function RequestForm() {
                     {/* Render the form contents only if a service request type is selected */}
                     {requestType && (
                         <>
-                            <div className="input-field">
-                                <TextField
-                                    id="standard-basic"
-                                    label="Name"
-                                    variant="standard"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    type="text"
-                                    required
-                                />
-                            </div>
+                            {/*<div className="input-field">*/}
+                            {/*    <TextField*/}
+                            {/*        id="standard-basic"*/}
+                            {/*        label="Name"*/}
+                            {/*        variant="standard"*/}
+                            {/*        value={name}*/}
+                            {/*        onChange={(e) => setName(e.target.value)}*/}
+                            {/*        type="text"*/}
+                            {/*        required*/}
+                            {/*    />*/}
+                            {/*</div>*/}
                             <div className="input-field">
                                 <Autocomplete
                                     disablePortal
@@ -484,15 +501,23 @@ export default function RequestForm() {
                                 </FormControl>
                             </div>
                             <div className="input-field">
-                                <TextField
-                                    id="standard-basic"
-                                    label="Assign To"
-                                    variant="standard"
-                                    type="text"
-                                    value={assignTo}
-                                    onChange={(e) => setAssignTo(e.target.value)}
-                                    required
-                                />
+                                <FormControl>
+                                    <InputLabel id="employee-label" shrink={false} variant="standard">{(assignTo === "") ? "Choose Employee" : ""}</InputLabel>
+                                    <Select
+                                        labelId="employee-label"
+                                        value={(assignTo === "") ? "Choose Employee" : assignTo}
+                                        onChange={async (event: SelectChangeEvent) => {
+                                            setAssignTo(event.target.value);
+                                        }}
+                                        variant="standard"
+                                        size={"small"}
+                                        style={{width: 220}}>
+                                        {employeeData.map(({email, firstName, lastName}) =>
+                                            <MenuItem
+                                                value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                        )}
+                                    </Select>
+                                </FormControl>
                             </div>
                             <div className="input-field">
                                 <TextField
@@ -521,6 +546,20 @@ export default function RequestForm() {
                             </div>
                         </>
                     )}
+                    <Snackbar
+                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                        open={submitAlert}
+                        autoHideDuration={2000}
+                        onClose={() => {
+                            setSubmitAlert(false);
+                        }}>
+                        <Alert
+                            severity="success"
+                            sx={{ width: '100%' }}
+                        >
+                            Request form submitted.
+                        </Alert>
+                    </Snackbar>
                 </div>
             </div>
         </div>
