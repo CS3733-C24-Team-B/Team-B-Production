@@ -170,7 +170,7 @@ export default function RequestList() {
     });
 
     function handleClick() {
-        navigate("/home");
+        navigate("/requestform");
     }
 
     return (
@@ -248,8 +248,7 @@ export default function RequestList() {
                 </table>
                 <br/>
                 <div className="home-button">
-                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Return to
-                        Home</Button>
+                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a Request</Button>
                 </div>
             </div>
         </div>
