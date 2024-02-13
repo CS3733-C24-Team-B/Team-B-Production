@@ -87,10 +87,11 @@ export default function PersistentDrawerLeft() {
             }}>
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{
-                width: '10px',
+                width:1,
+                // width: '10px',
                 boxShadow: 0,
                 // zIndex: theme.zIndex.drawer + 1, // keeps icons centered when screen size changes
-                backgroundColor: '#012d5a', //Background color
+                // backgroundColor: '#5a010b', //Background color
             }}>
                 <Toolbar style={{
                     backgroundColor: "#012d5a", //Background color

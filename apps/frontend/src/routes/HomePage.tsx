@@ -36,7 +36,9 @@ export default function HomePage() {
 
     return (
         <div className = "home-container">
-            <Navbar/>
+            <div className = 'nav-container'>
+                <Navbar/>
+            </div>
             <LeafletMap/>
             {/*someone should delete this if you know what it was for and we dont need it*/}
             {/*<div className="info-container">*/}
