@@ -108,13 +108,13 @@ export default function CSVData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-        <div className="node-data-container2">
+        <div className="home-container">
             <div className="nav-container">
                 <Navbar/>
             </div>
             <div className="data-container">
                 <div className="topbar-container">
-                    <div  className="node-data-header">
+                    <div className="node-data-header">
                         <header className={'headerblue'}>CSV Node Data</header>
                     </div>
                     <div className="top-buttons-container">
@@ -141,7 +141,7 @@ export default function CSVData() {
                                     onClick={downloadFromDB}
                                     className="export-button"
                                     style={{backgroundColor: "#012D5A"}}>
-                                 Export File
+                                Export File
                             </Button>
                         </div>
                     </div>
