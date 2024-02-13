@@ -6,6 +6,7 @@ import { LatLng, LatLngBounds } from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
 import { Button, Autocomplete, Drawer, MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import {PathPrinter} from "./PathPrinter.tsx";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -46,6 +47,7 @@ export default function LeafletMap() {
     const [lineData, setLineData] = useState<JSX.Element[]>([]);
     const [showEdges, setShowEdges] = useState(false);
     const [useAStar, setUseAStar] = useState(false);
+    const [directions, setDirections] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
@@ -72,7 +74,22 @@ export default function LeafletMap() {
     useEffect(() => {
         async function fetch() {
             const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
-            setPathData(res2.data);
+
+            let nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
+                nodeID: string;
+                xcoord: number;
+                ycoord: number;
+                floor: string;
+                building: string;
+                nodeType: string;
+                longName: string;
+                shortName: string;
+            }) => {
+                const { longName } = roomData;
+                accumulator.push(longName);
+                return accumulator;
+            }, []);
+            setPathData(nodeIDs);
         }
 
         fetch().then();
@@ -252,7 +269,9 @@ export default function LeafletMap() {
             setIsDrawerOpen(true);
         }
     }, [nodeEnd]);
-
+    function handleDirections(){
+    setDirections(!directions);
+    }
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
@@ -296,9 +315,11 @@ export default function LeafletMap() {
                         </div>
                     </div>
                     <div className="drawer-buttons">
-                        <Button variant="contained" size="small" onClick={() => console.log("Text Directions clicked")}>
-                            Text Directions
-                        </Button>
+                        <ul>
+                            <Button variant="contained" onClick={handleDirections}>Text
+                                Directions</Button>
+                            {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
+                        </ul>
                         <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)}
                                 style={{backgroundColor: "white", color: "black"}}>
                             {showEdges ? "Hide All Edges" : "Show All Edges"}
@@ -353,12 +374,14 @@ export default function LeafletMap() {
                     <AuthenticationButton/>
                 </div>
             </div>
-            <MapContainer center={[34, 25]} zoom={5}
-                          minZoom={5}
-                          maxZoom={8}
-                          scrollWheelZoom={true}
-                          maxBoundsViscosity={1.0}
-                          maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+            <MapContainer
+                center={[17, 25]}
+                zoom={5}
+                minZoom={5}
+                maxZoom={8}
+                scrollWheelZoom={true}
+                maxBoundsViscosity={1.0}
+                maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
             >
                 <ImageOverlay
                     url={selectedFloor} //"src/images/00_thelowerlevel1.png"
