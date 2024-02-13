@@ -78,7 +78,7 @@ export default function RequestForm() {
                                     setMedPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
-                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
                                 startIcon={<SanitizerIcon/>}
                             >
@@ -99,7 +99,7 @@ export default function RequestForm() {
                                     setSanPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
-                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
                                 startIcon={<MedicationIcon/>}
                             >
@@ -120,7 +120,7 @@ export default function RequestForm() {
                                     setMedPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
-                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
                                 startIcon={<SanitizerIcon/>}
                             >
@@ -141,7 +141,7 @@ export default function RequestForm() {
                                     setSanPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
-                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: medPressed ? "lightgreen" : "white"}}
                                 startIcon={<MedicationIcon/>}
                             >
@@ -163,7 +163,7 @@ export default function RequestForm() {
                                     setMedPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
-                                sx={{left: '33%', width: '20vw', height: '50vh', boxShadow: '4'}}
+                                sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
                                 style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
                                 startIcon={<SanitizerIcon/>}
                             >

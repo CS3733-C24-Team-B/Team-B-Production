@@ -19,6 +19,7 @@ const RequestCarouselContainer = styled(Box)(() => ({
 const RequestCarouselWrapper = styled(Box)(() => ({
     display: 'flex',
     width: '50%',
+    alignSelf: 'start',
     alignContent: 'center',
 }));
 
@@ -86,7 +87,7 @@ const RequestCarousel: React.FC<RequestCarouselProps> = ({children}) => {
     };
 
     const slideStyle = {
-        transform: `translateX(-${activeIndex * 100}%)`,
+        transform: `translateX(-${activeIndex * 70}%)`,
         transition: isAnimating ? 'transform 0.5s ease' : 'none',
     };
 

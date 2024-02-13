@@ -39,6 +39,10 @@
     height: 70%;
 }
 
+.carousel-button {
+    display: inline-grid;
+}
+
 .carousel-button .MuiButton-root {
     border-radius: 30px;
 }
