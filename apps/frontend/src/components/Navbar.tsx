@@ -78,13 +78,7 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{
-           display: 'flex',
-            // position: 'absolute',
-            // top: 0,
-            // left: 0,
-            // flexDirection: 'column',
-            }}>
+        <Box sx={{display: 'flex',}}> {/*not sure if needed, too scared to remove*/}
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
                 <Toolbar style={{
