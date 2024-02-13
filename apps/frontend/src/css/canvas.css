@@ -1,11 +1,4 @@
-.home-container {
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 4vw 96vw;
-    grid-template-rows: auto;
-    grid-template-areas: "navbar main";
-}
+
 
 /*for search*/
 .manual-dropdown2 {

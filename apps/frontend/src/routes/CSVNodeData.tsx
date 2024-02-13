@@ -10,6 +10,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {styled} from "@mui/material/styles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IosShareIcon from '@mui/icons-material/IosShare';
+// import Divider from "@mui/material/Divider";
 // import SideButtons from "../components/SideButtons.tsx"
 
 const VisuallyHiddenInput = styled('input')({
@@ -107,7 +108,7 @@ export default function CSVData() {
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
-        <div className="node-data-container">
+        <div className="node-data-container2">
             <div className="nav-container">
                 <Navbar/>
             </div>

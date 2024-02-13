@@ -21,7 +21,9 @@ export default function RequestList() {
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [filterType, setFilterType] = useState("Filter by...");
-    const [filterFunction, setFilterFunction] = useState<(nsr: UpdateServiceRequest) => boolean>(() => () => { return true; });
+    const [filterFunction, setFilterFunction] = useState<(nsr: UpdateServiceRequest) => boolean>(() => () => {
+        return true;
+    });
     const openMenu = Boolean(menuAnchor);
 
     useEffect(() => {
@@ -174,81 +176,85 @@ export default function RequestList() {
     }
 
     return (
-        <div className="node-data-container">
-            <div className="nav-container">
-                <Navbar/>
-            </div>
-            <div className="request-container">
-                <Menu
-                    open={openMenu}
-                    onClose={() => {
-                        setMenuAnchor(null);
-                    }}
-                    anchorEl={menuAnchor}>
-                    <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
-                        <Select
-                            value={filterType}
-                            label=""
-                            onChange={(e) => {
-                                setFilterType(e.target.value);
-                                setFilterFunction(() => () => {
-                                    return true;
-                                });
-                            }}
-                        >
-                            <MenuItem value={"Filter by..."}>None</MenuItem>
-                            <MenuItem value={"Status"}>Status</MenuItem>
-                            <MenuItem value={"Type"}>Request Type</MenuItem>
-                        </Select>
-                        {((filterType === "Filter by...") ? <></> :
-                            <>
-                                <Divider/>
-                                <Select
-                                    value={statusFilter}
-                                    label=""
-                                    onChange={(e) => {
-                                        setStatusFilter(e.target.value);
-                                        setFilterFunction(() => (nsr:UpdateServiceRequest) => {
-                                            return e.target.value === "Choose Status" || nsr.status === e.target.value;
-                                        });
-                                    }}
-                                >
-                                    <MenuItem value={"Choose Status"}>None</MenuItem>
-                                    <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
-                                    <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
-                                    <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
-                                    <MenuItem value={StatusType.Completed}>Completed</MenuItem>
-                                    <MenuItem value={StatusType.Paused}>Paused</MenuItem>
-                                </Select>
-                            </>)}
-                    </FormControl>
-                </Menu>
-                <IconButton onClick={(e) => {
-                    setMenuAnchor(e.currentTarget);
-                }} style={{borderRadius: 0, width: 72}}>
-                    <FilterListIcon/>
-                </IconButton>
-                <br/>
-                <div className="req-list-header">
-                    <header>Service Request List</header>
+        <div className="home-container2">
+            <div className="node-data-container">
+                <div className="nav-container">
+                    <Navbar/>
                 </div>
-                <br/>
-                <table className={"service-tables"}>
-                    <tr>
-                        <th></th>
-                        <th>Time Created</th>
-                        <th>Created by</th>
-                        <th>Location</th>
-                        <th>Priority</th>
-                        <th>Assigned To</th>
-                        <th>Status</th>
-                        <th>Type</th>
-                    </tr>
-                    {arraySR}
-                </table>
-                <br/>
-                <div className="home-button">
-                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a Request</Button>
+
+                <div className="request-container">
+                    <Menu
+                        open={openMenu}
+                        onClose={() => {
+                            setMenuAnchor(null);
+                        }}
+                        anchorEl={menuAnchor}>
+                        <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
+                            <Select
+                                value={filterType}
+                                label=""
+                                onChange={(e) => {
+                                    setFilterType(e.target.value);
+                                    setFilterFunction(() => () => {
+                                        return true;
+                                    });
+                                }}
+                            >
+                                <MenuItem value={"Filter by..."}>None</MenuItem>
+                                <MenuItem value={"Status"}>Status</MenuItem>
+                                <MenuItem value={"Type"}>Request Type</MenuItem>
+                            </Select>
+                            {((filterType === "Filter by...") ? <></> :
+                                <>
+                                    <Divider/>
+                                    <Select
+                                        value={statusFilter}
+                                        label=""
+                                        onChange={(e) => {
+                                            setStatusFilter(e.target.value);
+                                            setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                            });
+                                        }}
+                                    >
+                                        <MenuItem value={"Choose Status"}>None</MenuItem>
+                                        <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
+                                        <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
+                                        <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
+                                        <MenuItem value={StatusType.Completed}>Completed</MenuItem>
+                                        <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                    </Select>
+                                </>)}
+                        </FormControl>
+                    </Menu>
+                    <IconButton onClick={(e) => {
+                        setMenuAnchor(e.currentTarget);
+                    }} style={{borderRadius: 0, width: 72}}>
+                        <FilterListIcon/>
+                    </IconButton>
+                    <br/>
+                    <div className="req-list-header">
+                        <header className={'headerblue'}>Service Request List</header>
+                    </div>
+                    <br/>
+                    <table className={"service-tables"}>
+                        <tr>
+                            <th></th>
+                            <th>Time Created</th>
+                            <th>Created by</th>
+                            <th>Location</th>
+                            <th>Priority</th>
+                            <th>Assigned To</th>
+                            <th>Status</th>
+                            <th>Type</th>
+                        </tr>
+                        {arraySR}
+                    </table>
+                    <br/>
+                    <div className="home-button">
+                        <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a
+                            Request</Button>
+                    </div>
                 </div>
             </div>
         </div>
