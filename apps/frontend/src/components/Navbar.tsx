@@ -78,9 +78,14 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', }}>
+        <Box sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            flexDirection: 'column', }}>
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{
+                width: '10px',
                 zIndex: theme.zIndex.drawer + 1, // keeps icons centered when screen size changes
                 backgroundColor: '#012d5a', //Background color
             }}>

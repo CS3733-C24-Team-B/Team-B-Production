@@ -33,7 +33,7 @@ export default function LoginPage() {
 
     return (
         <div className={"home-container"}>
-            <div className="nav-container">
+            <div>
                 <Navbar/>
             </div>
             <div className="service-form-container">

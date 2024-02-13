@@ -35,7 +35,7 @@ export default function HomePage() {
     }, [isAuthenticated, user]);
 
     return (
-        <div className="home-container">
+        <div className = "home-container">
             <Navbar/>
             <LeafletMap/>
             {/*someone should delete this if you know what it was for and we dont need it*/}
