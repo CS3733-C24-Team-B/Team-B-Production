@@ -85,6 +85,11 @@ export default function ProfilePage() {
                 <Navbar/>
             </div>
             <div className="profile-data">
+                <div className="topbar-container2">
+                    <div className="node-data-header">
+                        <header className={'headerblue'}>Profile</header>
+                    </div>
+                </div>
                 <Container> {/* Increased marginRight */}
                     <Paper elevation={3} style={{
                         padding: '30px',

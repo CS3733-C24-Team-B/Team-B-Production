@@ -1,16 +1,14 @@
 import * as React from 'react';
-import {styled, useTheme} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -28,9 +26,9 @@ import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 
 const drawerWidth = 240;
 
-const icons = [<InboxIcon/>, <MailIcon/>, <SettingsIcon/>, <LanguageIcon/>];
+const icons = [<InboxIcon />, <MailIcon />, <SettingsIcon />, <LanguageIcon />];
 const links = ['/requestform', '/saved-locations', '/mapsettings', '/language'];
-const adminIcons = [<AccountBoxIcon/>, <InboxIcon/>, <ScatterPlotIcon/>, <TimelineIcon/>, <LogoutIcon/>];
+const adminIcons = [<AccountBoxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />, <LogoutIcon/>];
 const adminLinks = ['/profile-info', '/requestlist', '/csvnodedata', '/csvedgedata', '/login'];
 
 interface AppBarProps extends MuiAppBarProps {
@@ -39,7 +37,7 @@ interface AppBarProps extends MuiAppBarProps {
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({theme, open}) => ({
+})<AppBarProps>(({ theme, open }) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -52,7 +50,7 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const DrawerHeader = styled('div')(({theme}) => ({
+const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
@@ -62,7 +60,6 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }));
 
 export default function PersistentDrawerLeft() {
-    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -89,22 +86,23 @@ export default function PersistentDrawerLeft() {
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        onClick={handleDrawerOpen}
+                        onMouseEnter={handleDrawerOpen}
                         edge="start"
                         sx={{ml:0.075, //margin left
                             mt:1.5, //margin top
                             ...(open && {display: 'none'})}} //handles the opening properties
                         style={{marginBottom: '2px'}} // Add margin to separate the icons
                     >
-                        <MenuIcon/>
+                        <MenuIcon />
                     </IconButton>
                     <IconButton
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        style={{color: 'white'}}
+                        sx={{ position: 'absolute', top: 55, left: 12 }}
+                        style={{ color: 'white' }} // Add this line to set the color to white
                     >
-                        <HomeIcon/>
+                        <HomeIcon />
                     </IconButton>
                 </Toolbar>
                 <Drawer
@@ -119,16 +117,15 @@ export default function PersistentDrawerLeft() {
                     variant="persistent"
                     anchor="left"
                     open={open}
+                    onMouseEnter={handleDrawerOpen}
+                    onMouseLeave={handleDrawerClose}
                 >
-                    <DrawerHeader >
+                    <DrawerHeader>
                         <a href="/home">
-                            <img src={logo} alt="Hospital Logo" width={"100%"}/>
+                            <img src={logo} alt="Hospital Logo" width={"100%"} />
                         </a>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-                        </IconButton>
                     </DrawerHeader>
-                    <Divider/>
+                    <Divider />
                     <List>
                         {['Create Request', 'Saved Locations', 'Map Settings', 'Language'].map((text, index) => (
                             <ListItem key={text} disablePadding>
@@ -136,12 +133,12 @@ export default function PersistentDrawerLeft() {
                                     <ListItemIcon>
                                         {icons[index]}
                                     </ListItemIcon>
-                                    <ListItemText primary={text}/>
+                                    <ListItemText primary={text} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
-                    <Divider/>
+                    <Divider />
                     <List>
                         {['Profile', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Logout'].map((text, index) => (
                             <ListItem key={text} disablePadding>
@@ -149,7 +146,7 @@ export default function PersistentDrawerLeft() {
                                     <ListItemIcon>
                                         {adminIcons[index]}
                                     </ListItemIcon>
-                                    <ListItemText primary={text}/>
+                                    <ListItemText primary={text} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
