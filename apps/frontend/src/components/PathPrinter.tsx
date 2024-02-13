@@ -166,7 +166,6 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     };
 
     return (
-
         <div>
             <h2>Hospital Path</h2>
             <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
