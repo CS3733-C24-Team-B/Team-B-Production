@@ -17,13 +17,15 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
-import {Autocomplete} from "@mui/material";
+import {Autocomplete, FormControl, InputLabel, MenuItem} from "@mui/material";
 import Box from "@mui/material/Box";
+import Select from "@mui/material/Select";
 
 export default function RequestForm() {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
+    const [prio, setPrio] = useState("");
     const [infoText, setInfoText] = useState("");
     const [option1, setOption1] = useState("");
     const [option2, setOption2] = useState("");
@@ -60,7 +62,7 @@ export default function RequestForm() {
                 createdByID: name,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Hazards: " + option1,
-                priority: PriorityType.Low,
+                priority: prio,
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 hazards: option1
@@ -78,7 +80,7 @@ export default function RequestForm() {
                 createdByID: name,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Medicine Type: " + option1 + "+Amount: " + option2,
-                priority: PriorityType.Low,
+                priority: prio,
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 medicineType: option1,
@@ -97,7 +99,7 @@ export default function RequestForm() {
                 createdByID: name,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", To Location: " + option1 + "+Patient Name: " + option2 + "+Mobility Aid: " + option3,
-                priority: PriorityType.Low,
+                priority: prio,
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 toLocation: option1,
@@ -117,7 +119,7 @@ export default function RequestForm() {
                 createdByID: name,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", From Language: " + option1 + "+To Language: " + option2,
-                priority: PriorityType.Low,
+                priority: prio,
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 language1: option1,
@@ -137,7 +139,7 @@ export default function RequestForm() {
                 createdByID: name,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Details: " + option1,
-                priority: PriorityType.Low,
+                priority: prio,
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 details: option1
@@ -187,7 +189,7 @@ export default function RequestForm() {
 
     return (
         <div className="home-container">
-            <div className="nav-container">
+            <div className={(requestType === "" ? "nav-container" : "nav-container-extended")}>
                 <Navbar/>
             </div>
             <div className="service-form-container">
@@ -461,6 +463,27 @@ export default function RequestForm() {
                                 />
                             </div>
                             <div className="input-field">
+                                <FormControl>
+                                    <InputLabel id="prio-label" shrink={false} variant="standard">{(prio === "") ? "Priority" : ""}</InputLabel>
+                                    <Select
+                                        labelId="prio-label"
+                                        id="standard-basic"
+                                        label="Priority"
+                                        variant="standard"
+                                        size={"small"}
+                                        value={prio}
+                                        onChange={(e) => setPrio(e.target.value)}
+                                        style={{width: 220}}
+                                        required
+                                    >
+                                        <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                        <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                        <MenuItem value={PriorityType.High}>High</MenuItem>
+                                        <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="input-field">
                                 <TextField
                                     id="standard-basic"
                                     label="Assign To"
@@ -474,7 +497,7 @@ export default function RequestForm() {
                             <div className="input-field">
                                 <TextField
                                     id="standard-basic"
-                                    label="Request Details"
+                                    label="Special Notes"
                                     variant="standard"
                                     type="text"
                                     value={infoText}

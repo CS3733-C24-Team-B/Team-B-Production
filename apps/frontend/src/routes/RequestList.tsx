@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import {StatusType, UpdateRequest, UpdateServiceRequest} from "common/src/serviceRequestTypes.ts";
+import {PriorityType, StatusType, UpdateRequest, UpdateServiceRequest} from "common/src/serviceRequestTypes.ts";
 import {Button, FormControl, Menu, MenuItem} from "@mui/material";
 import Select, {SelectChangeEvent} from '@mui/material/Select';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -20,6 +20,7 @@ export default function RequestList() {
     const [clickedRows, setClickedRows] = useState<Map<number, JSX.Element>>(new Map<number, JSX.Element>);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
     const [typeFilter, setTypeFilter] = useState<string>("Choose Type");
+    const [priorityFilter, setPriorityFilter] = useState<string>("Choose Priority");
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [filterType, setFilterType] = useState("Filter by...");
     const [filterFunction, setFilterFunction] = useState<(nsr: UpdateServiceRequest) => boolean>(() => () => {
@@ -100,7 +101,12 @@ export default function RequestList() {
             <td>{sqlToDate(nsr.timeCreated.toString()).toDateString()}</td>
             <td>{nsr.createdByID}</td>
             <td>{nsr.locationID}</td>
-            <td>{nsr.priority}</td>
+            <td style={{
+                'Low': {color: "green"},
+                'Medium': {color: "blue"},
+                'High': {color: "orange"},
+                'Emergency': {color: "red"}
+            }[nsr.priority]}>{nsr.priority}</td>
             <td>
                 <Select
                     value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
@@ -130,6 +136,13 @@ export default function RequestList() {
             <td>
                 <Select
                     defaultValue={StatusType.Unassigned}
+                    style={{
+                        'Unassigned': {color: "crimson"},
+                        'Assigned': {color: "deepskyblue"},
+                        'In Progress': {color: "turquoise"},
+                        'Completed': {color: "limegreen"},
+                        'Paused': {color: "mediumpurple"}
+                    }[nsr.status]}
                     value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                     onChange={async (event: SelectChangeEvent) => {
                         console.log(nsr.status as keyof typeof StatusType);
@@ -144,7 +157,13 @@ export default function RequestList() {
                         setRefresh(!refresh);
                     }}>
                     {statuses.map((st) =>
-                        <MenuItem value={st}>{StatusType[st as keyof typeof StatusType]}</MenuItem>
+                        <MenuItem value={st} style={{
+                            'Unassigned': {color: "crimson"},
+                            'Assigned': {color: "deepskyblue"},
+                            'InProgress': {color: "turquoise"},
+                            'Completed': {color: "limegreen"},
+                            'Paused': {color: "mediumpurple"}
+                        }[st]}>{StatusType[st as keyof typeof StatusType]}</MenuItem>
                     )}
                 </Select>
             </td>
@@ -212,6 +231,7 @@ export default function RequestList() {
                                 <MenuItem value={"Filter by..."}>None</MenuItem>
                                 <MenuItem value={"Status"}>Status</MenuItem>
                                 <MenuItem value={"Type"}>Request Type</MenuItem>
+                                <MenuItem value={"Priority"}>Priority</MenuItem>
                             </Select>
                             {((filterType === "Filter by...") ? <></> :
                                 ((filterType === "Type") ?
@@ -235,26 +255,46 @@ export default function RequestList() {
                                         <MenuItem value={"maintenance"}>Maintenance</MenuItem>
                                     </Select>
                                 </> :
-                                    <>
-                                        <Divider/>
-                                        <Select
-                                            value={statusFilter}
-                                            label=""
-                                            onChange={(e) => {
-                                                setStatusFilter(e.target.value);
-                                                setFilterFunction(() => (nsr: UpdateServiceRequest) => {
-                                                    return e.target.value === "Choose Status" || nsr.status === e.target.value;
-                                                });
-                                            }}
-                                        >
-                                            <MenuItem value={"Choose Status"}>None</MenuItem>
-                                            <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
-                                            <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
-                                            <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
-                                            <MenuItem value={StatusType.Completed}>Completed</MenuItem>
-                                            <MenuItem value={StatusType.Paused}>Paused</MenuItem>
-                                        </Select>
-                                    </>))}
+                                    ((filterType === "Status") ?
+                                        <>
+                                            <Divider/>
+                                            <Select
+                                                value={statusFilter}
+                                                label=""
+                                                onChange={(e) => {
+                                                    setStatusFilter(e.target.value);
+                                                    setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                        return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                                    });
+                                                }}
+                                            >
+                                                <MenuItem value={"Choose Status"}>None</MenuItem>
+                                                <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
+                                                <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
+                                                <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
+                                                <MenuItem value={StatusType.Completed}>Completed</MenuItem>
+                                                <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                            </Select>
+                                        </> :
+                                        <>
+                                            <Divider/>
+                                            <Select
+                                                value={priorityFilter}
+                                                label=""
+                                                onChange={(e) => {
+                                                    setPriorityFilter(e.target.value);
+                                                    setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                        return e.target.value === "Choose Priority" || nsr.priority === e.target.value;
+                                                    });
+                                                }}
+                                            >
+                                                <MenuItem value={"Choose Priority"}>None</MenuItem>
+                                                <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                                <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                                <MenuItem value={PriorityType.High}>High</MenuItem>
+                                                <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                            </Select>
+                                        </>)))}
                         </FormControl>
                     </Menu>
                     <IconButton onClick={(e) => {
