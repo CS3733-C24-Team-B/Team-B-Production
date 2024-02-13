@@ -14,6 +14,7 @@ export default function LoginPage() {
     const [roomNumber, setRoomNumber] = useState("");
     const [infoText, setInfoText] = useState("");
 
+
     async function submit() {
         const requestSent: NewRequest = {
             name: name,
