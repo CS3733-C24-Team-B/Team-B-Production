@@ -9,7 +9,6 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
-import {useAuth0} from "@auth0/auth0-react";
 import LeafletMap from "../components/LeafletMap.tsx";
 
 interface FloorImages {
@@ -54,8 +53,6 @@ export default function HomePage() {
         "lowerlevel1"
     );
     const [selectedLevel, setSelectedLevel] = useState("L1");
-    // const [nodeData, setNodeData] = useState([]);
-    const { user, isAuthenticated} = useAuth0();
 
     useEffect(() => {
         async function fetch() {
