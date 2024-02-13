@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from "react";
-//import { Outlet } from "react-router-dom";
-//import ExampleRoute from "./routes/ExampleRoute.tsx";
 import "../css/csvdata_page.css";
-// import {MapNode} from "../../../backend/src/utilities/algorithm.ts";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
 import {Button} from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {styled} from "@mui/material/styles";
-// import SideButtons from "../components/SideButtons.tsx";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',

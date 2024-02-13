@@ -6,7 +6,7 @@ import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 
 export default function ProfilePage() {
-    const {user, isAuthenticated} = useAuth0();
+    const {user, isAuthenticated, isLoading} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -67,6 +67,13 @@ export default function ProfilePage() {
     }
 
     const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
+
+    if (isLoading) {
+        return <div>Loading ...</div>;
+    }
+    if (!isAuthenticated) {
+        return window.location.href = "/";
+    }
 
     return (
         <div className="home-container">

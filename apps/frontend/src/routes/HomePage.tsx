@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from "react";
-//import {Outlet} from "react-router-dom";
-//import logo from "../images/Brigham_and_Womens_Hospital_horiz_rgb.png";
 import "../css/home_page.css";
 import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -9,13 +7,10 @@ import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
 import axios from "axios";
-// import Canvas from "../components/Canvas.tsx";
-//import PathHandler from "../components/PathHandler.tsx";
 import Navbar from "../components/Navbar.tsx";
 import {MenuItem, TextField} from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import LeafletMap from "../components/LeafletMap.tsx";
-import {CreateEmployee} from "common/src/employeeTypes.ts";
 
 interface FloorImages {
     groundfloor: string;
@@ -64,39 +59,11 @@ export default function HomePage() {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
             const res = await axios.get("/api/db-load-nodes");
-
             console.log(res.data);
-            //setNodeData(res.data);
         }
-
         fetch().then();
     }, []);
-    
-    useEffect(() => {
-        async function createAuthenticatedEmployee() {
-            const employeeInfo: CreateEmployee = {
-                email: user!.email!,
-            };
-            const res = await axios.post("/api/employee", employeeInfo, {
-                headers: {
-                    "Content-Type":"application/json"
-                }
-            });
-            if (res.status == 200) {
-                console.log("Successfully submitted form");
-            }
-        }
-        if(isAuthenticated) {
-            createAuthenticatedEmployee().then();
-        }
-    }, [isAuthenticated, user]);
 
     // Function to handle floor selection change
     const handleFloorChange = (
@@ -189,13 +156,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="map-container">
-                    {/*<Canvas*/}
-                    {/*    imageSource={floorImages[selectedFloor]}*/}
-                    {/*    currLevel={selectedLevel}*/}
-                    {/*/>*/}
-                    {/*<Outlet/>*/}
                     <LeafletMap imageSource={floorImages[selectedFloor]} currLevel={selectedLevel}/>
-                    {/*<PathHandler/>*/}
                 </div>
             </div>
         </div>
