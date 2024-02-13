@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,8 +9,6 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -62,7 +60,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft() {
-    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -88,7 +85,7 @@ export default function PersistentDrawerLeft() {
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        onClick={handleDrawerOpen}
+                        onMouseEnter={handleDrawerOpen}
                         edge="start"
                         sx={{ mr: 2, ...(open && { display: 'none' }) }}
                     >
@@ -116,14 +113,13 @@ export default function PersistentDrawerLeft() {
                     variant="persistent"
                     anchor="left"
                     open={open}
+                    onMouseEnter={handleDrawerOpen}
+                    onMouseLeave={handleDrawerClose}
                 >
                     <DrawerHeader>
                         <a href="/home">
                             <img src={logo} alt="Hospital Logo" width={"100%"} />
                         </a>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                        </IconButton>
                     </DrawerHeader>
                     <Divider />
                     <List>

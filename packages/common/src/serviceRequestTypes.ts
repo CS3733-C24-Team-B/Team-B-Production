@@ -41,6 +41,16 @@ export type DeleteRequest = {
     serviceID: number
 }
 
+export type InternalTransportationRequestType = {
+    employee: string;
+    location: string;
+    priority: PriorityType;
+    status: StatusType;
+    toLocation: string;
+    mobilityAid: string;
+    patientName: string;
+}
+
 export type UpdateRequest = {
     serviceID: number,
     assignedTo: string,
@@ -54,6 +64,14 @@ export enum StatusType {
     Completed = "Completed",
     Paused = "Paused"
 }
+
+export enum PriorityType {
+    Low = "Low",
+    Medium = "Medium",
+    High = "High",
+    Emergency = "Emergency"
+}
+
 
 export enum PriorityType {
     Low = "Low",
