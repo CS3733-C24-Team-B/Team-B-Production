@@ -8,8 +8,10 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SanitationRequest from "../components/SanitationRequest.tsx";
 import MedicineRequest from "../components/MedicineRequest.tsx";
+import MaintenanceRequest from "../components/MaintenanceRequest.tsx";
 import SanitizerIcon from '@mui/icons-material/Sanitizer';
 import MedicationIcon from '@mui/icons-material/Medication';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import RequestCarousel from '../components/RequestCarousel.tsx';
 
 export default function RequestForm() {
@@ -21,6 +23,7 @@ export default function RequestForm() {
 
     const [sanPressed, setSanPressed] = useState(false);
     const [medPressed, setMedPressed] = useState(false);
+    const [mainPressed, setMainPressed] = useState(false);
 
     async function submit() {
         const requestSent: NewRequest = {
@@ -46,6 +49,8 @@ export default function RequestForm() {
                 return <SanitationRequest/>;
             case "medicine":
                 return <MedicineRequest/>;
+            case "maintenance":
+                return <MaintenanceRequest/>;
             // Add cases for other service request types
             default:
                 return null;
@@ -64,6 +69,7 @@ export default function RequestForm() {
 
                 <div className="button-container">
                     <RequestCarousel>
+                        {/*Sanitation Button*/}
                         <div className="carousel-button">
                             <Button
                                 variant="outlined"
@@ -76,6 +82,7 @@ export default function RequestForm() {
 
                                     setSanPressed(!sanPressed);
                                     setMedPressed(false);
+                                    setMainPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -85,6 +92,8 @@ export default function RequestForm() {
                                 Sanitization Request
                             </Button>
                         </div>
+
+                        {/*Medicine Button*/}
                         <div className="carousel-button">
                             <Button
                                 variant="outlined"
@@ -97,6 +106,7 @@ export default function RequestForm() {
 
                                     setMedPressed(!medPressed);
                                     setSanPressed(false);
+                                    setMainPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -106,25 +116,28 @@ export default function RequestForm() {
                                 Medicine Delivery
                             </Button>
                         </div>
+
+                        {/*Maintenance Button*/}
                         <div className="carousel-button">
                             <Button
                                 variant="outlined"
                                 onClick={() => {
-                                    if (requestType === "sanitation") {
+                                    if (requestType === "maintenance") {
                                         setRequestType("");
                                     } else {
-                                        setRequestType("sanitation");
+                                        setRequestType("maintenance");
                                     }
 
-                                    setSanPressed(!sanPressed);
+                                    setMainPressed(!mainPressed);
+                                    setSanPressed(false);
                                     setMedPressed(false);
                                 }}
-                                className={requestType === "sanitation" ? "selected" : ""}
+                                className={requestType === "maintenance" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
-                                style={{backgroundColor: sanPressed ? "lightcyan" : "white"}}
-                                startIcon={<SanitizerIcon/>}
+                                style={{backgroundColor: mainPressed ? "lightcyan" : "white"}}
+                                startIcon={<WarningAmberIcon/>}
                             >
-                                Sanitization Request (duplicate)
+                                Maintenance Request
                             </Button>
                         </div>
                         <div className="carousel-button">
@@ -139,6 +152,7 @@ export default function RequestForm() {
 
                                     setMedPressed(!medPressed);
                                     setSanPressed(false);
+                                    setMainPressed(false);
                                 }}
                                 className={requestType === "medicine" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}
@@ -161,6 +175,7 @@ export default function RequestForm() {
 
                                     setSanPressed(!sanPressed);
                                     setMedPressed(false);
+                                    setMainPressed(false);
                                 }}
                                 className={requestType === "sanitation" ? "selected" : ""}
                                 sx={{left: '20%', width: '20vw', height: '50vh', boxShadow: '4'}}

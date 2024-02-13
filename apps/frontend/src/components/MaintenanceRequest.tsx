@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import './App.css';
 
-function App() {
+const MaintenanceRequest = () => {
     const [name, setName] = useState("");
     const [prio, setPrio] = useState("low");
     const [loc, setLoc] = useState("");
@@ -9,7 +8,7 @@ function App() {
     const [status, setStatus] = useState("unassigned");
 
     return (
-        <div className="App">
+        <div>
             <header>Sanitation Request Form</header>
             <form>
                 <label>Name: </label>
@@ -53,6 +52,6 @@ function App() {
             </form>
         </div>
     );
-}
+};
 
-export default App;
+export default MaintenanceRequest;
