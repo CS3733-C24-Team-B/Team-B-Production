@@ -4,9 +4,12 @@
 }
 
 .map-buttons {
+    position: absolute;
+    top: 10px;
+    left: 10px; /* adjust left positioning as needed */
+    z-index: 1000; /* ensure it's above the Leaflet map */
     display: flex;
     flex-direction: row;
-    justify-content: center;
     gap: 36px;
 }
 

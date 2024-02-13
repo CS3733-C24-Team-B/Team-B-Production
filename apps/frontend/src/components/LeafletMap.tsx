@@ -254,7 +254,8 @@ export default function LeafletMap() {
     }, [nodeEnd]);
 
     return (
-        <div>
+        <div style={{position: 'relative', width: '100%', height: '100%'}}>
+            {/* Drawer for additional controls */}
             <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
                     ModalProps={{BackdropProps: {invisible: true}}}>
                 <div className="drawer-content">
@@ -302,15 +303,11 @@ export default function LeafletMap() {
                                 style={{backgroundColor: "white", color: "black"}}>
                             {showEdges ? "Hide All Edges" : "Show All Edges"}
                         </Button>
-                        <Button
-                            variant="contained"
-                            size="small"
-                            style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}}
-                            onClick={() => {
-                                axios.post(`/api/db-get-path/change`);
-                                setUseAStar(!useAStar);
-                            }}
-                        >
+                        <Button variant="contained" size="small"
+                                style={{backgroundColor: useAStar ? "grey" : "white", color: "black"}} onClick={() => {
+                            axios.post(`/api/db-get-path/change`);
+                            setUseAStar(!useAStar);
+                        }}>
                             Use A*
                         </Button>
                     </div>
