@@ -246,8 +246,8 @@ export default function LeafletMap() {
         return output;
     };
 
-    const currNodes = nodeData.filter(({floor}) => {
-        return floor === currLevel;
+    const currNodes = nodeData.filter(({nodeType}) => {
+        return nodeType !== "HALL";
     });
 
     useEffect(() => {

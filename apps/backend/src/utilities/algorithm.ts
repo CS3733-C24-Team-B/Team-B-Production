@@ -361,7 +361,7 @@ export function pathfindAStar(startNode: string, goalNode: string): string[] | u
             if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
                 //set g to parent g+1
                 neighbor.gvalue = tentativeG;
-                const floorWeight = 300;
+                const floorWeight = 1;
                 //heuristic for current distance to goal node.
                 neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal)-nodeToFloor(neighbor))*floorWeight )** 2);
                 //f is g+h
