@@ -6,13 +6,25 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import "../css/servicelist_page.css";
+import "../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import {Alert, Snackbar} from "@mui/material";
 
 export default function EmployeeManager() {
 
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
+    const [submitAlert, setSubmitAlert] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [alertText, setAlertText] = useState("");
+    const [doRefresh, setRefresh] = useState(false);
+
+    function validEmail(em:string) {
+        const aInd = em.indexOf("@");
+        const dotInd = em.indexOf(".");
+        return aInd > 0 && dotInd > 0 && dotInd > aInd;
+    }
 
     async function refresh() {
         axios.get("/api/employee").then((res) => {
@@ -27,33 +39,39 @@ export default function EmployeeManager() {
 
     const addEmployeeEmail = (
         <TextField inputMode="email"
+                   type="email"
             id="standard-basic" label="New employee email" variant="standard"
                    value={newEmployeeEmail}
                    onChange={(e) => {
-                       /*
-                       const alreadyExists = employees.find(({email}) => {
-                           return email === e.target.value;
-                       });
-                       if (alreadyExists === undefined) {
-                           setNewEmployeeEmail(e.target.value);
-                       }*/
                        setNewEmployeeEmail(e.target.value);
                    }}
         />
     );
 
     const addEmployeeButton = (
-        <Button variant="contained" color="primary" onClick={() => {
-            axios.post("/api/employee", {
-                email: newEmployeeEmail
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then();
-            refresh().then();
+        <Button variant="contained" color="primary" style={{backgroundColor: "#012D5A"}} onClick={() => {
+            const alreadyExists = employees.find(({email}) => {
+                return email === newEmployeeEmail;
+            });
+            if (alreadyExists === undefined && validEmail(newEmployeeEmail)) {
+                setIsError(false);
+                setAlertText("Email has been sent.");
+                axios.post("/api/employee", {
+                    email: newEmployeeEmail
+                }, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then();
+                refresh().then();
+                setRefresh(!doRefresh);
+            } else {
+                setIsError(true);
+                setAlertText("Error sending email.");
+            }
+            setSubmitAlert(true);
         }}>
-            Invite Employee
+            Invite
         </Button>);
 
     const employeeList = employees.map((employee: UpdateEmployee, index: number) => {
@@ -87,7 +105,7 @@ export default function EmployeeManager() {
                 </td>
 
                 <td> {(editRowID === index) ? (
-                    <Button variant="outlined" onClick={() => {
+                    <Button variant="outlined" style={{color: "#012D5A"}} onClick={() => {
                         console.log("Editing employee with email " + employee.email);
                         console.log(employee);
                         axios.put("/api/employee", employee, {
@@ -100,7 +118,7 @@ export default function EmployeeManager() {
                         <CheckIcon/>
                     </Button>
                 ) : (
-                    <Button variant="outlined" onClick={() => {
+                    <Button variant="outlined" style={{color: "#012D5A"}} onClick={() => {
                         setEditRowID(index);
                     }}>
                         <EditIcon/>
@@ -110,7 +128,7 @@ export default function EmployeeManager() {
                 </td>
 
                 <td>
-                    <Button variant="outlined" onClick={() => {
+                    <Button variant="outlined" style={{color: "#012D5A"}} onClick={() => {
                         console.log("Deleting employee with email " + employee.email);
                         axios.delete("/api/employee", {
                             data: {
@@ -129,14 +147,14 @@ export default function EmployeeManager() {
     return (
         <div className="request-container">
             <div className="req-list-header">
-                <header>Employees</header>
+                <header className={'headerblue'}>Employees</header>
             </div>
             <br/>
-            <div className="tables">
-                {addEmployeeEmail}
-                {addEmployeeButton}
+            <div className="invite-buttons">
+                <div className="invite-text">{addEmployeeEmail} {addEmployeeButton}</div>
             </div>
-            <table className={"tables"}>
+            <br/>
+            <table className={"employee-tables"}>
                 <thead>
                 <tr>
                     <th>Email</th>
@@ -150,6 +168,21 @@ export default function EmployeeManager() {
                 {employeeList}
                 </tbody>
             </table>
+
+            <Snackbar
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={submitAlert}
+                autoHideDuration={3500}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity={isError ? "error" : "success"}
+                    sx={{ width: '100%' }}
+                >
+                    {alertText}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
