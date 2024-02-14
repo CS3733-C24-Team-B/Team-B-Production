@@ -6,7 +6,7 @@ import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 
 export default function ProfilePage() {
-    const {user, isAuthenticated} = useAuth0();
+    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -16,12 +16,20 @@ export default function ProfilePage() {
 
     useEffect(() => {
         async function submit() { ///copied
+            const accessToken: string = await getAccessTokenSilently();
             const res = await axios.get(`/api/employee/${user!.email!}`, {
                 params: {
                     email: user!.email!
+                },
+                headers: {
+                    Authorization: "Bearer " + accessToken
                 }
             });
-            const res2 = await axios.get("/api/service-request");
+            const res2 = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             if (res.status == 200) {
                 console.log("Successfully submitted form");
@@ -35,7 +43,7 @@ export default function ProfilePage() {
         }
 
         submit().then();
-    }, [user, isAuthenticated]);
+    }, [getAccessTokenSilently, user, isAuthenticated]);
 
     const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
 
@@ -71,9 +79,11 @@ export default function ProfilePage() {
             firstName: firstName,
             lastName: lastName
         };
+        const accessToken: string = await getAccessTokenSilently();
         const res = await axios.put("/api/employee", employeeInfo, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken
             }
         });
         if (res.status == 200) {
