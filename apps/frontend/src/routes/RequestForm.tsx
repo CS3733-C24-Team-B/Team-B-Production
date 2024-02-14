@@ -32,8 +32,7 @@ import {useAuth0} from "@auth0/auth0-react";
 
 export default function RequestForm() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useAuth0();
-    //const [name, setName] = useState("");
+    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [location, setLocation] = useState("");
     const [prio, setPrio] = useState("");
     const [infoText, setInfoText] = useState("");
@@ -54,38 +53,43 @@ export default function RequestForm() {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
-            const res3 = await axios.get(`/api/employee`);
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/db-load-nodes", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res3 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             setNodeData(res.data);
             setEmployeeData(res3.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     console.log(isAuthenticated);
 
     async function submit() {
+        const accessToken: string = await getAccessTokenSilently();
         if(typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
                 createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Hazards: " + option1,
-                priority: prio,
+                priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 hazards: option1
             };
             const res = await axios.post("/api/service-request", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -96,7 +100,7 @@ export default function RequestForm() {
                 createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Medicine Type: " + option1 + "+Amount: " + option2,
-                priority: prio,
+                priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 medicineType: option1,
@@ -104,7 +108,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -115,7 +120,7 @@ export default function RequestForm() {
                 createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", To Location: " + option1 + "+Patient Name: " + option2 + "+Mobility Aid: " + option3,
-                priority: prio,
+                priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 toLocation: option1,
@@ -124,7 +129,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -135,7 +141,7 @@ export default function RequestForm() {
                 createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", From Language: " + option1 + "+To Language: " + option2,
-                priority: prio,
+                priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 language1: option1,
@@ -144,7 +150,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -155,14 +162,15 @@ export default function RequestForm() {
                 createdByID: user!.email!,
                 locationID: location,
                 notes: typeReq + ", " + infoText + ", Details: " + option1,
-                priority: prio,
+                priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
                 details: option1
             };
             const res = await axios.post("/api/service-request", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
