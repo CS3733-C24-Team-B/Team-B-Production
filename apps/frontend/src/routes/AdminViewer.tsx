@@ -34,8 +34,6 @@ export default function AdminViewer() {
     useEffect(() => {
         (async () => {
             const accessToken: string = await getAccessTokenSilently();
-            console.log(accessToken);
-            console.log("hello world");
             const res = await axios.get("/api/employee", {
                 headers: {
                     Authorization: "Bearer " + accessToken

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useAuth0} from "@auth0/auth0-react";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
@@ -13,6 +14,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import Divider from "@mui/material/Divider";
 
 export default function RequestList() {
+    const {getAccessTokenSilently} = useAuth0();
     const navigate = useNavigate();
     const [srData, setSRData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
@@ -29,17 +31,23 @@ export default function RequestList() {
     const openMenu = Boolean(menuAnchor);
 
     useEffect(() => {
-        async function fetch() {
-            const res = await axios.get("/api/service-request");
-            const res2 = await axios.get(`/api/employee`);
-
+        (async () => {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res2 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
             setSRData(res.data);
             setEmployeeData(res2.data);
             console.log(res.data);
-        }
-
-        fetch().then();
-    }, [refresh]);
+        })();
+    }, [getAccessTokenSilently, refresh]);
 
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
@@ -122,9 +130,14 @@ export default function RequestList() {
                             serviceRequest.status = StatusType.Assigned;
                         }
 
-                        const resSR = await axios.put("/api/service-request", serviceRequest).then();
+                        getAccessTokenSilently().then((accessToken: string) => {
+                            axios.put("/api/service-request", serviceRequest, {
+                                headers: {
+                                    Authorization: "Bearer " + accessToken
+                                }
+                            }).then();
+                        });
 
-                        console.log(resSR);
                         setRefresh(!refresh);
                     }}>
                     {employeeData.map(({email, firstName, lastName}) =>
@@ -153,7 +166,14 @@ export default function RequestList() {
                             status: StatusType[event.target.value as keyof typeof StatusType]
                         };
 
-                        await axios.put("/api/service-request", serviceRequest).then();
+                        getAccessTokenSilently().then((accessToken: string) => {
+                            axios.put("/api/service-request", serviceRequest, {
+                                headers: {
+                                    Authorization: "Bearer " + accessToken
+                                }
+                            }).then();
+                        });
+
                         setRefresh(!refresh);
                     }}>
                     {statuses.map((st) =>
@@ -175,11 +195,17 @@ export default function RequestList() {
                         if(clickedRows.has(index)) {
                             clickedRows.delete(index);
                         }
-                        axios.delete("/api/service-request", {
-                            data: {
-                                serviceID: nsr.serviceID
-                            }
-                        }).then();
+                        getAccessTokenSilently().then((accessToken: string) => {
+                            axios.delete("/api/service-request", {
+                                data: {
+                                    serviceID: nsr.serviceID
+                                },
+                                headers: {
+                                    Authorization: "Bearer " + accessToken
+                                }
+                            }).then();
+                        });
+
                         setRefresh(!refresh);
                     }}>Delete
                 </Button>
