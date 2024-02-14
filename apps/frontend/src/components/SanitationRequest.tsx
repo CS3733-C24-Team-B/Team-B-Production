@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TextField from '@mui/material/TextField';
 
+// Michael
 const SanitationRequest = ({ change }) => {
     const [additionalField1, setAdditionalField1] = useState("");
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
@@ -24,6 +25,8 @@ const SanitationRequest = ({ change }) => {
                     required
                 />
             </div>
+            <br/>
+            <p> Created by Michael </p>
         </>
     );
 };

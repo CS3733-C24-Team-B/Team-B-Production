@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TextField from '@mui/material/TextField';
 
+// Rodrick and Piotr
 const MedicineRequest = ({ change1, change2 }) => {
     const [additionalField1, setAdditionalField1] = useState("");
     const [additionalField2, setAdditionalField2] = useState("");
@@ -40,6 +41,8 @@ const MedicineRequest = ({ change1, change2 }) => {
                     required
                 />
             </div>
+            <br/>
+            <p> Created by Rodrick and Piotr </p>
         </>
     );
 };
