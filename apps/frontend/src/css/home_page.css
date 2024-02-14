@@ -32,7 +32,9 @@
     width: 100%;
     height: 100%;
     background-color: #012d5a;
+    overscroll-behavior: contain;
 }
+
 
 
 .manual-dropdown {
