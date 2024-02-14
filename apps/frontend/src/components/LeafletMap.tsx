@@ -318,11 +318,11 @@ export default function LeafletMap() {
                     </div>
                     {/* Show/Hide Edges */}
                     <div style={{ marginBottom: '20px', width: '100%', maxWidth: '300px' }}>
-                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{ backgroundColor: "white", color: "black", marginRight: '20px' }}>
+                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{ backgroundColor: "white", color: "black", marginRight: '20px', fontSize: '1.5vh', width: '8vw'}}>
                             {showEdges ? "Hide All Edges" : "Show All Edges"}
                         </Button>
                         {/* Use A* */}
-                        <Button variant="contained" size="small" style={{ backgroundColor: useAStar ? "grey" : "white", color: "black" }} onClick={() => {
+                        <Button variant="contained" size="small" style={{ backgroundColor: useAStar ? "grey" : "white", color: "black", fontSize: '1.5vh', width: '6vw'}} onClick={() => {
                             axios.post(`/api/db-get-path/change`);
                             setUseAStar(!useAStar);
                         }}>
@@ -332,12 +332,8 @@ export default function LeafletMap() {
                     {/* Text Directions */}
                     <div>
                         <Button variant="contained" size="small" onClick={handleDirections}
-                                style={{backgroundColor: "#012D5A", width: '5vw', marginBottom: '20px' , marginRight: '20px', fontSize: '13px'}}>
+                                style={{backgroundColor: "#012D5A", width: '15.5vw', marginBottom: '20px' , marginRight: '30px', fontSize: '1.5vh'}}>
                             Text Directions
-                        </Button>
-                        <Button variant="contained" size="small"
-                                style={{backgroundColor: "#012D5A", width: '5vw', marginBottom: '20px', fontSize: '13px'}}>
-                            Route Directions
                         </Button>
                     </div>
 
