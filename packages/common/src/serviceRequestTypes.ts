@@ -72,10 +72,15 @@ export enum PriorityType {
     Emergency = "Emergency"
 }
 
-
-export enum PriorityType {
-    Low = "Low",
-    Medium = "Medium",
-    High = "High",
-    Emergency = "Emergency"
+export interface ServiceRequest {
+    assignedID: string;
+    createdByID: string;
+    locationID: string;
+    notes: string;
+    priority: string;
+    serviceID: number;
+    status: string;
+    timeCreated: string;
 }
+
+export type CategoryKey = 'transport' | 'medicine' | 'sanitation' | 'maintenance' | 'language';

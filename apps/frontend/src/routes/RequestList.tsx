@@ -205,6 +205,9 @@ export default function RequestList() {
     function handleClick() {
         navigate("/requestform");
     }
+    function dataClick() {
+        navigate("/show-data");
+    }
 
     return (
         <div className="req-list-container">
@@ -238,26 +241,26 @@ export default function RequestList() {
                             </Select>
                             {((filterType === "Filter by...") ? <></> :
                                 ((filterType === "Type") ?
-                                <>
-                                    <Divider/>
-                                    <Select
-                                        value={typeFilter}
-                                        label=""
-                                        onChange={(e) => {
-                                            setTypeFilter(e.target.value);
-                                            setFilterFunction(() => (nsr: UpdateServiceRequest) => {
-                                                return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
-                                            });
-                                        }}
-                                    >
-                                        <MenuItem value={"Choose Type"}>None</MenuItem>
-                                        <MenuItem value={"sanitation"}>Sanitation</MenuItem>
-                                        <MenuItem value={"medicine"}>Medicine</MenuItem>
-                                        <MenuItem value={"transport"}>Transport</MenuItem>
-                                        <MenuItem value={"language"}>Language</MenuItem>
-                                        <MenuItem value={"maintenance"}>Maintenance</MenuItem>
-                                    </Select>
-                                </> :
+                                    <>
+                                        <Divider/>
+                                        <Select
+                                            value={typeFilter}
+                                            label=""
+                                            onChange={(e) => {
+                                                setTypeFilter(e.target.value);
+                                                setFilterFunction(() => (nsr: UpdateServiceRequest) => {
+                                                    return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
+                                                });
+                                            }}
+                                        >
+                                            <MenuItem value={"Choose Type"}>None</MenuItem>
+                                            <MenuItem value={"sanitation"}>Sanitation</MenuItem>
+                                            <MenuItem value={"medicine"}>Medicine</MenuItem>
+                                            <MenuItem value={"transport"}>Transport</MenuItem>
+                                            <MenuItem value={"language"}>Language</MenuItem>
+                                            <MenuItem value={"maintenance"}>Maintenance</MenuItem>
+                                        </Select>
+                                    </> :
                                     ((filterType === "Status") ?
                                         <>
                                             <Divider/>
@@ -329,6 +332,10 @@ export default function RequestList() {
                         <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a
                             Request</Button>
                     </div>
+                    <div className="home-button">
+                        <Button variant="contained" onClick={dataClick} style={{backgroundColor: "#012D5A"}}>Show Data Chart</Button>
+                    </div>
+
                 </div>
             </div>
         </div>

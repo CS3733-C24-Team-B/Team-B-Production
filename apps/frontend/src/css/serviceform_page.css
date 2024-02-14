@@ -20,6 +20,13 @@
     padding-top: 1%;
 }
 
+.header-container2 {
+    display: grid;
+    grid-area: s1;
+    justify-self: center;
+    align-self: start;
+}
+
 .header-container {
     display: grid;
     grid-area: s1;
