@@ -32,7 +32,7 @@ class Auth0Utility {
     public async createUser(email: string) {
         await axios.post(this.audience + "api/v2/users", {
             email: email,
-            email_verified: false,
+            email_verified: true,
             password: Math.random().toString(36).slice(-20),
             connection: "Username-Password-Authentication"
         }, {
