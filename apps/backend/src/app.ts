@@ -6,14 +6,16 @@ import pathRouter from "./routes/getPath.ts";
 import loadNodesRouter from "./routes/loadNode.ts";
 import loadEdgesRouter from "./routes/loadEdge.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
-import serviceAssignmentRouter from "./routes/serviceRequestAssignment.ts";
-import serviceStatusRouter from "./routes/serviceRequestStatus.ts";
+import sanitationRouter from "./routes/serviceRequestSanitation.ts";
+import maintenanceRouter from "./routes/serviceRequestMaintenance.ts";
+import internalTransportRouter from "./routes/serviceRequestInternalTransport.ts";
+import medicineRouter from "./routes/serviceRequestMedicine.ts";
+import languageRouter from "./routes/serviceRequestLanguage.ts";
 import employeeRouter from "./routes/employee.ts";
-import userRouter from "./routes/user.ts";
 
-const app: Express = express(); // Setup the backend
+const app: Express = express(); // Set up the backend
 
-// Setup generic middlewear
+// Setup generic middle wear
 app.use(
   logger("dev", {
     stream: {
@@ -32,10 +34,12 @@ app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
 app.use("/api/service-request", serviceRouter);
-app.use("/api/service-assignment", serviceAssignmentRouter);
-app.use("/api/service-status", serviceStatusRouter);
+app.use("/api/service-request/sanitation", sanitationRouter);
+app.use("/api/service-request/maintenance", maintenanceRouter);
+app.use("/api/service-request/internal-transport", internalTransportRouter);
+app.use("/api/service-request/medicine", medicineRouter);
+app.use("/api/service-request/language", languageRouter);
 app.use("/api/employee", employeeRouter);
-app.use("/api/user", userRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler

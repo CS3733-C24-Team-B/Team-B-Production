@@ -71,3 +71,22 @@
 .delete-button {
     border-bottom: 0px;
 }
+
+.service-tables{
+    background-color: white;
+    grid-column-start: 1;
+}
+
+.info-cell {
+    vertical-align: middle;
+}
+
+.req-list-container {
+    min-width: 140vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 4% 96%;
+    grid-template-rows: auto;
+    grid-template-areas: "navbar main";
+    background-image: linear-gradient(lightgray 0%, white 25vh);
+}

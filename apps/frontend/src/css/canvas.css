@@ -1,11 +1,4 @@
-.home-container {
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 4vw 96vw;
-    grid-template-rows: auto;
-    grid-template-areas: "navbar main";
-}
+
 
 /*for search*/
 .manual-dropdown2 {
@@ -25,16 +18,3 @@
 
 
 /*canvas - map options container*/
-.map-options {
-    grid-area: s1;
-    justify-self: center;
-}
-
-.button2 {
-    grid-area: s2;
-}
-
-.button3 {
-    grid-area: s2;
-    justify-self: center;
-}

@@ -2,17 +2,12 @@ import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import "./index.css";
 import HomePage from "./routes/HomePage.tsx";
-// import Settings from "./routes/Settings.tsx";
-// import CreateAccount from "./routes/CreateAccount.tsx";
-// import ForgotPassword from "./routes/ForgotPassword.tsx";
-// import Profile from "./routes/Profile.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
-import LoginButton from "./components/LoginButton.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
-import ChangeProfile from "./routes/ChangeProfile.tsx";
+import AdminViewer from "./routes/AdminViewer.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -26,16 +21,6 @@ function App() {
             errorElement: <div/>,
             element: <HomePage/>,
         },
-        {
-            path: "/login",
-            errorElement: <div><p>An error has occurred</p></div>,
-            element: <LoginButton/>
-        },
-        // {
-        //     path: "/profile",
-        //     errorElement: <div/>,
-        //     element: <Profile/>,
-        // },
         {
             path: "/csvnodedata",
             errorElement: <div/>,
@@ -62,10 +47,10 @@ function App() {
             element: <ProfilePage/>,
         },
         {
-            path: "/change-profile",
+            path: "/admin-viewer",
             errorElement: <div/>,
-            element: <ChangeProfile/>,
-        },
+            element: <AdminViewer/>
+        }
 
     ]);
 
