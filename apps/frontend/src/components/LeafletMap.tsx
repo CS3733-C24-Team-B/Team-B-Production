@@ -46,7 +46,7 @@ export default function LeafletMap() {
     const [pathData, setPathData] = useState([]);
     const [lineData, setLineData] = useState<JSX.Element[]>([]);
     const [showEdges, setShowEdges] = useState(false);
-    const [useAStar, setUseAStar] = useState(false);
+    const [useAStar, setUseAStar] = useState(0);
     const [directions, setDirections] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
@@ -272,6 +272,22 @@ export default function LeafletMap() {
     function handleDirections(){
     setDirections(!directions);
     }
+    function numToSearchType(num:number){
+        switch(num){
+            case 0: return "A Star";
+            case 1: return "BFS";
+            case 2: return "DFS";
+        }
+        return "A Star";
+    }
+    function searchTypeToNum(str:string){
+        switch(str){
+            case "A Star": return 0;
+            case "BFS": return 1;
+            case "DFS": return 2;
+        }
+        return 0;
+    }
     return (
         <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             {/* Drawer for additional controls */}
@@ -317,22 +333,44 @@ export default function LeafletMap() {
                         </div>
                     </div>
                     {/* Show/Hide Edges */}
-                    <div style={{ marginBottom: '20px', width: '100%', maxWidth: '300px' }}>
-                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{ backgroundColor: "white", color: "black", marginRight: '20px', fontSize: '1.5vh', width: '8vw'}}>
+                    <div style={{display:"flex" ,marginBottom: '20px', width: '100%', maxWidth: '300px'}}>
+                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{
+                            backgroundColor: "white",
+                            color: "black",
+                            marginRight: '20px',
+                            fontSize: '1.5vh',
+                            width: '8vw'
+                        }}>
                             {showEdges ? "Hide All Edges" : "Show All Edges"}
                         </Button>
                         {/* Use A* */}
-                        <Button variant="contained" size="small" style={{ backgroundColor: useAStar ? "grey" : "white", color: "black", fontSize: '1.5vh', width: '6vw'}} onClick={() => {
-                            axios.post(`/api/db-get-path/change`);
-                            setUseAStar(!useAStar);
-                        }}>
-                            Use A*
-                        </Button>
+
+                            <TextField
+                                select
+                                value={numToSearchType(useAStar)}
+                                onChange={(event) => {
+                                    setUseAStar(searchTypeToNum(event.target.value));
+                                    console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
+                                    axios.post(`/api/db-get-path/change/${searchTypeToNum(event.target.value)}`);
+                                }}
+                                 size="small" style={{ backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}
+                            >
+
+                                {<MenuItem value={"A Star"}>A*</MenuItem>}
+                                {<MenuItem value={"BFS"}>BFS</MenuItem>}
+                                {<MenuItem value={"DFS"}>DFS</MenuItem>}
+                            </TextField>
                     </div>
                     {/* Text Directions */}
                     <div>
                         <Button variant="contained" size="small" onClick={handleDirections}
-                                style={{backgroundColor: "#012D5A", width: '15.5vw', marginBottom: '20px' , marginRight: '30px', fontSize: '1.5vh'}}>
+                                style={{
+                                    backgroundColor: "#012D5A",
+                                    width: '15.5vw',
+                                    marginBottom: '20px',
+                                    marginRight: '30px',
+                                    fontSize: '1.5vh'
+                                }}>
                             Text Directions
                         </Button>
                     </div>
