@@ -12,6 +12,7 @@ import internalTransportRouter from "./routes/serviceRequestInternalTransport.ts
 import medicineRouter from "./routes/serviceRequestMedicine.ts";
 import languageRouter from "./routes/serviceRequestLanguage.ts";
 import employeeRouter from "./routes/employee.ts";
+import {auth} from "express-oauth2-jwt-bearer";
 
 const app: Express = express(); // Set up the backend
 
@@ -33,6 +34,15 @@ app.use(cookieParser()); // Cookie parser
 app.use("/api/db-get-path", pathRouter);
 app.use("/api/db-load-nodes", loadNodesRouter);
 app.use("/api/db-load-edges", loadEdgesRouter);
+
+app.use(auth({
+    audience: "/api",
+    issuerBaseURL: "https://dev-emppp88ojksbdj0d.us.auth0.com/",
+    tokenSigningAlg: "RS256"
+}));
+
+// More routers. All these routers are AFTER the auth,
+// so all these routes require an authentication token.
 app.use("/api/service-request", serviceRouter);
 app.use("/api/service-request/sanitation", sanitationRouter);
 app.use("/api/service-request/maintenance", maintenanceRouter);

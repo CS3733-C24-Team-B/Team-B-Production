@@ -7,10 +7,14 @@ import App from "./App.tsx";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
         <Auth0Provider
+            useRefreshTokens
+            cacheLocation="localstorage"
             domain="dev-emppp88ojksbdj0d.us.auth0.com"
             clientId="CAaC9HTn4AmrRQiSCVxYQJm9MSvHyJiQ"
             authorizationParams={{
-                redirect_uri: window.location.origin
+                redirect_uri: window.location.origin,
+                audience: "/api",
+                scope: "openid profile email offline_access"
             }}
         >
             <App/>
