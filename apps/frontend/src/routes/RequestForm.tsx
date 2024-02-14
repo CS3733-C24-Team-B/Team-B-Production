@@ -73,7 +73,7 @@ export default function RequestForm() {
     console.log(isAuthenticated);
 
     async function submit() {
-        if(typeReq === "sanitation") {
+        if (typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
                 createdByID: user!.email!,
                 locationID: location,
@@ -91,7 +91,7 @@ export default function RequestForm() {
             if (res.status == 200) {
                 console.log("success");
             }
-        } else if(typeReq === "medicine") {
+        } else if (typeReq === "medicine") {
             const requestSent: MedicineRequest = {
                 createdByID: user!.email!,
                 locationID: location,
@@ -110,7 +110,7 @@ export default function RequestForm() {
             if (res.status == 200) {
                 console.log("success");
             }
-        } else if(typeReq === "transport") {
+        } else if (typeReq === "transport") {
             const requestSent: InternalTransportRequest = {
                 createdByID: user!.email!,
                 locationID: location,
@@ -130,7 +130,7 @@ export default function RequestForm() {
             if (res.status == 200) {
                 console.log("success");
             }
-        } else if(typeReq === "language") {
+        } else if (typeReq === "language") {
             const requestSent: LanguageRequest = {
                 createdByID: user!.email!,
                 locationID: location,
@@ -150,7 +150,7 @@ export default function RequestForm() {
             if (res.status == 200) {
                 console.log("success");
             }
-        } else if(typeReq === "maintenance") {
+        } else if (typeReq === "maintenance") {
             const requestSent: MaintenanceRequest = {
                 createdByID: user!.email!,
                 locationID: location,
@@ -173,15 +173,15 @@ export default function RequestForm() {
         navigate("/requestlist");
     }
 
-    function handleChange1(newVal:string) {
+    function handleChange1(newVal: string) {
         setOption1(newVal);
     }
 
-    function handleChange2(new2:string) {
+    function handleChange2(new2: string) {
         setOption2(new2);
     }
 
-    function handleChange3(new3:string) {
+    function handleChange3(new3: string) {
         setOption3(new3);
     }
 
@@ -195,7 +195,8 @@ export default function RequestForm() {
             case "maintenance":
                 return <MaintenanceReq change={handleChange1}/>;
             case "transport":
-                return <InternalTransportationReq change1={handleChange1} change2={handleChange2} change3={handleChange3}/>;
+                return <InternalTransportationReq change1={handleChange1} change2={handleChange2}
+                                                  change3={handleChange3}/>;
             case "language":
                 return <LanguageReq change1={handleChange1} change2={handleChange2}/>;
             // Add cases for other service request types
@@ -206,7 +207,7 @@ export default function RequestForm() {
 
     return (
         <div className="home-container">
-            <div className={(requestType === "" ? "nav-container" : "nav-container-extended")}>
+            <div className={"nav-container"}>
                 <Navbar/>
             </div>
             <div className="service-form-container">
@@ -254,9 +255,16 @@ export default function RequestForm() {
                                 }}
                             >
                                 {/* Place icon at the top */}
-                                <SanitizerIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute', top: '15%', left: '55%', transform: 'translateX(-50%)' }} />
+                                <SanitizerIcon sx={{
+                                    fontSize: '10vw',
+                                    color: 'white',
+                                    position: 'absolute',
+                                    top: '15%',
+                                    left: '55%',
+                                    transform: 'translateX(-50%)'
+                                }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                <Box sx={{mt: 'auto', pb: 2}}>
                                     Sanitization Request
                                 </Box>
                             </Button>
@@ -298,10 +306,12 @@ export default function RequestForm() {
                                 }}
                             >
                                 {/* Place icon at the top */}
-                                <MedicationIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
-                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                <MedicationIcon sx={{
+                                    fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)'
+                                }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                <Box sx={{mt: 'auto', pb: 2}}>
                                     Medicine Delivery
                                 </Box>
                             </Button>
@@ -344,10 +354,12 @@ export default function RequestForm() {
                             >
                                 {/* Place icon at the top */}
                                 <WarningAmberIcon
-                                    sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
-                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                    sx={{
+                                        fontSize: '10vw', color: 'white', position: 'absolute',
+                                        top: '15%', left: '50%', transform: 'translateX(-50%)'
+                                    }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                <Box sx={{mt: 'auto', pb: 2}}>
                                     Maintenance Request
                                 </Box>
                             </Button>
@@ -389,10 +401,12 @@ export default function RequestForm() {
                                 }}
                             >
                                 {/* Place icon at the top */}
-                                <CompareArrowsIcon sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
-                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                <CompareArrowsIcon sx={{
+                                    fontSize: '10vw', color: 'white', position: 'absolute',
+                                    top: '15%', left: '50%', transform: 'translateX(-50%)'
+                                }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                <Box sx={{mt: 'auto', pb: 2}}>
                                     Int. Tranportation
                                     Request
                                 </Box>
@@ -436,10 +450,12 @@ export default function RequestForm() {
                             >
                                 {/* Place icon at the top */}
                                 <TranslateIcon
-                                    sx={{ fontSize: '10vw', color: 'white', position: 'absolute',
-                                    top: '15%', left: '50%', transform: 'translateX(-50%)' }} />
+                                    sx={{
+                                        fontSize: '10vw', color: 'white', position: 'absolute',
+                                        top: '15%', left: '50%', transform: 'translateX(-50%)'
+                                    }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{ mt: 'auto', pb: 2 }}>
+                                <Box sx={{mt: 'auto', pb: 2}}>
                                     Language Request
                                 </Box>
                             </Button>
@@ -451,92 +467,88 @@ export default function RequestForm() {
                     {/* Render the form contents only if a service request type is selected */}
                     {requestType && (
                         <>
-                            {/*<div className="input-field">*/}
-                            {/*    <TextField*/}
-                            {/*        id="standard-basic"*/}
-                            {/*        label="Name"*/}
-                            {/*        variant="standard"*/}
-                            {/*        value={name}*/}
-                            {/*        onChange={(e) => setName(e.target.value)}*/}
-                            {/*        type="text"*/}
-                            {/*        required*/}
-                            {/*    />*/}
-                            {/*</div>*/}
-                            <div className="input-field">
-                                <Autocomplete
-                                    disablePortal
-                                    options={nodeData.map(({longName}): { label: string } => (
-                                        {label: longName}
-                                    ))}
-                                    size={"small"}
-                                    renderInput={(params) =>
-                                        <TextField {...params} label="Location" variant="standard"/>}
-                                    value={{label: location}}
-                                    onChange={(newValue) => {
-                                        if (newValue !== null && newValue.target.innerText !== undefined) {
-                                            setLocation(newValue.target.innerText);
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div className="input-field">
-                                <FormControl>
-                                    <InputLabel id="prio-label" shrink={false} variant="standard">{(prio === "") ? "Priority" : ""}</InputLabel>
-                                    <Select
-                                        labelId="prio-label"
-                                        id="standard-basic"
-                                        label="Priority"
-                                        variant="standard"
+                            <div className="row">
+                                <div className="column">
+                                    <Autocomplete
+                                        disablePortal
+                                        options={nodeData.map(({longName}): { label: string } => (
+                                            {label: longName}
+                                        ))}
                                         size={"small"}
-                                        value={prio}
-                                        onChange={(e) => setPrio(e.target.value)}
                                         style={{width: 220}}
-                                        required
-                                    >
-                                        <MenuItem value={PriorityType.Low}>Low</MenuItem>
-                                        <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
-                                        <MenuItem value={PriorityType.High}>High</MenuItem>
-                                        <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div className="input-field">
-                                <FormControl>
-                                    <InputLabel id="employee-label" shrink={false} variant="standard">{(assignTo === "") ? "Choose Employee" : ""}</InputLabel>
-                                    <Select
-                                        labelId="employee-label"
-                                        value={(assignTo === "") ? "Choose Employee" : assignTo}
-                                        onChange={async (event: SelectChangeEvent) => {
-                                            setAssignTo(event.target.value);
+                                        renderInput={(params) =>
+                                            <TextField {...params} label="Location" variant="standard"/>}
+                                        value={{label: location}}
+                                        onChange={(newValue) => {
+                                            if (newValue !== null && newValue.target.innerText !== undefined) {
+                                                setLocation(newValue.target.innerText);
+                                            }
                                         }}
-                                        variant="standard"
-                                        size={"small"}
-                                        style={{width: 220}}>
-                                        {employeeData.map(({email, firstName, lastName}) =>
-                                            <MenuItem
-                                                value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                                        )}
-                                    </Select>
-                                </FormControl>
+                                    />
+                                </div>
+                                <div className="column">
+                                    <FormControl>
+                                        <InputLabel id="prio-label" shrink={false}
+                                                    variant="standard">{(prio === "") ? "Priority" : ""}</InputLabel>
+                                        <Select
+                                            labelId="prio-label"
+                                            id="standard-basic"
+                                            label="Priority"
+                                            variant="standard"
+                                            size={"small"}
+                                            value={prio}
+                                            onChange={(e) => setPrio(e.target.value)}
+                                            style={{width: 220}}
+                                            required
+                                        >
+                                            <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                            <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                            <MenuItem value={PriorityType.High}>High</MenuItem>
+                                            <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="column">
+                                    <FormControl>
+                                        <InputLabel id="employee-label" shrink={false}
+                                                    variant="standard">{(assignTo === "") ? "Choose Employee" : ""}</InputLabel>
+                                        <Select
+                                            labelId="employee-label"
+                                            value={(assignTo === "") ? "Choose Employee" : assignTo}
+                                            onChange={async (event: SelectChangeEvent) => {
+                                                setAssignTo(event.target.value);
+                                            }}
+                                            variant="standard"
+                                            size={"small"}
+                                            style={{width: 220}}>
+                                            {employeeData.map(({email, firstName, lastName}) =>
+                                                <MenuItem
+                                                    value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                            )}
+                                        </Select>
+                                    </FormControl>
+                                </div>
                             </div>
-                            <div className="input-field">
+                            <div className="full-row">
                                 <TextField
-                                    id="standard-basic"
+                                    multiline
+                                    rows={3}
+                                    id="outlined-multiline-flexible"
                                     label="Special Notes"
-                                    variant="standard"
                                     type="text"
                                     value={infoText}
                                     onChange={(e) => setInfoText(e.target.value)}
                                     required
                                 />
                             </div>
-                            {/* Render the appropriate service request component */}
-                            {renderServiceRequestComponent()}
-                            <br/>
                             <div>
+                                {renderServiceRequestComponent()}
+                            </div>
+                            <div className="row-button">
                                 <Button
                                     style={{
                                         backgroundColor: "#012D5A",
+                                        width: 220
                                     }}
                                     variant="contained"
                                     onClick={submit}
@@ -544,10 +556,12 @@ export default function RequestForm() {
                                     Submit Request
                                 </Button>
                             </div>
+                            {/* Render the appropriate service request component */}
+
                         </>
                     )}
                     <Snackbar
-                        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                        anchorOrigin={{vertical: "top", horizontal: "center"}}
                         open={submitAlert}
                         autoHideDuration={2000}
                         onClose={() => {
@@ -555,7 +569,7 @@ export default function RequestForm() {
                         }}>
                         <Alert
                             severity="success"
-                            sx={{ width: '100%' }}
+                            sx={{width: '100%'}}
                         >
                             Request form submitted.
                         </Alert>

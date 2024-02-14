@@ -95,7 +95,7 @@ export default function RequestList() {
                 return true;
             }
         });
-        return (outFirst === "" || outLast === "") ? outEmail : outFirst + " " + outLast;
+        return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
     }
 
     const filterSR = srData.filter(filterFunction);

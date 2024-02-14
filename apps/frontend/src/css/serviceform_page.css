@@ -62,11 +62,39 @@
 
 
 .form-container {
-    display: grid;
     grid-area: s2;
     justify-self: center;
     align-self: end;
-    padding-top: 64px;
+    padding-top: 12vh;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 100%;
+    flex: 1;
+    padding-bottom: 2vh;
+}
+
+.row-button {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 100%;
+    flex: 1;
+    padding-top: 3vh;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    padding-right: 2vw;
+}
+
+.full-row {
+    min-width: 100%;
+    align-self: stretch;
 }
 
 .service-form-container .container {
