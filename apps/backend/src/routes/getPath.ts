@@ -1,11 +1,11 @@
 import express, {Router, Request, Response} from "express";
 import client from "../bin/database-connection.ts";
-import {pathfindAStar, pathFindBFS} from "../utilities/algorithm.ts";
+import {pathfindAStar, pathFindBFS, pathFindDFS} from "../utilities/algorithm.ts";
 const router: Router = express.Router();
-let searchType = false;
-router.post("/change",async function (req: Request, res: Response){
-    console.log("TEST 1");
-    changeSearch();
+let searchType = 0;
+router.post("/change/:type",async function (req: Request, res: Response){
+    console.log(req.params.type +" is the new search");
+    changeSearch(parseInt(req.params.type));
     req;
     res.sendStatus(200);
 });
@@ -16,24 +16,21 @@ router.get("/currentAlg",async function (req: Request, res: Response){
 });
 
 
-function changeSearch(){
-    if(searchType){
-        console.log("ASTAR enabled");
-        searchType=!searchType;
-    }else{
-        console.log("BFS enabled");
-        searchType=!searchType;
-    }
+function changeSearch(type:number){
+        searchType=type;
 }
 router.get("/:startNode/:endNode/", async function (req: Request, res: Response) {
     let nodes  =[] ;
 
     let path:string[]  = [];
-    if(searchType){
+    if(searchType===0){
         path=pathfindAStar(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
     }
-    else{
+    else if (searchType===1){
         path=pathFindBFS(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
+    }
+    else if (searchType===2){
+        path=pathFindDFS(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
     }
     path=path!.slice().reverse();
 

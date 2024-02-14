@@ -245,6 +245,36 @@ export function breadthFirstSearch(){
     console.log(result);
     return result;
 }
+export function pathFindDFS(startingNode: string, endingNode: string) {
+    const nodeList = createNodeList();
+    const edgeList = createEdgeList();
+    const graph = createGraph(nodeList, edgeList);
+    const startNode = findNode(startingNode);
+    const endNode = findNode(endingNode);
+    const visited: Set<string> = new Set();
+    const stack: string[][] = [[startNode.nodeID]];
+    visited.add(startNode.nodeID);
+
+    while (stack.length > 0) {
+        const currentPath = stack.pop()!;
+        const currentVertex = currentPath[currentPath.length - 1];
+        if (currentVertex === endNode.nodeID) {
+            console.log(currentPath);
+            return currentPath;
+        }
+
+        const neighbors: string[] = graph.adjacencyList.get(currentVertex) || [];
+
+        for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                const newPath: string[] = [...currentPath, neighbor];
+                stack.push(newPath);
+            }
+        }
+    }
+    return null;
+}
 export function pathFindBFS(startingNode:string,endingNode:string){
     const nodeList = createNodeList();
     const edgeList = createEdgeList();
@@ -331,7 +361,7 @@ export function pathfindAStar(startNode: string, goalNode: string): string[] | u
             if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
                 //set g to parent g+1
                 neighbor.gvalue = tentativeG;
-                const floorWeight = 300;
+                const floorWeight = 20;
                 //heuristic for current distance to goal node.
                 neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal)-nodeToFloor(neighbor))*floorWeight )** 2);
                 //f is g+h
