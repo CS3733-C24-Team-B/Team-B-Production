@@ -169,8 +169,8 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
         <div>
             <h2>Hospital Path</h2>
             <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
-            <Button variant="contained" size="small" onClick={speakArray}
-                    style={{backgroundColor: "#012D5A"}}>
+            <Button size="small" onClick={speakArray}
+                    style={{backgroundColor: "#012D5A", color:'white', fontSize: '1.5vh', width: '15.5vw' }}>
                 {speaking ? 'Stop Speaking' : 'Speak Array'}
             </Button>
         </div>);
