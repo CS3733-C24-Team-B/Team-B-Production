@@ -23,6 +23,7 @@ const InternalTransportationRequest = ({change1, change2}) => {
 
             <div className="input-field">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
                     label="Language to Translate From"
                     variant="standard"
@@ -37,6 +38,7 @@ const InternalTransportationRequest = ({change1, change2}) => {
 
             <div className="input-field">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
                     label="Language to Translate to"
                     variant="standard"
@@ -48,8 +50,6 @@ const InternalTransportationRequest = ({change1, change2}) => {
                     required
                 />
             </div>
-            <br/>
-            <p> Created by Katie and Hien </p>
         </>
     );
 };

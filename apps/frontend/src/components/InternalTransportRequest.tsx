@@ -42,12 +42,17 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
         fetch().then();
     }, []);
 
+    const currNodes = nodeData.filter(({nodeType}) => {
+        return nodeType !== "HALL";
+    });
+
     return (
         <>
             <div className="input-field">
                 <Autocomplete
+                    style={{width: window.innerWidth * 0.38}}
                     disablePortal
-                    options={nodeData.map(({longName}): { label: string } => (
+                    options={currNodes.map(({longName}): { label: string } => (
                         {label: longName}
                     ))}
                     size={"small"}
@@ -64,6 +69,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
 
             <div className="input-field">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
                     label="Patient Name"
                     variant="standard"
@@ -76,11 +82,13 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
                 />
             </div>
 
-            <div className="input-field">
+            <div className="top-space">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
+                    multiline
+                    rows={3}
                     id="standard-basic"
                     label="Mobility Aid"
-                    variant="standard"
                     value={mobilityAid}
                     onChange={(e) => {
                         handleChange3(e);
@@ -89,8 +97,6 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
                     required
                 />
             </div>
-            <br/>
-            <p> Created by Cameron and Katy </p>
 
         </>
     );

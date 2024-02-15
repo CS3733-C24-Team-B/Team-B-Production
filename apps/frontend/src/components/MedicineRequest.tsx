@@ -19,8 +19,9 @@ const MedicineRequest = ({ change1, change2 }) => {
 
     return (
         <>
-            <div className="input-field">
+            <div>
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
                     label="Medicine Type"
                     variant="standard"
@@ -30,8 +31,9 @@ const MedicineRequest = ({ change1, change2 }) => {
                     required
                 />
             </div>
-            <div className="input-field">
+            <div>
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
                     label="Medication Dose"
                     variant="standard"
@@ -41,8 +43,6 @@ const MedicineRequest = ({ change1, change2 }) => {
                     required
                 />
             </div>
-            <br/>
-            <p> Created by Rodrick and Piotr </p>
         </>
     );
 };

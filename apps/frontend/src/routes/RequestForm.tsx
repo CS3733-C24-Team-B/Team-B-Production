@@ -83,7 +83,7 @@ export default function RequestForm() {
                 assignedID: assignTo,
                 hazards: option1
             };
-            const res = await axios.post("/api/service-request", requestSent, {
+            const res = await axios.post("/api/service-request/sanitation", requestSent, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -102,7 +102,7 @@ export default function RequestForm() {
                 medicineType: option1,
                 amount: option2
             };
-            const res = await axios.post("/api/service-request", requestSent, {
+            const res = await axios.post("/api/service-request/medicine", requestSent, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -122,7 +122,7 @@ export default function RequestForm() {
                 patientName: option2,
                 mobilityAid: option3
             };
-            const res = await axios.post("/api/service-request", requestSent, {
+            const res = await axios.post("/api/service-request/internal-transport", requestSent, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -142,7 +142,7 @@ export default function RequestForm() {
                 language2: option2,
                 when: new Date()
             };
-            const res = await axios.post("/api/service-request", requestSent, {
+            const res = await axios.post("/api/service-request/language", requestSent, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -160,7 +160,7 @@ export default function RequestForm() {
                 assignedID: assignTo,
                 details: option1
             };
-            const res = await axios.post("/api/service-request", requestSent, {
+            const res = await axios.post("/api/service-request/maintenance", requestSent, {
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -204,6 +204,10 @@ export default function RequestForm() {
                 return null;
         }
     };
+
+    const currNodes = nodeData.filter(({nodeType}) => {
+        return nodeType !== "HALL";
+    });
 
     return (
         <div className="home-container">
@@ -264,7 +268,7 @@ export default function RequestForm() {
                                     transform: 'translateX(-50%)'
                                 }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{mt: 'auto', pb: 2}}>
+                                <Box sx={{mt: 'auto', pb: 2}} style={{color: "green"}} >
                                     Sanitization Request
                                 </Box>
                             </Button>
@@ -311,7 +315,7 @@ export default function RequestForm() {
                                     top: '15%', left: '50%', transform: 'translateX(-50%)'
                                 }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{mt: 'auto', pb: 2}}>
+                                <Box sx={{mt: 'auto', pb: 2}} style={{color: "darkred"}}>
                                     Medicine Delivery
                                 </Box>
                             </Button>
@@ -359,7 +363,7 @@ export default function RequestForm() {
                                         top: '15%', left: '50%', transform: 'translateX(-50%)'
                                     }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{mt: 'auto', pb: 2}}>
+                                <Box sx={{mt: 'auto', pb: 2}} style={{color: "goldenrod"}}>
                                     Maintenance Request
                                 </Box>
                             </Button>
@@ -406,7 +410,7 @@ export default function RequestForm() {
                                     top: '15%', left: '50%', transform: 'translateX(-50%)'
                                 }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{mt: 'auto', pb: 2}}>
+                                <Box sx={{mt: 'auto', pb: 2}} style={{color: "peru"}}>
                                     Int. Tranportation
                                     Request
                                 </Box>
@@ -455,7 +459,7 @@ export default function RequestForm() {
                                         top: '15%', left: '50%', transform: 'translateX(-50%)'
                                     }}/>
                                 {/* Text positioned at the bottom within the button */}
-                                <Box sx={{mt: 'auto', pb: 2}}>
+                                <Box sx={{mt: 'auto', pb: 2}} style={{color: "rebeccapurple"}}>
                                     Language Request
                                 </Box>
                             </Button>
@@ -467,70 +471,82 @@ export default function RequestForm() {
                     {/* Render the form contents only if a service request type is selected */}
                     {requestType && (
                         <>
-                            <div className="row">
-                                <div className="column">
-                                    <Autocomplete
-                                        disablePortal
-                                        options={nodeData.map(({longName}): { label: string } => (
-                                            {label: longName}
-                                        ))}
-                                        size={"small"}
-                                        style={{width: 220}}
-                                        renderInput={(params) =>
-                                            <TextField {...params} label="Location" variant="standard"/>}
-                                        value={{label: location}}
-                                        onChange={(newValue) => {
-                                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                                setLocation(newValue.target.innerText);
-                                            }
-                                        }}
-                                    />
-                                </div>
-                                <div className="column">
-                                    <FormControl>
-                                        <InputLabel id="prio-label" shrink={false}
-                                                    variant="standard">{(prio === "") ? "Priority" : ""}</InputLabel>
-                                        <Select
-                                            labelId="prio-label"
-                                            id="standard-basic"
-                                            label="Priority"
-                                            variant="standard"
-                                            size={"small"}
-                                            value={prio}
-                                            onChange={(e) => setPrio(e.target.value)}
-                                            style={{width: 220}}
-                                            required
-                                        >
-                                            <MenuItem value={PriorityType.Low}>Low</MenuItem>
-                                            <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
-                                            <MenuItem value={PriorityType.High}>High</MenuItem>
-                                            <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className="column">
-                                    <FormControl>
-                                        <InputLabel id="employee-label" shrink={false}
-                                                    variant="standard">{(assignTo === "") ? "Choose Employee" : ""}</InputLabel>
-                                        <Select
-                                            labelId="employee-label"
-                                            value={(assignTo === "") ? "Choose Employee" : assignTo}
-                                            onChange={async (event: SelectChangeEvent) => {
-                                                setAssignTo(event.target.value);
-                                            }}
-                                            variant="standard"
-                                            size={"small"}
-                                            style={{width: 220}}>
-                                            {employeeData.map(({email, firstName, lastName}) =>
-                                                <MenuItem
-                                                    value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </div>
+                            <p>
+                                Created by {" "}
+                                {{
+                                    'sanitation': "Rodrick",
+                                    'medicine': "Rodrick and Piotr",
+                                    'maintenance': "Kenny",
+                                    'transport': "Katy and Cameron",
+                                    'language': "Katie and Hien"
+                                }[requestType]}
+                            </p>
+                            <div>
+                                <Autocomplete
+                                    style={{width: window.innerWidth * 0.38}}
+                                    disablePortal
+                                    options={currNodes.map(({longName}): { label: string } => (
+                                        {label: longName}
+                                    ))}
+                                    size={"small"}
+                                    renderInput={(params) =>
+                                        <TextField {...params} label="Location" variant="standard"/>}
+                                    value={{label: location}}
+                                    onChange={(newValue) => {
+                                        if (newValue !== null && newValue.target.innerText !== undefined) {
+                                            setLocation(newValue.target.innerText);
+                                        }
+                                    }}
+                                />
                             </div>
-                            <div className="full-row">
+                            <div>
+                                <FormControl className="input-field">
+                                    <InputLabel id="prio-label" shrink={false}
+                                                variant="standard">{(prio === "") ? "Priority" : ""}</InputLabel>
+                                    <Select
+                                        style={{width: window.innerWidth * 0.38}}
+                                        labelId="prio-label"
+                                        id="standard-basic"
+                                        label="Priority"
+                                        variant="standard"
+                                        size={"small"}
+                                        value={prio}
+                                        onChange={(e) => setPrio(e.target.value)}
+                                        required
+                                    >
+                                        <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                        <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                        <MenuItem value={PriorityType.High}>High</MenuItem>
+                                        <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div>
+                                <FormControl>
+                                    <InputLabel id="employee-label" shrink={false}
+                                                variant="standard">{(assignTo === "") ? "Choose Employee" : ""}</InputLabel>
+                                    <Select
+                                        labelId="employee-label"
+                                        value={(assignTo === "") ? "Choose Employee" : assignTo}
+                                        onChange={async (event: SelectChangeEvent) => {
+                                            setAssignTo(event.target.value);
+                                        }}
+                                        variant="standard"
+                                        size={"small"}
+                                        style={{width: window.innerWidth * 0.38}}>
+                                        {employeeData.map(({email, firstName, lastName}) =>
+                                            <MenuItem
+                                                value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div>
+                                {renderServiceRequestComponent()}
+                            </div>
+                            <div className="top-space">
                                 <TextField
+                                    style={{width: window.innerWidth * 0.38}}
                                     multiline
                                     rows={3}
                                     id="outlined-multiline-flexible"
@@ -541,10 +557,7 @@ export default function RequestForm() {
                                     required
                                 />
                             </div>
-                            <div>
-                                {renderServiceRequestComponent()}
-                            </div>
-                            <div className="row-button">
+                            <div className="top-space">
                                 <Button
                                     style={{
                                         backgroundColor: "#012D5A",
