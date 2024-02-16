@@ -81,6 +81,7 @@ export default function AdminViewer() {
                 const updatedEmployees: UpdateEmployee[] = [...employees];
                 updatedEmployees.push({email: newEmployeeEmail, firstName: "", lastName: ""});
                 setEmployees(updatedEmployees);
+                setNewEmployeeEmail("");
             } else {
                 setIsError(true);
                 setAlertText("Error sending email.");
@@ -148,7 +149,10 @@ export default function AdminViewer() {
                 </td>
 
                 <td>
-                    <Button variant="outlined" style={{color: "#012D5A"}} onClick={() => {
+                    <Button variant="outlined"
+                            style={{color: (employee.email === "softengc24b@gmail.com") ? "grey" : "#012D5A"}}
+                            disabled={(employee.email === "softengc24b@gmail.com")}
+                            onClick={() => {
                         console.log("Deleting employee with email " + employee.email);
                         getAccessTokenSilently()
                             .then((accessToken: string) => {

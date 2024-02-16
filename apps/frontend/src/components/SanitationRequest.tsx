@@ -12,11 +12,13 @@ const SanitationRequest = ({ change }) => {
 
     return (
         <>
-            <div className="input-field">
+            <div className="top-space">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
+                    multiline
+                    rows={3}
                     id="standard-basic"
                     label="Hazards"
-                    variant="standard"
                     value={additionalField1}
                     onChange={(e) => {
                         handleChange(e);
@@ -25,8 +27,6 @@ const SanitationRequest = ({ change }) => {
                     required
                 />
             </div>
-            <br/>
-            <p> Created by Michael </p>
         </>
     );
 };

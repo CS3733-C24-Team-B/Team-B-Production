@@ -66,7 +66,7 @@ router.post("/", upload.single("csvFile"), async function (req: Request, res: Re
 
 router.delete("/", async function (req: Request, res: Response) {
     try {
-        client.edge.deleteMany();
+        client.edge.deleteMany({});
         return res.status(200).send("Successfully cleared edge data from database");
     }
     catch (error) {

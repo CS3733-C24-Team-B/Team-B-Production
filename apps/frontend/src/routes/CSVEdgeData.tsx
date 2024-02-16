@@ -142,7 +142,16 @@ export default function CSVEdgeData() {
 
                         <div className={'upload-buttons'}>
                             <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                                    style={{backgroundColor: "#012D5A"}}>
+                                    style={{backgroundColor: "#012D5A"}}
+                                    onClick={() => {
+                                        getAccessTokenSilently().then((accessToken: string) => {
+                                            axios.delete("/api/edges", {
+                                                headers: {
+                                                    Authorization: "Bearer " + accessToken
+                                                }
+                                            }).then();
+                                        });
+                                    }}>
                                 Delete Data
                                 {/*<VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>*/}
                             </Button>

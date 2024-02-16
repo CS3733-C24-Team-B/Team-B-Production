@@ -71,7 +71,7 @@ router.post("/", upload.single("csvFile"), async function (req: Request, res: Re
 
 router.delete("/", async function (req: Request, res: Response) {
     try {
-        client.node.deleteMany();
+        client.node.deleteMany({});
         return res.status(200).send("Successfully cleared node data from database");
     }
     catch (error) {

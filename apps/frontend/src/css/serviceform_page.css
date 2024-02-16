@@ -62,11 +62,47 @@
 
 
 .form-container {
-    display: grid;
     grid-area: s2;
     justify-self: center;
     align-self: end;
-    padding-top: 64px;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 12vh;
+    width: 40%
+}
+
+.input-field {
+    margin-top: 1vh;
+    min-width: 100%;
+}
+
+.top-space {
+    padding-top: 2vh;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-basis: 100%;
+    flex: 1;
+    padding-bottom: 2vh;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    padding-right: 2vw;
+}
+
+.full-row {
+    min-width: 100%;
+    align-self: stretch;
 }
 
 .service-form-container .container {
