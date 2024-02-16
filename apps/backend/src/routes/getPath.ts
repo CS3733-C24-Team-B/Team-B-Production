@@ -25,8 +25,8 @@ function changeSearch(type:number){
         searchType=type;
 }
 router.get("/:startNode/:endNode/", async function (req: Request, res: Response) {
-    let nodes  =[] ;
-     let pathfind:Pathfind= new Pathfind(new AStar());
+    const nodes  = [] ;
+    let pathfind: Pathfind= new Pathfind(new AStar());
     let path:string[]  = [];
     if(searchType===0){
         pathfind=new Pathfind(new AStar());
@@ -37,7 +37,8 @@ router.get("/:startNode/:endNode/", async function (req: Request, res: Response)
     else if (searchType===2){
         pathfind=new Pathfind(new DFS());
     }
-    path=pathfind.search(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
+    const p = await pathfind.search(req.params.startNode, req.params.endNode);
+    path = p?.map(obj => obj)as string[];
     path=path!.slice().reverse();
 
     while ((path as string[]).length>0){
