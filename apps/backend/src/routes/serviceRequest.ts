@@ -6,11 +6,20 @@ import {NewServiceRequest, UpdateRequest, DeleteRequest} from "common/src/servic
 const router: Router = express.Router();
 
 router.get('/', async function (req: Request, res: Response) {
-    const serviceRequest: ServiceRequest[] = await client.serviceRequest.findMany();
+    const serviceRequest: ServiceRequest[] = await client.serviceRequest.findMany({
+        include: {
+            sanitation: true,
+            maintenance: true,
+            internalTransport: true,
+            medicine: true,
+            language: true
+        }
+    });
     if (serviceRequest === null) {
         console.error("No edge data found in database");
         return res.status(204).send("Could not find edge data in database");
     } else {
+        console.log(serviceRequest);
         return res.status(200).send(JSON.stringify(serviceRequest));
     }
 });
