@@ -2,90 +2,48 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
 
-function calculateSlope(x1:number,x2:number,y1:number,y2:number): number {
-    // Calculate the slope of the line passing through two points
-    return (y2 - y1) / (x2 - x1);
-}
-function calculateVector(x1:number,x2:number,y1:number,y2:number){
-    return [(x2-x1),(y2-y1)] as number[];
-}
-function findAngleBetweenLines(slope2: number, slope1: number): number {
-    // Calculate the absolute difference between slopes
-    const delta_slope = Math.abs(slope1 - slope2);
-
-    // Calculate the angle in radians
-    const angle_rad = Math.atan(delta_slope);
-
-    // Convert angle from radians to degrees
-    const angle_deg = angle_rad * (180 / Math.PI);
-
-    return angle_deg;
-}
-function directNode(previousNode:string,nodeStart:string,nodeEnd:string){
+function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:string): string {
+    // Calculate vectors AB and BC
     const x = parseInt(previousNode.substring(previousNode.indexOf(":")+1,previousNode.lastIndexOf(":")));
     const y = parseInt(previousNode.substring(previousNode.lastIndexOf(":")+1));
     const x1 = parseInt(nodeStart.substring(nodeStart.indexOf(":")+1,nodeStart.lastIndexOf(":")));
     const y1 = parseInt(nodeStart.substring(nodeStart.lastIndexOf(":")+1));
     const x2 = parseInt(nodeEnd.substring(nodeEnd.indexOf(":")+1,nodeEnd.lastIndexOf(":")));
     const y2 = parseInt(nodeEnd.substring(nodeEnd.lastIndexOf(":")+1));
-    let right = false;
-    const vector2 = calculateVector(x1,x2,y1,y2);
-    const vector1 = calculateVector(x,x1,y,y1);
+    const vectorAB = [ x1-x, y1-y ];
+    const vectorBC = [x2-x1,y2-y1];
 
-    //vector1[0] >0 = right
-    //vector1[0] <0 = left
-    //vector1[1] <0 = up
-    //vector1[1] >0 = down
+    // Calculate cross product (z-component only for 2D vectors)
+    const crossProduct = vectorAB[0] * vectorBC[1] - vectorAB[1] * vectorBC[0];
 
-    //vector2[0] >0 = right
-    //vector2[0] <0 = left
-    //vector2[1] <0 = up
-    //vector2[1] >0 = down
-    const vector2up = vector2[1]<0;
-    const vector2right = vector2[0]>0;
-    const vector1right = vector1[0]>0;
-    const vector1up = vector1[1]<0;
-    if(vector1up&&vector2right||!vector1up&&!vector2right||vector1right&&!vector2up||!vector1right&&vector2up){
-
-        right=true;
+    if (crossProduct < -500) {
+        console.log(nodeStart+": "+crossProduct);
+        return "Make a left at";
+    } else if (crossProduct > 500) {
+        console.log(nodeStart+": "+crossProduct);
+        return "Make a right at ";
+    } else {
+        return "";
     }
+}
+function directNode(previousNode:string,nodeStart:string,nodeEnd:string){
+
     if(previousNode.substring(0,2)!=nodeStart.substring(0,2)){
-        return "Take the elevator to";
+        return "Take the elevator from "+previousNode.substring(0,2)+" to ";
     }
-    let slope1 = calculateSlope(x,x1,y,y1);
-    console.log(slope1);
-    let slope2 = calculateSlope(x1,x2,y1,y2);
-
-    console.log(slope2);
-    const angle = findAngleBetweenLines(slope2, slope1);
-    console.log("x:"+x+" y:"+y);
-    console.log("x1:"+x1+" y1:"+y1);
-    console.log("x2:"+x2+" y2:"+y2);
-    console.log("ANGLE: "+angle);
+    if(nodeStart.substring(0,2)!=nodeEnd.substring(0,2)){
+        return "";
+    }
     // let output:string ="";
-    let direction = "";
-    if(Number.isNaN(angle)){
-        return "";
-    }
-    const distFromStraight = Math.abs(angle%180);
-    if(distFromStraight<50){
-        return "";
-    }
-    if( (!right)){
-        direction+= "left turn "+" "/*+ vector1[0]+","+vector1[1]+" "+vector2[0]+","+vector2[1]+" "*/;
-    }else{
-        direction+="right turn "+" "/*+ vector1[0]+","+vector1[1]+" "+vector2[0]+","+vector2[1]+" "*/;
-    }
-    if(distFromStraight>=60){
-        return "Make a "+direction + "at";
-    }
-    if(distFromStraight<60){
-        return "Make a slight "+direction + "at";
-    }
-    else{
-        return "ERROR!!! ";
-    }
+    return determineTurnDirection(previousNode,nodeStart,nodeEnd);
 
+/*Starting at Elevator L Floor L2
+Make a left at Hallway 8 Floor L2
+Make a left at Hallway 7 Floor L2
+Make a right at Hallway 6 Floor L2
+Continue straight until you reach Hallway 8 Floor L2
+Make a left at Hallway 5 Floor L2
+You have arrived at Radiation Oncology Floor L2*/
 }
 export const PathPrinter = (data: { startNode: string; endNode: string }) => {
 
@@ -133,11 +91,23 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
             console.log(coords);
             setCoords(coords);
             let joinedwords:string[] = ["You have arrived at "+nodeIDs[nodeIDs.length-1]];
+
             // setPath(nodeIDs);
+            let x:number = parseInt(coords[0].substring(coords[0].indexOf(":")+1,coords[0].lastIndexOf(":")));
+            let y:number = parseInt(coords[0].substring(coords[0].lastIndexOf(":")+1));
             for( let i = coords.length-2; i >0;i--){
                 const direction =directNode(coords[i-1],coords[i],coords[i+1]);
                 if(direction!="") {
+                    const currx = parseInt(coords[i].substring(coords[i].indexOf(":")+1,coords[i].lastIndexOf(":")));
+                    const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
+                    const dist =Math.sqrt((currx-x)**2+(curry-y)**2);
+
                     joinedwords.push(direction+" "+ nodeIDs[i]);
+                    if(dist>=350){
+                        joinedwords.push("Go straight until you reach "+nodeIDs[i]);
+                    }
+                    x = parseInt(coords[i].substring(coords[i].indexOf(":")+1,coords[i].lastIndexOf(":")));
+                    y = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
                 }
             }
             joinedwords.push("Starting at "+nodeIDs[0]+" ");
