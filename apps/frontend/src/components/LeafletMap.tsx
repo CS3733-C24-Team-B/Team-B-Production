@@ -1,12 +1,13 @@
-import { MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup } from 'react-leaflet';
+import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup} from 'react-leaflet';
 import "../css/leaflet.css";
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
-import { LatLng, LatLngBounds } from "leaflet";
+import {LatLng, LatLngBounds} from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import { Button, Autocomplete, Drawer, MenuItem } from "@mui/material";
+import {Button, Autocomplete, Drawer, MenuItem, FormControlLabel, Checkbox, FormGroup} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
+import L from "leaflet";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -45,12 +46,15 @@ export default function LeafletMap() {
     const [nodeEnd, setNodeEnd] = useState("");
     const [pathData, setPathData] = useState([]);
     const [lineData, setLineData] = useState<JSX.Element[]>([]);
+    const [showNodes, setShowNodes] = useState(true);
     const [showEdges, setShowEdges] = useState(false);
+    const [showHalls, setShowHalls] = useState(false);
     const [useAStar, setUseAStar] = useState(0);
     const [directions, setDirections] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
+    const lMap: Ref<L.Map> = useRef();
 
 
     useEffect(() => {
@@ -85,7 +89,7 @@ export default function LeafletMap() {
                 longName: string;
                 shortName: string;
             }) => {
-                const { nodeID } = roomData;
+                const {nodeID} = roomData;
                 accumulator.push(nodeID);
                 return accumulator;
             }, []);
@@ -142,7 +146,7 @@ export default function LeafletMap() {
                 }
             });
         } else {
-            let floorChanges:number = 1;
+            let floorChanges: number = 1;
             pathData.map((nr) => {
                 if (nodeIDToFloor(nr) === currLevel) {
                     if (startX >= 0 && startY >= 0) {
@@ -151,14 +155,14 @@ export default function LeafletMap() {
                             color={"green"} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
-                        const midX = transX(startX) + dx/2;
-                        const midY = transY(startY) + dy/2;
-                        const angle = Math.atan(dy/dx);
-                        const xMod = (dx === 0) ? 1 : -dx/Math.abs(dx);
+                        const midX = transX(startX) + dx / 2;
+                        const midY = transY(startY) + dy / 2;
+                        const angle = Math.atan(dy / dx);
+                        const xMod = (dx === 0) ? 1 : -dx / Math.abs(dx);
                         const yMod = (dx >= 0) ? -1 : 1;
-                        const pathLength = Math.sqrt(dx*dx + dy*dy);
+                        const pathLength = Math.sqrt(dx * dx + dy * dy);
                         console.log("ANGLE: " + angle);
-                        if(pathLength > 0.2) {
+                        if (pathLength > 0.2) {
                             temp.push(<Polyline
                                 positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
                                 color={"green"} weight={5}></Polyline>);
@@ -264,39 +268,49 @@ export default function LeafletMap() {
             setIsDrawerOpen(true);
         }
     }, [nodeEnd]);
-    function handleDirections(){
-    setDirections(!directions);
+
+    function handleDirections() {
+        setDirections(!directions);
     }
-    function numToSearchType(num:number){
-        switch(num){
-            case 0: return "A Star";
-            case 1: return "BFS";
-            case 2: return "DFS";
+
+    function numToSearchType(num: number) {
+        switch (num) {
+            case 0:
+                return "A Star";
+            case 1:
+                return "BFS";
+            case 2:
+                return "DFS";
         }
         return "A Star";
     }
-    function searchTypeToNum(str:string){
-        switch(str){
-            case "A Star": return 0;
-            case "BFS": return 1;
-            case "DFS": return 2;
+
+    function searchTypeToNum(str: string) {
+        switch (str) {
+            case "A Star":
+                return 0;
+            case "BFS":
+                return 1;
+            case "DFS":
+                return 2;
         }
         return 0;
     }
+
     return (
-        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
             <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
-                    ModalProps={{ BackdropProps: { invisible: true } }}>
-                <div className="drawer-content" style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
-                    <div className="drawer-search-bars" style={{ marginBottom: '10px', width: '100%' }}>
-                        <div className="nav-buttons" style={{ marginBottom: '10px', width: '100%', maxWidth: '300px' }}>
+                    ModalProps={{BackdropProps: {invisible: true}}}>
+                <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
+                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
+                        <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
                             {/* Start Node */}
                             <Autocomplete
                                 disablePortal
-                                options={currNodes.map(({ longName }) => ({ label: longName }))}
-                                sx={{ width: '100%' }}
-                                renderInput={(params) => <TextField {...params} label="Start Node..." />}
+                                options={currNodes.map(({longName}) => ({label: longName}))}
+                                sx={{width: '100%'}}
+                                renderInput={(params) => <TextField {...params} label="Start Node..."/>}
                                 value={nodeIDtoName(nodeStart)}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -308,13 +322,13 @@ export default function LeafletMap() {
                                 }}
                             />
                         </div>
-                        <div className="nav-buttons" style={{ width: '100%', maxWidth: '300px' }}>
+                        <div className="nav-buttons" style={{width: '100%', maxWidth: '300px'}}>
                             {/* End Node */}
                             <Autocomplete
                                 disablePortal
-                                options={currNodes.map(({ longName }) => ({ label: longName }))}
-                                sx={{ width: '100%' }}
-                                renderInput={(params) => <TextField {...params} label="End Node..." />}
+                                options={currNodes.map(({longName}) => ({label: longName}))}
+                                sx={{width: '100%'}}
+                                renderInput={(params) => <TextField {...params} label="End Node..."/>}
                                 value={nodeIDtoName(nodeEnd)}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -328,7 +342,7 @@ export default function LeafletMap() {
                         </div>
                     </div>
                     {/* Show/Hide Edges */}
-                    <div style={{display:"flex" ,marginBottom: '20px', width: '100%', maxWidth: '300px'}}>
+                    <div style={{display: "flex", marginBottom: '20px', width: '100%', maxWidth: '300px'}}>
                         <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{
                             backgroundColor: "white",
                             color: "black",
@@ -340,21 +354,22 @@ export default function LeafletMap() {
                         </Button>
                         {/* Use A* */}
 
-                            <TextField
-                                select
-                                value={numToSearchType(useAStar)}
-                                onChange={(event) => {
-                                    setUseAStar(searchTypeToNum(event.target.value));
-                                    console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
-                                    axios.post(`/api/db-get-path/change/${searchTypeToNum(event.target.value)}`);
-                                }}
-                                 size="small" style={{ backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}
-                            >
+                        <TextField
+                            select
+                            value={numToSearchType(useAStar)}
+                            onChange={(event) => {
+                                setUseAStar(searchTypeToNum(event.target.value));
+                                console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
+                                axios.post(`/api/db-get-path/change/${searchTypeToNum(event.target.value)}`);
+                            }}
+                            size="small"
+                            style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}
+                        >
 
-                                {<MenuItem value={"A Star"}>A*</MenuItem>}
-                                {<MenuItem value={"BFS"}>BFS</MenuItem>}
-                                {<MenuItem value={"DFS"}>DFS</MenuItem>}
-                            </TextField>
+                            {<MenuItem value={"A Star"}>A*</MenuItem>}
+                            {<MenuItem value={"BFS"}>BFS</MenuItem>}
+                            {<MenuItem value={"DFS"}>DFS</MenuItem>}
+                        </TextField>
                     </div>
                     {/* Text Directions */}
                     <div>
@@ -382,6 +397,8 @@ export default function LeafletMap() {
                         select
                         value={selectedFloor}
                         onChange={(event) => {
+                            console.log(lMap);
+                            lMap!.current.setZoom(5);
                             setSelectedFloor(event.target.value);
                             setCurrLevel(floorToLevel(event.target.value));
                         }}
@@ -420,6 +437,13 @@ export default function LeafletMap() {
                 <div className="button3">
                     <AuthenticationButton/>
                 </div>
+                <div className="checkboxes">
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>} label="Show Nodes"/>
+                        <FormControlLabel control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>} label="Show Edges"/>
+                        <FormControlLabel control={<Checkbox checked={showHalls} onClick={() => setShowHalls(!showHalls)}/>} label="Show Halls"/>
+                    </FormGroup>
+                </div>
             </div>
             <MapContainer
                 center={[17, 25]}
@@ -429,13 +453,14 @@ export default function LeafletMap() {
                 scrollWheelZoom={true}
                 maxBoundsViscosity={1.0}
                 maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+                ref={lMap}
             >
                 <ImageOverlay
                     url={selectedFloor} //"src/images/00_thelowerlevel1.png"
                     bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
                 />
-                {nodeData.map(({nodeID, longName, xcoord, ycoord, floor}) => (
-                    (floor === currLevel ?
+                {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
+                    ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
                         <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6}
                                       eventHandlers={{
                                           click: () => {
