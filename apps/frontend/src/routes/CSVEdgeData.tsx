@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import "../css/csvdata_page.css";
 import axios from "axios";
+import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
-import {Button} from "@mui/material";
+import {Button, CircularProgress} from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {styled} from "@mui/material/styles";
 import IosShareIcon from "@mui/icons-material/IosShare";
@@ -21,29 +22,29 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function CSVEdgeData() {
-  //const nodes : MapNode[] = createNodeList();
+    const {user, isLoading, isAuthenticated, getAccessTokenSilently} = useAuth0();
+    const isAdmin: boolean = isAuthenticated && user!.email! === "softengc24b@gmail.com";
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
-  useEffect(() => {
-      async function fetch() {
-          const res = await axios.get("/api/db-load-nodes");
-          const res3 = await axios.get("/api/db-load-edges");
+    useEffect(() => {
+        async function fetch() {
+            const res = await axios.get("/api/nodes/read");
+            const res3 = await axios.get("/api/edges/read");
+            setNodeData(res.data);
+            setEdgeData(res3.data);
+        }
 
-          console.log(res.data);
-          setNodeData(res.data);
-          setEdgeData(res3.data);
-      }
-      fetch().then();
-  }, []);
+        fetch().then();
+    }, [getAccessTokenSilently]);
 
-    function nodeIDtoName(nId : string) {
+    function nodeIDtoName(nId: string) {
         return nodeData.find(({nodeID}) =>
             nodeID === nId
         )!["longName"];
     }
 
     const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
-        <tr key={i} >
+        <tr key={i}>
             <td>{edgeID}</td>
             <td>{nodeIDtoName(startNodeID)}</td>
             <td>{nodeIDtoName(endNodeID)}</td>
@@ -62,14 +63,15 @@ export default function CSVEdgeData() {
             }
 
             formData.append("csvFile", csvFile.files[0]); // Update based on backend
-            axios.post("/api/db-load-edges", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            getAccessTokenSilently().then((accessToken: string) => {
+                axios.post("/api/edges", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: "Bearer " + accessToken
+                    }
+                }).then();
             });
-        }
-
-        catch (exception) {
+        } catch (exception) {
             console.log("post error: " + exception);
         }
     }
@@ -78,11 +80,15 @@ export default function CSVEdgeData() {
         console.log("Running Download to DB");
 
         try {
-            const res3 = await axios.get('/api/db-load-edges');
+            const res3 = await axios.get('/api/edges/read');
             console.log(res3);
-            let headers = ['edgeID, startNodeID, endNodeID'];
-            let resCSV = res3.data.reduce((edges: string[], edgeData: { edgeID: string, startNodeID: string, endNodeID: string}) => {
-                const { edgeID, startNodeID, endNodeID } = edgeData;
+            const headers = ['edgeID, startNodeID, endNodeID'];
+            const resCSV = res3.data.reduce((edges: string[], edgeData: {
+                edgeID: string,
+                startNodeID: string,
+                endNodeID: string
+            }) => {
+                const {edgeID, startNodeID, endNodeID} = edgeData;
                 edges.push([edgeID, startNodeID, endNodeID].join(','));
                 return edges;
             }, []);
@@ -103,6 +109,13 @@ export default function CSVEdgeData() {
         }
     }
 
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAdmin) {
+        return window.location.href = "/";
+    }
 
     // GO TO apps/backend/src/utilities/readCSV.ts TO SEE WHAT DATA IS STORED IN nodeData AND edgeData ARRAYS
     return (
@@ -112,7 +125,7 @@ export default function CSVEdgeData() {
             </div>
             <div className="data-container">
                 <div className="topbar-container">
-                    <div  className="node-data-header">
+                    <div className="node-data-header">
                         <header className={'headerblue'}>CSV Edge Data</header>
                     </div>
                     <div className="top-buttons-container">
@@ -150,12 +163,17 @@ export default function CSVEdgeData() {
                 </div>
                 <br/>
                 <table className={"tables"}>
+                    <thead>
                     <tr>
                         <th>Edge ID</th>
                         <th>Start Room</th>
                         <th>End Room</th>
                     </tr>
-                    {arrayEdge}</table>
+                    </thead>
+                    <tbody>
+                    {arrayEdge}
+                    </tbody>
+                </table>
                 <br/>
             </div>
         </div>

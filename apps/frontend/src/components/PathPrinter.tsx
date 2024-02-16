@@ -97,7 +97,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     useEffect(() => {
         async function fetch() {
             //  console.log(`${data.startNode}`);
-            const res2 = await axios.get(`/api/db-get-path/${data.startNode}/${data.endNode}`);
+            const res2 = await axios.get(`/api/path/${data.startNode}/${data.endNode}`);
             let nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
                 xcoord: number;

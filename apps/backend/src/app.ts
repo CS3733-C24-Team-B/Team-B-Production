@@ -2,9 +2,12 @@ import createError, { HttpError } from "http-errors";
 import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import {auth} from "express-oauth2-jwt-bearer";
 import pathRouter from "./routes/getPath.ts";
-import loadNodesRouter from "./routes/loadNode.ts";
-import loadEdgesRouter from "./routes/loadEdge.ts";
+import readNodesRouter from "./routes/readNodes.ts";
+import readEdgesRouter from "./routes/readEdges.ts";
+import editNodesRouter from "./routes/editNodes.ts";
+import editEdgesRouter from "./routes/editEdges.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
 import sanitationRouter from "./routes/serviceRequestSanitation.ts";
 import maintenanceRouter from "./routes/serviceRequestMaintenance.ts";
@@ -12,7 +15,6 @@ import internalTransportRouter from "./routes/serviceRequestInternalTransport.ts
 import medicineRouter from "./routes/serviceRequestMedicine.ts";
 import languageRouter from "./routes/serviceRequestLanguage.ts";
 import employeeRouter from "./routes/employee.ts";
-import {auth} from "express-oauth2-jwt-bearer";
 
 const app: Express = express(); // Set up the backend
 
@@ -31,9 +33,9 @@ app.use(cookieParser()); // Cookie parser
 
 // Setup routers. ALL ROUTERS MUST use /api as a start point, or they
 // won't be reached by the default proxy and prod setup
-app.use("/api/db-get-path", pathRouter);
-app.use("/api/db-load-nodes", loadNodesRouter);
-app.use("/api/db-load-edges", loadEdgesRouter);
+app.use("/api/path", pathRouter);
+app.use("/api/nodes/read", readNodesRouter);
+app.use("/api/edges/read", readEdgesRouter);
 
 app.use(auth({
     audience: "/api",
@@ -43,6 +45,8 @@ app.use(auth({
 
 // More routers. All these routers are AFTER the auth,
 // so all these routes require an authentication token.
+app.use("/api/nodes", editNodesRouter);
+app.use("/api/edges", editEdgesRouter);
 app.use("/api/service-request", serviceRouter);
 app.use("/api/service-request/sanitation", sanitationRouter);
 app.use("/api/service-request/maintenance", maintenanceRouter);

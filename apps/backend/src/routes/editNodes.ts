@@ -6,20 +6,6 @@ import client from "../bin/database-connection.ts";
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
-router.get("/", async function (req: Request, res: Response) {
-
-    const node_data: Node[] = await client.node.findMany();
-    if (node_data === null) {
-        console.error("No node data found in database");
-        res.sendStatus(204);    // no data
-    }
-    else {
-        res.send(JSON.stringify(node_data));
-        console.info("Successfully sent " + node_data.length + " nodes to frontend");
-    }
-
-});
-
 router.post("/", upload.single("csvFile"), async function (req: Request, res: Response) {
 
     const nodeFile = req.file;
@@ -81,6 +67,17 @@ router.post("/", upload.single("csvFile"), async function (req: Request, res: Re
     }
 
     return res.sendStatus(200);
+});
+
+router.delete("/", async function (req: Request, res: Response) {
+    try {
+        client.node.deleteMany();
+        return res.status(200).send("Successfully cleared node data from database");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).send("Could not clear node data from database");
+    }
 });
 
 export default router;

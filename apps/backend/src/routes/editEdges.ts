@@ -6,20 +6,6 @@ import client from "../bin/database-connection.ts";
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
-router.get("/", async function (req: Request, res: Response) {
-
-    const edge_data: Edge[] = await client.edge.findMany();
-    if (edge_data === null) {
-        console.error("No edge data found in database");
-        res.sendStatus(204);    // no data
-    }
-    else {
-        res.send(JSON.stringify(edge_data));
-        console.info("Successfully sent " + edge_data.length + " edges to frontend");
-    }
-
-});
-
 router.post("/", upload.single("csvFile"), async function (req: Request, res: Response) {
 
     const edgeFile = req.file;
@@ -76,6 +62,17 @@ router.post("/", upload.single("csvFile"), async function (req: Request, res: Re
     }
 
     return res.sendStatus(200);
+});
+
+router.delete("/", async function (req: Request, res: Response) {
+    try {
+        client.edge.deleteMany();
+        return res.status(200).send("Successfully cleared edge data from database");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).send("Could not clear edge data from database");
+    }
 });
 
 export default router;

@@ -54,7 +54,7 @@ export default function RequestForm() {
     useEffect(() => {
         async function fetch() {
             const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/db-load-nodes", {
+            const res = await axios.get("/api/nodes/read", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
