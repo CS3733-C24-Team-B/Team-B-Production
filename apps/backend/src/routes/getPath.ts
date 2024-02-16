@@ -4,10 +4,6 @@ import {
     AStar,
     BFS,
     DFS,
-    searchStrategy,
-    pathfindAStar,
-    pathFindBFS,
-    pathFindDFS,
     Pathfind
 } from "../utilities/algorithm.ts";
 const router: Router = express.Router();
