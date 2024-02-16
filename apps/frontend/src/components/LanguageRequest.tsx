@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {TextField} from "@mui/material";
 
+// Hien and Katie
 const InternalTransportationRequest = ({change1, change2}) => {
     const [language1, setLanguage1] = useState("");
     const [language2, setLanguage2] = useState("");
@@ -47,7 +48,8 @@ const InternalTransportationRequest = ({change1, change2}) => {
                     required
                 />
             </div>
-
+            <br/>
+            <p> Created by Katie and Hien </p>
         </>
     );
 };
