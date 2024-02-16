@@ -3,7 +3,7 @@ import { Pie } from 'react-chartjs-2';
 import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale} from 'chart.js';
 import { ChartOptions } from 'chart.js';
 import axios from 'axios';
-import {CategoryKey, ServiceRequest} from "common/src/serviceRequestTypes.ts";
+import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 import "../css/chart.css";
 
@@ -26,21 +26,19 @@ function ShowData() {
     }, []);
 
     const categories = {
-        transport: 0,
+        internalTransport: 0,
         medicine: 0,
         sanitation: 0,
         maintenance: 0,
         language: 0
     };
-
+    console.log(srData);
     srData.forEach(item => {
-        const noteCategoryParts = item.notes.split(",");
-        if (noteCategoryParts.length === 0) return;
-        const noteCategory = noteCategoryParts[0].trim();
-        if (noteCategory in categories) {
-            const key = noteCategory as CategoryKey;
-            categories[key]++;
-        }
+        if (item.internalTransport !== null) categories.internalTransport++;
+        if (item.language !== null) categories.language++;
+        if (item.maintenance !== null) categories.maintenance++;
+        if (item.medicine !== null) categories.medicine++;
+        if (item.sanitation !== null) categories.sanitation++;
     });
 
     const chartData = {

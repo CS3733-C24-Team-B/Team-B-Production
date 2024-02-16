@@ -1,6 +1,11 @@
 import express, {Router, Request, Response} from "express";
 import client from "../bin/database-connection.ts";
-import {pathfindAStar, pathFindBFS, pathFindDFS} from "../utilities/algorithm.ts";
+import {
+    AStar,
+    BFS,
+    DFS,
+    Pathfind
+} from "../utilities/algorithm.ts";
 const router: Router = express.Router();
 let searchType = 0;
 router.post("/change/:type",async function (req: Request, res: Response){
@@ -21,17 +26,18 @@ function changeSearch(type:number){
 }
 router.get("/:startNode/:endNode/", async function (req: Request, res: Response) {
     let nodes  =[] ;
-
+     let pathfind:Pathfind= new Pathfind(new AStar());
     let path:string[]  = [];
     if(searchType===0){
-        path=pathfindAStar(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
+        pathfind=new Pathfind(new AStar());
     }
     else if (searchType===1){
-        path=pathFindBFS(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
+        pathfind=new Pathfind(new BFS());
     }
     else if (searchType===2){
-        path=pathFindDFS(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
+        pathfind=new Pathfind(new DFS());
     }
+    path=pathfind.search(req.params.startNode, req.params.endNode)?.map(obj => obj)as string[];
     path=path!.slice().reverse();
 
     while ((path as string[]).length>0){
