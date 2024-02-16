@@ -85,8 +85,8 @@ export default function LeafletMap() {
                 longName: string;
                 shortName: string;
             }) => {
-                const { longName } = roomData;
-                accumulator.push(longName);
+                const { nodeID } = roomData;
+                accumulator.push(nodeID);
                 return accumulator;
             }, []);
             setPathData(nodeIDs);
@@ -96,21 +96,24 @@ export default function LeafletMap() {
     }, [nodeEnd, nodeStart]);
 
     useEffect(() => {
-        const nameToXPos = (name: string) => {
-            return nodeData.find(({longName}) =>
-                name === longName
+        const nodeIDToXPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
             )!["xcoord"];
         };
 
-        const nameToYPos = (name: string) => {
-            return nodeData.find(({longName}) =>
-                name === longName
+        const nodeIDToYPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
             )!["ycoord"];
         };
 
-        const nameToFloor = (name: string) => {
-            return nodeData.find(({longName}) =>
-                name === longName
+        const nodeIDToFloor = (nId: string) => {
+            console.log(nodeData.find(({nodeID}) =>
+                nId === nodeID
+            ));
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
             )!["floor"];
         };
 
@@ -122,25 +125,17 @@ export default function LeafletMap() {
             return 34.8 - (yp * 34 / 3400);
         };
 
-        function nodeIDtoName(nId: string) {
-            return nodeData.find(({nodeID}) =>
-                nodeID === nId
-            )!["longName"];
-        }
-
         let startX = -1;
         let startY = -1;
         let prevFloor = "";
         const temp: JSX.Element[] = [];
         if (showEdges) {
             edgeData.map(({startNodeID, endNodeID}) => {
-                const startName = nodeIDtoName(startNodeID);
-                const endName = nodeIDtoName(endNodeID);
-                if (nameToFloor(startName) === currLevel && nameToFloor(endName) === currLevel) {
-                    const x1 = transX(nameToXPos(startName));
-                    const y1 = transY(nameToYPos(startName));
-                    const x2 = transX(nameToXPos(endName));
-                    const y2 = transY(nameToYPos(endName));
+                if (nodeIDToFloor(startNodeID) === currLevel && nodeIDToFloor(endNodeID) === currLevel) {
+                    const x1 = transX(nodeIDToXPos(startNodeID));
+                    const y1 = transY(nodeIDToYPos(startNodeID));
+                    const x2 = transX(nodeIDToXPos(endNodeID));
+                    const y2 = transY(nodeIDToYPos(endNodeID));
                     temp.push(<Polyline
                         positions={[[y1, x1], [y2, x2]]}
                         color={"green"} weight={5}></Polyline>);
@@ -149,13 +144,13 @@ export default function LeafletMap() {
         } else {
             let floorChanges:number = 1;
             pathData.map((nr) => {
-                if (nameToFloor(nr) === currLevel) {
+                if (nodeIDToFloor(nr) === currLevel) {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
-                            positions={[[transY(startY), transX(startX)], [transY(nameToYPos(nr)), transX(nameToXPos(nr))]]}
+                            positions={[[transY(startY), transX(startX)], [transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]]}
                             color={"green"} weight={5}></Polyline>);
-                        const dx = transX(nameToXPos(nr)) - transX(startX);
-                        const dy = transY(nameToYPos(nr)) - transY(startY);
+                        const dx = transX(nodeIDToXPos(nr)) - transX(startX);
+                        const dy = transY(nodeIDToYPos(nr)) - transY(startY);
                         const midX = transX(startX) + dx/2;
                         const midY = transY(startY) + dy/2;
                         const angle = Math.atan(dy/dx);
@@ -173,24 +168,24 @@ export default function LeafletMap() {
                         }
                     } else if (prevFloor !== "") {
                         temp.push(
-                            <Popup position={[transY(nameToYPos(nr)), transX(nameToXPos(nr))]} autoClose={false}>
+                            <Popup position={[transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]} autoClose={false}>
                                 {floorChanges + ". Arrive from floor " + prevFloor}
                             </Popup>
                         );
                         floorChanges++;
                     }
-                    startX = nameToXPos(nr);
-                    startY = nameToYPos(nr);
+                    startX = nodeIDToXPos(nr);
+                    startY = nodeIDToYPos(nr);
                 } else {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(
                             <Popup position={[transY(startY), transX(startX)]} autoClose={false}>
-                                {floorChanges + ". Go to floor " + nameToFloor(nr)}
+                                {floorChanges + ". Go to floor " + nodeIDToFloor(nr)}
                             </Popup>
                         );
                         floorChanges++;
                     }
-                    prevFloor = nameToFloor(nr);
+                    prevFloor = nodeIDToFloor(nr);
                     startX = -1;
                     startY = -1;
                 }
@@ -251,8 +246,8 @@ export default function LeafletMap() {
         return output;
     };
 
-    const currNodes = nodeData.filter(({floor}) => {
-        return floor === currLevel;
+    const currNodes = nodeData.filter(({nodeType}) => {
+        return nodeType !== "HALL";
     });
 
     useEffect(() => {
