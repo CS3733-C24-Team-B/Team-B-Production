@@ -79,7 +79,19 @@ function ShowData() {
                     size: 14,
                     family: 'Arial',
                 }
-            }
+            },
+            title: {
+                display: true,
+                text: 'Number of Requests in Types',
+                font: {
+                    size: 16,
+                    family: 'Arial',
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30,
+                },
+            },
         },
         layout: {
             padding: {
@@ -99,14 +111,7 @@ function ShowData() {
                 </div>
             </div>
 
-            <div className="chartbox" style={{
-                padding: '20px',
-                width: '100%',
-                height: '500px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
+            <div className="chartbox">
                 <Pie data={chartData} options={options}/>
             </div>
         </div>
