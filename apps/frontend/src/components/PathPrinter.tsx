@@ -18,10 +18,10 @@ function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:str
 
     if (crossProduct < -500) {
         console.log(nodeStart+": "+crossProduct);
-        return "Make a left at";
+        return "Make a left ";
     } else if (crossProduct > 500) {
         console.log(nodeStart+": "+crossProduct);
-        return "Make a right at ";
+        return "Make a right ";
     } else {
         return "";
     }
@@ -102,9 +102,10 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
                     const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
                     const dist =Math.sqrt((currx-x)**2+(curry-y)**2);
 
-                    joinedwords.push(direction+" "+ nodeIDs[i]);
                     if(dist>=350){
-                        joinedwords.push("Go straight until you reach "+nodeIDs[i]);
+                        joinedwords.push("Go straight until you reach "+nodeIDs[i]+" then "+ direction.toLowerCase());
+                    }else{
+                        joinedwords.push(direction+" at "+ nodeIDs[i]);
                     }
                     x = parseInt(coords[i].substring(coords[i].indexOf(":")+1,coords[i].lastIndexOf(":")));
                     y = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
