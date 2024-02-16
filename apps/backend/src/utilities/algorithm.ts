@@ -1,9 +1,5 @@
 import { readFileSync } from "fs";
 import {Edge, Node, PrismaClient} from "database";
-// import * as path from "path";
-// import * as fs from "fs";
-// import {G} from "vitest/dist/types-198fd1d9";
-// import {start} from "http-errors";
 export interface searchStrategy {
      search(startNode:string,endNode:string):string[]|undefined;
 }
