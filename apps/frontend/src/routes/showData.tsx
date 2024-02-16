@@ -5,6 +5,7 @@ import { ChartOptions } from 'chart.js';
 import axios from 'axios';
 import {CategoryKey, ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import Navbar from "../components/Navbar.tsx";
+import "../css/chart.css";
 
 
 ChartJS.register(Tooltip, Legend, ArcElement, Title, CategoryScale);
@@ -90,14 +91,16 @@ function ShowData() {
     };
 
     return (
-        <div className="home-container">
-            <div className="header-container2">
-                <h1>Create Service Request</h1>
-                <br/>
-            </div>
+        <div className="top-container">
             <div>
                 <Navbar/>
             </div>
+            <div style={{gridArea: 'main'}} className="header-container2">
+                <div className="data-view-header">
+                    <header className={'headerblue'}>Service Request List</header>
+                </div>
+            </div>
+
             <div className="chartbox" style={{
                 padding: '20px',
                 width: '100%',
