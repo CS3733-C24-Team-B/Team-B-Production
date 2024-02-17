@@ -3,6 +3,14 @@
     height: 100vh;
 }
 
+.google-maps-collapse {
+    position: fixed;
+    z-index: 1001; /* ensure it's above the Leaflet map */
+    width: 10%;
+    min-height: 100%;
+    background-color: white;
+}
+
 .map-buttons {
     position: fixed;
     top: 4%;
@@ -57,9 +65,15 @@
     margin-right: 10px;
 }
 
+.open-drawer {
+    margin-left: 0%;
+    margin-bottom: -38%;
+    position: absolute;
+}
+
 .checkboxes {
-    margin-left: 75%;
-    margin-bottom: -40%;
+    margin-left: 78%;
+    margin-bottom: -38%;
     position: absolute;
 }
 

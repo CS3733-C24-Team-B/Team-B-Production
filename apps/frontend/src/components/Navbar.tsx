@@ -73,7 +73,7 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{display: 'block', position: 'fixed', width: '4%', zIndex: '1001'}}>
+        <Box sx={{display: 'block', position: 'fixed', width: '4%', zIndex: '1002'}}>
             <CssBaseline/>
             <AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
                 <Toolbar style={{

@@ -4,7 +4,8 @@ import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import {Button, Autocomplete, Drawer, MenuItem, FormControlLabel, Checkbox, FormGroup} from "@mui/material";
+import {Button, Autocomplete, Collapse, MenuItem, FormControlLabel, Checkbox, FormGroup} from "@mui/material";
+import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
@@ -296,8 +297,9 @@ export default function LeafletMap() {
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
-            <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
-                    ModalProps={{BackdropProps: {invisible: true}}}>
+            <Collapse in={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} timeout="auto"
+                    ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
+            className={"google-maps-collapse"}>
                 <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
                     <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
                         <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
@@ -314,6 +316,7 @@ export default function LeafletMap() {
                                         setNodeStart(nId);
                                     } else {
                                         setNodeStart("");
+                                        setPathData([]);
                                     }
                                 }}
                             />
@@ -332,6 +335,7 @@ export default function LeafletMap() {
                                         setNodeEnd(nId);
                                     } else {
                                         setNodeEnd("");
+                                        setPathData([]);
                                     }
                                 }}
                             />
@@ -385,8 +389,13 @@ export default function LeafletMap() {
 
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
                     </div>
+                    <Button className="open-drawer" onClick={() => {
+                        setIsDrawerOpen(!isDrawerOpen);
+                    }}>
+                        <RoomIcon />
+                    </Button>
                 </div>
-            </Drawer>
+            </Collapse>
             <div className="map-buttons">
                 <div className="floor-button">
                     <TextField
@@ -433,11 +442,20 @@ export default function LeafletMap() {
                 <div className="button3">
                     <AuthenticationButton/>
                 </div>
+
+                <div className="open-drawer">
+                    <Button onClick={() => {
+                        setIsDrawerOpen(!isDrawerOpen);
+                    }}>
+                        <RoomIcon />
+                    </Button>
+                </div>
+
                 <div className="checkboxes">
                     <FormGroup>
                         <FormControlLabel control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>} label="Show Nodes"/>
                         <FormControlLabel control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>} label="Show Edges"/>
-                        <FormControlLabel control={<Checkbox checked={showHalls} onClick={() => setShowHalls(!showHalls)}/>} label="Show Halls"/>
+                        <FormControlLabel control={<Checkbox checked={showNodes && showHalls} onClick={() => setShowHalls(!showHalls)}/>} label="Show Halls"/>
                     </FormGroup>
                 </div>
             </div>
