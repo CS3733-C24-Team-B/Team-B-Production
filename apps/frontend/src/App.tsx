@@ -8,6 +8,7 @@ import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
+import SettingsPage from "./routes/SettingsPage.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -50,8 +51,12 @@ function App() {
             path: "/admin-viewer",
             errorElement: <div/>,
             element: <AdminViewer/>
+        },
+        {
+            path: "/settings",
+            errorElement: <div/>,
+            element: <SettingsPage/>
         }
-
     ]);
 
     return <RouterProvider router={router}/>;

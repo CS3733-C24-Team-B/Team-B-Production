@@ -92,7 +92,7 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                hazards: "Hazards: " + option1
+                hazards: option1
             };
             const res = await axios.post("/api/service-request/sanitation", requestSent, {
                 headers: {
@@ -111,8 +111,8 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                medicineType: "Medicine Type: " + option1,
-                amount: "Amount: " + option2
+                medicineType: option1,
+                amount: option2
             };
             const res = await axios.post("/api/service-request/medicine", requestSent, {
                 headers: {
@@ -131,9 +131,9 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                toLocation: "To Location: " + option1,
-                patientName: "Patient Name: " + option2,
-                mobilityAid: "Mobility Aid: " + option3
+                toLocation: option1,
+                patientName: option2,
+                mobilityAid: option3
             };
             const res = await axios.post("/api/service-request/internal-transport", requestSent, {
                 headers: {
@@ -152,8 +152,8 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                language1: "From Language: " + option1,
-                language2: "To Language: " + option2,
+                language1: option1,
+                language2: option2,
                 when: new Date()
             };
             const res = await axios.post("/api/service-request/language", requestSent, {
@@ -173,7 +173,7 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                details: "Details: " + option1
+                details: option1
             };
             const res = await axios.post("/api/service-request/maintenance", requestSent, {
                 headers: {
@@ -232,6 +232,22 @@ export default function RequestForm() {
     if (!isAuthenticated) {
         loginWithRedirect().then();
         return;
+    }
+
+    // function nodeIDtoName(nId: string) {
+    //     const node = nodeData.find(({nodeID}) =>
+    //         nodeID === nId
+    //     );
+    //     if (node !== undefined) {
+    //         return node!["longName"];
+    //     } else {
+    //         return "";
+    //     }
+    // }
+
+    interface NodeType {
+        label: string,
+        nid: string
     }
 
     return (
@@ -518,16 +534,22 @@ export default function RequestForm() {
                                     <Autocomplete
                                         style={{width: window.innerWidth * 0.38}}
                                         disablePortal
-                                        options={currNodes.map(({longName}): { label: string } => (
-                                            {label: longName}
+                                        options={currNodes.map(({nodeID, longName}): NodeType => (
+                                            {label: longName, nid: nodeID}
                                         ))}
                                         size={"small"}
                                         renderInput={(params) =>
                                             <TextField {...params} label="Location" variant="standard"/>}
-                                        value={{label: location}}
-                                        onChange={(newValue) => {
-                                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                                setLocation(newValue.target.innerText);
+                                        //value={{label: nodeIDtoName(location), nid: location}}
+                                        getOptionLabel={(nd : NodeType) =>
+                                            `${nd.label}`
+                                    }
+                                        getOptionKey={(nd : NodeType) =>
+                                            `${nd.nid}`
+                                        }
+                                        onChange={(newValue, val) => {
+                                            if (val !== null) {
+                                                setLocation(val.nid);
                                             }
                                         }}
                                     />
