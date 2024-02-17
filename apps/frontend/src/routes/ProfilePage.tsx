@@ -6,7 +6,7 @@ import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 
 export default function ProfilePage() {
-    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -90,6 +90,11 @@ export default function ProfilePage() {
             console.log("Successfully submitted form");
             setSubmitAlert(true);
         }
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
     }
 
     return (
