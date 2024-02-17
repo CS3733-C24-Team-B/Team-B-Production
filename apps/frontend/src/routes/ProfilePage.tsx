@@ -31,7 +31,7 @@ type ServiceRequest = {
 }
 
 export default function ProfilePage() {
-    const {loginWithRedirect, user, isAuthenticated, getAccessTokenSilently} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -156,7 +156,7 @@ export default function ProfilePage() {
         }
     }
 
-    if (!isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
         loginWithRedirect().then();
         return;
     }
