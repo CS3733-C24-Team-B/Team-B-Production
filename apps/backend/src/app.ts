@@ -9,11 +9,6 @@ import readEdgesRouter from "./routes/readEdges.ts";
 import editNodesRouter from "./routes/editNodes.ts";
 import editEdgesRouter from "./routes/editEdges.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
-import sanitationRouter from "./routes/serviceRequestSanitation.ts";
-import maintenanceRouter from "./routes/serviceRequestMaintenance.ts";
-import internalTransportRouter from "./routes/serviceRequestInternalTransport.ts";
-import medicineRouter from "./routes/serviceRequestMedicine.ts";
-import languageRouter from "./routes/serviceRequestLanguage.ts";
 import employeeRouter from "./routes/employee.ts";
 
 const app: Express = express(); // Set up the backend
@@ -48,11 +43,6 @@ app.use(auth({
 app.use("/api/nodes", editNodesRouter);
 app.use("/api/edges", editEdgesRouter);
 app.use("/api/service-request", serviceRouter);
-app.use("/api/service-request/sanitation", sanitationRouter);
-app.use("/api/service-request/maintenance", maintenanceRouter);
-app.use("/api/service-request/internal-transport", internalTransportRouter);
-app.use("/api/service-request/medicine", medicineRouter);
-app.use("/api/service-request/language", languageRouter);
 app.use("/api/employee", employeeRouter);
 
 /**
