@@ -18,9 +18,15 @@ function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:str
 
     if (crossProduct < -500) {
         console.log(nodeStart+": "+crossProduct);
+        if(crossProduct>-2000){
+            return "Make a slight left ";
+        }
         return "Make a left ";
     } else if (crossProduct > 500) {
         console.log(nodeStart+": "+crossProduct);
+        if(crossProduct<2000){
+            return "Make a slight right ";
+        }
         return "Make a right ";
     } else {
         return "";
@@ -91,10 +97,13 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
             console.log(coords);
             setCoords(coords);
             let joinedwords:string[] = ["You have arrived at "+nodeIDs[nodeIDs.length-1]];
-
+            if(data.startNode===data.endNode){
+                setCoords(joinedwords);
+                return;
+            }
             // setPath(nodeIDs);
-            let x:number = parseInt(coords[0].substring(coords[0].indexOf(":")+1,coords[0].lastIndexOf(":")));
-            let y:number = parseInt(coords[0].substring(coords[0].lastIndexOf(":")+1));
+            let x:number = parseInt(coords[coords.length-1].substring(coords[coords.length-1].indexOf(":")+1,coords[coords.length-1].lastIndexOf(":")));
+            let y:number = parseInt(coords[coords.length-1].substring(coords[coords.length-1].lastIndexOf(":")+1));
             for( let i = coords.length-2; i >0;i--){
                 const direction =directNode(coords[i-1],coords[i],coords[i+1]);
                 if(direction!="") {
@@ -102,16 +111,13 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
                     const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
                     const dist =Math.sqrt((currx-x)**2+(curry-y)**2);
 
-                    if(dist>=350){
-                        joinedwords.push("Go straight until you reach "+nodeIDs[i]+" then "+ direction.toLowerCase());
-                    }else{
-                        joinedwords.push(direction+" at "+ nodeIDs[i]);
-                    }
+                        joinedwords.push(direction+" at "+ nodeIDs[i] +" ("+Math.round(dist/4)+"ft)");
+
                     x = parseInt(coords[i].substring(coords[i].indexOf(":")+1,coords[i].lastIndexOf(":")));
                     y = parseInt(coords[i].substring(coords[i].lastIndexOf(":")+1));
                 }
             }
-            joinedwords.push("Starting at "+nodeIDs[0]+" ");
+            joinedwords.push("Starting at "+nodeIDs[0]+" head in the direction of "+ nodeIDs[1]);
             joinedwords=joinedwords.reverse();
 
             setCoords(joinedwords);
