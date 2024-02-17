@@ -13,11 +13,13 @@ const MaintenanceRequest = ({change}) => {
 
     return (
         <>
-            <div className="input-field">
+            <div className="top-space">
                 <TextField
+                    style={{width: window.innerWidth * 0.38}}
+                    multiline
+                    rows={3}
                     id="standard-basic"
                     label="Details"
-                    variant="standard"
                     value={details}
                     onChange={(e) => {
                         handleChange(e);
@@ -26,8 +28,6 @@ const MaintenanceRequest = ({change}) => {
                     required
                 />
             </div>
-            <br/>
-            <p> Created by Kenny </p>
         </>
     );
 };
