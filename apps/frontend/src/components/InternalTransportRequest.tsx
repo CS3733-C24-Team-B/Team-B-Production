@@ -8,6 +8,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
     const [toLocation, setToLocation] = useState("");
     const [mobilityAid, setMobilityAid] = useState("");
     const [patientName, setPatientName] = useState("");
+    console.log(toLocation);
 
     function handleChange1(input: string) {
         setToLocation(input);
@@ -28,13 +29,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
+            const res = await axios.get("/api/nodes/read");
 
             setNodeData(res.data);
         }
@@ -46,22 +41,33 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
         return nodeType !== "HALL";
     });
 
+    interface NodeType {
+        label: string,
+        nid: string
+    }
+
     return (
         <>
             <div className="input-field">
                 <Autocomplete
                     style={{width: window.innerWidth * 0.38}}
                     disablePortal
-                    options={currNodes.map(({longName}): { label: string } => (
-                        {label: longName}
+                    options={currNodes.map(({nodeID, longName}): NodeType => (
+                        {label: longName, nid: nodeID}
                     ))}
                     size={"small"}
                     renderInput={(params) =>
-                        <TextField {...params} label="Location to Move Patient" variant="standard"/>}
-                    value={{label: toLocation}}
-                    onChange={(newValue) => {
-                        if (newValue !== null && newValue.target.innerText !== undefined) {
-                            handleChange1(newValue.target.innerText);
+                        <TextField {...params} label="To Location" variant="standard"/>}
+                    //value={{label: nodeIDtoName(location), nid: location}}
+                    getOptionLabel={(nd : NodeType) =>
+                        `${nd.label}`
+                    }
+                    getOptionKey={(nd : NodeType) =>
+                        `${nd.nid}`
+                    }
+                    onChange={(newValue, val) => {
+                        if (val !== null) {
+                            handleChange1(val.nid);
                         }
                     }}
                 />

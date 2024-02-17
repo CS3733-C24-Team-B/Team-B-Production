@@ -59,10 +59,24 @@ type ServiceRequest = {
     language: LanguageRequest,
 }
 
+enum RequestSpecifics {
+    hazards = "Hazards: ",
+    medicineType = "Medicine Type: ",
+    amount = "Amount: ",
+    toLocation = "To Location: ",
+    patientName = "Patient Name: ",
+    mobilityAid = "Mobility Aid: ",
+    language1 = "From Language: ",
+    language2 = "To Language: ",
+    when = "When: ",
+    details = "Details: "
+}
+
 export default function RequestList() {
     const navigate = useNavigate();
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
+    const [nodeData, setNodeData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
@@ -92,10 +106,11 @@ export default function RequestList() {
                     Authorization: "Bearer " + accessToken
                 }
             });
+            const res3 = await axios.get("/api/nodes/read");
 
             setSRData(res.data);
             setEmployeeData(res2.data);
-            console.log(res.data);
+            setNodeData(res3.data);
             setReceivedSR(true);
         }
 
@@ -166,6 +181,17 @@ export default function RequestList() {
             }
         });
         return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
+    }
+
+    function nodeNameOrReturn(nId: string) {
+        const node = nodeData.find(({nodeID}) =>
+            nodeID === nId
+        );
+        if (node !== undefined) {
+            return node!["longName"];
+        } else {
+            return nId;
+        }
     }
 
     const filterSR = srData.filter(filterFunction);
@@ -282,7 +308,7 @@ export default function RequestList() {
                             )}
                         </Select>
                     </TableCell>
-                    <TableCell>{nsr.locationID}</TableCell>
+                    <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
                     <TableCell>{getNameOrEmail(nsr.createdByID)}</TableCell>
                     <TableCell>
                         <Button
@@ -334,9 +360,10 @@ export default function RequestList() {
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
                                 {Object.keys(nsr[getReqType(nsr)]).filter((key) => {
+                                    console.log("KEY: " + key);
                                     return !key.includes("ID");
                                 }).map((key) => (
-                                    <p>{nsr[getReqType(nsr)][key]}</p>
+                                    <p>{RequestSpecifics[key as keyof typeof RequestSpecifics] + nodeNameOrReturn(nsr[getReqType(nsr)][key])}</p>
                                 ))}
                                 <p>Notes: {nsr.notes}</p>
                             </Box>
