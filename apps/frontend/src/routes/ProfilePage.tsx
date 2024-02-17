@@ -31,7 +31,7 @@ type ServiceRequest = {
 }
 
 export default function ProfilePage() {
-    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, isLoading, logout, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -207,7 +207,7 @@ export default function ProfilePage() {
                                     Update Info
                                 </Button>
                             </div>
-                            <div>
+                            <div style={{marginTop: '20px'}}>
                                 <Button variant="contained" color="primary" style={{backgroundColor: "#012D5A"}}
                                         onClick={() => {
                                             getAccessTokenSilently().then((accessToken: string) => {
@@ -221,6 +221,12 @@ export default function ProfilePage() {
                                             });
                                         }}>
                                     Change Password
+                                </Button>
+                            </div>
+                            <div style={{marginTop: '20px'}}>
+                                <Button variant="contained" color="primary" style={{backgroundColor: "#012D5A"}}
+                                        onClick={() => logout()}>
+                                    Log Out
                                 </Button>
                             </div>
                         </div>}
