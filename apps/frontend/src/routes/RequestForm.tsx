@@ -25,7 +25,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
-import {Alert, Autocomplete, FormControl, InputLabel, MenuItem, Snackbar, Modal} from "@mui/material";
+import {Alert, Autocomplete, FormControl, InputLabel, MenuItem, Snackbar, Modal, CircularProgress} from "@mui/material";
 import Box from "@mui/material/Box";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import {useAuth0} from "@auth0/auth0-react";
@@ -44,8 +44,7 @@ const modalStyle = {
 
 export default function RequestForm() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useAuth0();
-    //const [name, setName] = useState("");
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [location, setLocation] = useState("");
     const [prio, setPrio] = useState("");
     const [infoText, setInfoText] = useState("");
@@ -66,25 +65,25 @@ export default function RequestForm() {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
-            const res3 = await axios.get(`/api/employee`);
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/nodes/read");
+            const res3 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             setNodeData(res.data);
             setEmployeeData(res3.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     console.log(isAuthenticated);
 
     async function submit() {
+        const accessToken: string = await getAccessTokenSilently();
         if (typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
                 createdByID: user!.email!,
@@ -97,7 +96,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request/sanitation", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -116,7 +116,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request/medicine", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -136,7 +137,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request/internal-transport", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -156,7 +158,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request/language", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -174,7 +177,8 @@ export default function RequestForm() {
             };
             const res = await axios.post("/api/service-request/maintenance", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -220,6 +224,15 @@ export default function RequestForm() {
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
     });
+
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
 
     return (
         <div className="home-container">

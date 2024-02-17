@@ -31,7 +31,7 @@ type ServiceRequest = {
 }
 
 export default function ProfilePage() {
-    const {user, isAuthenticated} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -72,18 +72,30 @@ export default function ProfilePage() {
 
     useEffect(() => {
         async function submit() { ///copied
+            const accessToken: string = await getAccessTokenSilently();
             const res = await axios.get(`/api/employee/${user!.email!}`, {
                 params: {
                     email: user!.email!
+                },
+                headers: {
+                    Authorization: "Bearer " + accessToken
                 }
             });
-            const res2 = await axios.get("/api/service-request");
-            const res3 = await axios.get(`/api/employee`);
+            const res2 = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res3 = await axios.get(`/api/employee`, {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             if (res.status == 200) {
                 console.log("Successfully submitted form");
             }
-            console.log(res.data);
+
             setEmail(res.data.email);
             setFirstName(res.data.firstName);
             setLastName(res.data.lastName);
@@ -93,7 +105,7 @@ export default function ProfilePage() {
         }
 
         submit().then();
-    }, [user, isAuthenticated]);
+    }, [getAccessTokenSilently, user, isAuthenticated]);
 
     const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
 
@@ -131,15 +143,22 @@ export default function ProfilePage() {
             firstName: firstName,
             lastName: lastName
         };
+        const accessToken: string = await getAccessTokenSilently();
         const res = await axios.put("/api/employee", employeeInfo, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken
             }
         });
         if (res.status == 200) {
             console.log("Successfully submitted form");
             setSubmitAlert(true);
         }
+    }
+
+    if (!isLoading && !isAuthenticated) {
+        loginWithRedirect().then();
+        return;
     }
 
     return (

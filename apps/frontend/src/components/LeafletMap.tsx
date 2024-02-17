@@ -60,14 +60,8 @@ export default function LeafletMap() {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
-            const res3 = await axios.get("/api/db-load-edges");
+            const res = await axios.get("/api/nodes/read");
+            const res3 = await axios.get("/api/edges/read");
 
             setNodeData(res.data);
             setEdgeData(res3.data);
@@ -78,7 +72,7 @@ export default function LeafletMap() {
 
     useEffect(() => {
         async function fetch() {
-            const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
+            const res2 = await axios.get(`/api/path/${nodeStart}/${nodeEnd}`);
 
             let nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
@@ -97,7 +91,9 @@ export default function LeafletMap() {
             setPathData(nodeIDs);
         }
 
-        fetch().then();
+        if (nodeStart.length > 0 && nodeEnd.length > 0) {
+            fetch().then();
+        }
     }, [nodeEnd, nodeStart]);
 
     useEffect(() => {
@@ -202,7 +198,7 @@ export default function LeafletMap() {
     useEffect(() => {
         async function fetch() {
             //  console.log(`${data.startNode}`);
-            const res2 = await axios.get(`/api/db-get-path/currentAlg`);
+            const res2 = await axios.get(`/api/path/currentAlg`);
             setUseAStar(res2.data);
 
         }
@@ -364,7 +360,7 @@ export default function LeafletMap() {
                             onChange={(event) => {
                                 setUseAStar(searchTypeToNum(event.target.value));
                                 console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
-                                axios.post(`/api/db-get-path/change/${searchTypeToNum(event.target.value)}`);
+                                axios.post(`/api/path/change/${searchTypeToNum(event.target.value)}`).then();
                             }}
                             size="small"
                             style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}

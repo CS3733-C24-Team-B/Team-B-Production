@@ -97,7 +97,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     useEffect(() => {
         async function fetch() {
             //  console.log(`${data.startNode}`);
-            const res2 = await axios.get(`/api/db-get-path/${data.startNode}/${data.endNode}`);
+            const res2 = await axios.get(`/api/path/${data.startNode}/${data.endNode}`);
             let nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
                 xcoord: number;
@@ -171,7 +171,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
             <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
             <Button size="small" onClick={speakArray}
                     style={{backgroundColor: "#012D5A", color:'white', fontSize: '1.5vh', width: '15.5vw' }}>
-                {speaking ? 'Stop Speaking' : 'Speak Array'}
+                {speaking ? 'Stop Speaking' : 'Speak Path'}
             </Button>
         </div>);
 };

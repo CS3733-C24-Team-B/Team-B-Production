@@ -11,13 +11,10 @@ let searchType = 0;
 router.post("/change/:type",async function (req: Request, res: Response){
     console.log(req.params.type +" is the new search");
     changeSearch(parseInt(req.params.type));
-    req;
     res.sendStatus(200);
 });
 router.get("/currentAlg",async function (req: Request, res: Response){
-    res.send(searchType);
-    req;
-    res.sendStatus(200);
+    res.status(200).send(searchType);
 });
 
 
@@ -27,7 +24,7 @@ function changeSearch(type:number){
 router.get("/:startNode/:endNode/", async function (req: Request, res: Response) {
     const nodes  = [] ;
     let pathfind: Pathfind= new Pathfind(new AStar());
-    let path:string[]  = [];
+    let path:string[];
     if(searchType===0){
         pathfind=new Pathfind(new AStar());
     }
@@ -46,16 +43,13 @@ router.get("/:startNode/:endNode/", async function (req: Request, res: Response)
         nodes.push(node_data);
     }
 
-    if (nodes === null) {
+    if (nodes.length == 0) {
         console.error("No node data found in database");
         res.sendStatus(204);    // no data
     } else {
 
         res.send(JSON.stringify(nodes));
-        console.info("Successfully sent " + nodes.length + " nodes to frontend");
     }
-
-
 
 });
 export default router;

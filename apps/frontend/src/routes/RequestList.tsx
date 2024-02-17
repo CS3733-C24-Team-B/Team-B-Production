@@ -61,11 +61,10 @@ type ServiceRequest = {
 
 export default function RequestList() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [refresh, setRefresh] = useState(false);
-    //const [clickedRows, setClickedRows] = useState<Map<number, JSX.Element>>(new Map<number, JSX.Element>);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
     const [typeFilter, setTypeFilter] = useState<string>("Choose Type");
     const [priorityFilter, setPriorityFilter] = useState<string>("Choose Priority");
@@ -82,8 +81,17 @@ export default function RequestList() {
 
     useEffect(() => {
         async function fetch() {
-            const res = await axios.get("/api/service-request");
-            const res2 = await axios.get(`/api/employee`);
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res2 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             setSRData(res.data);
             setEmployeeData(res2.data);
@@ -92,7 +100,7 @@ export default function RequestList() {
         }
 
         fetch().then();
-    }, [refresh]);
+    }, [refresh, getAccessTokenSilently]);
 
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
@@ -135,9 +143,7 @@ export default function RequestList() {
         //console.log(sYear + " " + sMonth + " " + sDay + " " + sHour + " " + sMinute + " " + sSecond + " " + sMillisecond);
         const utc = new Date(sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond);
         const offset = utc.getTimezoneOffset() + 60;
-        const local = new Date(utc.getTime() - offset * 60000);
-
-        return local;
+        return new Date(utc.getTime() - offset * 60000);
     }
 
     srData.sort((srA: ServiceRequest, srB: ServiceRequest) => {
@@ -164,7 +170,7 @@ export default function RequestList() {
 
     const filterSR = srData.filter(filterFunction);
 
-    function Row(props: { nsr: ServiceRequest}) {
+    function Row(props: { nsr: ServiceRequest }) {
         const {nsr} = props;
         const [open, setOpen] = React.useState(false);
         const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -218,9 +224,14 @@ export default function RequestList() {
                                     serviceRequest.status = StatusType.Assigned;
                                 }
 
-                                const resSR = await axios.put("/api/service-request", serviceRequest).then();
+                                getAccessTokenSilently().then((accessToken: string) => {
+                                    axios.put("/api/service-request", serviceRequest, {
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then();
+                                });
 
-                                console.log(resSR);
                                 setRefresh(!refresh);
                             }}
                             sx={{fontSize: 15}}>
@@ -250,7 +261,13 @@ export default function RequestList() {
                                     status: StatusType[event.target.value as keyof typeof StatusType]
                                 };
 
-                                await axios.put("/api/service-request", serviceRequest).then();
+                                getAccessTokenSilently().then((accessToken: string) => {
+                                    axios.put("/api/service-request", serviceRequest, {
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then();
+                                });
                                 setRefresh(!refresh);
                             }}
                             sx={{fontSize: 15}}>
@@ -291,11 +308,16 @@ export default function RequestList() {
                     </DialogTitle>
                     <DialogActions>
                         <Button onClick={() => {
-                            axios.delete("/api/service-request", {
-                                data: {
-                                    serviceID: nsr.serviceID
-                                }
-                            }).then();
+                            getAccessTokenSilently().then((accessToken: string) => {
+                                axios.delete("/api/service-request", {
+                                    data: {
+                                        serviceID: nsr.serviceID
+                                    },
+                                    headers: {
+                                        Authorization: "Bearer " + accessToken
+                                    }
+                                }).then();
+                            });
                             setRefresh(!refresh);
                             setDialogOpen(false);
                         }}>Yes</Button>
@@ -336,6 +358,15 @@ export default function RequestList() {
     const userEmployee = employeeData.find(({email}) => {
         return email === employeeFilter;
     });
+
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
 
     return (
         <div className="req-list-container">
