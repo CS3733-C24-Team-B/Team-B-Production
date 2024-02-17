@@ -45,6 +45,9 @@ class Auth0Utility {
      * @param email
      */
     public async createUser(email: string) {
+        if (this.token === "") {
+            await this.setToken();
+        }
         await axios.post(this.domain + "/api/v2/users", {
             email: email,
             email_verified: true,   // true means that user won't need to verify email
@@ -64,6 +67,9 @@ class Auth0Utility {
      * @param email
      */
     public async inviteUser(email: string) {
+        if (this.token === "") {
+            await this.setToken();
+        }
         await axios.post(this.domain + "/dbconnections/change_password", {
             client_id: this.client_id,
             email: email,
@@ -76,18 +82,37 @@ class Auth0Utility {
         });
     }
 
+    public async resetPassword(email: string): Promise<string> {
+        if (this.token === "") {
+            await this.setToken();
+        }
+        const user_id: string = await this.getUserID(email);
+        const res = await axios.post(this.domain + "/api/v2/tickets/password-change", {
+            user_id: user_id,
+            client_id: this.client_id,
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this.token
+            }
+        });
+        return res.data.ticket;
+    }
+
     /**
      * Deletes a user from Auth0 with the specified email.
      * @param email
      */
-    public async deleteUser(email: string) {
-        this.getUserID(email).then(async (user_id) => {
-            await axios.delete(this.domain + "/api/v2/users/" + user_id, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.token
-                }
-            });
+    public async deleteUser(email: string): Promise<void> {
+        if (this.token === "") {
+            await this.setToken();
+        }
+        const user_id: string = await this.getUserID(email);
+        await axios.delete(this.domain + "/api/v2/users/" + user_id, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this.token
+            }
         });
     }
 
@@ -97,7 +122,10 @@ class Auth0Utility {
      * @param email
      * @private
      */
-    private async getUserID(email: string) {
+    private async getUserID(email: string): Promise<string> {
+        if (this.token === "") {
+            await this.setToken();
+        }
         const user_id = await axios.get(this.domain + "/api/v2/users-by-email", {
             headers: {
                 "Content-Type": "application/json",

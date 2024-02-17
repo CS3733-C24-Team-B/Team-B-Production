@@ -37,6 +37,12 @@ router.get("/:email?", async function (req: Request, res: Response) {
     }
 });
 
+router.get("/reset-password/:email", async function (req: Request, res: Response) {
+    const email: string = req.params.email;
+    const resetPasswordLink: string = await auth0Utility.resetPassword(email);
+    return res.status(200).send(resetPasswordLink);
+});
+
 router.post('/', async function (req: Request, res: Response) {
     const employeeInfo: CreateEmployee = req.body;
     try {
@@ -50,7 +56,6 @@ router.post('/', async function (req: Request, res: Response) {
             }
         });
 
-        await auth0Utility.setToken();
         await auth0Utility.createUser(employeeInfo.email);
         await auth0Utility.inviteUser(employeeInfo.email);
 
@@ -95,7 +100,6 @@ router.delete('/', async function (req: Request, res: Response) {
             }
         });
 
-        await auth0Utility.setToken();
         await auth0Utility.deleteUser(employeeDelete.email);
 
         return res.status(200).json({

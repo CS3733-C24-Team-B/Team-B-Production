@@ -207,12 +207,34 @@ export default function ProfilePage() {
                                     Update Info
                                 </Button>
                             </div>
+                            <div>
+                                <Button variant="contained" color="primary" style={{backgroundColor: "#012D5A"}}
+                                        onClick={() => {
+                                            getAccessTokenSilently().then((accessToken: string) => {
+                                                axios.get("/api/employee/reset-password/" + email, {
+                                                    headers: {
+                                                        Authorization: "Bearer " + accessToken
+                                                    }
+                                                }).then((res) => {
+                                                    location.href = res.data;
+                                                });
+                                            });
+                                        }}>
+                                    Change Password
+                                </Button>
+                            </div>
                         </div>}
                     </Paper>
                 </Container>
                 <Container style={{marginTop: '20px'}}> {/* Increased marginTop */}
                     <Paper elevation={3}
-                           style={{padding: '30px', width: '45%', float: 'right', maxHeight: window.innerHeight*0.51, overflow: 'auto'}}>
+                           style={{
+                               padding: '30px',
+                               width: '45%',
+                               float: 'right',
+                               maxHeight: window.innerHeight * 0.51,
+                               overflow: 'auto'
+                           }}>
                         <Typography variant="h5" gutterBottom>
                             Service Requests
                         </Typography>
