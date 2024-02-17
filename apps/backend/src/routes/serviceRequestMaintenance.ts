@@ -16,7 +16,11 @@ router.post("/", async function (req: Request, res: Response) {
                                 email: request.createdByID
                             }
                         },
-                        locationID: request.locationID,
+                        location: {
+                            connect: {
+                                nodeID: request.locationID
+                            }
+                        },
                         priority: request.priority,
                         status: request.status,
                         assignedTo: {

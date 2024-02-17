@@ -6,6 +6,23 @@ import client from "../bin/database-connection.ts";
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
+router.get("/", async function (req: Request, res: Response) {
+
+    const node_data: Node[] = await client.node.findMany({
+        include: {
+            serviceRequests: true
+        }
+    });
+    if (node_data === null) {
+        console.error("No node data found in database");
+        res.sendStatus(204);    // no data
+    }
+    else {
+        res.send(JSON.stringify(node_data));
+    }
+
+});
+
 router.post("/", upload.single("csvFile"), async function (req: Request, res: Response) {
 
     const nodeFile = req.file;

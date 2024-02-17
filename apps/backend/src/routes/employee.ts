@@ -13,7 +13,12 @@ router.get("/:email?", async function (req: Request, res: Response) {
     const email: string = req.params.email;
 
     if (email === undefined) {
-        const employees: Employee[] = await client.employee.findMany();
+        const employees: Employee[] = await client.employee.findMany({
+            include: {
+                requestsCreated: true,
+                requestsAssigned: true
+            }
+        });
         if (employees === null) {
             console.error("No employees found in database");
             return res.status(204).send("No employees found in database");
@@ -23,6 +28,10 @@ router.get("/:email?", async function (req: Request, res: Response) {
         const employee: Employee | null = await client.employee.findUnique({
             where: {
                 email: email
+            },
+            include: {
+                requestsCreated: true,
+                requestsAssigned: true
             }
         });
         if (employee === null) {

@@ -8,6 +8,8 @@ const router: Router = express.Router();
 router.get('/', async function (req: Request, res: Response) {
     const serviceRequest: ServiceRequest[] = await client.serviceRequest.findMany({
         include: {
+            createdBy: true,
+            assignedTo: true,
             sanitation: true,
             maintenance: true,
             internalTransport: true,
@@ -34,7 +36,11 @@ router.post('/', async function (req: Request, res: Response) {
                         email: request.createdByID
                     }
                 },
-                locationID: request.locationID,
+                location: {
+                    connect: {
+                        nodeID: request.locationID
+                    }
+                },
                 priority: request.priority,
                 status: request.status,
                 assignedTo: {
