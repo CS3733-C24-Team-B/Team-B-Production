@@ -139,7 +139,7 @@ export default function LeafletMap() {
                     const y2 = transY(nodeIDToYPos(endNodeID));
                     temp.push(<Polyline
                         positions={[[y1, x1], [y2, x2]]}
-                        color={"green"} weight={5}></Polyline>);
+                        color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                 }
             });
         } else {
@@ -149,7 +149,7 @@ export default function LeafletMap() {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
                             positions={[[transY(startY), transX(startX)], [transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]]}
-                            color={"green"} weight={5}></Polyline>);
+                            color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
                         const midX = transX(startX) + dx / 2;
@@ -162,10 +162,10 @@ export default function LeafletMap() {
                         if (pathLength > 0.2) {
                             temp.push(<Polyline
                                 positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
+                                color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                             temp.push(<Polyline
                                 positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
+                                color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         }
                     } else if (prevFloor !== "") {
                         temp.push(
@@ -434,6 +434,7 @@ export default function LeafletMap() {
                                 setNodeEnd(nId);
                             } else {
                                 setNodeEnd("");
+                                setPathData([]);
                             }
                         }}
                     />
@@ -475,7 +476,7 @@ export default function LeafletMap() {
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6}
+                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {
