@@ -17,6 +17,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import SettingsIcon from '@mui/icons-material/Settings';
 // import HomeIcon from '@mui/icons-material/Home';
 import logo from "../images/BandW-Logo-White.png";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -26,8 +27,8 @@ const drawerWidth = 240;
 
 const icons = [<AccountBoxIcon />, <AdminPanelSettingsIcon/>];
 const links = ['/profile-info', '/admin-viewer'];
-const adminIcons = [<NavigationIcon />,<InboxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />];
-const adminLinks = ['/','/requestform', '/requestlist', '/csvnodedata', '/csvedgedata'];
+const adminIcons = [<NavigationIcon />,<InboxIcon />, <InboxIcon />, <ScatterPlotIcon />, <TimelineIcon />, <SettingsIcon />];
+const adminLinks = ['/','/requestform', '/requestlist', '/csvnodedata', '/csvedgedata', '/settings'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -151,7 +152,7 @@ export default function PersistentDrawerLeft() {
                             color: 'white',
                         }}
                     >
-                        {['Navigation', 'Create Request', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data'].map((text, index) => (
+                        {['Navigation', 'Create Request', 'View Service Requests', 'CSV Node Data', 'CSV Edge Data', 'Settings'].map((text, index) => (
                             <ListItem key={text} disablePadding>
                                 <ListItemButton component="a" href={adminLinks[index]}>
                                     <ListItemIcon

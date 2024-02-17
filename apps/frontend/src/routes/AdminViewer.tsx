@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Dialog, DialogActions, DialogTitle} from "@mui/material";
 import {Alert, Snackbar} from "@mui/material";
 import "../css/servicelist_page.css";
 import "../css/admin_page.css";
@@ -26,6 +26,7 @@ export default function AdminViewer() {
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
+    const [dialogID, setDialogID] = useState(-1);
     const [submitAlert, setSubmitAlert] = useState(false);
     const [isError, setIsError] = useState(false);
     const [alertText, setAlertText] = useState("");
@@ -92,6 +93,7 @@ export default function AdminViewer() {
         </Button>);
 
     const employeeList = employees.map((employee: UpdateEmployee, index: number) => {
+
         return (
             <tr>
                 <td>{employee.email}</td>
@@ -153,26 +155,49 @@ export default function AdminViewer() {
                             style={{color: (employee.email === "softengc24b@gmail.com") ? "grey" : "#012D5A"}}
                             disabled={(employee.email === "softengc24b@gmail.com")}
                             onClick={() => {
-                        console.log("Deleting employee with email " + employee.email);
-                        getAccessTokenSilently()
-                            .then((accessToken: string) => {
-                                axios.delete("/api/employee", {
-                                    data: {
-                                        email: employee.email
-                                    },
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken
-                                    }
-                                }).then();
-                            });
-
-                        const updatedEmployees: UpdateEmployee[] = [...employees];
-                        updatedEmployees.splice(index, 1);
-                        setEmployees(updatedEmployees);
+                        setDialogID(index);
                     }}>
                         <DeleteIcon/>
                     </Button>
                 </td>
+                <Dialog
+                    open={dialogID === index}
+                    onClose={() => {
+                        setDialogID(-1);
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Are you sure you want to delete that account?"}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={() => {
+                            console.log("Deleting employee with email " + employee.email);
+                            getAccessTokenSilently()
+                                .then((accessToken: string) => {
+                                    axios.delete("/api/employee", {
+                                        data: {
+                                            email: employee.email
+                                        },
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then();
+                                });
+
+                            const updatedEmployees: UpdateEmployee[] = [...employees];
+                            updatedEmployees.splice(index, 1);
+                            setEmployees(updatedEmployees);
+                            setDialogID(-1);
+                        }}>Yes</Button>
+                        <Button onClick={() => {
+                            setDialogID(-1);
+                        }} autoFocus>
+                            No
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </tr>
         );
     });
