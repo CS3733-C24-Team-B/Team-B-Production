@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import { Pie } from 'react-chartjs-2';
-import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale} from 'chart.js';
+import {Bar, Pie} from 'react-chartjs-2';
+import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale, BarElement} from 'chart.js';
 import { ChartOptions } from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
@@ -8,16 +8,16 @@ import Navbar from "../components/Navbar.tsx";
 import "../css/chart.css";
 
 
-ChartJS.register(Tooltip, Legend, ArcElement, Title, CategoryScale);
+ChartJS.register(BarElement, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale);
 
 function ShowData() {
-    const [srData, setSRData] = useState<ServiceRequest[]>([]);
-
+    const [srData, setsrData] = useState<ServiceRequest[]>([]);
+    
     useEffect(() => {
         async function fetchData() {
             try {
                 const res = await axios.get("/api/service-request");
-                setSRData(res.data);
+                setsrData(res.data);
             } catch (error) {
                 console.error("There was an error fetching the service request data:", error);
             }
@@ -99,6 +99,29 @@ function ShowData() {
             },
         },
     };
+    const priorityCounts = { Low: 0, Medium: 0, High: 0, Emergency: 0 };
+
+    srData.forEach(item => {
+        const priority = item.priority as keyof typeof priorityCounts;
+        if (Object.prototype.hasOwnProperty.call(priorityCounts, priority)) {
+            priorityCounts[priority]++;
+        }
+    });
+    const barData = {
+        labels: Object.keys(priorityCounts),
+        datasets: [{
+            label: 'Number of Requests by Priority',
+            data: Object.values(priorityCounts),
+            backgroundColor: ['blue', 'yellow', 'orange', 'red'],
+        }]
+    };
+
+    const bar_options = {
+        aspectRatio: 2,
+        maintainAspectRatio: true,
+    };
+
+
 
     return (
         <div className="top-container">
@@ -113,10 +136,12 @@ function ShowData() {
 
             <div className="chartbox">
                 <Pie data={chartData} options={options}/>
+                <Bar data={barData} options={bar_options}/>
             </div>
         </div>
     );
 
 };
+
 
 export default ShowData;
