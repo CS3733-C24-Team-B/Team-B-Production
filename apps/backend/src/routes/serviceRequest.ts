@@ -24,7 +24,6 @@ router.get('/', async function (req: Request, res: Response) {
         console.error("No edge data found in database");
         return res.status(204).send("Could not find edge data in database");
     } else {
-        console.log(serviceRequest);
         return res.status(200).send(JSON.stringify(serviceRequest));
     }
 });
@@ -82,7 +81,7 @@ router.post("/sanitation", async function (req: Request, res: Response) {
         });
         return res.status(200).send("Successfully added sanitation service request to db");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).send("Could not add sanitation service request to db");
     }
 });
@@ -100,7 +99,7 @@ router.post("/maintenance", async function (req: Request, res: Response) {
         });
         return res.status(200).send("Successfully added maintenance service request to db");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).send("Could not add maintenance service request to db");
     }
 });
@@ -120,7 +119,7 @@ router.post("/internal-transport", async function (req: Request, res: Response) 
         });
         return res.status(200).send("Successfully added internal transportation service request to db");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).send("Could not add internal transportation service request to db");
     }
 });
@@ -139,7 +138,7 @@ router.post("/medicine", async function (req: Request, res: Response) {
         });
         return res.status(200).send("Successfully added medicine service request to db");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).send("Could not add medicine service request to db");
     }
 });
@@ -159,7 +158,7 @@ router.post("/language", async function (req: Request, res: Response) {
         });
         return res.status(200).send("Successfully added language service request to db");
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).send("Could not add language service request to db");
     }
 });
