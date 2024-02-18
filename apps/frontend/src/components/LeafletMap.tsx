@@ -56,6 +56,7 @@ export default function LeafletMap() {
     const [currLevel, setCurrLevel] = useState("L1");
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
     const [animateData, setAnimateData] = useState<LatLng[]>([]);
+    const [animateChanges, setAnimateChanges] = useState<number[]>([]);
     const [redraw, setRedraw] = useState(false);
     const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
@@ -133,6 +134,7 @@ export default function LeafletMap() {
         let prevFloor = "";
         const temp: JSX.Element[] = [];
         const animate: LatLng[] = [];
+        const changes : number[] = [];
         if (showEdges) {
             edgeData.map(({startNodeID, endNodeID}) => {
                 if (nodeIDToFloor(startNodeID) === currLevel && nodeIDToFloor(endNodeID) === currLevel) {
@@ -155,24 +157,9 @@ export default function LeafletMap() {
                             color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
-                        const steps = 80;
+                        const steps = 120 * Math.sqrt(dy*dy + dx*dx);
                         for(let i = 0; i < steps; i++) {
                             animate.push(new LatLng(transY(startY) + dy*i/steps, transX(startX) + dx*i/steps));
-                        }
-                        const midX = transX(startX) + dx / 2;
-                        const midY = transY(startY) + dy / 2;
-                        const angle = Math.atan(dy / dx);
-                        const xMod = (dx === 0) ? 1 : -dx / Math.abs(dx);
-                        const yMod = (dx >= 0) ? -1 : 1;
-                        const pathLength = Math.sqrt(dx * dx + dy * dy);
-                        console.log("ANGLE: " + angle);
-                        if (pathLength > 0.2) {
-                            temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
-                            temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         }
                     } else if (prevFloor !== "") {
                         temp.push(
@@ -192,6 +179,7 @@ export default function LeafletMap() {
                             </Popup>
                         );
                         floorChanges++;
+                        changes.push(animate.length - 1);
                     }
                     prevFloor = nodeIDToFloor(nr);
                     startX = -1;
@@ -201,6 +189,7 @@ export default function LeafletMap() {
         }
         setLineData(temp);
         setAnimateData(animate);
+        setAnimateChanges(changes);
     }, [currLevel, edgeData, nodeData, pathData, showEdges]);
 
     useEffect(() => {
@@ -217,8 +206,12 @@ export default function LeafletMap() {
     function moveLine() {
         if(animateData.length > 0) {
             startDraw.current = (startDraw.current+1) % animateData.length;
-            let end = startDraw.current;
-            end = startDraw.current + 20;
+            let end = startDraw.current + 50;
+            animateChanges.forEach((num) => {
+                if(startDraw.current <= num && end > num) {
+                    end = num;
+                }
+            });
             if(end >= animateData.length) {
                 end = animateData.length-1;
             }
@@ -228,7 +221,9 @@ export default function LeafletMap() {
             return (
                 <Polyline
                     positions={[animateData[startDraw.current], animateData[end]]}
-                    color={"white"} weight={5} opacity={0.6} ></Polyline>
+                    color={"white"} weight={5} opacity={0.75} ref={(r) => {
+                        r?.bringToFront();
+                }}></Polyline>
             );
         }
     }
