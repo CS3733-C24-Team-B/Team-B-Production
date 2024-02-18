@@ -74,12 +74,10 @@ router.post("/bulk-insert", upload.single("employeeFile"), async function (req: 
     }
 
     const employees: Employee[] = [];
-
     try {
         const employeeData: string = String(employeeFile.buffer);
         const lines: string[] = employeeData.split(/\r?\n/);
         lines.splice(0, 1);                     // remove 1st line (column headings)
-        lines.splice(lines.length - 1, 1);      // remove last line (empty line)
 
         // loop through lines and put into JSON format
         for (let i: number = 0; i < lines.length; i++) {
@@ -98,7 +96,7 @@ router.post("/bulk-insert", upload.single("employeeFile"), async function (req: 
     catch (error) {
         console.error(error);
         console.error("Unable to read employee CSV file");
-        return res.sendStatus(400);
+        return res.status(400).send("Unable to read employee CSV file");
     }
 
     try {
@@ -115,7 +113,7 @@ router.post("/bulk-insert", upload.single("employeeFile"), async function (req: 
         else {
             console.error(error);
         }
-        return res.sendStatus(400);
+        return res.status(400).send("Unable to add employees to the database");
     }
 
     for (let i: number = 0; i < employees.length; i++) {
@@ -124,7 +122,7 @@ router.post("/bulk-insert", upload.single("employeeFile"), async function (req: 
             await auth0Utility.createUser(email);
             await auth0Utility.inviteUser(email);
 
-            res.status(200).send("Sent invite email to employee with email " + email);
+            console.log("Sent invite email to employee with email " + email);
         } catch (error) {
             console.log(error);
             return res.status(400).send("Could not send invite email to employee with email " + email);
