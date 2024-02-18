@@ -8,7 +8,7 @@ import {Button, Autocomplete, Collapse, MenuItem, FormControlLabel, Checkbox, Fo
 import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
-import * as L from "leaflet";
+import L from "leaflet";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -19,12 +19,12 @@ import thirdfloor from "../images/03_thethirdfloor.png";
 
 const FloorLevel = [
     {
-        floor: lowerlevel1,
-        level: "L1"
-    },
-    {
         floor: lowerlevel2,
         level: "L2"
+    },
+    {
+        floor: lowerlevel1,
+        level: "L1"
     },
     {
         floor: firstfloor,
@@ -259,15 +259,15 @@ export default function LeafletMap() {
         }
     }
 
-    const floorToLevel = (inputFloor: string) => {
-        let output = "0";
-        FloorLevel.map(({floor, level}) => {
-            if (inputFloor === floor) {
-                output = level;
-            }
-        });
-        return output;
-    };
+    // const floorToLevel = (inputFloor: string) => {
+    //     let output = "0";
+    //     FloorLevel.map(({floor, level}) => {
+    //         if (inputFloor === floor) {
+    //             output = level;
+    //         }
+    //     });
+    //     return output;
+    // };
 
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
@@ -320,8 +320,8 @@ export default function LeafletMap() {
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
             <Collapse in={isDrawerOpen} timeout="auto"
-                    ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
-            className={"google-maps-collapse"}>
+                      ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
+                      className={"google-maps-collapse"}>
                 <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
                     <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
                         <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
@@ -414,34 +414,13 @@ export default function LeafletMap() {
                     <Button className="open-drawer" onClick={() => {
                         setIsDrawerOpen(!isDrawerOpen);
                     }}>
-                        <RoomIcon />
+                        <RoomIcon/>
                     </Button>
                 </div>
             </Collapse>
             <div className="map-buttons">
                 <div className="floor-button">
-                    <TextField
-                        select
-                        value={selectedFloor}
-                        onChange={(event) => {
-                            console.log(lMap);
-                            lMap!.current.setZoom(5);
-                            setSelectedFloor(event.target.value);
-                            setCurrLevel(floorToLevel(event.target.value));
-                        }}
-                        variant="outlined"
-                        size="small"
-                        style={{backgroundColor: "white",}}
-                    >
-                        <MenuItem value={lowerlevel1}>Lower Level 1</MenuItem>
-                        <MenuItem value={lowerlevel2}>Lower Level 2</MenuItem>
-                        {/*<MenuItem value="groundfloor">Ground Floor</MenuItem>*/}
-                        <MenuItem value={firstfloor}>First Floor</MenuItem>
-                        <MenuItem value={secondfloor}>Second Floor</MenuItem>
-                        <MenuItem value={thirdfloor}>Third Floor</MenuItem>
-                    </TextField>
                 </div>
-
                 <div className="search-button">
                     <Autocomplete
                         disablePortal
@@ -470,15 +449,21 @@ export default function LeafletMap() {
                     <Button onClick={() => {
                         setIsDrawerOpen(!isDrawerOpen);
                     }}>
-                        <RoomIcon />
+                        <RoomIcon/>
                     </Button>
                 </div>
 
                 <div className="checkboxes">
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>} label="Show Nodes"/>
-                        <FormControlLabel control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>} label="Show Edges"/>
-                        <FormControlLabel control={<Checkbox checked={showNodes && showHalls} onClick={() => setShowHalls(!showHalls)}/>} label="Show Halls"/>
+                        <FormControlLabel
+                            control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
+                            label="Show Nodes"/>
+                        <FormControlLabel
+                            control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
+                            label="Show Edges"/>
+                        <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
+                                                             onClick={() => setShowHalls(!showHalls)}/>}
+                                          label="Show Halls"/>
                     </FormGroup>
                 </div>
             </div>
@@ -521,6 +506,20 @@ export default function LeafletMap() {
                 {lineData}
                 {moveLine()}
             </MapContainer>
+            <div className="floor-buttons">
+                {FloorLevel.slice().reverse().map(({floor, level}) => (
+                    <button
+                        key={floor}
+                        className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : ''}`}
+                        onClick={() => {
+                            setSelectedFloor(floor);
+                            setCurrLevel(level);
+                        }}
+                    >
+                        {level}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }
