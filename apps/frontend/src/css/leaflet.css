@@ -11,6 +11,10 @@
     background-color: white;
 }
 
+.text-paper {
+    overflow-y: auto;
+}
+
 .map-buttons {
     position: fixed;
     top: 4%;
