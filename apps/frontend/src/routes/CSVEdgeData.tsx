@@ -56,13 +56,13 @@ export default function CSVEdgeData() {
 
         try {
             const formData = new FormData();
-            const csvFile = document.querySelector('#myFile');
+            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
             if (csvFile == null) {
                 console.log("imagefile should not be null...");
                 return;
             }
 
-            formData.append("csvFile", csvFile.files[0]); // Update based on backend
+            formData.append("csvFile", csvFile.files![0]); // Update based on backend
             getAccessTokenSilently().then((accessToken: string) => {
                 axios.post("/api/edges", formData, {
                     headers: {
