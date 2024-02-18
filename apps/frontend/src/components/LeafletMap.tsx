@@ -4,11 +4,21 @@ import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import {Button, Autocomplete, Collapse, MenuItem, FormControlLabel, Checkbox, FormGroup} from "@mui/material";
+import {
+    Button,
+    Autocomplete,
+    Collapse,
+    MenuItem,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
+    CircularProgress
+} from "@mui/material";
 import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
+import {useAuth0} from "@auth0/auth0-react";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -16,6 +26,13 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
+import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import {
+    InternalTransportRequest, LanguageRequest,
+    MaintenanceRequest,
+    MedicineRequest,
+    SanitationRequest
+} from "common/src/serviceRequestTypes.ts";
 
 const FloorLevel = [
     {
@@ -40,6 +57,24 @@ const FloorLevel = [
     }
 ];
 
+type ServiceRequest = {
+    serviceID: number,
+    timeCreated: string,
+    createdBy: UpdateEmployee,
+    createdByID: string,
+    locationID: string,
+    priority: string,
+    status: string,
+    assignedTo: UpdateEmployee,
+    assignedID: string,
+    notes: string,
+    sanitation: SanitationRequest,
+    maintenance: MaintenanceRequest,
+    internalTransport: InternalTransportRequest,
+    medicine: MedicineRequest,
+    language: LanguageRequest,
+}
+
 export default function LeafletMap() {
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
@@ -57,18 +92,37 @@ export default function LeafletMap() {
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
     const lMap: Ref<L.Map> = useRef();
 
+    // get auth0 stuff
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
+
+    const [srData, setSRData] = useState<ServiceRequest[]>([]);
+    //const [employeeData, setEmployeeData] = useState([]);
+
 
     useEffect(() => {
         async function fetch() {
-            const res = await axios.get("/api/nodes/read");
-            const res3 = await axios.get("/api/edges/read");
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            // const res2 = await axios.get("/api/employee", {
+            //     headers: {
+            //         Authorization: "Bearer " + accessToken
+            //     }
+            // });
+            const res3 = await axios.get("/api/nodes/read");
+            const res4 = await axios.get("/api/edges/read");
 
-            setNodeData(res.data);
-            setEdgeData(res3.data);
+            setSRData(res.data);
+            //setEmployeeData(res2.data);
+            setNodeData(res3.data);
+            setEdgeData(res4.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -294,6 +348,31 @@ export default function LeafletMap() {
         return 0;
     }
 
+    function getReqType(nsr: ServiceRequest) {
+        if (nsr.sanitation) {
+            return "sanitation ";
+        } else if (nsr.medicine) {
+            return "medicine ";
+        } else if (nsr.maintenance) {
+            return "maintenance ";
+        } else if (nsr.internalTransport) {
+            return "Internal Transport ";
+        } else if (nsr.language) {
+            return "Language ";
+        }
+        return "";
+    }
+
+    // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
+
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
@@ -476,7 +555,8 @@ export default function LeafletMap() {
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
+                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)}
+                                      radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {
@@ -492,7 +572,22 @@ export default function LeafletMap() {
                                           }
                                       }}>
                             <Tooltip>
-                                {longName + ": " + xcoord + ", " + ycoord}
+                                <MenuItem value={user!.email}>Assigned to you</MenuItem>
+                                {/*{longName + ": " + xcoord + ", " + ycoord}*/}
+                                <div>
+                                    {longName}
+                                    {/* Display service request data here */}
+                                    {srData.map((serviceRequest) => (
+                                        <div key={serviceRequest.serviceID}>
+                                            {serviceRequest.locationID === nodeID && (
+                                                <p>Contains {getReqType(serviceRequest)} Service Request <br/>
+                                                    Request Status: {serviceRequest.status} <br/>
+                                                    Created By: {serviceRequest.createdByID} <br/>
+                                                    Assigned To: {serviceRequest.assignedID}</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </Tooltip>
                         </CircleMarker> : <></>)
                 ))}
