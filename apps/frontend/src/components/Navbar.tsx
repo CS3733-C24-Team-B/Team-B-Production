@@ -76,7 +76,7 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }));
 
 export default function PersistentDrawerLeft() {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -104,7 +104,7 @@ export default function PersistentDrawerLeft() {
                         color="inherit"
                         aria-label="open drawer"
                         // onMouseEnter={handleDrawerOpen} //opens navbar when hovered
-                        onMouseClick={handleDrawerOpen} //opens navbar when clicked
+                        onClick={handleDrawerOpen} //opens navbar when clicked
                         edge="start"
                         sx={{
                             ml: 0.075, //margin left
@@ -184,7 +184,7 @@ export default function PersistentDrawerLeft() {
                             color: 'white',
                         }}
                     >
-                        {['Profile','Navigation', 'Service Requests', 'Admin','Settings'].map((text, index) => (
+                        {['Navigation', 'Service Requests','Settings'].map((text, index) => (
                             <ListItem key={text} disablePadding>
                                 <ListItemButton component="a" href={adminLinks[index]}>
                                     <ListItemIcon
