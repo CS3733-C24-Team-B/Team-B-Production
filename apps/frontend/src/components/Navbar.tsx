@@ -21,7 +21,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-const drawerWidth = 240;
+const drawerWidth = 262;
 
 
 // Import Lato font
@@ -36,14 +36,17 @@ const theme = createTheme({
         ].join(','),
     },
 });
+{/*profile, settings, nav, service, admin*/}
 
 const adminIcons = [
-    <AccountCircleIcon style={{ fontSize: '2rem' }}/>,
-    <AdminPanelSettingsIcon style={{ fontSize: '2rem' }}/>,
-    <NavigationIcon style={{ fontSize: '2rem' }}/>,
-    <DesignServicesIcon style={{ fontSize: '2rem' }}/>,
-    <SettingsIcon style={{ fontSize: '2rem' }}/>];
-const adminLinks = ['/profile-info', '/admin-viewer','/', '/requestform','/settings'];
+    <AccountCircleIcon style={{ fontSize: '1.7rem' }}/>,
+    <SettingsIcon style={{ fontSize: '1.7rem' }}/>,
+    <NavigationIcon style={{ fontSize: '1.7rem' }}/>,
+    <DesignServicesIcon style={{ fontSize: '1.7rem' }}/>,
+    <AdminPanelSettingsIcon style={{ fontSize: '1.7rem' }}/>
+    ];
+
+const adminLinks = ['/profile-info','/settings', '/','/requestform','/admin-viewer'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -103,8 +106,7 @@ export default function PersistentDrawerLeft() {
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        // onMouseEnter={handleDrawerOpen} //opens navbar when hovered
-                        onClick={handleDrawerOpen} //opens navbar when clicked
+                        onMouseEnter={handleDrawerOpen} //opens navbar when hovered
                         edge="start"
                         sx={{
                             ml: 0.075, //margin left
@@ -121,7 +123,7 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '72px'}}
                     >
-                        <AccountCircleIcon style={{ fontSize: '2rem' }}/>  {/*profile icon*/}
+                        <AccountCircleIcon style={{ fontSize: '1.5rem' }}/>  {/*profile icon*/}
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -129,7 +131,7 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '125px'}}
                     >
-                        <AdminPanelSettingsIcon style={{ fontSize: '2.2rem' }}/>  {/*admin icon*/}
+                        <AdminPanelSettingsIcon style={{ fontSize: '1.9rem' }}/>  {/*admin icon*/}
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -137,7 +139,7 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '176px'}}
                     >
-                        <NavigationIcon style={{ fontSize: '2rem' }}/>  {/*naviagtion icon*/}
+                        <NavigationIcon style={{ fontSize: '1.5rem' }}/>  {/*naviagtion icon*/}
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -145,7 +147,7 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '228px'}}
                     >
-                        <DesignServicesIcon style={{ fontSize: '2rem' }}/>  {/*service request icon*/}
+                        <DesignServicesIcon style={{ fontSize: '1.5rem' }}/>  {/*service request icon*/}
                     </IconButton>
                     <IconButton
                         color="inherit"
@@ -153,7 +155,7 @@ export default function PersistentDrawerLeft() {
                         onClick={handleHomeClick}
                         style={{color: 'white', position: 'fixed', top: '279px'}}
                     >
-                        <SettingsIcon style={{ fontSize: '2rem' }}/>{/*settings icon*/}
+                        <SettingsIcon style={{ fontSize: '1.5rem' }}/>{/*settings icon*/}
                     </IconButton>
                 </Toolbar>
 
@@ -176,19 +178,18 @@ export default function PersistentDrawerLeft() {
                     onMouseEnter={handleDrawerOpen}
                     onMouseLeave={handleDrawerClose}
                 >
-                    <DrawerHeader>
+                    <DrawerHeader sx={{paddingTop:'3.5px', ml:'1px'}}>
                         <a href="/home">
                             <img src={logo} alt="Hospital Logo" width={"100%"}/>
                         </a>
                     </DrawerHeader>
-
                     <List
                         sx={{
                             color: 'white',
                         }}
                     >
                         {['Profile', 'Admin','Navigation', 'Service Requests','Settings'].map((text, index) => (
-                            <ListItem key={text} disablePadding>
+                            <ListItem key={text} sx={{paddingBottom:'0px', ml:-2.3}}>
                                 <ListItemButton component="a" href={adminLinks[index]}>
                                     <ListItemIcon
                                         sx={{
