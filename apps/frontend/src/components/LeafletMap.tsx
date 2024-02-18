@@ -8,7 +8,7 @@ import {Button, Autocomplete, Collapse, MenuItem, FormControlLabel, Checkbox, Fo
 import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
-import L from "leaflet";
+import * as L from "leaflet";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -55,8 +55,10 @@ export default function LeafletMap() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
+    const [animateData, setAnimateData] = useState<LatLng[]>([]);
+    const [redraw, setRedraw] = useState(false);
+    const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
-
 
     useEffect(() => {
         async function fetch() {
@@ -130,6 +132,7 @@ export default function LeafletMap() {
         let startY = -1;
         let prevFloor = "";
         const temp: JSX.Element[] = [];
+        const animate: LatLng[] = [];
         if (showEdges) {
             edgeData.map(({startNodeID, endNodeID}) => {
                 if (nodeIDToFloor(startNodeID) === currLevel && nodeIDToFloor(endNodeID) === currLevel) {
@@ -152,6 +155,10 @@ export default function LeafletMap() {
                             color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
+                        const steps = 80;
+                        for(let i = 0; i < steps; i++) {
+                            animate.push(new LatLng(transY(startY) + dy*i/steps, transX(startX) + dx*i/steps));
+                        }
                         const midX = transX(startX) + dx / 2;
                         const midY = transY(startY) + dy / 2;
                         const angle = Math.atan(dy / dx);
@@ -193,6 +200,7 @@ export default function LeafletMap() {
             });
         }
         setLineData(temp);
+        setAnimateData(animate);
     }, [currLevel, edgeData, nodeData, pathData, showEdges]);
 
     useEffect(() => {
@@ -205,6 +213,25 @@ export default function LeafletMap() {
 
         fetch().then();
     }, []);
+
+    function moveLine() {
+        if(animateData.length > 0) {
+            startDraw.current = (startDraw.current+1) % animateData.length;
+            let end = startDraw.current;
+            end = startDraw.current + 20;
+            if(end >= animateData.length) {
+                end = animateData.length-1;
+            }
+            setInterval(() => {
+                setRedraw(!redraw);
+            }, 800);
+            return (
+                <Polyline
+                    positions={[animateData[startDraw.current], animateData[end]]}
+                    color={"white"} weight={5} opacity={0.6} ></Polyline>
+            );
+        }
+    }
 
     // function selectNode(event: LeafletMouseEvent) {
     //     event.target.setStyle({
@@ -297,7 +324,7 @@ export default function LeafletMap() {
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
-            <Collapse in={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} timeout="auto"
+            <Collapse in={isDrawerOpen} timeout="auto"
                     ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
             className={"google-maps-collapse"}>
                 <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
@@ -497,6 +524,7 @@ export default function LeafletMap() {
                         </CircleMarker> : <></>)
                 ))}
                 {lineData}
+                {moveLine()}
             </MapContainer>
         </div>
     );
