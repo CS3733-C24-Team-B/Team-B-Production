@@ -58,6 +58,7 @@ export default function LeafletMap() {
     const [animateData, setAnimateData] = useState<LatLng[]>([]);
     const [animateChanges, setAnimateChanges] = useState<number[]>([]);
     const [redraw, setRedraw] = useState(false);
+    const [doAnimation, setDoAnimation] = useState(false);
     const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
 
@@ -464,6 +465,9 @@ export default function LeafletMap() {
                         <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
                                                              onClick={() => setShowHalls(!showHalls)}/>}
                                           label="Show Halls"/>
+                        <FormControlLabel control={<Checkbox checked={doAnimation}
+                                                             onClick={() => setDoAnimation(!doAnimation)}/>}
+                                          label="Animate Path"/>
                     </FormGroup>
                 </div>
             </div>
@@ -504,7 +508,7 @@ export default function LeafletMap() {
                         </CircleMarker> : <></>)
                 ))}
                 {lineData}
-                {moveLine()}
+                {doAnimation ? moveLine() : <></>}
             </MapContainer>
             <div className="floor-buttons">
                 {FloorLevel.slice().reverse().map(({floor, level}) => (
@@ -512,6 +516,7 @@ export default function LeafletMap() {
                         key={floor}
                         className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : ''}`}
                         onClick={() => {
+                            lMap!.current.setZoom(5);
                             setSelectedFloor(floor);
                             setCurrLevel(level);
                         }}
