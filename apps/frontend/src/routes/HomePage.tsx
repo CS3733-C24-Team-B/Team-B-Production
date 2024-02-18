@@ -12,7 +12,7 @@ export default function HomePage() {
     return (
         <div className="Nav-container-white">
             <div className="nav-container">
-                {isAuthenticated ? <NavbarLogout /> : <Navbar />}
+                {isAuthenticated ? <Navbar /> : <NavbarLogout />}
             </div>
             <LeafletMap />
         </div>

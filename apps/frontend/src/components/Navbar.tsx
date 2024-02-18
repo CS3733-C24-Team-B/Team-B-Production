@@ -6,27 +6,23 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/Inbox';
-import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import SettingsIcon from '@mui/icons-material/Settings';
 // import HomeIcon from '@mui/icons-material/Home';
 import logo from "../images/BandW-Logo-White.png";
 //MaterialUI icons
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import SettingsIcon from '@mui/icons-material/Settings';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const drawerWidth = 240;
 
-const icons = [<AccountCircleIcon/>, <AdminPanelSettingsIcon/>];
-const links = ['/profile-info', '/admin-viewer'];
 
 // Import Lato font
 import {createTheme, ThemeProvider} from '@mui/material/styles';
@@ -41,9 +37,13 @@ const theme = createTheme({
     },
 });
 
-const adminIcons = [<NavigationIcon/>, <InboxIcon/>, <InboxIcon/>, <ScatterPlotIcon/>, <TimelineIcon/>,
-    <SettingsIcon/>];
-const adminLinks = ['/', '/requestform', '/requestlist', '/csvnodedata', '/csvedgedata', '/settings'];
+const adminIcons = [
+    <AccountCircleIcon style={{ fontSize: '2rem' }}/>,
+    <AdminPanelSettingsIcon style={{ fontSize: '2rem' }}/>,
+    <NavigationIcon style={{ fontSize: '2rem' }}/>,
+    <DesignServicesIcon style={{ fontSize: '2rem' }}/>,
+    <SettingsIcon style={{ fontSize: '2rem' }}/>];
+const adminLinks = ['/profile-info', '/admin-viewer','/', '/requestform','/settings'];
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
@@ -119,20 +119,44 @@ export default function PersistentDrawerLeft() {
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        style={{color: 'white', position: 'fixed', top: '60px'}}
+                        style={{color: 'white', position: 'fixed', top: '72px'}}
                     >
-                        <NavigationIcon/>
+                        <AccountCircleIcon style={{ fontSize: '2rem' }}/>  {/*profile icon*/}
                     </IconButton>
                     <IconButton
                         color="inherit"
                         aria-label="home"
                         onClick={handleHomeClick}
-                        style={{color: 'white', position: 'fixed', top: '120px'}}
+                        style={{color: 'white', position: 'fixed', top: '125px'}}
                     >
-                        <AccountCircleIcon/>
+                        <AdminPanelSettingsIcon style={{ fontSize: '2.2rem' }}/>  {/*admin icon*/}
                     </IconButton>
-
+                    <IconButton
+                        color="inherit"
+                        aria-label="home"
+                        onClick={handleHomeClick}
+                        style={{color: 'white', position: 'fixed', top: '176px'}}
+                    >
+                        <NavigationIcon style={{ fontSize: '2rem' }}/>  {/*naviagtion icon*/}
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
+                        aria-label="home"
+                        onClick={handleHomeClick}
+                        style={{color: 'white', position: 'fixed', top: '228px'}}
+                    >
+                        <DesignServicesIcon style={{ fontSize: '2rem' }}/>  {/*service request icon*/}
+                    </IconButton>
+                    <IconButton
+                        color="inherit"
+                        aria-label="home"
+                        onClick={handleHomeClick}
+                        style={{color: 'white', position: 'fixed', top: '279px'}}
+                    >
+                        <SettingsIcon style={{ fontSize: '2rem' }}/>{/*settings icon*/}
+                    </IconButton>
                 </Toolbar>
+
 
                 {/*When navbar is OPENED*/}<Drawer
                     sx={{
@@ -157,34 +181,13 @@ export default function PersistentDrawerLeft() {
                             <img src={logo} alt="Hospital Logo" width={"100%"}/>
                         </a>
                     </DrawerHeader>
-                    <Divider/>
+
                     <List
                         sx={{
                             color: 'white',
                         }}
                     >
-                        {['Profile', 'Admin'].map((text, index) => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton component="a" href={links[index]}>
-                                    <ListItemIcon
-                                        sx={{
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {icons[index]}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text}/>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider/>
-                    <List
-                        sx={{
-                            color: 'white',
-                        }}
-                    >
-                        {['Navigation', 'Service Requests','Settings'].map((text, index) => (
+                        {['Profile', 'Admin','Navigation', 'Service Requests','Settings'].map((text, index) => (
                             <ListItem key={text} disablePadding>
                                 <ListItemButton component="a" href={adminLinks[index]}>
                                     <ListItemIcon
