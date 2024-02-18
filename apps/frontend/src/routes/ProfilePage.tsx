@@ -163,9 +163,7 @@ export default function ProfilePage() {
 
     return (
         <div className="home-container">
-            <div className="nav-container">
-                <Navbar/>
-            </div>
+            <Navbar/>
             <div className="profile-data">
                 <div className="topbar-container2">
                     <div className="node-data-header">

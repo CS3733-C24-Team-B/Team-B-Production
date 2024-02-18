@@ -1,27 +1,21 @@
 import * as React from 'react';
 import {styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 // import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-// import HomeIcon from '@mui/icons-material/Home';
-import logo from "../images/BandW-Logo-White.png";
+
+
 //MaterialUI icons
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-const drawerWidth = 262;
+
 
 
 // Import Lato font
@@ -36,18 +30,6 @@ const theme = createTheme({
         ].join(','),
     },
 });
-{/*profile, settings, nav, service, admin*/}
-
-const adminIcons = [
-    <AccountCircleIcon style={{ fontSize: '1.7rem' }}/>,
-    <SettingsIcon style={{ fontSize: '1.7rem' }}/>,
-    <NavigationIcon style={{ fontSize: '1.7rem' }}/>,
-    <DesignServicesIcon style={{ fontSize: '1.7rem' }}/>,
-    <AdminPanelSettingsIcon style={{ fontSize: '1.7rem' }}/>
-    ];
-
-const adminLinks = ['/profile-info','/settings', '/','/requestform','/admin-viewer'];
-
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;
 }
@@ -68,25 +50,11 @@ const AppBar = styled(MuiAppBar, {
     fontFamily: 'Lato, sans-serif', //Changed font to LAto
 }));
 
-const DrawerHeader = styled('div')(({theme}) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-    fontFamily: 'Lato, sans-serif', //Changed font to Lato
-}));
-
 export default function PersistentDrawerLeft() {
     const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
         setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
     };
 
     const handleHomeClick = () => {
@@ -95,7 +63,7 @@ export default function PersistentDrawerLeft() {
 
     return (
         <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-            <Box sx={{display: 'block', position: 'fixed', width: '4%', zIndex: '1002'}}>
+            <Box sx={{display: 'block', position: 'fixed', width: '10%', zIndex: '1002'}}>
                 <CssBaseline/>
                 {/*When navbar is CLOSED*/}<AppBar position="relative" open={open} sx={{boxShadow: 0,}}> {/*no shadow*/}
                 <Toolbar style={{
@@ -160,50 +128,7 @@ export default function PersistentDrawerLeft() {
                 </Toolbar>
 
 
-                {/*When navbar is OPENED*/}<Drawer
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        // backgroundColor: 'green',
-                        '& .MuiDrawer-paper': {
-                            width: drawerWidth,
-                            boxSizing: 'border-box',
-                            backgroundColor: '#012d5a',
-                            fontFamily: 'Lato, sans-serif', //font
-                        },
-                    }}
-                    variant="persistent"
-                    anchor="left"
-                    open={open}
-                    onMouseEnter={handleDrawerOpen}
-                    onMouseLeave={handleDrawerClose}
-                >
-                    <DrawerHeader sx={{paddingTop:'3.5px', ml:'1px'}}>
-                        <a href="/home">
-                            <img src={logo} alt="Hospital Logo" width={"100%"}/>
-                        </a>
-                    </DrawerHeader>
-                    <List
-                        sx={{
-                            color: 'white',
-                        }}
-                    >
-                        {['Profile', 'Admin','Navigation', 'Service Requests','Settings'].map((text, index) => (
-                            <ListItem key={text} sx={{paddingBottom:'0px', ml:-2.3}}>
-                                <ListItemButton component="a" href={adminLinks[index]}>
-                                    <ListItemIcon
-                                        sx={{
-                                            color: 'white',
-                                        }}
-                                    >
-                                        {adminIcons[index]}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text}/>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Drawer>
+
             </AppBar>
             </Box>
         </ThemeProvider>

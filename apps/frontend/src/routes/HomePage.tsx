@@ -14,6 +14,7 @@ export default function HomePage() {
             <div className="nav-container">
                 {isAuthenticated ? <Navbar /> : <NavbarLogout />}
             </div>
+            <Navbar />
             <LeafletMap />
         </div>
     );
