@@ -103,8 +103,7 @@ export default function PersistentDrawerLeft() {
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
-                        // onMouseEnter={handleDrawerOpen} //opens navbar when hovered
-                        onMouseClick={handleDrawerOpen} //opens navbar when clicked
+                        onMouseEnter={handleDrawerOpen}
                         edge="start"
                         sx={{
                             ml: 0.075, //margin left
