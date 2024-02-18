@@ -549,10 +549,9 @@ export default function LeafletMap() {
                     </div>
 
                     <div style={{display: 'grid', maxWidth: '100%'}}>
-
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
                     </div>
-                    <Button className="open-drawer" onClick={() => {
+                    <Button onClick={() => {
                         setIsDrawerOpen(!isDrawerOpen);
                     }}>
                         <RoomIcon/>
