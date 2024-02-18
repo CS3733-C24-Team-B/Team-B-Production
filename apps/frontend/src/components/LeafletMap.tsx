@@ -99,7 +99,7 @@ export default function LeafletMap() {
 
     // get auth0 stuff
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
-
+    console.log(user);
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     //const [employeeData, setEmployeeData] = useState([]);
 
@@ -440,9 +440,9 @@ export default function LeafletMap() {
         } else if (nsr.maintenance) {
             return "maintenance ";
         } else if (nsr.internalTransport) {
-            return "Internal Transport ";
+            return "internal transport ";
         } else if (nsr.language) {
-            return "Language ";
+            return "language ";
         }
         return "";
     }
@@ -644,7 +644,6 @@ export default function LeafletMap() {
                                           }
                                       }}>
                             <Tooltip>
-                                <MenuItem value={user!.email}>Assigned to you</MenuItem>
                                 {/*{longName + ": " + xcoord + ", " + ycoord}*/}
                                 <div>
                                     {longName}
@@ -652,7 +651,7 @@ export default function LeafletMap() {
                                     {srData.map((serviceRequest) => (
                                         <div key={serviceRequest.serviceID}>
                                             {serviceRequest.locationID === nodeID && (
-                                                <p>Contains {getReqType(serviceRequest)} Service Request <br/>
+                                                <p>Contains {getReqType(serviceRequest)} service request <br/>
                                                     Request Status: {serviceRequest.status} <br/>
                                                     Created By: {serviceRequest.createdByID} <br/>
                                                     Assigned To: {serviceRequest.assignedID}</p>
