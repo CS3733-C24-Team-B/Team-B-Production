@@ -103,10 +103,11 @@
 }
 
 .icon-spacing {
+    margin-top: 10%;
+    gap: 5%;
     height: 60%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     horiz-align: left;
 }
 
