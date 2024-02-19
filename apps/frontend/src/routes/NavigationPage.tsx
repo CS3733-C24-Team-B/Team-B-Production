@@ -20,7 +20,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 
 export default function NavigationPage() {
-    const {user, isAuthenticated} = useAuth0();
+    const {user} = useAuth0();
     console.log(user);
     const [nodeData, setNodeData] = useState([]);
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -167,7 +167,7 @@ export default function NavigationPage() {
     return (
         <div className={"NavigationContainer"}> {/* expands area across entire screen */}
             <Topbar elems={topbarElems}/> {/* TopGreen css fixes this to the top */}
-            {isAuthenticated ? <TempNavbar/> : <></>} {/* NavBlue css fixes this to the left */}
+            <TempNavbar/> {/* NavBlue css fixes this to the left */}
             <div className={"NavigationBackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"MapArea"}>
                     <LeafletMap openDrawer={openDrawer}

@@ -103,7 +103,7 @@ export default function LeafletMap(props : MapProps) {
     const lMap: Ref<L.Map> = useRef();
 
     // get auth0 stuff
-    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
+    const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     console.log(user);
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     //const [employeeData, setEmployeeData] = useState([]);
@@ -132,28 +132,25 @@ export default function LeafletMap(props : MapProps) {
 
     useEffect(() => {
         async function fetch() {
-            const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/service-request", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            // const res2 = await axios.get("/api/employee", {
-            //     headers: {
-            //         Authorization: "Bearer " + accessToken
-            //     }
-            // });
+
+            if (isAuthenticated) {
+                const accessToken: string = await getAccessTokenSilently();
+                const res = await axios.get("/api/service-request", {
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
+                setSRData(res.data);
+            }
+
             const res3 = await axios.get("/api/nodes/read");
             const res4 = await axios.get("/api/edges/read");
-
-            setSRData(res.data);
-            //setEmployeeData(res2.data);
             setNodeData(res3.data);
             setEdgeData(res4.data);
         }
 
         fetch().then();
-    }, [getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -427,11 +424,6 @@ export default function LeafletMap(props : MapProps) {
     // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
     if (isLoading) {
         return <div className="loading-center"><CircularProgress/></div>;
-    }
-
-    if (!isAuthenticated) {
-        loginWithRedirect().then();
-        return;
     }
 
     return (
