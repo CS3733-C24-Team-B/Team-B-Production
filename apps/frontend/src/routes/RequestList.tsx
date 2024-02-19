@@ -200,7 +200,6 @@ export default function RequestList() {
         const {nsr} = props;
         const [open, setOpen] = React.useState(false);
         const [dialogOpen, setDialogOpen] = React.useState(false);
-        console.log(nsr);
 
         return (
             <>
@@ -279,8 +278,6 @@ export default function RequestList() {
                             }[nsr.status]}
                             value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                             onChange={async (event: SelectChangeEvent) => {
-                                console.log(nsr.status as keyof typeof StatusType);
-
                                 const serviceRequest: UpdateRequest = {
                                     serviceID: nsr.serviceID,
                                     assignedTo: nsr.assignedID,
@@ -292,9 +289,10 @@ export default function RequestList() {
                                         headers: {
                                             Authorization: "Bearer " + accessToken
                                         }
-                                    }).then();
+                                    }).then(() => {
+                                        setRefresh(!refresh);
+                                    });
                                 });
-                                setRefresh(!refresh);
                             }}
                             sx={{fontSize: 15}}>
                             {statuses.map((st) =>
@@ -436,14 +434,14 @@ export default function RequestList() {
                                             onChange={(e) => {
                                                 setTypeFilter(e.target.value);
                                                 setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
+                                                    return e.target.value === "Choose Type" || getReqType(nsr) === e.target.value;
                                                 });
                                             }}
                                         >
                                             <MenuItem value={"Choose Type"}>None</MenuItem>
                                             <MenuItem value={"sanitation"}>Sanitation</MenuItem>
                                             <MenuItem value={"medicine"}>Medicine</MenuItem>
-                                            <MenuItem value={"transport"}>Transport</MenuItem>
+                                            <MenuItem value={"internalTransport"}>Internal Transport</MenuItem>
                                             <MenuItem value={"language"}>Language</MenuItem>
                                             <MenuItem value={"maintenance"}>Maintenance</MenuItem>
                                         </Select>
@@ -547,7 +545,7 @@ export default function RequestList() {
                             </TableContainer> :
                             (srData.length > 0) ? <p className="center-text">No {{
                                     'Status': "service requests that are " + statusFilter,
-                                    'Type': typeFilter + "service requests",
+                                    'Type': typeFilter + " service requests",
                                     'Priority': priorityFilter + " priority service requests",
                                     'Employee': "service requests assigned to " + ((userEmployee && userEmployee["firstName"] && userEmployee["lastName"]) ?
                                         userEmployee["firstName"] + " " + userEmployee["lastName"] : userEmployee)

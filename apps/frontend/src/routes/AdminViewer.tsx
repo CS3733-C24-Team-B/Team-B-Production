@@ -7,11 +7,27 @@ import TextField from "@mui/material/TextField";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import {CircularProgress, Dialog, DialogActions, DialogTitle} from "@mui/material";
 import {Alert, Snackbar} from "@mui/material";
+import {styled} from "@mui/material/styles";
 import "../css/servicelist_page.css";
 import "../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 function validEmail(em: string) {
     const aInd = em.indexOf("@");
@@ -44,6 +60,60 @@ export default function AdminViewer() {
         })();
     }, [getAccessTokenSilently]);
 
+    function uploadFile() {
+        console.log("Uploading employee info to database");
+        try {
+            const form: FormData = new FormData();
+            const employeeFile = document.querySelector('#employeeFile') as HTMLInputElement;
+            if (employeeFile == null) {
+                console.log("csv file is null");
+                return;
+            }
+            form.append("employeeFile", employeeFile.files![0]);
+            getAccessTokenSilently().then((accessToken: string) => {
+                axios.post("/api/employee/bulk-insert", form, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        "Content-Type": "multipart/form-data"
+                    }
+                }).then();
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function downloadFile() {
+        console.log("Downloading employee info from database");
+
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const headers: string[] = ["email, firstName, lastName"];
+            const resCSV = res.data.reduce((employees: string[], employeeData: UpdateEmployee) => {
+                employees.push([employeeData.email, employeeData.firstName, employeeData.lastName].join(','));
+                return employees;
+            }, []);
+            const data: string = [...headers, ...resCSV].join('\n');
+            const blob: Blob = new Blob([data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "EmployeeData.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvent: MouseEvent = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            a.dispatchEvent(clickEvent);
+            a.remove();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const addEmployeeEmail = (
         <TextField inputMode="email"
@@ -155,8 +225,8 @@ export default function AdminViewer() {
                             style={{color: (employee.email === "softengc24b@gmail.com") ? "grey" : "#012D5A"}}
                             disabled={(employee.email === "softengc24b@gmail.com")}
                             onClick={() => {
-                        setDialogID(index);
-                    }}>
+                                setDialogID(index);
+                            }}>
                         <DeleteIcon/>
                     </Button>
                 </td>
@@ -215,9 +285,28 @@ export default function AdminViewer() {
             <div className="nav-container">
                 <Navbar/>
             </div>
-            <div className="request-container">
+            <div className="data-container">
                 <div className="req-list-header">
                     <header className={'headerblue'}>Employees</header>
+                </div>
+                <br/>
+                <div>
+                    <div className="upload-buttons">
+                        <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}
+                                style={{backgroundColor: "#012D5A"}}>
+                            Upload File
+                            <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
+                        </Button>
+                    </div>
+                    <br/>
+                    <div className="upload-buttons">
+                        <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                                onClick={downloadFile}
+                                className="export-button"
+                                style={{backgroundColor: "#012D5A"}}>
+                            Export File
+                        </Button>
+                    </div>
                 </div>
                 <br/>
                 <div className="invite-buttons">

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 
 function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:string): string {
     // Calculate vectors AB and BC
@@ -143,9 +143,12 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     };
 
     return (
-        <div>
+        <div style={{maxHeight: '10%'}}>
             <h2>Hospital Path</h2>
-            <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
+            <Paper style={{minHeight: '30vh', maxHeight: '30vh'}} className={"text-paper"}>
+                <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
+            </Paper>
+            <br/>
             <Button size="small" onClick={speakArray}
                     style={{backgroundColor: "#012D5A", color:'white', fontSize: '1.5vh', width: '15.5vw' }}>
                 {speaking ? 'Stop Speaking' : 'Speak Path'}
