@@ -48,6 +48,14 @@ export type UpdateRequest = {
     status: StatusType
 }
 
+export enum RequestType {
+    sanitation = "Sanitation",
+    medicine = "Medicine",
+    internalTransport = "Internal Transport",
+    maintenance = "Maintenance",
+    language = "Language"
+}
+
 export enum StatusType {
     Unassigned = "Unassigned",
     Assigned = "Assigned",

@@ -25,7 +25,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import RequestCarousel from '../components/RequestCarousel.tsx';
-import {Alert, Autocomplete, FormControl, InputLabel, MenuItem, Snackbar, Modal} from "@mui/material";
+import {Alert, Autocomplete, FormControl, InputLabel, MenuItem, Snackbar, Modal, CircularProgress} from "@mui/material";
 import Box from "@mui/material/Box";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import {useAuth0} from "@auth0/auth0-react";
@@ -44,8 +44,7 @@ const modalStyle = {
 
 export default function RequestForm() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useAuth0();
-    //const [name, setName] = useState("");
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [location, setLocation] = useState("");
     const [prio, setPrio] = useState("");
     const [infoText, setInfoText] = useState("");
@@ -66,25 +65,25 @@ export default function RequestForm() {
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
-            const res3 = await axios.get(`/api/employee`);
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/nodes/read");
+            const res3 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
             setNodeData(res.data);
             setEmployeeData(res3.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     console.log(isAuthenticated);
 
     async function submit() {
+        const accessToken: string = await getAccessTokenSilently();
         if (typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
                 createdByID: user!.email!,
@@ -93,11 +92,12 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                hazards: "Hazards: " + option1
+                hazards: option1
             };
             const res = await axios.post("/api/service-request/sanitation", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -111,12 +111,13 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                medicineType: "Medicine Type: " + option1,
-                amount: "Amount: " + option2
+                medicineType: option1,
+                amount: option2
             };
             const res = await axios.post("/api/service-request/medicine", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -130,13 +131,14 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                toLocation: "To Location: " + option1,
-                patientName: "Patient Name: " + option2,
-                mobilityAid: "Mobility Aid: " + option3
+                toLocation: option1,
+                patientName: option2,
+                mobilityAid: option3
             };
             const res = await axios.post("/api/service-request/internal-transport", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -150,13 +152,14 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                language1: "From Language: " + option1,
-                language2: "To Language: " + option2,
+                language1: option1,
+                language2: option2,
                 when: new Date()
             };
             const res = await axios.post("/api/service-request/language", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -170,11 +173,12 @@ export default function RequestForm() {
                 priority: PriorityType[prio as keyof typeof PriorityType],
                 status: StatusType.Assigned,
                 assignedID: assignTo,
-                details: "Details: " + option1
+                details: option1
             };
             const res = await axios.post("/api/service-request/maintenance", requestSent, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
                 }
             });
             if (res.status == 200) {
@@ -220,6 +224,31 @@ export default function RequestForm() {
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
     });
+
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
+
+    // function nodeIDtoName(nId: string) {
+    //     const node = nodeData.find(({nodeID}) =>
+    //         nodeID === nId
+    //     );
+    //     if (node !== undefined) {
+    //         return node!["longName"];
+    //     } else {
+    //         return "";
+    //     }
+    // }
+
+    interface NodeType {
+        label: string,
+        nid: string
+    }
 
     return (
         <div className="home-container">
@@ -505,16 +534,22 @@ export default function RequestForm() {
                                     <Autocomplete
                                         style={{width: window.innerWidth * 0.38}}
                                         disablePortal
-                                        options={currNodes.map(({longName}): { label: string } => (
-                                            {label: longName}
+                                        options={currNodes.map(({nodeID, longName}): NodeType => (
+                                            {label: longName, nid: nodeID}
                                         ))}
                                         size={"small"}
                                         renderInput={(params) =>
                                             <TextField {...params} label="Location" variant="standard"/>}
-                                        value={{label: location}}
-                                        onChange={(newValue) => {
-                                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                                setLocation(newValue.target.innerText);
+                                        //value={{label: nodeIDtoName(location), nid: location}}
+                                        getOptionLabel={(nd : NodeType) =>
+                                            `${nd.label}`
+                                    }
+                                        getOptionKey={(nd : NodeType) =>
+                                            `${nd.nid}`
+                                        }
+                                        onChange={(newValue, val) => {
+                                            if (val !== null) {
+                                                setLocation(val.nid);
                                             }
                                         }}
                                     />

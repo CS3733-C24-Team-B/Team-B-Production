@@ -3,14 +3,25 @@ import {useNavigate} from "react-router-dom";
 import "../css/servicelist_page.css";
 import axios from "axios";
 import Navbar from "../components/Navbar.tsx";
-import {PriorityType, StatusType, UpdateRequest, SanitationRequest, MedicineRequest, MaintenanceRequest, InternalTransportRequest, LanguageRequest} from "common/src/serviceRequestTypes.ts";
+import {
+    PriorityType,
+    StatusType,
+    RequestType,
+    UpdateRequest,
+    SanitationRequest,
+    MedicineRequest,
+    MaintenanceRequest,
+    InternalTransportRequest,
+    LanguageRequest
+} from "common/src/serviceRequestTypes.ts";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import {
     Button, CircularProgress, Collapse,
+    Dialog, DialogActions, DialogTitle,
     FormControl,
     Menu,
     MenuItem,
-    Paper, TableBody,
+    Paper, Table, TableBody,
     TableCell,
     TableContainer,
     TableHead,
@@ -48,13 +59,26 @@ type ServiceRequest = {
     language: LanguageRequest,
 }
 
+enum RequestSpecifics {
+    hazards = "Hazards: ",
+    medicineType = "Medicine Type: ",
+    amount = "Amount: ",
+    toLocation = "To Location: ",
+    patientName = "Patient Name: ",
+    mobilityAid = "Mobility Aid: ",
+    language1 = "From Language: ",
+    language2 = "To Language: ",
+    when = "When: ",
+    details = "Details: "
+}
+
 export default function RequestList() {
     const navigate = useNavigate();
-    const {user, isAuthenticated} = useAuth0();
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
+    const [nodeData, setNodeData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [refresh, setRefresh] = useState(false);
-    //const [clickedRows, setClickedRows] = useState<Map<number, JSX.Element>>(new Map<number, JSX.Element>);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
     const [typeFilter, setTypeFilter] = useState<string>("Choose Type");
     const [priorityFilter, setPriorityFilter] = useState<string>("Choose Priority");
@@ -71,32 +95,42 @@ export default function RequestList() {
 
     useEffect(() => {
         async function fetch() {
-            const res = await axios.get("/api/service-request");
-            const res2 = await axios.get(`/api/employee`);
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res2 = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const res3 = await axios.get("/api/nodes/read");
 
             setSRData(res.data);
             setEmployeeData(res2.data);
-            console.log(res.data);
+            setNodeData(res3.data);
             setReceivedSR(true);
         }
 
         fetch().then();
-    }, [refresh]);
+    }, [refresh, getAccessTokenSilently]);
 
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
     });
 
     function getReqType(nsr: ServiceRequest) {
-        if(nsr.sanitation) {
+        if (nsr.sanitation) {
             return "sanitation";
-        } else if(nsr.medicine) {
+        } else if (nsr.medicine) {
             return "medicine";
-        } else if(nsr.maintenance) {
+        } else if (nsr.maintenance) {
             return "maintenance";
-        } else if(nsr.internalTransport) {
+        } else if (nsr.internalTransport) {
             return "internalTransport";
-        } else if(nsr.language) {
+        } else if (nsr.language) {
             return "language";
         }
         return "";
@@ -124,9 +158,7 @@ export default function RequestList() {
         //console.log(sYear + " " + sMonth + " " + sDay + " " + sHour + " " + sMinute + " " + sSecond + " " + sMillisecond);
         const utc = new Date(sYear, sMonth, sDay, sHour, sMinute, sSecond, sMillisecond);
         const offset = utc.getTimezoneOffset() + 60;
-        const local = new Date(utc.getTime() - offset * 60000);
-
-        return local;
+        return new Date(utc.getTime() - offset * 60000);
     }
 
     srData.sort((srA: ServiceRequest, srB: ServiceRequest) => {
@@ -151,12 +183,23 @@ export default function RequestList() {
         return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
     }
 
+    function nodeNameOrReturn(nId: string) {
+        const node = nodeData.find(({nodeID}) =>
+            nodeID === nId
+        );
+        if (node !== undefined) {
+            return node!["longName"];
+        } else {
+            return nId;
+        }
+    }
+
     const filterSR = srData.filter(filterFunction);
 
     function Row(props: { nsr: ServiceRequest }) {
         const {nsr} = props;
         const [open, setOpen] = React.useState(false);
-        console.log(nsr);
+        const [dialogOpen, setDialogOpen] = React.useState(false);
 
         return (
             <>
@@ -189,7 +232,7 @@ export default function RequestList() {
                             useGrouping: false
                         })}</TableCell>
                     <TableCell>{
-                        getReqType(nsr)
+                        RequestType[getReqType(nsr) as keyof typeof RequestType]
                     }</TableCell>
                     <TableCell>
                         <Select
@@ -206,9 +249,14 @@ export default function RequestList() {
                                     serviceRequest.status = StatusType.Assigned;
                                 }
 
-                                const resSR = await axios.put("/api/service-request", serviceRequest).then();
+                                getAccessTokenSilently().then((accessToken: string) => {
+                                    axios.put("/api/service-request", serviceRequest, {
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then();
+                                });
 
-                                console.log(resSR);
                                 setRefresh(!refresh);
                             }}
                             sx={{fontSize: 15}}>
@@ -230,16 +278,21 @@ export default function RequestList() {
                             }[nsr.status]}
                             value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                             onChange={async (event: SelectChangeEvent) => {
-                                console.log(nsr.status as keyof typeof StatusType);
-
                                 const serviceRequest: UpdateRequest = {
                                     serviceID: nsr.serviceID,
                                     assignedTo: nsr.assignedID,
                                     status: StatusType[event.target.value as keyof typeof StatusType]
                                 };
 
-                                await axios.put("/api/service-request", serviceRequest).then();
-                                setRefresh(!refresh);
+                                getAccessTokenSilently().then((accessToken: string) => {
+                                    axios.put("/api/service-request", serviceRequest, {
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then(() => {
+                                        setRefresh(!refresh);
+                                    });
+                                });
                             }}
                             sx={{fontSize: 15}}>
                             {statuses.map((st) =>
@@ -253,33 +306,62 @@ export default function RequestList() {
                             )}
                         </Select>
                     </TableCell>
-                    <TableCell>{nsr.locationID}</TableCell>
+                    <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
                     <TableCell>{getNameOrEmail(nsr.createdByID)}</TableCell>
                     <TableCell>
                         <Button
                             variant="outlined"
                             style={{color: "#012D5A"}}
                             onClick={() => {
-                                axios.delete("/api/service-request", {
-                                    data: {
-                                        serviceID: nsr.serviceID
-                                    }
-                                }).then();
-                                setRefresh(!refresh);
+                                setDialogOpen(true);
                             }}>
-                            <DeleteIcon />
+                            <DeleteIcon/>
                         </Button>
                     </TableCell>
                 </TableRow>
+                <Dialog
+                    open={dialogOpen}
+                    onClose={() => {
+                        setDialogOpen(false);
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Are you sure you want to delete that request?"}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={() => {
+                            getAccessTokenSilently().then((accessToken: string) => {
+                                axios.delete("/api/service-request", {
+                                    data: {
+                                        serviceID: nsr.serviceID
+                                    },
+                                    headers: {
+                                        Authorization: "Bearer " + accessToken
+                                    }
+                                }).then();
+                            });
+                            setRefresh(!refresh);
+                            setDialogOpen(false);
+                        }}>Yes</Button>
+                        <Button onClick={() => {
+                            setDialogOpen(false);
+                        }} autoFocus>
+                            No
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                 {open ? <TableRow>
                     <TableCell/>
                     <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={8}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
                                 {Object.keys(nsr[getReqType(nsr)]).filter((key) => {
+                                    console.log("KEY: " + key);
                                     return !key.includes("ID");
                                 }).map((key) => (
-                                    <p>{nsr[getReqType(nsr)][key]}</p>
+                                    <p>{RequestSpecifics[key as keyof typeof RequestSpecifics] + nodeNameOrReturn(nsr[getReqType(nsr)][key])}</p>
                                 ))}
                                 <p>Notes: {nsr.notes}</p>
                             </Box>
@@ -305,6 +387,15 @@ export default function RequestList() {
     const userEmployee = employeeData.find(({email}) => {
         return email === employeeFilter;
     });
+
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
 
     return (
         <div className="req-list-container">
@@ -347,14 +438,14 @@ export default function RequestList() {
                                             onChange={(e) => {
                                                 setTypeFilter(e.target.value);
                                                 setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Type" || nsr.notes.split(",")[0] === e.target.value;
+                                                    return e.target.value === "Choose Type" || getReqType(nsr) === e.target.value;
                                                 });
                                             }}
                                         >
                                             <MenuItem value={"Choose Type"}>None</MenuItem>
                                             <MenuItem value={"sanitation"}>Sanitation</MenuItem>
                                             <MenuItem value={"medicine"}>Medicine</MenuItem>
-                                            <MenuItem value={"transport"}>Transport</MenuItem>
+                                            <MenuItem value={"internalTransport"}>Internal Transport</MenuItem>
                                             <MenuItem value={"language"}>Language</MenuItem>
                                             <MenuItem value={"maintenance"}>Maintenance</MenuItem>
                                         </Select>
@@ -435,27 +526,30 @@ export default function RequestList() {
                     <br/>
                     {(!receivedSR) ? <CircularProgress className="center-text"/> :
                         (filterSR.length > 0) ?
-                            <TableContainer component={Paper} className="service-tables" sx={{width: 1205}}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell/>
-                                        <TableCell>Priority</TableCell>
-                                        <TableCell>Time Created</TableCell>
-                                        <TableCell>Type</TableCell>
-                                        <TableCell>Assigned To</TableCell>
-                                        <TableCell>Status</TableCell>
-                                        <TableCell>Location</TableCell>
-                                        <TableCell>Created by</TableCell>
-                                        <TableCell/>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {arraySR}
-                                </TableBody>
+                            <TableContainer component={Paper} className="service-tables"
+                                            sx={{width: 1205, maxHeight: window.innerHeight * 0.7}}>
+                                <Table stickyHeader>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell/>
+                                            <TableCell>Priority</TableCell>
+                                            <TableCell>Time Created</TableCell>
+                                            <TableCell>Type</TableCell>
+                                            <TableCell>Assigned To</TableCell>
+                                            <TableCell>Status</TableCell>
+                                            <TableCell>Location</TableCell>
+                                            <TableCell>Created by</TableCell>
+                                            <TableCell/>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {arraySR}
+                                    </TableBody>
+                                </Table>
                             </TableContainer> :
                             (srData.length > 0) ? <p className="center-text">No {{
                                     'Status': "service requests that are " + statusFilter,
-                                    'Type': typeFilter + "service requests",
+                                    'Type': typeFilter + " service requests",
                                     'Priority': priorityFilter + " priority service requests",
                                     'Employee': "service requests assigned to " + ((userEmployee && userEmployee["firstName"] && userEmployee["lastName"]) ?
                                         userEmployee["firstName"] + " " + userEmployee["lastName"] : userEmployee)

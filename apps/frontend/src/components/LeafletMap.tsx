@@ -1,13 +1,24 @@
-import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup} from 'react-leaflet';
+import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup, Marker} from 'react-leaflet';
 import "../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
 import AuthenticationButton from "./AuthenticationButton.tsx";
-import {Button, Autocomplete, Drawer, MenuItem, FormControlLabel, Checkbox, FormGroup} from "@mui/material";
+import {
+    Button,
+    Autocomplete,
+    Collapse,
+    MenuItem,
+    FormControlLabel,
+    Checkbox,
+    FormGroup,
+    CircularProgress
+} from "@mui/material";
+import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
+import {useAuth0} from "@auth0/auth0-react";
 
 // import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
@@ -15,15 +26,22 @@ import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
 import secondfloor from "../images/02_thesecondfloor.png";
 import thirdfloor from "../images/03_thethirdfloor.png";
+import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import {
+    InternalTransportRequest, LanguageRequest,
+    MaintenanceRequest,
+    MedicineRequest,
+    SanitationRequest
+} from "common/src/serviceRequestTypes.ts";
 
 const FloorLevel = [
     {
-        floor: lowerlevel1,
-        level: "L1"
-    },
-    {
         floor: lowerlevel2,
         level: "L2"
+    },
+    {
+        floor: lowerlevel1,
+        level: "L1"
     },
     {
         floor: firstfloor,
@@ -38,6 +56,24 @@ const FloorLevel = [
         level: "3"
     }
 ];
+
+type ServiceRequest = {
+    serviceID: number,
+    timeCreated: string,
+    createdBy: UpdateEmployee,
+    createdByID: string,
+    locationID: string,
+    priority: string,
+    status: string,
+    assignedTo: UpdateEmployee,
+    assignedID: string,
+    notes: string,
+    sanitation: SanitationRequest,
+    maintenance: MaintenanceRequest,
+    internalTransport: InternalTransportRequest,
+    medicine: MedicineRequest,
+    language: LanguageRequest,
+}
 
 export default function LeafletMap() {
     const [nodeData, setNodeData] = useState([]);
@@ -54,32 +90,50 @@ export default function LeafletMap() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
     const [selectedFloor, setSelectedFloor] = useState(lowerlevel1);
+    const [animateData, setAnimateData] = useState<LatLng[]>([]);
+    const [animateChanges, setAnimateChanges] = useState<number[]>([]);
+    const [redraw, setRedraw] = useState(false);
+    const [doAnimation, setDoAnimation] = useState(false);
+    const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
+
+    // get auth0 stuff
+    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
+    console.log(user);
+    const [srData, setSRData] = useState<ServiceRequest[]>([]);
+    //const [employeeData, setEmployeeData] = useState([]);
 
 
     useEffect(() => {
         async function fetch() {
-            try {
-                const res2 = await axios.post("/api/db-insert");
-                console.log(res2.data);
-            } catch {
-                console.log("post error");
-            }
-            const res = await axios.get("/api/db-load-nodes");
-            const res3 = await axios.get("/api/db-load-edges");
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            // const res2 = await axios.get("/api/employee", {
+            //     headers: {
+            //         Authorization: "Bearer " + accessToken
+            //     }
+            // });
+            const res3 = await axios.get("/api/nodes/read");
+            const res4 = await axios.get("/api/edges/read");
 
-            setNodeData(res.data);
-            setEdgeData(res3.data);
+            setSRData(res.data);
+            //setEmployeeData(res2.data);
+            setNodeData(res3.data);
+            setEdgeData(res4.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
-            const res2 = await axios.get(`/api/db-get-path/${nodeStart}/${nodeEnd}`);
+            const res2 = await axios.get(`/api/path/${nodeStart}/${nodeEnd}`);
 
-            let nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
+            const nodeIDs = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
                 xcoord: number;
                 ycoord: number;
@@ -96,7 +150,9 @@ export default function LeafletMap() {
             setPathData(nodeIDs);
         }
 
-        fetch().then();
+        if (nodeStart.length > 0 && nodeEnd.length > 0) {
+            fetch().then();
+        }
     }, [nodeEnd, nodeStart]);
 
     useEffect(() => {
@@ -133,6 +189,8 @@ export default function LeafletMap() {
         let startY = -1;
         let prevFloor = "";
         const temp: JSX.Element[] = [];
+        const animate: LatLng[] = [];
+        const changes : number[] = [];
         if (showEdges) {
             edgeData.map(({startNodeID, endNodeID}) => {
                 if (nodeIDToFloor(startNodeID) === currLevel && nodeIDToFloor(endNodeID) === currLevel) {
@@ -142,7 +200,7 @@ export default function LeafletMap() {
                     const y2 = transY(nodeIDToYPos(endNodeID));
                     temp.push(<Polyline
                         positions={[[y1, x1], [y2, x2]]}
-                        color={"green"} weight={5}></Polyline>);
+                        color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                 }
             });
         } else {
@@ -152,23 +210,30 @@ export default function LeafletMap() {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
                             positions={[[transY(startY), transX(startX)], [transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]]}
-                            color={"green"} weight={5}></Polyline>);
+                            color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
-                        const midX = transX(startX) + dx / 2;
-                        const midY = transY(startY) + dy / 2;
-                        const angle = Math.atan(dy / dx);
-                        const xMod = (dx === 0) ? 1 : -dx / Math.abs(dx);
-                        const yMod = (dx >= 0) ? -1 : 1;
-                        const pathLength = Math.sqrt(dx * dx + dy * dy);
-                        console.log("ANGLE: " + angle);
-                        if (pathLength > 0.2) {
-                            temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
-                            temp.push(<Polyline
-                                positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                color={"green"} weight={5}></Polyline>);
+                        const steps = 120 * Math.sqrt(dy*dy + dx*dx);
+                        for(let i = 0; i < steps; i++) {
+                            animate.push(new LatLng(transY(startY) + dy*i/steps, transX(startX) + dx*i/steps));
+                        }
+                        if(!doAnimation) {
+                            const midX = transX(startX) + dx / 2;
+                            const midY = transY(startY) + dy / 2;
+                            const angle = Math.atan(dy / dx);
+                            const xMod = (dx === 0) ? 1 : -dx / Math.abs(dx);
+                            const yMod = (dx >= 0) ? -1 : 1;
+                            const pathLength = Math.sqrt(dx * dx + dy * dy);
+                            if (pathLength > 0.2) {
+                                temp.push(<Polyline
+                                    positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
+                                    color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!}
+                                    weight={5}></Polyline>);
+                                temp.push(<Polyline
+                                    positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
+                                    color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!}
+                                    weight={5}></Polyline>);
+                            }
                         }
                     } else if (prevFloor !== "") {
                         temp.push(
@@ -188,6 +253,7 @@ export default function LeafletMap() {
                             </Popup>
                         );
                         floorChanges++;
+                        changes.push(animate.length - 1);
                     }
                     prevFloor = nodeIDToFloor(nr);
                     startX = -1;
@@ -196,18 +262,87 @@ export default function LeafletMap() {
             });
         }
         setLineData(temp);
-    }, [currLevel, edgeData, nodeData, pathData, showEdges]);
+        setAnimateData(animate);
+        setAnimateChanges(changes);
+    }, [currLevel, doAnimation, edgeData, nodeData, pathData, showEdges]);
 
     useEffect(() => {
         async function fetch() {
             //  console.log(`${data.startNode}`);
-            const res2 = await axios.get(`/api/db-get-path/currentAlg`);
+            const res2 = await axios.get(`/api/path/currentAlg`);
             setUseAStar(res2.data);
 
         }
 
         fetch().then();
     }, []);
+
+    function moveLine() {
+        if(animateData.length > 0) {
+            startDraw.current = (startDraw.current+1) % animateData.length;
+            let end = startDraw.current + 50;
+            animateChanges.forEach((num) => {
+                if(startDraw.current <= num && end > num) {
+                    end = num;
+                }
+            });
+            if(end >= animateData.length) {
+                end = animateData.length-1;
+            }
+            setInterval(() => {
+                setRedraw(!redraw);
+            }, 800);
+            return (
+                <Polyline
+                    positions={[animateData[startDraw.current], animateData[end]]}
+                    color={"white"} weight={5} opacity={0.75} ref={(r) => {
+                        r?.bringToFront();
+                }}></Polyline>
+            );
+        }
+    }
+
+    const nodeIDToXPos = (nId: string) => {
+        return nodeData.find(({nodeID}) =>
+            nId === nodeID
+        )!["xcoord"];
+    };
+
+    const nodeIDToYPos = (nId: string) => {
+        return nodeData.find(({nodeID}) =>
+            nId === nodeID
+        )!["ycoord"];
+    };
+
+    const nodeIDToFloor = (nId: string) => {
+        console.log(nodeData.find(({nodeID}) =>
+            nId === nodeID
+        ));
+        return nodeData.find(({nodeID}) =>
+            nId === nodeID
+        )!["floor"];
+    };
+
+    function drawNodeStart() {
+        if(nodeStart !== "" && nodeIDToFloor(nodeStart) === currLevel) {
+            return (
+                <CircleMarker fillOpacity={1}
+                              center={new LatLng(34.8 - (nodeIDToYPos(nodeStart) * 34 / 3400), nodeIDToXPos(nodeStart) * 50 / 5000)}
+                              radius={6}
+                              color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}>
+                </CircleMarker>
+            );
+        }
+    }
+
+    function drawNodeEnd() {
+        if(nodeStart !== "" && nodeIDToFloor(nodeEnd) === currLevel) {
+            return (
+                <Marker position={new LatLng(34.8 - (nodeIDToYPos(nodeEnd) * 34 / 3400), nodeIDToXPos(nodeEnd) * 50 / 5000)}>
+                </Marker>
+            );
+        }
+    }
 
     // function selectNode(event: LeafletMouseEvent) {
     //     event.target.setStyle({
@@ -240,15 +375,15 @@ export default function LeafletMap() {
         }
     }
 
-    const floorToLevel = (inputFloor: string) => {
-        let output = "0";
-        FloorLevel.map(({floor, level}) => {
-            if (inputFloor === floor) {
-                output = level;
-            }
-        });
-        return output;
-    };
+    // const floorToLevel = (inputFloor: string) => {
+    //     let output = "0";
+    //     FloorLevel.map(({floor, level}) => {
+    //         if (inputFloor === floor) {
+    //             output = level;
+    //         }
+    //     });
+    //     return output;
+    // };
 
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
@@ -297,11 +432,37 @@ export default function LeafletMap() {
         return 0;
     }
 
+    function getReqType(nsr: ServiceRequest) {
+        if (nsr.sanitation) {
+            return "sanitation ";
+        } else if (nsr.medicine) {
+            return "medicine ";
+        } else if (nsr.maintenance) {
+            return "maintenance ";
+        } else if (nsr.internalTransport) {
+            return "internal transport ";
+        } else if (nsr.language) {
+            return "language ";
+        }
+        return "";
+    }
+
+    // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
+    if (isLoading) {
+        return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    if (!isAuthenticated) {
+        loginWithRedirect().then();
+        return;
+    }
+
     return (
         <div style={{position: 'relative', width: '100%', height: '100%'}}>
             {/* Drawer for additional controls */}
-            <Drawer anchor="left" open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}
-                    ModalProps={{BackdropProps: {invisible: true}}}>
+            <Collapse in={isDrawerOpen} timeout="auto"
+                      ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
+                      className={"google-maps-collapse"}>
                 <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
                     <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
                         <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
@@ -318,6 +479,7 @@ export default function LeafletMap() {
                                         setNodeStart(nId);
                                     } else {
                                         setNodeStart("");
+                                        setPathData([]);
                                     }
                                 }}
                             />
@@ -336,6 +498,7 @@ export default function LeafletMap() {
                                         setNodeEnd(nId);
                                     } else {
                                         setNodeEnd("");
+                                        setPathData([]);
                                     }
                                 }}
                             />
@@ -360,7 +523,7 @@ export default function LeafletMap() {
                             onChange={(event) => {
                                 setUseAStar(searchTypeToNum(event.target.value));
                                 console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
-                                axios.post(`/api/db-get-path/change/${searchTypeToNum(event.target.value)}`);
+                                axios.post(`/api/path/change/${searchTypeToNum(event.target.value)}`).then();
                             }}
                             size="small"
                             style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}
@@ -386,35 +549,18 @@ export default function LeafletMap() {
                     </div>
 
                     <div style={{display: 'grid', maxWidth: '100%'}}>
-
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
                     </div>
+                    <Button onClick={() => {
+                        setIsDrawerOpen(!isDrawerOpen);
+                    }}>
+                        <RoomIcon/>
+                    </Button>
                 </div>
-            </Drawer>
+            </Collapse>
             <div className="map-buttons">
                 <div className="floor-button">
-                    <TextField
-                        select
-                        value={selectedFloor}
-                        onChange={(event) => {
-                            console.log(lMap);
-                            lMap!.current.setZoom(5);
-                            setSelectedFloor(event.target.value);
-                            setCurrLevel(floorToLevel(event.target.value));
-                        }}
-                        variant="outlined"
-                        size="small"
-                        style={{backgroundColor: "white",}}
-                    >
-                        <MenuItem value={lowerlevel1}>Lower Level 1</MenuItem>
-                        <MenuItem value={lowerlevel2}>Lower Level 2</MenuItem>
-                        {/*<MenuItem value="groundfloor">Ground Floor</MenuItem>*/}
-                        <MenuItem value={firstfloor}>First Floor</MenuItem>
-                        <MenuItem value={secondfloor}>Second Floor</MenuItem>
-                        <MenuItem value={thirdfloor}>Third Floor</MenuItem>
-                    </TextField>
                 </div>
-
                 <div className="search-button">
                     <Autocomplete
                         disablePortal
@@ -429,6 +575,7 @@ export default function LeafletMap() {
                                 setNodeEnd(nId);
                             } else {
                                 setNodeEnd("");
+                                setPathData([]);
                             }
                         }}
                     />
@@ -437,11 +584,29 @@ export default function LeafletMap() {
                 <div className="button3">
                     <AuthenticationButton/>
                 </div>
+
+                <div className="open-drawer">
+                    <Button onClick={() => {
+                        setIsDrawerOpen(!isDrawerOpen);
+                    }}>
+                        <RoomIcon/>
+                    </Button>
+                </div>
+
                 <div className="checkboxes">
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>} label="Show Nodes"/>
-                        <FormControlLabel control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>} label="Show Edges"/>
-                        <FormControlLabel control={<Checkbox checked={showHalls} onClick={() => setShowHalls(!showHalls)}/>} label="Show Halls"/>
+                        <FormControlLabel
+                            control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
+                            label="Show Nodes"/>
+                        <FormControlLabel
+                            control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
+                            label="Show Edges"/>
+                        <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
+                                                             onClick={() => setShowHalls(!showHalls)}/>}
+                                          label="Show Halls"/>
+                        <FormControlLabel control={<Checkbox checked={doAnimation}
+                                                             onClick={() => setDoAnimation(!doAnimation)}/>}
+                                          label="Animate Path"/>
                     </FormGroup>
                 </div>
             </div>
@@ -461,7 +626,8 @@ export default function LeafletMap() {
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)} radius={6}
+                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)}
+                                      radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {
@@ -477,12 +643,44 @@ export default function LeafletMap() {
                                           }
                                       }}>
                             <Tooltip>
-                                {longName + ": " + xcoord + ", " + ycoord}
+                                {/*{longName + ": " + xcoord + ", " + ycoord}*/}
+                                <div>
+                                    {longName}
+                                    {/* Display service request data here */}
+                                    {srData.map((serviceRequest) => (
+                                        <div key={serviceRequest.serviceID}>
+                                            {serviceRequest.locationID === nodeID && (
+                                                <p>Contains {getReqType(serviceRequest)} service request <br/>
+                                                    Request Status: {serviceRequest.status} <br/>
+                                                    Created By: {serviceRequest.createdByID} <br/>
+                                                    Assigned To: {serviceRequest.assignedID}</p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                             </Tooltip>
                         </CircleMarker> : <></>)
                 ))}
                 {lineData}
+                {nodeStart !== "" ? drawNodeStart() : <></>}
+                {nodeEnd !== "" ? drawNodeEnd() : <></>}
+                {doAnimation ? moveLine() : <></>}
             </MapContainer>
+            <div className="floor-buttons">
+                {FloorLevel.slice().reverse().map(({floor, level}) => (
+                    <button
+                        key={floor}
+                        className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : ''}`}
+                        onClick={() => {
+                            lMap!.current.setZoom(5);
+                            setSelectedFloor(floor);
+                            setCurrLevel(level);
+                        }}
+                    >
+                        {level}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 }

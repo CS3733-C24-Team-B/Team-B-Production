@@ -3,6 +3,18 @@
     height: 100vh;
 }
 
+.google-maps-collapse {
+    position: fixed;
+    z-index: 1001; /* ensure it's above the Leaflet map */
+    width: 10%;
+    min-height: 100%;
+    background-color: white;
+}
+
+.text-paper {
+    overflow-y: auto;
+}
+
 .map-buttons {
     position: fixed;
     top: 4%;
@@ -57,9 +69,47 @@
     margin-right: 10px;
 }
 
+.open-drawer {
+    margin-left: 0;
+    margin-bottom: -38%;
+    position: absolute;
+}
+
 .checkboxes {
     margin-left: 75%;
-    margin-bottom: -40%;
+    margin-bottom: -38%;
     position: absolute;
+}
+
+.floor-buttons {
+    z-index: 1000;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.mui-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: white;
+    color: black;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid transparent; /* Add border */
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1rem; /* Adjust font size if necessary */
+}
+
+.mui-btn.selected {
+    background-color: gray;
+    color: white;
+    border-color: gray; /* Change border color when selected */
 }
 

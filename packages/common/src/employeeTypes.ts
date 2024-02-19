@@ -1,5 +1,7 @@
 export type CreateEmployee = {
-    email: string
+    email: string,
+    firstName?: string,
+    lastName?: string
 }
 
 export type UpdateEmployee = {
