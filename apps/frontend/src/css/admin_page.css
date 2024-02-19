@@ -1,3 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+
+.AD-OneColumn {
+    background-color: #012d5a;
+    display: grid;
+    grid-template-columns: 100%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.AD-ThreeRows {
+    background-color: #012d5a;
+    display: grid;
+    grid-template-rows: 6% 60% 30%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-columns: auto;
+    grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
+    margin: 2vw;
+    /* order matter :) \/ */
+    margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+}
+
+.AD-FourColumns {
+    background-color: white;
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    width: 100%;
+    height: 100%;
+}
+
+
+.AD-TestCard {
+    background-color: white;
+    border-radius: 15px;
+
+}
+.AD-TestCard2 {
+    background-color: white;
+    border-radius: 15px;
+    overflow: auto;
+    max-height: 100vh;
+}
+
+
+
+
+
+
+
+
+
+/*DELETE LATER */
+
 .invite-buttons{
     background-color: rgba(0, 0, 0, 0);
     justify-self: center;
