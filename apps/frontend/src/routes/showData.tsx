@@ -6,24 +6,26 @@ import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import Navbar from "../components/Navbar.tsx";
 import "../css/chart.css";
+import {useAuth0} from "@auth0/auth0-react";
 
 
 ChartJS.register(BarElement, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale);
 
 function ShowData() {
     const [srData, setsrData] = useState<ServiceRequest[]>([]);
-    
+    const {getAccessTokenSilently} = useAuth0();
     useEffect(() => {
         async function fetchData() {
-            try {
-                const res = await axios.get("/api/service-request");
-                setsrData(res.data);
-            } catch (error) {
-                console.error("There was an error fetching the service request data:", error);
-            }
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setsrData(res.data);
         }
         fetchData();
-    }, []);
+    }, [getAccessTokenSilently]);
 
     const categories = {
         internalTransport: 0,
