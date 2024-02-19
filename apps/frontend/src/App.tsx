@@ -1,7 +1,7 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import "./index.css";
-import HomePage from "./routes/HomePage.tsx";
+import HomePage from "./routes/NavigationPage.tsx";
 import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
