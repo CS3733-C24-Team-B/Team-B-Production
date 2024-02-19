@@ -45,10 +45,7 @@ export default function NewUITemplete() {
                             </Button>
 
                         </div>
-                        <div className={"AD-TestCard2"}>
-                            <br/>
                             {ADPageShow}
-                        </div>
                         <div className={"TestCard"}></div>
                     </div>
                 </div>
