@@ -19,9 +19,10 @@ export class Pathfind {
 }
 
 export class AStar implements searchStrategy {
-    async search(startNode: string, goalNode: string) {
+    async search(startNode: string, goalNode: string):Promise<string[] | undefined> {
         const nodeList = await createNodeList();
         const edgeList = await createEdgeList();
+        const elevatorList = await findElevatorNode(startNode);
         const start = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === startNode) as MapNode);
         const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
         const graph = createGraph(nodeList, edgeList);
@@ -30,6 +31,29 @@ export class AStar implements searchStrategy {
         //already searched
         const closedList: aStarNode[] = [];
         //while there are still nodes left to search
+        let elevatorPath:string[] | undefined = [];
+        if(nodeList.find(node => node.nodeID===goalNode)!.floor!=nodeList.find(node => node.nodeID===startNode)!.floor) {
+            let closest = -1;
+            let closestNode = elevatorList[0];
+            for (let i = 0; i < elevatorList.length; i++) {
+                const dist = Math.sqrt((elevatorList[i].xcoord - nodeList.find(node => node.nodeID === goalNode)!.xcoord) ** 2 + (elevatorList[i].ycoord - nodeList.find(node => node.nodeID === goalNode)!.ycoord) ** 2);
+                if (closest === -1) {
+                    closest = dist;
+                } else {
+                    if (closest > dist) {
+                        closest = dist;
+                        closestNode = elevatorList[i];
+                    }
+                }
+            }
+            if(closestNode.nodeID!==startNode) {
+                elevatorPath = await this.search(startNode, closestNode.nodeID);
+                if (elevatorPath) {
+                    elevatorPath.concat(await this.search(closestNode.nodeID, goalNode) as string[]);
+                }
+                return elevatorPath as string[];
+            }
+        }
         while (openList.length > 0) {
             //get currenet node
             const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
@@ -282,6 +306,14 @@ export async function findNode(nodeID: string): Promise<MapNode> {
     return nodeList.find(MapNode => MapNode.nodeID === nodeID) as MapNode;
 }
 
+export async function findElevatorNode(nodeID: string): Promise<MapNode[]> {
+    //return array.find(obj => obj.id === id);
+    //console.log(createNodeList()[7]);
+    // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
+    const nodeList: MapNode[] = await createNodeList();
+
+    return nodeList.filter(async MapNode => MapNode.floor === (await findNode(nodeID)).floor&&MapNode.nodeType==="ELEV");
+}
 
 /*
 read data from NodeCSV and export in JSON:
