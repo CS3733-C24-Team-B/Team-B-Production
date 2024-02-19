@@ -2,6 +2,7 @@ import React from "react";
 import logo from "../images/BandW-Logo-White.png";
 import "../css/topbar.css";
 import {useAuth0} from "@auth0/auth0-react";
+import AuthenticationButton from "./AuthenticationButton";
 
 interface TopbarProps {
     elems: React.ReactNode[];
@@ -18,6 +19,7 @@ export default function Topbar({elems} : TopbarProps) {
             </div>
             <div className={"profile-card"}>
                 {isAuthenticated ? <p className={"profile-text"}>{user!.email}</p> : <></>}
+                <AuthenticationButton/>
             </div>
         </div>
     );
