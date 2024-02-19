@@ -114,56 +114,6 @@
     font-size: 17px;
 }
 
-/*IGNORE PLEEASSEE OFMG PLLLLLEEEEAASSE       \/   \/   \/   \/   \/      */
-
-#myInput { /* The search field */
-    box-sizing: border-box;
-    background-image: url('../images/searchIcon.png');
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    background-size: 16px; /* Adjust the size of the icon here */
-    font-size: 16px;
-    margin-top: 8px;
-    padding: 8px 34px;
-    border: none;
-    border-bottom: 1px solid #ddd;
-}
-
-#myInput:focus { /* the highlight when you click it*/
-    outline: 3px solid #ddd;
-}
-
-
-/* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
-@media screen and (max-width: 700px) {
-    .search a {
-        float: none;
-        display: block;
-        text-align: left;
-        margin-top: 8px;
-        margin-right: 8px;
-        padding: 6px;
-    }
-
-    .navbar-butn a {
-        padding: 14px 16px;
-
-    }
-
-    #myInput input[type=text] {
-        display: block;
-        width: 80%;
-        margin-left: 3px;
-        text-align: left;
-        float: left;
-
-    }
-
-    #myInput input[type=text] {
-        border: 1px solid #ddd;
-    }
-}
-
 canvas {
     max-width: 100%;
     max-height: 100%;
