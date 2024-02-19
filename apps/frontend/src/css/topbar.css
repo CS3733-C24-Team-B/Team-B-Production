@@ -1,0 +1,24 @@
+.logo-style {
+    margin-left: 3%;
+    width: 95%;
+}
+
+.topbar-elems {
+    margin-top: 0.8%;
+    margin-left: 15%;
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+    margin-top: 3%
+}
+
+.profile-text {
+    font-family: Calibri;
+    color: white;
+}

@@ -3,18 +3,13 @@ import "../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
-import AuthenticationButton from "./AuthenticationButton.tsx";
+//import AuthenticationButton from "./AuthenticationButton.tsx";
 import {
     Button,
     Autocomplete,
     Collapse,
-    MenuItem,
-    FormControlLabel,
-    Checkbox,
-    FormGroup,
     CircularProgress
 } from "@mui/material";
-import RoomIcon from '@mui/icons-material/Room';
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
@@ -75,7 +70,18 @@ type ServiceRequest = {
     language: LanguageRequest,
 }
 
-export default function LeafletMap() {
+interface MapProps {
+    openDrawer: boolean;
+    nodesShow: boolean;
+    edgesShow: boolean;
+    hallsShow: boolean;
+    animate: boolean;
+    algo: number;
+    endNode: string;
+    changeTopbar: (arg0: string) => void;
+}
+
+export default function LeafletMap(props : MapProps) {
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
     const [nodeStart, setNodeStart] = useState("");
@@ -85,7 +91,6 @@ export default function LeafletMap() {
     const [showNodes, setShowNodes] = useState(true);
     const [showEdges, setShowEdges] = useState(false);
     const [showHalls, setShowHalls] = useState(false);
-    const [useAStar, setUseAStar] = useState(0);
     const [directions, setDirections] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State for drawer open/close
     const [currLevel, setCurrLevel] = useState("L1");
@@ -103,6 +108,27 @@ export default function LeafletMap() {
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     //const [employeeData, setEmployeeData] = useState([]);
 
+    useEffect(() => {
+        setIsDrawerOpen(props.openDrawer);
+    }, [props.openDrawer]);
+
+    useEffect(() => {
+        setShowNodes(props.nodesShow);
+        setShowEdges(props.edgesShow);
+        setShowHalls(props.hallsShow);
+        setDoAnimation(props.animate);
+    }, [props.nodesShow, props.edgesShow, props.hallsShow, props.animate]);
+
+    useEffect(() => {
+        axios.post(`/api/path/change/${props.algo}`).then();
+    }, [props.algo]);
+
+    useEffect(() => {
+        setNodeEnd(props.endNode);
+        if(props.endNode === "") {
+            setPathData([]);
+        }
+    }, [props.endNode]);
 
     useEffect(() => {
         async function fetch() {
@@ -266,17 +292,6 @@ export default function LeafletMap() {
         setAnimateChanges(changes);
     }, [currLevel, doAnimation, edgeData, nodeData, pathData, showEdges]);
 
-    useEffect(() => {
-        async function fetch() {
-            //  console.log(`${data.startNode}`);
-            const res2 = await axios.get(`/api/path/currentAlg`);
-            setUseAStar(res2.data);
-
-        }
-
-        fetch().then();
-    }, []);
-
     function moveLine() {
         if(animateData.length > 0) {
             startDraw.current = (startDraw.current+1) % animateData.length;
@@ -344,20 +359,6 @@ export default function LeafletMap() {
         }
     }
 
-    // function selectNode(event: LeafletMouseEvent) {
-    //     event.target.setStyle({
-    //         color: "green"
-    //     });
-    //     if (selectedNodes.length >= 2) {
-    //         selectedNodes[0]!.sourceTarget.setStyle({
-    //             color: "#3388ff"
-    //         });
-    //         selectedNodes.splice(0, 1);
-    //     }
-    //     selectedNodes.push(event);
-    //     setSelectedNodes(selectedNodes);
-    // }
-
     function nametoNodeID(name: string) {
         return nodeData.find(({longName}) =>
             longName === name
@@ -408,30 +409,6 @@ export default function LeafletMap() {
         setDirections(!directions);
     }
 
-    function numToSearchType(num: number) {
-        switch (num) {
-            case 0:
-                return "A Star";
-            case 1:
-                return "BFS";
-            case 2:
-                return "DFS";
-        }
-        return "A Star";
-    }
-
-    function searchTypeToNum(str: string) {
-        switch (str) {
-            case "A Star":
-                return 0;
-            case "BFS":
-                return 1;
-            case "DFS":
-                return 2;
-        }
-        return 0;
-    }
-
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
             return "sanitation ";
@@ -458,11 +435,11 @@ export default function LeafletMap() {
     }
 
     return (
-        <div style={{position: 'relative', width: '100%', height: '100%'}}>
+        <div style={{maxHeight: '100%'}}>
             {/* Drawer for additional controls */}
             <Collapse in={isDrawerOpen} timeout="auto"
-                      ModalProps={{BackdropProps: {invisible: true}}} unmountOnExit orientation="horizontal"
-                      className={"google-maps-collapse"}>
+                      unmountOnExit orientation="horizontal"
+                      className={"google-maps-collapse"} sx={{maxWidth: '30%'}}>
                 <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
                     <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
                         <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
@@ -496,43 +473,15 @@ export default function LeafletMap() {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
                                         const nId = nametoNodeID(newValue.target.innerText);
                                         setNodeEnd(nId);
+                                        props.changeTopbar(nId);
                                     } else {
                                         setNodeEnd("");
                                         setPathData([]);
+                                        props.changeTopbar("");
                                     }
                                 }}
                             />
                         </div>
-                    </div>
-                    {/* Show/Hide Edges */}
-                    <div style={{display: "flex", marginBottom: '20px', width: '100%', maxWidth: '300px'}}>
-                        <Button variant="contained" size="small" onClick={() => setShowEdges(!showEdges)} style={{
-                            backgroundColor: "white",
-                            color: "black",
-                            marginRight: '20px',
-                            fontSize: '1.5vh',
-                            width: '8vw'
-                        }}>
-                            {showEdges ? "Hide All Edges" : "Show All Edges"}
-                        </Button>
-                        {/* Use A* */}
-
-                        <TextField
-                            select
-                            value={numToSearchType(useAStar)}
-                            onChange={(event) => {
-                                setUseAStar(searchTypeToNum(event.target.value));
-                                console.log(`changing path finding to type ${searchTypeToNum(event.target.value)}`);
-                                axios.post(`/api/path/change/${searchTypeToNum(event.target.value)}`).then();
-                            }}
-                            size="small"
-                            style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', width: '8vw'}}
-                        >
-
-                            {<MenuItem value={"A Star"}>A*</MenuItem>}
-                            {<MenuItem value={"BFS"}>BFS</MenuItem>}
-                            {<MenuItem value={"DFS"}>DFS</MenuItem>}
-                        </TextField>
                     </div>
                     {/* Text Directions */}
                     <div>
@@ -548,67 +497,35 @@ export default function LeafletMap() {
                         </Button>
                     </div>
 
-                    <div style={{display: 'grid', maxWidth: '100%'}}>
+                    <div style={{display: 'grid', maxWidth: '90%'}}>
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
                     </div>
-                    <Button onClick={() => {
-                        setIsDrawerOpen(!isDrawerOpen);
-                    }}>
-                        <RoomIcon/>
-                    </Button>
                 </div>
             </Collapse>
             <div className="map-buttons">
-                <div className="floor-button">
-                </div>
-                <div className="search-button">
-                    <Autocomplete
-                        disablePortal
-                        options={currNodes.map(({longName}) => ({label: longName}))}
-                        sx={{backgroundColor: 'white'}}
-                        renderInput={(params) => <TextField {...params} label="Search"/>}
-                        value={nodeIDtoName(nodeEnd)}
-                        size={"small"}
-                        onChange={(newValue) => {
-                            if (newValue !== null && newValue.target.innerText !== undefined) {
-                                const nId = nametoNodeID(newValue.target.innerText);
-                                setNodeEnd(nId);
-                            } else {
-                                setNodeEnd("");
-                                setPathData([]);
-                            }
-                        }}
-                    />
-                </div>
+                {/*<div className="search-button">*/}
+                {/*    <Autocomplete*/}
+                {/*        disablePortal*/}
+                {/*        options={currNodes.map(({longName}) => ({label: longName}))}*/}
+                {/*        sx={{backgroundColor: 'white'}}*/}
+                {/*        renderInput={(params) => <TextField {...params} label="Search"/>}*/}
+                {/*        value={nodeIDtoName(nodeEnd)}*/}
+                {/*        size={"small"}*/}
+                {/*        onChange={(newValue) => {*/}
+                {/*            if (newValue !== null && newValue.target.innerText !== undefined) {*/}
+                {/*                const nId = nametoNodeID(newValue.target.innerText);*/}
+                {/*                setNodeEnd(nId);*/}
+                {/*            } else {*/}
+                {/*                setNodeEnd("");*/}
+                {/*                setPathData([]);*/}
+                {/*            }*/}
+                {/*        }}*/}
+                {/*    />*/}
+                {/*</div>*/}
 
-                <div className="button3">
-                    <AuthenticationButton/>
-                </div>
-
-                <div className="open-drawer">
-                    <Button onClick={() => {
-                        setIsDrawerOpen(!isDrawerOpen);
-                    }}>
-                        <RoomIcon/>
-                    </Button>
-                </div>
-
-                <div className="checkboxes">
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
-                            label="Show Nodes"/>
-                        <FormControlLabel
-                            control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
-                            label="Show Edges"/>
-                        <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
-                                                             onClick={() => setShowHalls(!showHalls)}/>}
-                                          label="Show Halls"/>
-                        <FormControlLabel control={<Checkbox checked={doAnimation}
-                                                             onClick={() => setDoAnimation(!doAnimation)}/>}
-                                          label="Animate Path"/>
-                    </FormGroup>
-                </div>
+                {/*<div className="button3">*/}
+                {/*    <AuthenticationButton/>*/}
+                {/*</div>*/}
             </div>
             <MapContainer
                 center={[17, 25]}
@@ -619,6 +536,7 @@ export default function LeafletMap() {
                 maxBoundsViscosity={1.0}
                 maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
                 ref={lMap}
+                className={"leaflet-container"}
             >
                 <ImageOverlay
                     url={selectedFloor} //"src/images/00_thelowerlevel1.png"
@@ -635,9 +553,11 @@ export default function LeafletMap() {
                                                       setNodeStart(nodeID);
                                                   } else if (nodeEnd === "") {
                                                       setNodeEnd(nodeID);
+                                                      props.changeTopbar(nodeID);
                                                   } else {
                                                       setNodeStart(nodeEnd);
                                                       setNodeEnd(nodeID);
+                                                      props.changeTopbar(nodeID);
                                                   }
                                               }
                                           }
@@ -684,3 +604,12 @@ export default function LeafletMap() {
         </div>
     );
 }
+
+LeafletMap.defaultProps = {
+    openDrawer: false,
+    nodesShow: true,
+    edgesShow: false,
+    hallsShow: false,
+    animate: false,
+    algo: 0
+};
