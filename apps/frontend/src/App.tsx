@@ -9,6 +9,7 @@ import RequestForm from "./routes/RequestForm.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
+import NewUITemplete from "./components/NewUITemplete.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -56,6 +57,11 @@ function App() {
             path: "/settings",
             errorElement: <div/>,
             element: <SettingsPage/>
+        },
+        {
+            path: "/newUI",
+            errorElement: <div/>,
+            element: <NewUITemplete/>
         }
     ]);
 
