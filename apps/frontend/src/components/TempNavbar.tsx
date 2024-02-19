@@ -5,6 +5,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import SettingsIcon from "@mui/icons-material/Settings";
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function TempNavbar() {
     return (
@@ -34,6 +35,11 @@ export default function TempNavbar() {
                         startIcon={<SettingsIcon style={{fontSize: 40, minWidth: 80}}/>}
                 href={"/settings"}>
                     Settings {/*settings icon*/}
+                </Button>
+                <Button sx={{color: 'white', width: '80%', textTransform: 'none'}} style={{justifyContent: "flex-start", marginLeft: '10%', fontSize: '25px', fontFamily: 'Calibri'}}
+                        startIcon={<InfoIcon style={{fontSize: 40, minWidth: 80}}/>}
+                        href={"/about"}>
+                    About {/*about icon*/}
                 </Button>
             </div>
         </div>

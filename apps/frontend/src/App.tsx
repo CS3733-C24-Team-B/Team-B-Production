@@ -10,6 +10,7 @@ import ProfilePage from "./routes/ProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
 import NewUITemplete from "./components/NewUITemplete.tsx";
+import AboutPage from "./routes/AboutPage.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -62,6 +63,11 @@ function App() {
             path: "/newUI",
             errorElement: <div/>,
             element: <NewUITemplete/>
+        },
+        {
+            path: "/about",
+            errorElement: <div/>,
+            element: <AboutPage/>
         }
     ]);
 
