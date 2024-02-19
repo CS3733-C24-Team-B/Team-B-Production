@@ -439,10 +439,10 @@ export default function LeafletMap(props : MapProps) {
             {/* Drawer for additional controls */}
             <Collapse in={isDrawerOpen} timeout="auto"
                       unmountOnExit orientation="horizontal"
-                      className={"google-maps-collapse"} sx={{maxWidth: '30%'}}>
-                <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
-                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
-                        <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
+                      className={"google-maps-collapse"} sx={{maxWidth: '20%'}}>
+                <div className="drawer-content" style={{display: 'flex', flexDirection: 'column'}}>
+                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '86%'}}>
+                        <div className="nav-buttons" style={{marginBottom: '10px', width: '100%'}}>
                             {/* Start Node */}
                             <Autocomplete
                                 disablePortal
@@ -502,31 +502,6 @@ export default function LeafletMap(props : MapProps) {
                     </div>
                 </div>
             </Collapse>
-            <div className="map-buttons">
-                {/*<div className="search-button">*/}
-                {/*    <Autocomplete*/}
-                {/*        disablePortal*/}
-                {/*        options={currNodes.map(({longName}) => ({label: longName}))}*/}
-                {/*        sx={{backgroundColor: 'white'}}*/}
-                {/*        renderInput={(params) => <TextField {...params} label="Search"/>}*/}
-                {/*        value={nodeIDtoName(nodeEnd)}*/}
-                {/*        size={"small"}*/}
-                {/*        onChange={(newValue) => {*/}
-                {/*            if (newValue !== null && newValue.target.innerText !== undefined) {*/}
-                {/*                const nId = nametoNodeID(newValue.target.innerText);*/}
-                {/*                setNodeEnd(nId);*/}
-                {/*            } else {*/}
-                {/*                setNodeEnd("");*/}
-                {/*                setPathData([]);*/}
-                {/*            }*/}
-                {/*        }}*/}
-                {/*    />*/}
-                {/*</div>*/}
-
-                {/*<div className="button3">*/}
-                {/*    <AuthenticationButton/>*/}
-                {/*</div>*/}
-            </div>
             <MapContainer
                 center={[17, 25]}
                 zoom={5}

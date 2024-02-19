@@ -3,14 +3,6 @@
     width: 95%;
 }
 
-.topbar-elems {
-    margin-top: 0.8%;
-    margin-left: 15%;
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-}
-
 .profile-card {
     display: flex;
     flex-direction: row;
