@@ -97,8 +97,14 @@
     margin-top: 10vh;
     height: 100%;
     width: 15%; /* WHENEVER YOU CHANGE THIS, YOU ALSO NEED TO CHANGE THE margin-left IN .BackBlue */
+}
+
+.icon-spacing {
+    height: 60%;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
+    horiz-align: left;
 }
 
 .TestCard {
