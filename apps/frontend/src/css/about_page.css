@@ -4,7 +4,6 @@
 }
 
 .FiveRows {
-    background-color: orange;
     display: grid;
     grid-template-rows: 5% 30% 40% 20% 5%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
@@ -40,7 +39,7 @@
 .AboutTwoColumns {
     display: grid;
     grid-template-rows: auto; /* column ratios are split, also accounts for 2% gap */
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 25% 75%;
 }
 
 .about-header {
@@ -49,4 +48,28 @@
     font-size: 60px;
     font-family: "Calibri";
     color: #009CA6;
+}
+
+.welcome-text {
+    margin: 5%;
+    font-size: 35px;
+    font-family: "Calibri";
+    color: black;
+    line-height: 95%;
+}
+
+.meet-text {
+    margin: 1.5%;
+    font-size: 35px;
+    font-family: "Calibri";
+    color: black;
+    line-height: 95%;
+}
+
+.copyright-text {
+    align-self: center;
+    text-align: center;
+    font-size: 20px;
+    font-family: "Calibri";
+    color: black;
 }

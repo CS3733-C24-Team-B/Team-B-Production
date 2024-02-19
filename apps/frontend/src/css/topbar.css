@@ -1,0 +1,13 @@
+.logo-style {
+    margin-left: 2%;
+    width: 20%;
+}
+
+.topbar-elems {
+    margin-top: 0.8%;
+    margin-left: 6%;
+    display: flex;
+    flex-direction: row;
+    gap: 14%;
+    width: 60%;
+}
