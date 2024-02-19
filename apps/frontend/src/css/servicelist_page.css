@@ -1,3 +1,32 @@
+.service-list-BackBlue{
+    background-color: #012d5a;
+    height: 100%;
+    margin-left: 15%;
+    margin-top: 10vh;
+}
+
+.service-list-TwoColumns {
+    background-color: orange;
+    display: grid;
+    grid-template-columns: 80% 20%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*  \/\/\/DELETE WHEN YOUR DONE \/ \/ \/ */
 .csv table{
     border-radius: 12px;
     display: inline;
