@@ -21,65 +21,34 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 
-export default function CSVNodeDataTable(){
+export default function CSVEdgeDataTable(){
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
+    const [edgeData, setEdgeData] = useState([]);
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/nodes/read");
-            console.log(res.data);
+            const res3 = await axios.get("/api/edges/read");
             setNodeData(res.data);
+            setEdgeData(res3.data);
         }
 
         fetch().then();
-    }, []);
+    }, [getAccessTokenSilently]);
 
-    const arrayNode = nodeData.map(({floor, building, longName}, i) =>
-        <tr key={i}>
-            <td>{longName}</td>
-            <td>{floor}</td>
-            <td>{building}</td>
-        </tr>
-    );
-
-    async function downloadFromDB() {
-        console.log("Running Download to DB");
-
-        try {
-            const res3 = await axios.get('/api/nodes/read');
-            console.log(res3);
-            const headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
-            const resCSV = res3.data.reduce((roomNode: string[], roomData: {
-                nodeID: string;
-                xcoord: number;
-                ycoord: number;
-                floor: string;
-                building: string;
-                nodeType: string;
-                longName: string;
-                shortName: string;
-            }) => {
-                const {nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName} = roomData;
-                roomNode.push([nodeID, xcoord + "", ycoord + "", floor, building, nodeType, longName, shortName].join(','));
-                return roomNode;
-            }, []);
-            const data = [...headers, ...resCSV].join('\n');
-            const blob = new Blob([data], {type: "text/csv"});
-            const a = document.createElement("a");
-            a.download = "NodeData.csv";
-            a.href = window.URL.createObjectURL(blob);
-            const clickEvt = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true,
-            });
-            a.dispatchEvent(clickEvt);
-            a.remove();
-        } catch (exception) {
-            console.log("post error: " + exception);
-        }
+    function nodeIDtoName(nId: string) {
+        return nodeData.find(({nodeID}) =>
+            nodeID === nId
+        )!["longName"];
     }
 
+    const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
+        <tr key={i}>
+            <td>{edgeID}</td>
+            <td>{nodeIDtoName(startNodeID)}</td>
+            <td>{nodeIDtoName(endNodeID)}</td>
+        </tr>
+    );
 
     function uploadToDB() {
         console.log("Running Upload to DB");
@@ -93,15 +62,47 @@ export default function CSVNodeDataTable(){
             }
 
             formData.append("csvFile", csvFile.files![0]); // Update based on backend
-
             getAccessTokenSilently().then((accessToken: string) => {
-                axios.post('/api/nodes', formData, {
+                axios.post("/api/edges", formData, {
                     headers: {
-                        Authorization: "Bearer " + accessToken,
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: "Bearer " + accessToken
                     }
                 }).then();
             });
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
+    async function downloadFromDB() {
+        console.log("Running Download to DB");
+
+        try {
+            const res3 = await axios.get('/api/edges/read');
+            console.log(res3);
+            const headers = ['edgeID, startNodeID, endNodeID'];
+            const resCSV = res3.data.reduce((edges: string[], edgeData: {
+                edgeID: string,
+                startNodeID: string,
+                endNodeID: string
+            }) => {
+                const {edgeID, startNodeID, endNodeID} = edgeData;
+                edges.push([edgeID, startNodeID, endNodeID].join(','));
+                return edges;
+            }, []);
+            const data = [...headers, ...resCSV].join('\n');
+            const blob = new Blob([data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "EdgeData.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            a.dispatchEvent(clickEvt);
+            a.remove();
         } catch (exception) {
             console.log("post error: " + exception);
         }
@@ -114,20 +115,20 @@ export default function CSVNodeDataTable(){
                 <table className={"tables"}>
                     <thead>
                     <tr>
-                        <th>Room Name</th>
-                        <th>Floor</th>
-                        <th>Building Name</th>
+                        <th>Edge ID</th>
+                        <th>Start Room</th>
+                        <th>End Room</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {arrayNode}
+                    {arrayEdge}
                     </tbody>
                 </table>
             </div>
             <div className={"AD-Card3"}>
                 <p className={"AD-head"}>Actions</p>
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                       style={{backgroundColor: "#34AD84", margin: "8%",maxHeight: "60%"}}
+                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}
                 >
                     Upload file
                     <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
