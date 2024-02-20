@@ -96,7 +96,7 @@ export default function NavigationPage() {
     );
 
     topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Calibri'}}
+        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<DirectionsIcon/>}
         onClick={() => {
             setOpenDrawer(!openDrawer);
@@ -137,10 +137,11 @@ export default function NavigationPage() {
             }}
             size="small"
             style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', margin: '8%', minWidth: '84%'}}
+            InputProps={{style: {fontFamily: 'Lato'}}}
         >
-            {<MenuItem value={"A Star"}>A*</MenuItem>}
-            {<MenuItem value={"BFS"}>BFS</MenuItem>}
-            {<MenuItem value={"DFS"}>DFS</MenuItem>}
+            {<MenuItem value={"A Star"} sx={{fontFamily: 'Lato'}}>A*</MenuItem>}
+            {<MenuItem value={"BFS"} sx={{fontFamily: 'Lato'}}>BFS</MenuItem>}
+            {<MenuItem value={"DFS"} sx={{fontFamily: 'Lato'}}>DFS</MenuItem>}
         </TextField>
     );
     const SettingsMenu = (
@@ -150,26 +151,26 @@ export default function NavigationPage() {
                 setMenuAnchor(null);
             }}
             anchorEl={menuAnchor}>
-            <FormGroup style={{minWidth: '10%', gap: 5, padding: 15}}>
+            <FormGroup style={{minWidth: '10%', gap: 0, padding: 15}}>
                 <FormControlLabel
                     control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
-                    label="Show Nodes"/>
+                    label={<p className={"settings-text"}>Show Nodes</p>}/>
                 <FormControlLabel
                     control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
-                    label="Show Edges"/>
+                    label={<p className={"settings-text"}>Show Edges</p>}/>
                 <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
                                                      onClick={() => setShowHalls(!showHalls)}/>}
-                                  label="Show Halls"/>
+                                  label={<p className={"settings-text"}>Show Halls</p>}/>
                 <FormControlLabel control={<Checkbox checked={doAnimation}
                                                      onClick={() => setDoAnimation(!doAnimation)}/>}
-                                  label="Animate Path"/>
+                                  label={<p className={"settings-text"}>Animate Path</p>}/>
             </FormGroup>
             <Divider/>
             {ChooseAlgo}
         </Menu>
     );
     topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Calibri'}}
+        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
             setMenuAnchor(e.currentTarget);
