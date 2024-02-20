@@ -9,7 +9,7 @@ export default function NewUITemplete() {
             <TempNavbar/> {/* NavBlue css fixes this to the left */}
             <div className={"service-list-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-list-TwoColumns"}>
-                    <div className={"ThreeRows"}>
+                    <div className={"SR-ThreeRows"}>
                         <div className={"TestCard"}></div>
                         <div className={"TestCard"}></div>
                         <div className={"TwoColumnsThirdRow"}>
