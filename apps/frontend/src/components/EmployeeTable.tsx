@@ -135,7 +135,8 @@ export default function AdminViewer() {
                 </td>
 
                 <td> {(editRowID === index) ? (
-                    <Button variant="outlined" style={{color: "#012D5A"}} onClick={() => {
+                    <Button variant="outlined" style={{
+                        color: "#012D5A"}} onClick={() => {
                         console.log("Editing employee with email " + employee.email);
                         console.log(employee);
                         getAccessTokenSilently()
@@ -236,29 +237,61 @@ export default function AdminViewer() {
                         </tbody>
                     </table>
                 </div>
-                <div className={"AD-Card3"}>
-                    <p className={"AD-head"}>Actions</p>
-                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                            style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                        Upload File
-                        <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                            onClick={downloadFile}
-                            className="export-button"
-                            style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                        Export File
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                            className="export-button"
-                            style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                        Export Template
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                            className="export-button"
-                            style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                        Delete Data
-                    </Button>
+                <div className={"AD-TwoRows2"}>
+                    <div className={"AD-Card3"}>
+                        <p className={"AD-head"}>Actions</p>
+                        <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
+                                style={{
+                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                    marginLeft: "5%",
+                                    minWidth: "90%",
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }}>
+                            Upload File
+                            <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
+                        </Button>
+                        <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                                onClick={downloadFile}
+                                className="export-button"
+                                style={{
+                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                    minWidth: "90%",
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none'
+                                }}>
+                            Export File
+                        </Button>
+                        <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                                className="export-button"
+                                style={{
+                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                    minWidth: "90%",
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none'
+                                }}>
+                            Template
+                        </Button>
+                        <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                                className="export-button"
+                                style={{
+                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                    minWidth: "90%",
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none'
+                                }}>
+                            Delete Data
+                        </Button>
+                    </div>
+                    <div className={"AD-OneCard2"}>
+                        <p className={"AD-head2"}>Last Updated</p>
+                        {/*<p className={"AD-head3"}>21:02</p>*/}
+                        {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
+                    </div>
                 </div>
             </div>
     );
