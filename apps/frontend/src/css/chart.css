@@ -5,11 +5,7 @@
     width: 100%;
 }
 .chartbox {
-    margin-left: 50px;
-    margin-top: 0;
-    padding: 20px;
     width: 30%;
-    height: 500px;
     display: flex;
     justify-content: flex-start;
     align-items: end
@@ -21,7 +17,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
     grid-template-areas: "header" "main";
-    background-image: linear-gradient(lightgray 0%, white 35vh);
+    background-color: #0078a8;
 }
 
 .data-view-header {
