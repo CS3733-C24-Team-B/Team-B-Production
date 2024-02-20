@@ -3,7 +3,6 @@ import "../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
-//import AuthenticationButton from "./AuthenticationButton.tsx";
 import {
     Button,
     Autocomplete,
@@ -14,8 +13,6 @@ import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
 import {useAuth0} from "@auth0/auth0-react";
-
-// import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
 import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
@@ -28,6 +25,8 @@ import {
     MedicineRequest,
     SanitationRequest
 } from "common/src/serviceRequestTypes.ts";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CircleIcon from '@mui/icons-material/Circle';
 
 const FloorLevel = [
     {
@@ -431,11 +430,12 @@ export default function LeafletMap(props : MapProps) {
             {/* Drawer for additional controls */}
             <Collapse in={isDrawerOpen} timeout="auto"
                       unmountOnExit orientation="horizontal"
-                      className={"google-maps-collapse"} sx={{maxWidth: '30%'}}>
-                <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
-                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
-                        <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
+                      className={"google-maps-collapse"} style={{maxWidth: '25%'}}>
+                <div className="drawer-content">
+                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%', minWidth: 250}}>
+                        <div className="autocomplete-rows" style={{width: '100%'}}>
                             {/* Start Node */}
+                            <CircleIcon style={{marginRight: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -453,8 +453,9 @@ export default function LeafletMap(props : MapProps) {
                                 }}
                             />
                         </div>
-                        <div className="nav-buttons" style={{width: '100%', maxWidth: '300px'}}>
+                        <div className="autocomplete-rows" style={{marginBottom: '10%', width: '100%'}}>
                             {/* End Node */}
+                            <LocationOnIcon style={{marginRight: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -480,9 +481,8 @@ export default function LeafletMap(props : MapProps) {
                         <Button variant="contained" size="small" onClick={handleDirections}
                                 style={{
                                     backgroundColor: "#012D5A",
-                                    width: '15.5vw',
+                                    width: '100%',
                                     marginBottom: '20px',
-                                    marginRight: '30px',
                                     fontSize: '1.5vh'
                                 }}>
                             Text Directions
@@ -494,31 +494,6 @@ export default function LeafletMap(props : MapProps) {
                     </div>
                 </div>
             </Collapse>
-            <div className="map-buttons">
-                {/*<div className="search-button">*/}
-                {/*    <Autocomplete*/}
-                {/*        disablePortal*/}
-                {/*        options={currNodes.map(({longName}) => ({label: longName}))}*/}
-                {/*        sx={{backgroundColor: 'white'}}*/}
-                {/*        renderInput={(params) => <TextField {...params} label="Search"/>}*/}
-                {/*        value={nodeIDtoName(nodeEnd)}*/}
-                {/*        size={"small"}*/}
-                {/*        onChange={(newValue) => {*/}
-                {/*            if (newValue !== null && newValue.target.innerText !== undefined) {*/}
-                {/*                const nId = nametoNodeID(newValue.target.innerText);*/}
-                {/*                setNodeEnd(nId);*/}
-                {/*            } else {*/}
-                {/*                setNodeEnd("");*/}
-                {/*                setPathData([]);*/}
-                {/*            }*/}
-                {/*        }}*/}
-                {/*    />*/}
-                {/*</div>*/}
-
-                {/*<div className="button3">*/}
-                {/*    <AuthenticationButton/>*/}
-                {/*</div>*/}
-            </div>
             <MapContainer
                 center={[17, 25]}
                 zoom={5}
