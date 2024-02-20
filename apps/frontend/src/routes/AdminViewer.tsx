@@ -25,6 +25,7 @@ export default function NewUITemplete() {
                             <Button
                                 style={{
                                     color: currentComponent === 'ServiceRequestTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'ServiceRequestTable' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Calibri',
                                     fontSize: '100%',
                                     textTransform: 'none',
