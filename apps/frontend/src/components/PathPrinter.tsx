@@ -144,7 +144,6 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
 
     return (
         <div style={{maxHeight: '10%'}}>
-            <h2>Hospital Path</h2>
             <Paper style={{minHeight: '30vh', maxHeight: '30vh'}} className={"text-paper"}>
                 <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
             </Paper>
