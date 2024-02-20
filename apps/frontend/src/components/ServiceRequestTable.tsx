@@ -23,6 +23,7 @@ import {
     UpdateRequest
 } from "common/src/serviceRequestTypes.ts";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import {ThemeProvider, createTheme} from "@mui/material/styles";
 
 type ServiceRequest = {
     serviceID: number,
@@ -54,6 +55,21 @@ enum RequestSpecifics {
     when = "When: ",
     details = "Details: "
 }
+
+const latoTheme = createTheme({
+    components: {
+        // Name of the component
+        MuiTableCell: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    // Some CSS
+                    fontFamily: 'Lato',
+                },
+            },
+        },
+    },
+});
 
 export default function ServiceRequestTable(){
     const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
@@ -473,6 +489,7 @@ export default function ServiceRequestTable(){
                 </FormControl>
             </Menu>
             {(!receivedSR) ? <CircularProgress className="center-text"/> :
+                <ThemeProvider theme={latoTheme}>
                     <TableContainer component={Paper} className="service-tables"
                                     sx={{width: 1205, maxHeight: "70vh"}}>
                         <Table stickyHeader>
@@ -520,7 +537,8 @@ export default function ServiceRequestTable(){
                                     </TableRow>)}
                             </TableBody>
                         </Table>
-                    </TableContainer>}
+                    </TableContainer>
+                </ThemeProvider>}
         </div>
     );
 }

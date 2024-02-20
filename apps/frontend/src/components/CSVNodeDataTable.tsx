@@ -153,8 +153,8 @@ export default function CSVNodeDataTable(){
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 marginLeft: "5%",
                                 minWidth: "90%",
-                                fontFamily: 'Calibri',
-                                fontSize: '100%',
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
                                 textTransform: 'none',
                             }}
                     >
@@ -167,8 +167,8 @@ export default function CSVNodeDataTable(){
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 minWidth: "90%",
-                                fontFamily: 'Calibri',
-                                fontSize: '100%',
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
                                 textTransform: 'none',
                             }}>
                         Export File
@@ -179,8 +179,8 @@ export default function CSVNodeDataTable(){
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 minWidth: "90%",
-                                fontFamily: 'Calibri',
-                                fontSize: '100%',
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
                                 textTransform: 'none',
                             }}>
                         Template
@@ -190,8 +190,8 @@ export default function CSVNodeDataTable(){
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 marginLeft: "5%",
                                 minWidth: "90%",
-                                fontFamily: 'Calibri',
-                                fontSize: '100%',
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
                                 textTransform: 'none',
                             }}
                             onClick={deleteTable}>

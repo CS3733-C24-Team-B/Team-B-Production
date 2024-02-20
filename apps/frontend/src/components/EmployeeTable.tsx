@@ -275,8 +275,8 @@ export default function AdminViewer() {
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                     marginLeft: "5%",
                                     minWidth: "90%",
-                                    fontFamily: 'Calibri',
-                                    fontSize: '100%',
+                                    fontFamily: 'Lato',
+                                    fontSize: '90%',
                                     textTransform: 'none',
                                 }}>
                             Upload File
@@ -288,8 +288,8 @@ export default function AdminViewer() {
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                     minWidth: "90%",
-                                    fontFamily: 'Calibri',
-                                    fontSize: '100%',
+                                    fontFamily: 'Lato',
+                                    fontSize: '90%',
                                     textTransform: 'none'
                                 }}>
                             Export File
@@ -300,8 +300,8 @@ export default function AdminViewer() {
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                     minWidth: "90%",
-                                    fontFamily: 'Calibri',
-                                    fontSize: '100%',
+                                    fontFamily: 'Lato',
+                                    fontSize: '90%',
                                     textTransform: 'none'
                                 }}>
                             Template
@@ -312,8 +312,8 @@ export default function AdminViewer() {
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                     minWidth: "90%",
-                                    fontFamily: 'Calibri',
-                                    fontSize: '100%',
+                                    fontFamily: 'Lato',
+                                    fontSize: '90%',
                                     textTransform: 'none'
                                 }}>
                             Delete Data
