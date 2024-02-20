@@ -11,33 +11,6 @@ import Slide from "@mui/material/Slide";
 import Stack from "@mui/material/Stack";
 import Card from "../components/card.tsx";
 
-
-const [cards, setCards] = useState<React.ReactElement[]>([]);
-const [currentPage, setCurrentPage] = useState(0);
-const[slideDirection, setSlideDirection] = useState<
-    "right" | "left" | undefined
->("left");
-
-const cardsPerPage = 2;
-const duplicateCards: React.ReactElement[] = Array.from(
-    {length: 10},
-    (_, i) => <Card key={i} />
-);
-
-const handleNextPage = () => {
-    setSlideDirection("left");
-    setCurrentPage((prevPage) => prevPage + 1);
-};
-
-const handlePrevPage = () => {
-    setSlideDirection("right");
-    setCurrentPage((prevPage) => prevPage - 1);
-};
-
-useEffect(() => {
-    setCards(duplicateCards);
-}, []);
-
 // let slideIndex = 1;
 // showSlides(slideIndex);
 
@@ -66,6 +39,32 @@ useEffect(() => {
 // }
 
 export default function AboutPage() {
+
+    const [cards, setCards] = useState<React.ReactElement[]>([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const[slideDirection, setSlideDirection] = useState<
+        "right" | "left" | undefined
+    >("left");
+
+    const cardsPerPage = 2;
+    const duplicateCards: React.ReactElement[] = Array.from(
+        {length: 10},
+        (_, i) => <Card key={i} />
+    );
+
+    const handleNextPage = () => {
+        setSlideDirection("left");
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
+
+    const handlePrevPage = () => {
+        setSlideDirection("right");
+        setCurrentPage((prevPage) => prevPage - 1);
+    };
+
+    useEffect(() => {
+        setCards(duplicateCards);
+    }, [duplicateCards]);
 
     return (
         <div className={"AboutContainer"}> {/* expands area across entire screen */}
@@ -186,7 +185,6 @@ export default function AboutPage() {
                     </div>
                 </div>
             </div>
-        </div>
     );
 
 }
