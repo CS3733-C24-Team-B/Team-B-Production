@@ -1,199 +1,195 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
-
-.service-form-container * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Open Sans", sans-serif;
-}
-
-.service-form-container {
-    display: grid;
-    grid-area: main;
-    grid-template-columns: auto;
-    grid-template-rows: auto;
-    grid-template-areas:
-            "s1 s1 s1 s1"
-            "s2 s2 s2 s2";
-    align-items: start;
-    height: 100vh;
-    padding-top: 1%;
-}
-
-.header-container {
-    display: grid;
-    grid-area: s1;
-    justify-self: center;
-    align-self: start;
-}
-
-.nav-container-extended {
-    grid-area: navbar;
-    width: 100%;
-    height: 125%;
+.service-form-TwoColumns {
     background-color: #012d5a;
-}
-
-
-.button-container {
     display: grid;
-    grid-area: s1;
-    justify-self: center;
-    justify-items: center;
-    align-self: center;
-    column-gap: 10vw;
-    width: 90%;
-    height: 70%;
-}
-
-.carousel-button {
-    display: inline-grid;
-    background-image: linear-gradient(
-            #012d5a,
-            #0C4682 75%,
-            white 25%,
-            white);
-    border-radius: 30px;
-}
-
-.carousel-button .MuiButton-root {
-    border-radius: 30px;
-}
-
-
-.form-container {
-    grid-area: s2;
-    justify-self: center;
-    align-self: end;
-    align-content: center;
-    align-items: center;
-    justify-items: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    padding-top: 12vh;
-    width: 40%
-}
-
-.input-field {
-    margin-top: 1vh;
-    min-width: 100%;
-}
-
-.top-space {
-    padding-top: 2vh;
-}
-
-.row {
-    display: flex;
-    flex-direction: row;
-    flex-basis: 100%;
-    flex: 1;
-    padding-bottom: 2vh;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+    grid-template-columns: 80% 20%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    width: 100%;
     height: 100%;
-    padding-right: 2vw;
 }
 
-.full-row {
-    min-width: 100%;
-    align-self: stretch;
+.service-form-topcard {
+    /* Styling */
+    background-color: white;
+    border-radius: 15px;
+
+    /* Positioning */
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: auto;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+    width: 100%;
+    height: 100%;
 }
 
-.service-form-container .container {
-    align-items: center;
-    /*width: 30vw;*/
-    /*height: 50vh;*/
-    /*border-radius: 2%;*/
-    /*padding: 30px;*/
-    /*text-align: center;*/
-    /*border: 1px solid rgba(0, 0, 0, 1);*/
-    /*backdrop-filter: blur(7px);*/
-    /*-webkit-backdrop-filter: blur(7px);*/
+.service-form-midcard {
+    /* Styling */
+    background-color: white;
+    border-radius: 15px;
+
+    /* Positioning */
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 20% 26% 26% 26%;
+    grid-template-areas:
+            "s1 s1"
+            "s2 s3"
+            "s4 s5"
+            "s6 s6";
+    width: 100%;
+    height: 100%;
 }
 
-.service-form-container form {
-    display: flex;
-    flex-direction: column;
-
+.service-form-midcard header{
+    display: grid;
+    justify-self: start;
+    padding-left: 1vw;
+    padding-top: 1vw;
+    font-size: 5vh;
+    grid-area: s1;
 }
 
-.service-form-container h1 {
-    /*font-size: 2rem;*/
-    margin-bottom: 5vh;
-    font-family: "Open Sans", sans-serif;
-    color: #012d5a;
+.service-form-TestCard {
+    background-color: white;
+    border-radius: 15px;
 }
 
-.buttonColor {
-    background-color: #115293;
-    align-items: center;
+/*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/
+/*@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");*/
 
-}
-
-
-/*.service-form-container .input-field {*/
-/*    position: relative;*/
-/*    margin: 15px 0;*/
+/*.service-form-container * {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*    font-family: "Open Sans", sans-serif;*/
 /*}*/
 
-/*.service-form-container .input-field label {*/
-/*    position: absolute;*/
-/*    top: 50%;*/
-/*    left: 0;*/
-/*    transform: translateY(-50%);*/
-/*    color: black;*/
-/*    font-size: 16px;*/
-/*    pointer-events: none;*/
-/*    transition: 0.15s ease;*/
+/*.service-form-container {*/
+/*    display: grid;*/
+/*    grid-area: main;*/
+/*    grid-template-columns: auto;*/
+/*    grid-template-rows: auto;*/
+/*    grid-template-areas:*/
+/*            "s1 s1 s1 s1"*/
+/*            "s2 s2 s2 s2";*/
+/*    align-items: start;*/
+/*    height: 100vh;*/
+/*    padding-top: 1%;*/
 /*}*/
 
-/*.service-form-container .input-field input {*/
+/*.header-container {*/
+/*    display: grid;*/
+/*    grid-area: s1;*/
+/*    justify-self: center;*/
+/*    align-self: start;*/
+/*}*/
+
+/*.nav-container-extended {*/
+/*    grid-area: navbar;*/
 /*    width: 100%;*/
-/*    height: 40px;*/
-/*    background: transparent;*/
-/*    border: none;*/
-/*    outline: none;*/
-/*    font-size: 16px;*/
-/*    color: black;*/
+/*    height: 125%;*/
+/*    background-color: #012d5a;*/
 /*}*/
 
-/*.service-form-container .input-field input:focus~label,*/
-/*.service-form-container .input-field input:valid~label {*/
-/*    font-size: 0.8rem;*/
-/*    top: 10px;*/
-/*    transform: translateY(-120%);*/
+
+/*.button-container {*/
+/*    display: grid;*/
+/*    grid-area: s1;*/
+/*    justify-self: center;*/
+/*    justify-items: center;*/
+/*    align-self: center;*/
+/*    column-gap: 10vw;*/
+/*    width: 90%;*/
+/*    height: 70%;*/
 /*}*/
 
-/*.service-form-container .container a {*/
-/*    color: black;*/
-/*    text-decoration: none;*/
+/*.carousel-button {*/
+/*    display: inline-grid;*/
+/*    background-image: linear-gradient(*/
+/*            #012d5a,*/
+/*            #0C4682 75%,*/
+/*            white 25%,*/
+/*            white);*/
+/*    border-radius: 30px;*/
 /*}*/
 
-/*.service-form-container .container a:hover {*/
-/*    text-decoration: underline;*/
+/*.carousel-button .MuiButton-root {*/
+/*    border-radius: 30px;*/
 /*}*/
 
-/*.service-form-container button {*/
-/*    background: #fff;*/
-/*    color: #000;*/
-/*    font-weight: 600;*/
-/*    border: none;*/
-/*    padding: 12px 20px;*/
-/*    cursor: pointer;*/
-/*    border-radius: 3px;*/
-/*    font-size: 16px;*/
-/*    border: 2px solid transparent;*/
-/*    transition: 0.3s ease;*/
+
+/*.form-container {*/
+/*    grid-area: s2;*/
+/*    justify-self: center;*/
+/*    align-self: end;*/
+/*    align-content: center;*/
+/*    align-items: center;*/
+/*    justify-items: center;*/
+/*    justify-content: center;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    padding-top: 12vh;*/
+/*    width: 40%*/
 /*}*/
 
-/*.service-form-container button:hover {*/
-/*    color: #fff;*/
-/*    border-color: #fff;*/
-/*    background: rgba(255, 255, 255, 0.15);*/
+/*.input-field {*/
+/*    margin-top: 1vh;*/
+/*    min-width: 100%;*/
+/*}*/
+
+/*.top-space {*/
+/*    padding-top: 2vh;*/
+/*}*/
+
+/*.row {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    flex-basis: 100%;*/
+/*    flex: 1;*/
+/*    padding-bottom: 2vh;*/
+/*}*/
+
+/*.column {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex-wrap: wrap;*/
+/*    height: 100%;*/
+/*    padding-right: 2vw;*/
+/*}*/
+
+/*.full-row {*/
+/*    min-width: 100%;*/
+/*    align-self: stretch;*/
+/*}*/
+
+/*.service-form-container .container {*/
+/*    align-items: center;*/
+/*    !*width: 30vw;*!*/
+/*    !*height: 50vh;*!*/
+/*    !*border-radius: 2%;*!*/
+/*    !*padding: 30px;*!*/
+/*    !*text-align: center;*!*/
+/*    !*border: 1px solid rgba(0, 0, 0, 1);*!*/
+/*    !*backdrop-filter: blur(7px);*!*/
+/*    !*-webkit-backdrop-filter: blur(7px);*!*/
+/*}*/
+
+/*.service-form-container form {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+
+/*}*/
+
+/*.service-form-container h1 {*/
+/*    !*font-size: 2rem;*!*/
+/*    margin-bottom: 5vh;*/
+/*    font-family: "Open Sans", sans-serif;*/
+/*    color: #012d5a;*/
+/*}*/
+
+/*.buttonColor {*/
+/*    background-color: #115293;*/
+/*    align-items: center;*/
+
 /*}*/
