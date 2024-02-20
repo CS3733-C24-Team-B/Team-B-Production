@@ -4,7 +4,6 @@ import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, Lin
 import { ChartOptions } from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
-import Navbar from "../components/Navbar.tsx";
 import "../css/chart.css";
 import {useAuth0} from "@auth0/auth0-react";
 
@@ -126,14 +125,8 @@ function ShowData() {
 
 
     return (
-        <div className="top-container">
-            <div>
-                <Navbar/>
-            </div>
+        <div>
             <div style={{gridArea: 'main'}} className="header-container2">
-                <div className="data-view-header">
-                    <header className={'headerblue'}>Service Request List</header>
-                </div>
             </div>
 
             <div className="chartbox">

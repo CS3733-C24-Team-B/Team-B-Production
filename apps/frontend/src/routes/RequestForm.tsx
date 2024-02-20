@@ -1,7 +1,8 @@
 import React from "react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import RequestList from "../routes/OldRequestList.tsx";
+import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
+import ShowData from "../routes/showData.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -147,7 +148,8 @@ export default function RequestForm() {
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
                             <div className={"service-form-midcard"}>
-                                <header>Statistics</header>
+                                <header>Service Request Statistics</header>
+                                <ShowData/>
                             </div>
                         )}
 
@@ -190,9 +192,7 @@ export default function RequestForm() {
 
                         {/*If current tab is the List request tab*/}
                         {currentTab === "list-request" && (
-                            <div>
-                                <RequestList/>
-                            </div>
+                            <ServiceRequestTable/>
                         )}
 
                         <div className={"TwoColumnsThirdRow"}>
