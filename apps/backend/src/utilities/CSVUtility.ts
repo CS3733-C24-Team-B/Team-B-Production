@@ -5,8 +5,8 @@ import Auth0Utility from "./Auth0Utility.ts";
 export interface CSVUtility {
     readonly headers: string[];
     upload(file: Express.Multer.File): Promise<void>;
-    download(): Promise<Blob>;
-    downloadTemplate(): Blob;
+    download(): Promise<string>;
+    downloadTemplate(): string;
 }
 
 export class EmployeeCSVUtility implements CSVUtility {
@@ -43,7 +43,7 @@ export class EmployeeCSVUtility implements CSVUtility {
         }
     }
 
-    async download(): Promise<Blob> {
+    async download(): Promise<string> {
         const employees: Employee[] = await client.employee.findMany();
         const dataStrings: string[] = [];
         dataStrings.push(this.headers.join(','));
@@ -51,13 +51,11 @@ export class EmployeeCSVUtility implements CSVUtility {
             const employee: Employee = employees[i];
             dataStrings.push([employee.email, employee.firstName, employee.lastName].join(','));
         }
-        const dataString: string = dataStrings.join('\n');
-        return new Blob([dataString], {type: "text/csv"});
+        return dataStrings.join('\n');
     }
 
-    downloadTemplate(): Blob {
-        const headerString: string = this.headers.join(',') + '\n';
-        return new Blob([headerString], {type: "text/csv"});
+    downloadTemplate(): string {
+        return this.headers.join(',') + '\n';
     }
 }
 
@@ -95,7 +93,7 @@ export class NodeCSVUtility implements CSVUtility {
         }
     }
 
-    async download(): Promise<Blob> {
+    async download(): Promise<string> {
         const nodes: Node[] = await client.node.findMany();
         const dataStrings: string[] = [];
         dataStrings.push(this.headers.join(','));
@@ -103,13 +101,11 @@ export class NodeCSVUtility implements CSVUtility {
             const node: Node = nodes[i];
             dataStrings.push([node.nodeID, node.xcoord, node.ycoord, node.floor, node.building, node.nodeType, node.longName, node.shortName].join(','));
         }
-        const dataString: string = dataStrings.join('\n');
-        return new Blob([dataString], {type: "text/csv"});
+        return dataStrings.join('\n');
     }
 
-    downloadTemplate(): Blob {
-        const headerString: string = this.headers.join(',') + '\n';
-        return new Blob([headerString], {type: "text/csv"});
+    downloadTemplate(): string {
+        return this.headers.join(',') + '\n';
     }
 }
 
@@ -143,7 +139,7 @@ export class EdgeCSVUtility implements CSVUtility {
         }
     }
 
-    async download(): Promise<Blob> {
+    async download(): Promise<string> {
         const edges: Edge[] = await client.edge.findMany();
         const dataStrings: string[] = [];
         dataStrings.push(this.headers.join(','));
@@ -151,13 +147,11 @@ export class EdgeCSVUtility implements CSVUtility {
             const edge: Edge = edges[i];
             dataStrings.push([edge.edgeID, edge.startNodeID, edge.endNodeID].join(','));
         }
-        const dataString: string = dataStrings.join('\n');
-        return new Blob([dataString], {type: "text/csv"});
+        return dataStrings.join('\n');
     }
 
-    downloadTemplate(): Blob {
-        const headerString: string = this.headers.join(',') + '\n';
-        return new Blob([headerString], {type: "text/csv"});
+    downloadTemplate(): string {
+        return this.headers.join(',') + '\n';
     }
 }
 
@@ -168,7 +162,7 @@ function parseCSV(csvFile: Express.Multer.File, headers: string[]): string[][] {
     const arrayData: string[][] = [];
 
     // if headers in the CSV file don't match specified headers, throw error
-    if (lines[0].split(',') !== headers) {
+    if (lines[0] != headers.join(',')) {
         console.log("Actual headers: " + lines[0]);
         console.log("Expected headers: " + headers);
         throw new Error("Incorrect CSV file uploaded, incorrect headers.");
@@ -183,6 +177,7 @@ function parseCSV(csvFile: Express.Multer.File, headers: string[]): string[][] {
         arrayData[i] = data;
     }
 
+    arrayData.splice(0, 1);
     console.log(arrayData.length + " CSV lines successfully read");
     return arrayData;
 }

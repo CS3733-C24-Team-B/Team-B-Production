@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 
-export default function CSVEdgeDataTable(){
+export default function CSVEdgeDataTable() {
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
@@ -161,9 +161,6 @@ export default function CSVEdgeDataTable(){
             </div>
 
         </div>
-
-
-    )
-        ;
+    );
 }
 

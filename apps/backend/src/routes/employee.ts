@@ -1,15 +1,11 @@
 import express, {Router, Request, Response} from "express";
-import multer from "multer";
 import Auth0Utility from "../utilities/Auth0Utility.ts";
-import {EmployeeCSVUtility} from "../utilities/CSVUtility.ts";
 import {Employee} from "database";
 import client from "../bin/database-connection.ts";
-import {CreateEmployee, UpdateEmployee, DeleteEmployee} from "common/src/employeeTypes.ts";
+import {CreateEmployee, UpdateEmployee} from "common/src/employeeTypes.ts";
 
 const router: Router = express.Router();
-const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 const auth0Utility: Auth0Utility = new Auth0Utility();
-const csvUtility: EmployeeCSVUtility = new EmployeeCSVUtility();
 
 router.get("/:email?", async function (req: Request, res: Response) {
 
@@ -67,34 +63,6 @@ router.post("/", async function (req: Request, res: Response) {
     }
 });
 
-router.get("/download", async function (req: Request, res: Response) {
-    const blob: Blob = await csvUtility.download();
-    return res.status(200).send(blob);
-});
-
-router.post("/upload", upload.single("employeeFile"), async function (req: Request, res: Response) {
-    const employeeFile: Express.Multer.File | undefined = req.file;
-
-    if (!employeeFile) {
-        console.error("No file was uploaded");
-        return res.status(400).send("No file was uploaded");
-    }
-
-    try {
-        await csvUtility.upload(employeeFile);
-        return res.status(200).send("Successfully added employees");
-    }
-    catch (error) {
-        console.error(error);
-        return res.status(400).send("Could not add employees");
-    }
-});
-
-router.get("/download-template", function (req: Request, res: Response) {
-    const blob: Blob = csvUtility.downloadTemplate();
-    return res.status(200).send(blob);
-});
-
 router.put("/", async function (req: Request, res: Response) {
     const employeeInfo: UpdateEmployee = req.body;
     try {
@@ -120,20 +88,21 @@ router.put("/", async function (req: Request, res: Response) {
     }
 });
 
-router.delete('/', async function (req: Request, res: Response) {
+router.delete("/:email", async function (req: Request, res: Response) {
+
+    const email: string = req.params.email;
+
     try {
-        const employeeDelete: DeleteEmployee = req.body;
         await client.employee.delete({
             where: {
-                email: employeeDelete.email
+                email: email
             }
         });
 
-        await auth0Utility.deleteUser(employeeDelete.email);
+        await auth0Utility.deleteUser(email);
 
-        return res.status(200).json({
-            message: "deleted employee"
-        });
+        return res.status(200).send("Deleted employee with email " + email);
+
     } catch (error) {
         console.error(error);
         return res.status(400);
