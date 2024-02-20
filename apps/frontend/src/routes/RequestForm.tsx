@@ -2,7 +2,8 @@ import React from "react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-import ShowData from "../routes/showData.tsx";
+// import ShowData from "../routes/showData.tsx";
+import PieChart from "../components/PieChart.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -14,6 +15,8 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import {createSvgIcon} from '@mui/material/utils';
+import BarChart from "../components/BarChart.tsx";
+import StackedBarChart from "../components/StackedBarChart.tsx";
 
 // Goku icon, probably should not be used in the actual build lmao //
 const GokuIcon = createSvgIcon(
@@ -148,7 +151,9 @@ export default function RequestForm() {
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
                             <div className={"service-form-midcard"}>
-                                <ShowData/>
+                                <div className={"pie-chart"}>
+                                    <PieChart/>
+                                </div>
                             </div>
                         )}
 
@@ -194,9 +199,13 @@ export default function RequestForm() {
                             <ServiceRequestTable/>
                         )}
 
-                        <div className={"TwoColumnsThirdRow"}>
-                            <div className={"service-form-TestCard"}></div>
-                            <div className={"service-form-TestCard"}></div>
+                        <div className={"service-form-TwoColumnsThirdRow"}>
+                            <div className={"service-form-ChartCard"}>
+                                <BarChart/>
+                            </div>
+                            <div className={"service-form-ChartCard"}>
+                                <StackedBarChart/>
+                            </div>
                         </div>
                     </div>
                     <div className={"service-form-TwoRows"}>

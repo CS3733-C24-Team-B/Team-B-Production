@@ -32,6 +32,11 @@
     }
 }
 
+.pie-chart {
+    width: 60vw;
+    height: 60vh;
+}
+
 .box.box1 {
     /* Adjust the width and height as needed */
     width: 100%;
