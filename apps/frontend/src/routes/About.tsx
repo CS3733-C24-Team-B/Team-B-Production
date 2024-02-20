@@ -1,5 +1,7 @@
 import React from "react";
 import AboutUsImage from "../images/AboutUsImage.png";
+import KatyStuparuImage from "../images/profiles/KatyStuparu.png";
+import CameronCraneImage from "../images/profiles/CameronCrane.png";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import "../css/about_page.css";
@@ -35,13 +37,36 @@ export default function AboutPage() {
                     <div className={"MeetTheTeam"}>
                         <div className={"About-TwoColumns"}>
                             <div className={"About-NameColumns"}>
-                                <div className={"About-TestCard"}></div>
+                                <div className={"About-TestCard"}>
+                                    <img className={"ProfilePicture"} src={KatyStuparuImage} alt="profile picture"/>
+                                    <div className={"TextBox"}>
+                                        <h2>Katy Stuparu</h2>
+                                        <h3>Lead Software Engineer</h3>
+                                        <h3>Backend Developer</h3>
+                                        <p>blah</p>
+                                    </div>
+
+                                </div>
                                 <div className={"About-TestCard"}></div>
                                 <div className={"About-TestCard"}></div>
                                 <div className={"About-TestCard"}></div>
                                 <div className={"About-TestCard"}></div>
                             </div>
-                            <div className={"TestCard"}></div>
+                            <div className={"About-NameColumns"}>
+                                <div className={"About-TestCard"}>
+                                    <img className={"ProfilePicture"} src={CameronCraneImage} alt="profile picture"/>
+                                    <div className={"TextBox"}>
+                                        <h2>Cameron Crane</h2>
+                                        <h3>Project Manager</h3>
+                                        <h3>Frontend Developer</h3>
+                                        <p>blah</p>
+                                    </div>
+                                </div>
+                                <div className={"About-TestCard"}></div>
+                                <div className={"About-TestCard"}></div>
+                                <div className={"About-TestCard"}></div>
+                                <div className={"About-TestCard"}></div>
+                            </div>
                         </div>
                     </div>
                     <div className={"AcknowledgementCard"}>
