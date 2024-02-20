@@ -108,6 +108,7 @@ th {
     background-color: white;
     grid-column-start: 2;
     border-radius: .9vw;
+    font-family: Lato;
 }
 
 .headerblue {
