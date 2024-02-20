@@ -4,6 +4,8 @@ import {Button} from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {useAuth0} from "@auth0/auth0-react";
 import {styled} from "@mui/material/styles";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -20,6 +22,45 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export default function CSVNodeDataTable(){
+
+    async function downloadFromDB() {
+        console.log("Running Download to DB");
+
+        try {
+            const res3 = await axios.get('/api/nodes/read');
+            console.log(res3);
+            const headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
+            const resCSV = res3.data.reduce((roomNode: string[], roomData: {
+                nodeID: string;
+                xcoord: number;
+                ycoord: number;
+                floor: string;
+                building: string;
+                nodeType: string;
+                longName: string;
+                shortName: string;
+            }) => {
+                const {nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName} = roomData;
+                roomNode.push([nodeID, xcoord + "", ycoord + "", floor, building, nodeType, longName, shortName].join(','));
+                return roomNode;
+            }, []);
+            const data = [...headers, ...resCSV].join('\n');
+            const blob = new Blob([data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "NodeData.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            a.dispatchEvent(clickEvt);
+            a.remove();
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
 
     function uploadToDB() {
         console.log("Running Upload to DB");
@@ -86,12 +127,31 @@ export default function CSVNodeDataTable(){
                 </table>
             </div>
             <div className={"AD-Card3"}>
-                <p>Heading</p>
+                <p className={"AD-head"}>Heading</p>
                 <Button component="label" variant="contained" startIcon={<UploadFileIcon/>}
-                       style={{backgroundColor: "#34AD84", margin: "8%"}}
+                       style={{backgroundColor: "#34AD84", margin: "8%",maxHeight: "45%"}}
                 >
                     Upload file
                     <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                </Button>
+                <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                        onClick={downloadFromDB}
+                        className="export-button"
+                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "45%"}}>
+                    Export File
+                </Button>
+                <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "45%"}}
+                        onClick={() => {
+                            getAccessTokenSilently().then((accessToken: string) => {
+                                axios.delete("/api/nodes", {
+                                    headers: {
+                                        Authorization: "Bearer " + accessToken
+                                    }
+                                }).then();
+                            });
+                        }}>
+                    Delete Data
                 </Button>
 
             </div>

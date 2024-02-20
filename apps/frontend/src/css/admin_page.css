@@ -40,6 +40,12 @@
     height: 100%;
 }
 
+.AD-head{
+    font-family: 'Lato', sans-serif;
+    font-size: 3.5vh;
+    margin-left: 3%;
+    font-weight: 600;
+}
 
 .AD-TestCard {
     background-color: white;
@@ -56,8 +62,10 @@
 .AD-Card3{
     background-color: white;
     border-radius: 15px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 10% 30% 30% 30%;
+    grid-template-columns: auto;
+
 }
 
 .AD-ExportButtons{
