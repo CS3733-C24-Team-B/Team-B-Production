@@ -35,17 +35,26 @@
 .ControlsLeft {
     margin-left: 2%;
     width: 80%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    vertical-align: middle;
+    align-items: center;
 }
 
 .navigation-autocomplete {
-    width: 40%;
-    align-self: center;
+    width: 50%;
 }
 
+.search-label {
+    translate: 0% -62%;
+    font-weight: 600;
+    color: black;
+}
+
+.action-text {
+    color: #34AD84;
+}
 
 
 /* DELETE \/ \/ \/ */

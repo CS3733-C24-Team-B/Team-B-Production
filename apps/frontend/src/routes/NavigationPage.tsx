@@ -5,7 +5,7 @@ import Topbar from "../components/Topbar.tsx";
 import LeafletMap from "../components/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
-    Autocomplete,
+    Autocomplete, autocompleteClasses,
     Button,
     Checkbox,
     Divider,
@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsIcon from '@mui/icons-material/Directions';
+import SearchIcon from '@mui/icons-material/Search';
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 
@@ -73,8 +74,13 @@ export default function NavigationPage() {
                 disablePortal
                 options={currNodes.map(({longName}) => ({label: longName}))}
                 size={"small"}
-                renderInput={(params) => <TextField {...params} label="Find Your Destination" variant={"outlined"}
-                                                    sx={{maxHeight: '50%'}}/>}
+                renderInput={(params) => <TextField {...params} label={<p className={"search-label"}>Find Your {<span
+                    className={"action-text"}>Destination</span>}
+                </p>} variant={"outlined"}/>}
+                popupIcon={<SearchIcon/>}
+                sx={{[`& .${autocompleteClasses.popupIndicator}`]: {
+                        transform: "none"
+                    }}}
                 value={nodeIDtoName(nodeEnd)}
                 onChange={(newValue) => {
                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -191,7 +197,8 @@ export default function NavigationPage() {
                                     animate={doAnimation}
                                     algo={algorithm}
                                     endNode={nodeEnd}
-                                    changeTopbar={setNodeEnd}/>
+                                    changeTopbar={setNodeEnd}
+                                    changeDrawer={setOpenDrawer}/>
                     </div>
                 </div>
             </div>
