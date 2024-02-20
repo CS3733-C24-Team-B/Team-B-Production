@@ -13,7 +13,7 @@ const LoginButton = () => {
     console.log(user);
     return (
         <Button variant="contained" color="primary" onClick={() => loginWithRedirect()}
-                style={{ backgroundColor: "white" , color: "black", maxHeight: '50%', fontSize: '70%', marginTop: '1.5vh'}}>
+                style={{ backgroundColor: "white" , color: "black", maxHeight: '50%', fontSize: '70%'}}>
             Login
         </Button>
     );
@@ -24,7 +24,7 @@ const LogoutButton = () => {
 
     return (
         <Button variant="contained" color="primary" onClick={() => logout()}
-                style={{ backgroundColor: "white" , color: "black", maxHeight: '50%', fontSize: '70%', marginTop: '1.5vh'}}>
+                style={{ backgroundColor: "white" , color: "black", maxHeight: '50%', fontSize: '70%'}}>
             Log Out
         </Button>
     );

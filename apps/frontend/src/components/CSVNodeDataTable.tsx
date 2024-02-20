@@ -124,40 +124,73 @@ export default function CSVNodeDataTable(){
                     </tbody>
                 </table>
             </div>
-            <div className={"AD-Card3"}>
-                <p className={"AD-head"}>Actions</p>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                       style={{backgroundColor: "#34AD84", margin: "8%",maxHeight: "60%"}}
-                >
-                    Upload file
-                    <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
-                </Button>
-                <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                        onClick={downloadFromDB}
-                        className="export-button"
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                    Export File
-                </Button>
-                <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                        className="export-button"
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                    Export Template
-                </Button>
-                <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}
-                        onClick={() => {
-                            getAccessTokenSilently().then((accessToken: string) => {
-                                axios.delete("/api/nodes", {
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken
-                                    }
-                                }).then();
-                            });
-                        }}>
-                    Delete Data
-                </Button>
-
+            <div className={"AD-TwoRows2"}>
+                <div className={"AD-Card3"}>
+                    <p className={"AD-head"}>Actions</p>
+                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                marginLeft: "5%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none',
+                            }}
+                    >
+                        Upload File
+                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                            onClick={downloadFromDB}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none',
+                            }}>
+                        Export File
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none',
+                            }}>
+                        Template
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                marginLeft: "5%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none',
+                            }}
+                            onClick={() => {
+                                getAccessTokenSilently().then((accessToken: string) => {
+                                    axios.delete("/api/nodes", {
+                                        headers: {
+                                            Authorization: "Bearer " + accessToken
+                                        }
+                                    }).then();
+                                });
+                            }}>
+                        Delete Data
+                    </Button>
+                </div>
+                <div className={"AD-OneCard2"}>
+                    <p className={"AD-head2"}>Last Updated</p>
+                    {/*<p className={"AD-head3"}>21:02</p>*/}
+                    {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
+                </div>
             </div>
+
 
         </div>
 
