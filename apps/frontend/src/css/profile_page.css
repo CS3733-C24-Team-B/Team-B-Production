@@ -47,7 +47,7 @@
 }
 
 .Profile-page-top-TestCard {
-    background-color: lightgray;
+    background-color: white;
     border-radius: 15px;
     width: 100%;
 }
@@ -80,7 +80,7 @@
 }
 
 .Profile-page-bottom-TestCard{
-    background-color: lightgray;
+    background-color: white;
     border-radius: 15px;
     width: 100%;
 }
@@ -97,7 +97,45 @@
 
 
 .SecondRow_SecondColumn-TestCard{
-    background-color: lightgray;
+    background-color: white;
     border-radius: 15px;
     width: 100%;
+}
+
+.Profile-page-pic {
+    width: auto;
+    height: auto;
+    border-radius: 50%;
+    max-height: 16vh;
+    justify-self: center;
+}
+
+.Profile-pic-main-TestCard {
+    background-color: white;
+    border-radius: 15px;
+    display: grid;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+    grid-template-rows: 9fr 9fr 1fr;
+    grid-template-columns: 100%;
+}
+
+.Profile-page-firstcard-text {
+    font-family: 'Lato', sans-serif;
+    font-size: 90%;
+    margin-top: -1vh;
+}
+
+.Profile-page-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: start;
+    margin-top: 5%;
+}
+
+.Profile-page-edit-button{
+    margin-bottom: 5%;
+    justify-self: center;
 }
