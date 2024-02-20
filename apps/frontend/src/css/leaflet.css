@@ -123,3 +123,8 @@
     border-color: gray; /* Change border color when selected */
 }
 
+.mui-btn.highlighted {
+    background-color: #34AD84;
+    color: white;
+    border-color: #34AD84;
+}

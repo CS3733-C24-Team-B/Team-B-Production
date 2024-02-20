@@ -8,7 +8,8 @@ import EmployeeTable from "../components/EmployeeTable.tsx";
 import {Button} from "@mui/material";
 
 export default function NewUITemplete() {
-    const[ADPageShow,setADPageShow] = useState(<div className={"AD-TestCard"}></div>);
+    const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
+    const [currentComponent, setCurrentComponent] = useState('');
     return (
         <div className={"AD-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
@@ -19,33 +20,55 @@ export default function NewUITemplete() {
                         <div className={"AD-FourColumns"}>
                             <Button
                                 style={{
-                                    color: "black"
-                                }} variant="text" onClick={()=>{
-                                    setADPageShow(<CSVNodeDataTable/>);
+                                    color: currentComponent === 'ServiceRequestTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'ServiceRequestTable' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }}
+                                variant="text"
+                                onClick={() => {
+                                    setADPageShow(<ServiceRequestTable/>);
+                                    setCurrentComponent('ServiceRequestTable'); // Set the state to track the current component
+                                }}>
+                                Service Request Data
+                            </Button>
+                            <Button
+                                style={{
+                                    color: currentComponent === 'CSVNodeDataTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'CSVNodeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }} variant="text" onClick={() => {
+                                setADPageShow(<CSVNodeDataTable/>);
+                                setCurrentComponent('CSVNodeDataTable'); // Set the state to track the current component
                             }}>
                                 Node Data
                             </Button>
                             <Button
                                 style={{
-                                    color: "black",
-                                }} variant="text" onClick={()=>{
+                                    color: currentComponent === 'CSVEdgeDataTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'CSVEdgeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }} variant="text" onClick={() => {
                                 setADPageShow(<CSVEdgeDataTable/>);
+                                setCurrentComponent('CSVEdgeDataTable'); // Set the state to track the current component
                             }}>
                                Edge Data
                             </Button>
                             <Button
                                 style={{
-                                    color: "black",
-                                }} variant="text" onClick={()=>{
-                                setADPageShow(<ServiceRequestTable/>);
-                            }}>
-                                Service Request Data
-                            </Button>
-                            <Button
-                                style={{
-                                    color: "black",
-                                }} variant="text" onClick={()=>{
+                                    color: currentComponent === 'EmployeeTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'EmployeeTable' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Calibri',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }} variant="text" onClick={() => {
                                 setADPageShow(<EmployeeTable/>);
+                                setCurrentComponent('EmployeeTable'); // Set the state to track the current component
                             }}>
                                 Employee Data
                             </Button>

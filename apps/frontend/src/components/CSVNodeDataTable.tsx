@@ -42,29 +42,42 @@ export default function CSVNodeDataTable(){
         </tr>
     );
 
-    async function downloadFromDB() {
-        console.log("Running Download to DB");
+    function uploadFile() {
+        console.log("Uploading node info to database");
+        try {
+            const formData = new FormData();
+            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
+            if (csvFile == null) {
+                console.log("csv file is null");
+                return;
+            }
+
+            formData.append("csvFile", csvFile.files![0]); // Update based on backend
+
+            getAccessTokenSilently().then((accessToken: string) => {
+                axios.post('/api/nodes/upload', formData, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then();
+            });
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
+    async function downloadFile() {
+        console.log("Downloading node info from database");
 
         try {
-            const res3 = await axios.get('/api/nodes/read');
-            console.log(res3);
-            const headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
-            const resCSV = res3.data.reduce((roomNode: string[], roomData: {
-                nodeID: string;
-                xcoord: number;
-                ycoord: number;
-                floor: string;
-                building: string;
-                nodeType: string;
-                longName: string;
-                shortName: string;
-            }) => {
-                const {nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName} = roomData;
-                roomNode.push([nodeID, xcoord + "", ycoord + "", floor, building, nodeType, longName, shortName].join(','));
-                return roomNode;
-            }, []);
-            const data = [...headers, ...resCSV].join('\n');
-            const blob = new Blob([data], {type: "text/csv"});
+            const accessToken: string = await getAccessTokenSilently();
+            const res3 = await axios.get('/api/nodes/download', {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
             a.download = "NodeData.csv";
             a.href = window.URL.createObjectURL(blob);
@@ -80,30 +93,38 @@ export default function CSVNodeDataTable(){
         }
     }
 
-
-    function uploadToDB() {
-        console.log("Running Upload to DB");
+    async function downloadTemplate() {
+        console.log("Downloading node CSV template");
 
         try {
-            const formData = new FormData();
-            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
-            if (csvFile == null) {
-                console.log("imagefile should not be null...");
-                return;
-            }
-
-            formData.append("csvFile", csvFile.files![0]); // Update based on backend
-
-            getAccessTokenSilently().then((accessToken: string) => {
-                axios.post('/api/nodes', formData, {
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then();
+            const res3 = await axios.get('/api/nodes/download-template');
+            const blob = new Blob([res3.data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "NodeDataTemplate.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
             });
+            a.dispatchEvent(clickEvt);
+            a.remove();
         } catch (exception) {
             console.log("post error: " + exception);
+        }
+    }
+
+    async function deleteTable() {
+        console.log("Deleting all nodes");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            await axios.delete("/api/nodes", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -124,40 +145,66 @@ export default function CSVNodeDataTable(){
                     </tbody>
                 </table>
             </div>
-            <div className={"AD-Card3"}>
-                <p className={"AD-head"}>Actions</p>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                       style={{backgroundColor: "#34AD84", margin: "8%",maxHeight: "60%"}}
-                >
-                    Upload file
-                    <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
-                </Button>
-                <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                        onClick={downloadFromDB}
-                        className="export-button"
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                    Export File
-                </Button>
-                <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                        className="export-button"
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}>
-                    Export Template
-                </Button>
-                <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                        style={{backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%"}}
-                        onClick={() => {
-                            getAccessTokenSilently().then((accessToken: string) => {
-                                axios.delete("/api/nodes", {
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken
-                                    }
-                                }).then();
-                            });
-                        }}>
-                    Delete Data
-                </Button>
-
+            <div className={"AD-TwoRows2"}>
+                <div className={"AD-Card3"}>
+                    <p className={"AD-head"}>Actions</p>
+                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                marginLeft: "5%",
+                                minWidth: "90%",
+                                fontFamily: 'Calibri',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}
+                    >
+                        Upload File
+                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadFile}/>
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                            onClick={downloadFile}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Calibri',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                        Export File
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                            onClick={downloadTemplate}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Calibri',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                        Template
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                marginLeft: "5%",
+                                minWidth: "90%",
+                                fontFamily: 'Calibri',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}
+                            onClick={deleteTable}>
+                        Delete Data
+                    </Button>
+                </div>
+                <div className={"AD-OneCard2"}>
+                    <p className={"AD-head2"}>Last Updated</p>
+                    {/*<p className={"AD-head3"}>21:02</p>*/}
+                    {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
+                </div>
             </div>
+
 
         </div>
 

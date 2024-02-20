@@ -8,8 +8,8 @@ const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 const csvUtility: EdgeCSVUtility = new EdgeCSVUtility();
 
 router.get("/download", async function (req: Request, res: Response) {
-    const blob: Blob = await csvUtility.download();
-    return res.status(200).send(blob);
+    const csvString: string = await csvUtility.download();
+    return res.status(200).send(csvString);
 });
 
 router.post("/upload", upload.single("csvFile"), async function (req: Request, res: Response) {
@@ -32,13 +32,13 @@ router.post("/upload", upload.single("csvFile"), async function (req: Request, r
 });
 
 router.get("/download-template", function (req: Request, res: Response) {
-    const blob: Blob = csvUtility.downloadTemplate();
-    return res.status(200).send(blob);
+    const csvString: string = csvUtility.downloadTemplate();
+    return res.status(200).send(csvString);
 });
 
 router.delete("/", async function (req: Request, res: Response) {
     try {
-        client.edge.deleteMany({});
+        await client.edge.deleteMany();
         return res.status(200).send("Successfully cleared edge data from database");
     }
     catch (error) {

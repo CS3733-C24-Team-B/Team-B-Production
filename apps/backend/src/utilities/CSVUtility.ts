@@ -110,7 +110,7 @@ export class NodeCSVUtility implements CSVUtility {
 }
 
 export class EdgeCSVUtility implements CSVUtility {
-    readonly headers: string[] = ["edgeID", "startNodeID", "endNodeID"];
+    readonly headers: string[] = ["edgeID", "startNode", "endNode"];
 
     async upload(file: Express.Multer.File): Promise<void> {
         const arrayData: string[][] = parseCSV(file, this.headers);

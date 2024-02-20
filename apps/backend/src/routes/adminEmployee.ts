@@ -1,13 +1,13 @@
 import express, {Router, Request, Response} from "express";
 import multer from "multer";
-// import Auth0Utility from "../utilities/Auth0Utility.ts";
+import Auth0Utility from "../utilities/Auth0Utility.ts";
 import {EmployeeCSVUtility} from "../utilities/CSVUtility.ts";
 import {Employee} from "database";
 import client from "../bin/database-connection.ts";
 
 const router: Router = express.Router();
 const upload: multer.Multer = multer({storage: multer.memoryStorage()});
-// const auth0Utility: Auth0Utility = new Auth0Utility();
+const auth0Utility: Auth0Utility = new Auth0Utility();
 const csvUtility: EmployeeCSVUtility = new EmployeeCSVUtility();
 
 router.get("/download", async function (req: Request, res: Response) {
@@ -39,14 +39,11 @@ router.get("/download-template", function (req: Request, res: Response) {
 
 router.delete("/", async function (req: Request, res: Response) {
 
-    const email: string = req.params.email;
-    console.log(email);
-
     try {
         const employees: Employee[] = await client.employee.findMany();
         await client.employee.deleteMany();
         for (let i: number = 0; i < employees.length; i++) {
-            // await auth0Utility.deleteUser(employees[i].email);
+            await auth0Utility.deleteUser(employees[i].email);
         }
         return res.status(200).send("Deleted all employees");
 
