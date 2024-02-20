@@ -89,9 +89,8 @@ function ShowData() {
                     font: {
                         size: 18,
                         family: 'Arial',
-                        // The color property should not be inside font for legend labels
                     },
-                    color: 'black', // Set legend text color to black here
+                    color: 'black',
                 },
                 position: 'bottom',
             },
@@ -99,15 +98,13 @@ function ShowData() {
                 bodyFont: {
                     size: 16,
                     family: 'Arial',
-                    // The color property should not be inside font for tooltip body
                 },
-                bodyColor: 'white', // Set tooltip body text color to black here
+                bodyColor: 'white',
                 titleFont: {
                     size: 18,
                     family: 'Arial',
-                    // The color property should not be inside font for tooltip title
                 },
-                titleColor: 'white', // Set tooltip title text color to black here
+                titleColor: 'white',
             },
             title: {
                 display: true,
@@ -116,7 +113,7 @@ function ShowData() {
                     size: 20,
                     family: 'Arial',
                 },
-                color: 'black', // This is correctly placed for title
+                color: 'black',
                 padding: {
                     top: 10,
                     bottom: 30,
@@ -154,12 +151,12 @@ function ShowData() {
         scales: {
             x: {
                 ticks: {
-                    color: 'black', // Ensures x-axis tick labels are black
+                    color: 'black',
                 },
                 title: {
                     display: true,
                     text: 'Priority',
-                    color: 'black', // Ensures x-axis title is black
+                    color: 'black',
                     font: {
                         weight: 'bold',
                     },
@@ -167,12 +164,12 @@ function ShowData() {
             },
             y: {
                 ticks: {
-                    color: 'black', // Ensures y-axis tick labels are black
+                    color: 'black',
                 },
                 title: {
                     display: true,
                     text: 'Number of Requests',
-                    color: 'black', // Ensures y-axis title is black
+                    color: 'black',
                     font: {
                         weight: 'bold',
                     },
@@ -182,13 +179,13 @@ function ShowData() {
         plugins: {
             legend: {
                 labels: {
-                    color: 'black', // Sets legend labels (dataset labels) to black
+                    color: 'black',
                 },
             },
             title: {
                 display: true,
                 text: 'Number of Requests by Priority',
-                color: 'black', // Ensures chart title is black
+                color: 'black',
                 font: {
                     size: 16,
                 },
@@ -215,7 +212,7 @@ function ShowData() {
         Low: 'blue',
         Medium: 'yellow',
         High: 'orange',
-        Emergency: 'red', // Set Emergency to red
+        Emergency: 'red',
     };
 
     const datasets = Object.entries(priorityStatusCounts).map(([priority, statuses]) => ({
@@ -288,8 +285,6 @@ function ShowData() {
             </div>
             <div className="box box2"><Bar data={barData} options={bar_options}/></div>
             <div className="box box7"><Bar data={stackBarData} options={stackBarOptions}/></div>
-            {/*<div className="box box8">Hello</div>*/}
-            {/*<div className="box box9">Hello</div>*/}
         </div>
     );
 
