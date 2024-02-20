@@ -3,22 +3,26 @@
     width: 95%;
 }
 
-.topbar-elems {
-    margin-top: 0.8%;
-    margin-left: 15%;
-    display: flex;
-    flex-direction: row;
-    gap: 10%;
-}
-
 .profile-card {
     display: flex;
     flex-direction: row;
     gap: 10%;
-    margin-top: 3%
+    max-height: 10vh;
+    align-items: center;
+    justify-self: center;
 }
 
 .profile-text {
-    font-family: Calibri;
+    font-family: Lato;
     color: white;
+    width: 10vw;
+}
+
+.profile-icon {
+    border-radius: 50%;
+    max-height: 7vh;
+}
+
+.profile-icon:hover {
+    filter: brightness(75%);
 }
