@@ -50,6 +50,12 @@
     translate: 0% -62%;
     font-weight: 600;
     color: black;
+    font-family: Lato;
+}
+
+.settings-text {
+    color: black;
+    font-family: Lato;
 }
 
 .action-text {
