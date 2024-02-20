@@ -116,7 +116,7 @@ function App() {
             element: <NewUITemplete/>
         },
         {
-            path: "/about",
+            path: "/about-us",
             errorElement: <div/>,
             element: <AboutPage/>
         }
