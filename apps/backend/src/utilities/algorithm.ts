@@ -23,7 +23,6 @@ export class AStar implements searchStrategy {
         const nodeList = await createNodeList();
         const edgeList = await createEdgeList();
         const start = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === startNode) as MapNode);
-        const elevatorList =  findElevatorNode(nodeList,start.floor);
         const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
         const graph = createGraph(nodeList, edgeList);
         //queue to search
@@ -31,35 +30,11 @@ export class AStar implements searchStrategy {
         //already searched
         const closedList: aStarNode[] = [];
         //while there are still nodes left to search
-        let elevatorPath:string[] | undefined = [];
-        if(nodeList.find(node => node.nodeID===goalNode)!.floor!=nodeList.find(node => node.nodeID===startNode)!.floor) {
-            let closest = -1;
-            let closestNode = elevatorList[0];
-            for (let i = 0; i < elevatorList.length; i++) {
-                const dist = Math.sqrt((elevatorList[i].xcoord - nodeList.find(node => node.nodeID === goalNode)!.xcoord) ** 2 + (elevatorList[i].ycoord - nodeList.find(node => node.nodeID === goalNode)!.ycoord) ** 2);
-                if (closest === -1) {
-                    closest = dist;
-                } else {
-                    if (closest > dist) {
-                        closest = dist;
-                        closestNode = elevatorList[i];
-                    }
-                }
-            }
-            if(closestNode.nodeID!==startNode) {
-                elevatorPath =   searchNode(openList,closedList,mapNodeToStar(closestNode),graph,nodeList);
-                if (elevatorPath) {
-                    elevatorPath.concat(  searchNode([mapNodeToStar(closestNode)],[],mapNodeToStar(goal),graph,nodeList) as string[]);
-                }
-                return elevatorPath as string[];
-            }
-        }
         return searchNode(openList,closedList,goal,graph,nodeList);
     }
 
 }
 function searchNode(openList:aStarNode[],closedList:aStarNode[],goal:aStarNode,graph:Graph,nodeList:MapNode[]){
-
     while (openList.length > 0) {
         //get currenet node
         const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
@@ -95,9 +70,24 @@ function searchNode(openList:aStarNode[],closedList:aStarNode[],goal:aStarNode,g
                 if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
                     //set g to parent g+1
                     neighbor.gvalue = tentativeG;
-                    const floorWeight = 300;
+                    if(nodeToFloor(neighbor)!==nodeToFloor(currentNode)){
+                        neighbor.gvalue+=800;
+
+                        neighbor.floorChanges=currentNode.floorChanges+1;
+
+                        if(canTravel(graph,neighbor,goal,nodes)){
+                            neighbor.gvalue-=100000;
+                        }
+                    }
+                    if(nodeToFloor(neighbor)!==nodeToFloor(currentNode)&&(neighbor.nodeType==="STAI"||currentNode.nodeType==="STAI")){
+                        neighbor.gvalue+=10000;
+                        neighbor.floorChanges=currentNode.floorChanges+1;
+                    }
+                    if(neighbor.floorChanges>0&&!canTravel(graph,neighbor,goal,nodes)){
+                        neighbor.gvalue+=100000;
+                    }
                     //heuristic for current distance to goal node.
-                    neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal) - nodeToFloor(neighbor)) * floorWeight) ** 2);
+                    neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2+((nodeToFloor(goal)-nodeToFloor(neighbor))*300)**2 );
                     //f is g+h
                     neighbor.f = neighbor.gvalue + neighbor.hvalue;
                     //set nodes parent to current node
@@ -214,9 +204,10 @@ export class aStarNode implements MapNode {
     gvalue: number;
     hvalue: number;
     f: number;
+    floorChanges: number;
     parent: aStarNode | undefined;
 
-    constructor(nodeID: string, xcoord: number, ycoord: number, floor: string, building: string, nodeType: string, longName: string, shortName: string, gvalue: number, hvalue: number) {
+    constructor(nodeID: string, xcoord: number, ycoord: number, floor: string, building: string, nodeType: string, longName: string, shortName: string, gvalue: number, hvalue: number,floorChanges:number) {
         this.nodeID = nodeID;
         this.xcoord = xcoord;
         this.ycoord = ycoord;
@@ -228,6 +219,7 @@ export class aStarNode implements MapNode {
         this.gvalue = gvalue;
         this.hvalue = hvalue;
         this.f = 0;
+        this.floorChanges=floorChanges;
     }
 
 /*
@@ -307,15 +299,9 @@ export function findNode(nodeList:MapNode[],nodeID: string): MapNode {
     // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
     return nodeList.find(MapNode => MapNode.nodeID === nodeID) as MapNode;
 }
-
-  function findElevatorNode(nodes:MapNode[],floor:string): MapNode[] {
-    //return array.find(obj => obj.id === id);
-    //console.log(createNodeList()[7]);
-    // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
-
-    return nodes.filter(MapNode => MapNode.floor === floor&&MapNode.nodeType==="ELEV");
+function canTravel(graph:Graph,startNode:aStarNode,endNode:aStarNode,nodes:MapNode[]){
+    return startNode.floor===endNode.floor&&searchNode([startNode],[],endNode,graph,nodes)?.filter(obj=>findNode(nodes,obj).floor!==endNode.floor).length===0;
 }
-
 /*
 read data from NodeCSV and export in JSON:
 format:
@@ -410,7 +396,7 @@ function createGraph(nodeList: MapNode[], edgeList: MapEdge[]) {
 }
 
 function mapNodeToStar(node: MapNode) {
-    return new aStarNode(node.nodeID, node.xcoord, node.ycoord, node.floor, node.building, node.nodeType, node.longName, node.shortName, 0, 0);
+    return new aStarNode(node.nodeID, node.xcoord, node.ycoord, node.floor, node.building, node.nodeType, node.longName, node.shortName, 0, 0,0);
 }
 
 export function nodeToFloor(node: aStarNode) {
