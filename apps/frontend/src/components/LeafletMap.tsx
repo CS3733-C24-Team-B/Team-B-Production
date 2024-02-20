@@ -3,7 +3,6 @@ import "../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
-//import AuthenticationButton from "./AuthenticationButton.tsx";
 import {
     Button,
     Autocomplete,
@@ -14,8 +13,6 @@ import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
 import {useAuth0} from "@auth0/auth0-react";
-
-// import groundfloor from "../images/00_thegroundfloor.png";
 import lowerlevel1 from "../images/00_thelowerlevel1.png";
 import lowerlevel2 from "../images/00_thelowerlevel2.png";
 import firstfloor from "../images/01_thefirstfloor.png";
@@ -28,6 +25,8 @@ import {
     MedicineRequest,
     SanitationRequest
 } from "common/src/serviceRequestTypes.ts";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CircleIcon from '@mui/icons-material/Circle';
 
 const FloorLevel = [
     {
@@ -79,6 +78,7 @@ interface MapProps {
     algo: number;
     endNode: string;
     changeTopbar: (arg0: string) => void;
+    changeDrawer: (arg0: boolean) => void;
 }
 
 export default function LeafletMap(props : MapProps) {
@@ -101,9 +101,10 @@ export default function LeafletMap(props : MapProps) {
     const [doAnimation, setDoAnimation] = useState(false);
     const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
+    const [floorSet, setFloorSet] = useState(new Set());
 
     // get auth0 stuff
-    const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
+    const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     console.log(user);
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     //const [employeeData, setEmployeeData] = useState([]);
@@ -132,28 +133,25 @@ export default function LeafletMap(props : MapProps) {
 
     useEffect(() => {
         async function fetch() {
-            const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/service-request", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            // const res2 = await axios.get("/api/employee", {
-            //     headers: {
-            //         Authorization: "Bearer " + accessToken
-            //     }
-            // });
+
+            if (isAuthenticated) {
+                const accessToken: string = await getAccessTokenSilently();
+                const res = await axios.get("/api/service-request", {
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
+                setSRData(res.data);
+            }
+
             const res3 = await axios.get("/api/nodes/read");
             const res4 = await axios.get("/api/edges/read");
-
-            setSRData(res.data);
-            //setEmployeeData(res2.data);
             setNodeData(res3.data);
             setEdgeData(res4.data);
         }
 
         fetch().then();
-    }, [getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -204,7 +202,7 @@ export default function LeafletMap(props : MapProps) {
         };
 
         const transX = (xp: number) => {
-            return xp * 50 / 5000;
+            return (xp * 50 / 5000) + 3;
         };
 
         const transY = (yp: number) => {
@@ -217,6 +215,7 @@ export default function LeafletMap(props : MapProps) {
         const temp: JSX.Element[] = [];
         const animate: LatLng[] = [];
         const changes : number[] = [];
+        const fs : Set<string> = new Set();
         if (showEdges) {
             edgeData.map(({startNodeID, endNodeID}) => {
                 if (nodeIDToFloor(startNodeID) === currLevel && nodeIDToFloor(endNodeID) === currLevel) {
@@ -232,6 +231,9 @@ export default function LeafletMap(props : MapProps) {
         } else {
             let floorChanges: number = 1;
             pathData.map((nr) => {
+                if(!fs.has(nodeIDToFloor(nr))) {
+                    fs.add(nodeIDToFloor(nr));
+                }
                 if (nodeIDToFloor(nr) === currLevel) {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
@@ -239,7 +241,7 @@ export default function LeafletMap(props : MapProps) {
                             color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
-                        const steps = 120 * Math.sqrt(dy*dy + dx*dx);
+                        const steps = 80 * Math.sqrt(dy*dy + dx*dx);
                         for(let i = 0; i < steps; i++) {
                             animate.push(new LatLng(transY(startY) + dy*i/steps, transX(startX) + dx*i/steps));
                         }
@@ -290,12 +292,14 @@ export default function LeafletMap(props : MapProps) {
         setLineData(temp);
         setAnimateData(animate);
         setAnimateChanges(changes);
+        setFloorSet(fs);
     }, [currLevel, doAnimation, edgeData, nodeData, pathData, showEdges]);
 
     function moveLine() {
         if(animateData.length > 0) {
             startDraw.current = (startDraw.current+1) % animateData.length;
             let end = startDraw.current + 50;
+            const linePoints = [];
             animateChanges.forEach((num) => {
                 if(startDraw.current <= num && end > num) {
                     end = num;
@@ -304,14 +308,18 @@ export default function LeafletMap(props : MapProps) {
             if(end >= animateData.length) {
                 end = animateData.length-1;
             }
-            setInterval(() => {
+            for(let i = startDraw.current; i < end; i++) {
+                linePoints.push(animateData[i]);
+            }
+            setTimeout(() => {
                 setRedraw(!redraw);
-            }, 800);
+            }, 20);
             return (
                 <Polyline
-                    positions={[animateData[startDraw.current], animateData[end]]}
-                    color={"white"} weight={5} opacity={0.75} ref={(r) => {
+                    positions={linePoints}
+                    color={"white"} weight={5} opacity={0.65} ref={(r) => {
                         r?.bringToFront();
+                        r?.redraw();
                 }}></Polyline>
             );
         }
@@ -338,11 +346,19 @@ export default function LeafletMap(props : MapProps) {
         )!["floor"];
     };
 
+    const transX = (xp: number) => {
+        return (xp * 50 / 5000) + 3;
+    };
+
+    const transY = (yp: number) => {
+        return 34.8 - (yp * 34 / 3400);
+    };
+
     function drawNodeStart() {
         if(nodeStart !== "" && nodeIDToFloor(nodeStart) === currLevel) {
             return (
                 <CircleMarker fillOpacity={1}
-                              center={new LatLng(34.8 - (nodeIDToYPos(nodeStart) * 34 / 3400), nodeIDToXPos(nodeStart) * 50 / 5000)}
+                              center={new LatLng(transY(nodeIDToYPos(nodeStart)), transX(nodeIDToXPos(nodeStart)))}
                               radius={6}
                               color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}>
                 </CircleMarker>
@@ -353,7 +369,7 @@ export default function LeafletMap(props : MapProps) {
     function drawNodeEnd() {
         if(nodeStart !== "" && nodeIDToFloor(nodeEnd) === currLevel) {
             return (
-                <Marker position={new LatLng(34.8 - (nodeIDToYPos(nodeEnd) * 34 / 3400), nodeIDToXPos(nodeEnd) * 50 / 5000)}>
+                <Marker position={new LatLng(transY(nodeIDToYPos(nodeEnd)), transX(nodeIDToXPos(nodeEnd)))}>
                 </Marker>
             );
         }
@@ -397,14 +413,6 @@ export default function LeafletMap(props : MapProps) {
         }
     }, [nodeEnd]);
 
-
-    useEffect(() => {
-        // Open the drawer automatically when nodeEnd is selected
-        if (nodeEnd) {
-            setIsDrawerOpen(true);
-        }
-    }, [nodeEnd]);
-
     function handleDirections() {
         setDirections(!directions);
     }
@@ -429,21 +437,17 @@ export default function LeafletMap(props : MapProps) {
         return <div className="loading-center"><CircularProgress/></div>;
     }
 
-    if (!isAuthenticated) {
-        loginWithRedirect().then();
-        return;
-    }
-
     return (
         <div style={{maxHeight: '100%'}}>
             {/* Drawer for additional controls */}
             <Collapse in={isDrawerOpen} timeout="auto"
                       unmountOnExit orientation="horizontal"
-                      className={"google-maps-collapse"} sx={{maxWidth: '30%'}}>
-                <div className="drawer-content" style={{display: 'flex', flexDirection: 'column', padding: '20px'}}>
-                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%'}}>
-                        <div className="nav-buttons" style={{marginBottom: '10px', width: '100%', maxWidth: '300px'}}>
+                      className={"google-maps-collapse"} style={{maxWidth: 300}}>
+                <div className="drawer-content">
+                    <div className="drawer-search-bars" style={{marginBottom: '10px', width: '100%', minWidth: 250}}>
+                        <div className="autocomplete-rows" style={{width: '100%'}}>
                             {/* Start Node */}
+                            <CircleIcon style={{marginRight: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -461,8 +465,9 @@ export default function LeafletMap(props : MapProps) {
                                 }}
                             />
                         </div>
-                        <div className="nav-buttons" style={{width: '100%', maxWidth: '300px'}}>
+                        <div className="autocomplete-rows" style={{marginBottom: '10%', width: '100%'}}>
                             {/* End Node */}
+                            <LocationOnIcon style={{marginRight: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -473,6 +478,7 @@ export default function LeafletMap(props : MapProps) {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
                                         const nId = nametoNodeID(newValue.target.innerText);
                                         setNodeEnd(nId);
+                                        props.changeDrawer(true);
                                         props.changeTopbar(nId);
                                     } else {
                                         setNodeEnd("");
@@ -488,9 +494,8 @@ export default function LeafletMap(props : MapProps) {
                         <Button variant="contained" size="small" onClick={handleDirections}
                                 style={{
                                     backgroundColor: "#012D5A",
-                                    width: '15.5vw',
+                                    width: '100%',
                                     marginBottom: '20px',
-                                    marginRight: '30px',
                                     fontSize: '1.5vh'
                                 }}>
                             Text Directions
@@ -502,31 +507,6 @@ export default function LeafletMap(props : MapProps) {
                     </div>
                 </div>
             </Collapse>
-            <div className="map-buttons">
-                {/*<div className="search-button">*/}
-                {/*    <Autocomplete*/}
-                {/*        disablePortal*/}
-                {/*        options={currNodes.map(({longName}) => ({label: longName}))}*/}
-                {/*        sx={{backgroundColor: 'white'}}*/}
-                {/*        renderInput={(params) => <TextField {...params} label="Search"/>}*/}
-                {/*        value={nodeIDtoName(nodeEnd)}*/}
-                {/*        size={"small"}*/}
-                {/*        onChange={(newValue) => {*/}
-                {/*            if (newValue !== null && newValue.target.innerText !== undefined) {*/}
-                {/*                const nId = nametoNodeID(newValue.target.innerText);*/}
-                {/*                setNodeEnd(nId);*/}
-                {/*            } else {*/}
-                {/*                setNodeEnd("");*/}
-                {/*                setPathData([]);*/}
-                {/*            }*/}
-                {/*        }}*/}
-                {/*    />*/}
-                {/*</div>*/}
-
-                {/*<div className="button3">*/}
-                {/*    <AuthenticationButton/>*/}
-                {/*</div>*/}
-            </div>
             <MapContainer
                 center={[17, 25]}
                 zoom={5}
@@ -534,17 +514,17 @@ export default function LeafletMap(props : MapProps) {
                 maxZoom={8}
                 scrollWheelZoom={true}
                 maxBoundsViscosity={1.0}
-                maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+                maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 56))}
                 ref={lMap}
                 className={"leaflet-container"}
             >
                 <ImageOverlay
                     url={selectedFloor} //"src/images/00_thelowerlevel1.png"
-                    bounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 50))}
+                    bounds={new LatLngBounds(new LatLng(0, 3), new LatLng(34, 53))}
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), xcoord * 50 / 5000)}
+                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
                                       radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
                                       eventHandlers={{
                                           click: () => {
@@ -553,10 +533,12 @@ export default function LeafletMap(props : MapProps) {
                                                       setNodeStart(nodeID);
                                                   } else if (nodeEnd === "") {
                                                       setNodeEnd(nodeID);
+                                                      props.changeDrawer(true);
                                                       props.changeTopbar(nodeID);
                                                   } else {
                                                       setNodeStart(nodeEnd);
                                                       setNodeEnd(nodeID);
+                                                      props.changeDrawer(true);
                                                       props.changeTopbar(nodeID);
                                                   }
                                               }
@@ -590,7 +572,7 @@ export default function LeafletMap(props : MapProps) {
                 {FloorLevel.slice().reverse().map(({floor, level}) => (
                     <button
                         key={floor}
-                        className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : ''}`}
+                        className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : floorSet.has(level) ? 'highlighted' : ''}`}
                         onClick={() => {
                             lMap!.current.setZoom(5);
                             setSelectedFloor(floor);

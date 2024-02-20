@@ -1,62 +1,29 @@
-import React, {useState} from 'react';
-import {Button, Container, Paper, Typography} from '@mui/material';
-import Navbar from "../components/Navbar.tsx";
+import React from "react";
+import TempNavbar from "../components/TempNavbar.tsx";
+import Topbar from "../components/Topbar.tsx";
 
-export default function SettingsPage() {
-    const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor"));
-    const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor"));
-
+export default function NewUITemplete() {
     return (
-        <div className="home-container">
-            <div className="nav-container">
-                <Navbar/>
-            </div>
-            <div className="profile-data">
-                <div className="topbar-container2">
-                    <div className="node-data-header">
-                        <header className={'headerblue'}>Settings</header>
+        <div className={"Container"}> {/* expands area across entire screen */}
+            <Topbar/> {/* TopGreen css fixes this to the top */}
+            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
+                <div className={"TwoColumns"}>
+                    <div className={"ThreeRows"}>
+                        <div className={"TestCard"}></div>
+                        <div className={"TestCard"}></div>
+                        <div className={"TwoColumnsThirdRow"}>
+                            <div className={"TestCard"}></div>
+                            <div className={"TestCard"}></div>
+                        </div>
+                    </div>
+                    <div className={"TwoRows"}>
+                        <div className={"TestCard"}></div>
+                        <div className={"TestCard"}></div>
                     </div>
                 </div>
-                <Container> {/* Increased marginRight */}
-                    <Paper elevation={3} style={{
-                        padding: '30px',
-                        width: '80%',
-                        marginTop: '20px',
-                        marginRight: '10%',
-                        float: 'left'
-                    }}>
-                        <Typography variant="h5" gutterBottom>
-                            {"Settings"}
-                        </Typography>
-                        <div>
-                            <input type="color" value={(nodeColor === null ? "#3388ff" : nodeColor!)}
-                                   onChange={(e) => {
-                                       localStorage.setItem("nodeColor", e.target.value);
-                                       setNodeColor(e.target.value);
-                                   }}/>
-                            <Button onClick={() => {
-                                localStorage.removeItem("nodeColor");
-                                setNodeColor(null);
-                            }}>
-                                Reset Node Color
-                            </Button>
-                        </div>
-                        <div>
-                            <input type="color" value={(edgeColor === null ? "#008000" : edgeColor!)}
-                                   onChange={(e) => {
-                                       localStorage.setItem("edgeColor", e.target.value);
-                                       setEdgeColor(e.target.value);
-                                   }}/>
-                            <Button onClick={() => {
-                                localStorage.removeItem("edgeColor");
-                                setEdgeColor(null);
-                            }}>
-                                Reset Edge Color
-                            </Button>
-                        </div>
-                    </Paper>
-                </Container>
             </div>
         </div>
     );
+
 }
