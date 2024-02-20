@@ -1,11 +1,14 @@
 .NavigationContainer {
     width: 100%;
-    height: 80vh;
+    height: 90vh;
 }
 
-.MapArea {
+.NavigationTwoRows {
     width: 100%;
     height: 100%;
+    display: grid;
+    grid-template-rows: 12% 87%;
+    grid-template-columns: auto;
 }
 
 .NavigationBackBlue {
@@ -14,6 +17,47 @@
     margin-left: 15%;
     margin-top: 10vh;
 }
+
+.MapArea {
+    width: 98%;
+    height: 98%;
+    background-color: white;
+    border-radius: 15px;
+    margin: 1%;
+}
+
+.MapControls {
+    background-color: white;
+    border-radius: 15px;
+    margin: 1%;
+}
+
+.ControlsLeft {
+    margin-left: 2%;
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navigation-autocomplete {
+    width: 50%;
+}
+
+.search-label {
+    translate: 0% -62%;
+    font-weight: 600;
+    color: black;
+}
+
+.action-text {
+    color: #34AD84;
+}
+
+
+/* DELETE \/ \/ \/ */
 
 .home-container {
     width: 100%;
