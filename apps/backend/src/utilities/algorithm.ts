@@ -22,8 +22,8 @@ export class AStar implements searchStrategy {
     async search(startNode: string, goalNode: string):Promise<string[] | undefined> {
         const nodeList = await createNodeList();
         const edgeList = await createEdgeList();
-        const elevatorList = await findElevatorNode(startNode);
         const start = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === startNode) as MapNode);
+        const elevatorList =  findElevatorNode(nodeList,start.floor);
         const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
         const graph = createGraph(nodeList, edgeList);
         //queue to search
@@ -47,76 +47,79 @@ export class AStar implements searchStrategy {
                 }
             }
             if(closestNode.nodeID!==startNode) {
-                elevatorPath = await this.search(startNode, closestNode.nodeID);
+                elevatorPath =   searchNode(openList,closedList,mapNodeToStar(closestNode),graph,nodeList);
                 if (elevatorPath) {
-                    elevatorPath.concat(await this.search(closestNode.nodeID, goalNode) as string[]);
+                    elevatorPath.concat(  searchNode([mapNodeToStar(closestNode)],[],mapNodeToStar(goal),graph,nodeList) as string[]);
                 }
                 return elevatorPath as string[];
             }
         }
-        while (openList.length > 0) {
-            //get currenet node
-            const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
-            //remove current node from queue
-            openList = openList.filter(node => !(node.nodeID === currentNode.nodeID));
-            //add current node to searched
-            closedList.push(currentNode);
-            //if current node is the goal
-            if (currentNode.nodeID === goal.nodeID) {
-                //return the path
-                const path: aStarNode[] = [];
-                let current = currentNode;
-                while (current) {
-                    path.push(current);
-                    current = current.parent!;
-                }
-                return path.reverse().map(obj => obj.nodeID);
-            }
-            //get nodes with edges connected to current node
-            const neighborsNode = (graph.adjacencyList.get(currentNode.nodeID));
-            if (neighborsNode) {
-                const neighbors = neighborsNode.map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === obj) as MapNode));
+        return searchNode(openList,closedList,goal,graph,nodeList);
+    }
 
-                //go through the nodes connected to current
-                for (const neighbor of neighbors) {
-                    //skip if node is already searched
-                    if (closedList.some(node => node.nodeID === neighbor.nodeID)) {
-                        continue;
-                    }
-                    //g value is 1 greater than currents
-                    const tentativeG = currentNode.gvalue + 1;
-                    //if openlist doesnt already have this node or the parent g is less than this nodes g
-                    if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
-                        //set g to parent g+1
-                        neighbor.gvalue = tentativeG;
-                        const floorWeight = 300;
-                        //heuristic for current distance to goal node.
-                        neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal) - nodeToFloor(neighbor)) * floorWeight) ** 2);
-                        //f is g+h
-                        neighbor.f = neighbor.gvalue + neighbor.hvalue;
-                        //set nodes parent to current node
-                        neighbor.parent = currentNode;
-                        //if open list does not contain this node, add it.
-                        if (!openList.some(node => node.nodeID === neighbor.nodeID)) {
-                            openList.push(neighbor);
-                        }
+}
+function searchNode(openList:aStarNode[],closedList:aStarNode[],goal:aStarNode,graph:Graph,nodeList:MapNode[]){
+
+    while (openList.length > 0) {
+        //get currenet node
+        const currentNode = openList.reduce((minNode, node) => (node.f < minNode.f ? node : minNode), openList[0]);
+        //remove current node from queue
+        openList = openList.filter(node => !(node.nodeID === currentNode.nodeID));
+        //add current node to searched
+        closedList.push(currentNode);
+        //if current node is the goal
+        if (currentNode.nodeID === goal.nodeID) {
+            //return the path
+            const path: aStarNode[] = [];
+            let current = currentNode;
+            while (current) {
+                path.push(current);
+                current = current.parent!;
+            }
+            return path.reverse().map(obj => obj.nodeID);
+        }
+        //get nodes with edges connected to current node
+        const neighborsNode = (graph.adjacencyList.get(currentNode.nodeID));
+        if (neighborsNode) {
+            const neighbors = neighborsNode.map(obj => mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === obj) as MapNode));
+
+            //go through the nodes connected to current
+            for (const neighbor of neighbors) {
+                //skip if node is already searched
+                if (closedList.some(node => node.nodeID === neighbor.nodeID)) {
+                    continue;
+                }
+                //g value is 1 greater than currents
+                const tentativeG = currentNode.gvalue + 1;
+                //if openlist doesnt already have this node or the parent g is less than this nodes g
+                if (!openList.some(node => node.nodeID === neighbor.nodeID) || tentativeG < neighbor.gvalue) {
+                    //set g to parent g+1
+                    neighbor.gvalue = tentativeG;
+                    const floorWeight = 300;
+                    //heuristic for current distance to goal node.
+                    neighbor.hvalue = Math.sqrt((goal.xcoord - neighbor.xcoord) ** 2 + (goal.ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(goal) - nodeToFloor(neighbor)) * floorWeight) ** 2);
+                    //f is g+h
+                    neighbor.f = neighbor.gvalue + neighbor.hvalue;
+                    //set nodes parent to current node
+                    neighbor.parent = currentNode;
+                    //if open list does not contain this node, add it.
+                    if (!openList.some(node => node.nodeID === neighbor.nodeID)) {
+                        openList.push(neighbor);
                     }
                 }
             }
         }
-        return undefined;
     }
-
+    return undefined;
 }
-
 export class BFS implements searchStrategy {
 
     async search(startingNode: string, endingNode: string) {
         const nodeList = await createNodeList();
         const edgeList = await createEdgeList();
         const graph = createGraph(nodeList, edgeList);
-        const startNode = await findNode(startingNode);
-        const endNode = await findNode(endingNode);
+        const startNode =  findNode(nodeList,startingNode);
+        const endNode =  findNode(nodeList,endingNode);
         const visited: Set<string> = new Set();
         const queue: string[][] = [[startNode.nodeID]];
         visited.add(startNode.nodeID);
@@ -149,8 +152,8 @@ export class DFS implements searchStrategy {
         const nodeList = await createNodeList();
         const edgeList = await createEdgeList();
         const graph = createGraph(nodeList, edgeList);
-        const startNode = await findNode(startingNode);
-        const endNode = await findNode(endingNode);
+        const startNode =  findNode(nodeList,startingNode);
+        const endNode =  findNode(nodeList,endingNode);
         const visited: Set<string> = new Set();
         const stack: string[][] = [[startNode.nodeID]];
         visited.add(startNode.nodeID);
@@ -298,21 +301,19 @@ const getAllEdges = async () => {
     }
 };
 
-export async function findNode(nodeID: string): Promise<MapNode> {
+export function findNode(nodeList:MapNode[],nodeID: string): MapNode {
     //return array.find(obj => obj.id === id);
     //console.log(createNodeList()[7]);
     // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
-    const nodeList: MapNode[] = await createNodeList();
     return nodeList.find(MapNode => MapNode.nodeID === nodeID) as MapNode;
 }
 
-export async function findElevatorNode(nodeID: string): Promise<MapNode[]> {
+  function findElevatorNode(nodes:MapNode[],floor:string): MapNode[] {
     //return array.find(obj => obj.id === id);
     //console.log(createNodeList()[7]);
     // console.log(createNodeList().find(MapNode => MapNode.nodeID === nodeID));
-    const nodeList: MapNode[] = await createNodeList();
 
-    return nodeList.filter(async MapNode => MapNode.floor === (await findNode(nodeID)).floor&&MapNode.nodeType==="ELEV");
+    return nodes.filter(MapNode => MapNode.floor === floor&&MapNode.nodeType==="ELEV");
 }
 
 /*
