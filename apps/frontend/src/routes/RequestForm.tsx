@@ -77,7 +77,7 @@ const RequestButton = styled(Button)(() => ({
 }));
 
 export default function RequestForm() {
-    const [currentTab, setCurrentTab] = React.useState("statistics");
+    const [currentTab, setCurrentTab] = React.useState("list-request");
 
     const handleTabClick = (tab: string) => {
         switch (tab) {
@@ -99,7 +99,8 @@ export default function RequestForm() {
             <TempNavbar/> {/* NavBlue css fixes this to the left */}
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
-                    <div className={"service-form-ThreeRows"}>
+                    <div className={"service-form-ThreeRows"}
+                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 60% 30%')}}>
                         <div className={"service-form-topcard"}>
                             <Button
                                 onClick={() => {
@@ -194,10 +195,12 @@ export default function RequestForm() {
                             <ServiceRequestTable/>
                         )}
 
-                        <div className={"TwoColumnsThirdRow"}>
-                            <div className={"service-form-TestCard"}></div>
-                            <div className={"service-form-TestCard"}></div>
-                        </div>
+                        {currentTab !== "list-request" && (
+                            <div className={"TwoColumnsThirdRow"}>
+                                <div className={"service-form-TestCard"}></div>
+                                <div className={"service-form-TestCard"}></div>
+                            </div>
+                        )}
                     </div>
                     <div className={"service-form-TwoRows"}>
                         <div className={"service-form-TestCard"}></div>
