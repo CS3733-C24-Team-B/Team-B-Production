@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import "../css/servicelist_page.css";
 import axios from "axios";
-import Navbar from "../components/Navbar.tsx";
 import {
     PriorityType,
     StatusType,
@@ -73,7 +71,6 @@ enum RequestSpecifics {
 }
 
 export default function RequestList() {
-    const navigate = useNavigate();
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     const [nodeData, setNodeData] = useState([]);
@@ -376,10 +373,6 @@ export default function RequestList() {
         <Row nsr={nsr}/>
     );
 
-    function handleClick() {
-        navigate("/requestform");
-    }
-
     const userEmployee = employeeData.find(({email}) => {
         return email === employeeFilter;
     });
@@ -394,168 +387,161 @@ export default function RequestList() {
     }
 
     return (
-        <div className="req-list-container">
-            <div className="node-data-container">
-                <div className="nav-container">
-                    <Navbar/>
-                </div>
-
-                <div className="request-container">
-                    <Menu
-                        open={openMenu}
-                        onClose={() => {
-                            setMenuAnchor(null);
+        <div className={"service-form-midcard"}>
+            <Menu
+                open={openMenu}
+                onClose={() => {
+                    setMenuAnchor(null);
+                }}
+                anchorEl={menuAnchor}>
+                <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
+                    <Select
+                        value={filterType}
+                        label=""
+                        onChange={(e) => {
+                            setFilterType(e.target.value);
+                            setFilterFunction(() => () => {
+                                return true;
+                            });
                         }}
-                        anchorEl={menuAnchor}>
-                        <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
-                            <Select
-                                value={filterType}
-                                label=""
-                                onChange={(e) => {
-                                    setFilterType(e.target.value);
-                                    setFilterFunction(() => () => {
-                                        return true;
-                                    });
-                                }}
-                            >
-                                <MenuItem value={"Filter by..."}>None</MenuItem>
-                                <MenuItem value={"Status"}>Status</MenuItem>
-                                <MenuItem value={"Type"}>Request Type</MenuItem>
-                                <MenuItem value={"Priority"}>Priority</MenuItem>
-                                <MenuItem value={"Employee"}>Employee</MenuItem>
-                            </Select>
-                            {((filterType === "Filter by...") ? <></> :
-                                {
-                                    'Type': <>
-                                        <Divider/>
-                                        <Select
-                                            value={typeFilter}
-                                            label=""
-                                            onChange={(e) => {
-                                                setTypeFilter(e.target.value);
-                                                setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Type" || getReqType(nsr) === e.target.value;
-                                                });
-                                            }}
-                                        >
-                                            <MenuItem value={"Choose Type"}>None</MenuItem>
-                                            <MenuItem value={"sanitation"}>Sanitation</MenuItem>
-                                            <MenuItem value={"medicine"}>Medicine</MenuItem>
-                                            <MenuItem value={"internalTransport"}>Internal Transport</MenuItem>
-                                            <MenuItem value={"language"}>Language</MenuItem>
-                                            <MenuItem value={"maintenance"}>Maintenance</MenuItem>
-                                        </Select>
-                                    </>,
-                                    'Status': <>
-                                        <Divider/>
-                                        <Select
-                                            value={statusFilter}
-                                            label=""
-                                            onChange={(e) => {
-                                                setStatusFilter(e.target.value);
-                                                setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Status" || nsr.status === e.target.value;
-                                                });
-                                            }}
-                                        >
-                                            <MenuItem value={"Choose Status"}>None</MenuItem>
-                                            <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
-                                            <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
-                                            <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
-                                            <MenuItem value={StatusType.Completed}>Completed</MenuItem>
-                                            <MenuItem value={StatusType.Paused}>Paused</MenuItem>
-                                        </Select>
-                                    </>,
-                                    'Priority': <>
-                                        <Divider/>
-                                        <Select
-                                            value={priorityFilter}
-                                            label=""
-                                            onChange={(e) => {
-                                                setPriorityFilter(e.target.value);
-                                                setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Priority" || nsr.priority === e.target.value;
-                                                });
-                                            }}
-                                        >
-                                            <MenuItem value={"Choose Priority"}>None</MenuItem>
-                                            <MenuItem value={PriorityType.Low}>Low</MenuItem>
-                                            <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
-                                            <MenuItem value={PriorityType.High}>High</MenuItem>
-                                            <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
-                                        </Select>
-                                    </>,
-                                    'Employee': <>
-                                        <Divider/>
-                                        <Select
-                                            value={employeeFilter}
-                                            label=""
-                                            onChange={(e) => {
-                                                setEmployeeFilter(e.target.value);
-                                                setFilterFunction(() => (nsr: ServiceRequest) => {
-                                                    return e.target.value === "Choose Employee" || nsr.assignedID === e.target.value;
-                                                });
-                                            }}
-                                        >
-                                            <MenuItem value={"Choose Employee"}>None</MenuItem>
-                                            <MenuItem value={user!.email}>Assigned to you</MenuItem>
-                                            {employeeData.filter(({email}) => {
-                                                return email !== user!.email;
-                                            }).map(({email, firstName, lastName}) =>
-                                                <MenuItem
-                                                    value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                                            )}
-                                        </Select>
-                                    </>
-                                }[filterType])}
-                        </FormControl>
-                    </Menu>
-                    <IconButton onClick={(e) => {
-                        setMenuAnchor(e.currentTarget);
-                    }} style={{borderRadius: 0, width: 72}}>
-                        <FilterListIcon/>
-                    </IconButton>
-                    <br/>
-                    <div className="req-list-header">
-                        <header className={'headerblue'}>Service Request List</header>
-                    </div>
-                    <br/>
-                    {(!receivedSR) ? <CircularProgress className="center-text"/> :
-                        (filterSR.length > 0) ?
-                            <TableContainer component={Paper} className="service-tables"
-                                            sx={{width: 1205, maxHeight: window.innerHeight * 0.7}}>
-                                <Table stickyHeader>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell/>
-                                            <TableCell>Priority</TableCell>
-                                            <TableCell>Time Created</TableCell>
-                                            <TableCell>Type</TableCell>
-                                            <TableCell>Assigned To</TableCell>
-                                            <TableCell>Status</TableCell>
-                                            <TableCell>Location</TableCell>
-                                            <TableCell>Created by</TableCell>
-                                            <TableCell/>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {arraySR}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer> :
-                            (srData.length > 0) ? <p className="center-text">No {{
-                                    'Status': "service requests that are " + statusFilter,
-                                    'Type': typeFilter + " service requests",
-                                    'Priority': priorityFilter + " priority service requests",
-                                    'Employee': "service requests assigned to " + ((userEmployee && userEmployee["firstName"] && userEmployee["lastName"]) ?
-                                        userEmployee["firstName"] + " " + userEmployee["lastName"] : userEmployee)
-                                }[filterType]} .</p> :
-                                <p className="center-text">No service requests.</p>}
-                </div>
-                <div className="home-button">
-                    <Button variant="contained" onClick={handleClick} style={{backgroundColor: "#012D5A"}}>Create a
-                        Request</Button>
-                </div>
+                    >
+                        <MenuItem value={"Filter by..."}>None</MenuItem>
+                        <MenuItem value={"Status"}>Status</MenuItem>
+                        <MenuItem value={"Type"}>Request Type</MenuItem>
+                        <MenuItem value={"Priority"}>Priority</MenuItem>
+                        <MenuItem value={"Employee"}>Employee</MenuItem>
+                    </Select>
+                    {((filterType === "Filter by...") ? <></> :
+                        {
+                            'Type': <>
+                                <Divider/>
+                                <Select
+                                    value={typeFilter}
+                                    label=""
+                                    onChange={(e) => {
+                                        setTypeFilter(e.target.value);
+                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                            return e.target.value === "Choose Type" || getReqType(nsr) === e.target.value;
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value={"Choose Type"}>None</MenuItem>
+                                    <MenuItem value={"sanitation"}>Sanitation</MenuItem>
+                                    <MenuItem value={"medicine"}>Medicine</MenuItem>
+                                    <MenuItem value={"internalTransport"}>Internal Transport</MenuItem>
+                                    <MenuItem value={"language"}>Language</MenuItem>
+                                    <MenuItem value={"maintenance"}>Maintenance</MenuItem>
+                                </Select>
+                            </>,
+                            'Status': <>
+                                <Divider/>
+                                <Select
+                                    value={statusFilter}
+                                    label=""
+                                    onChange={(e) => {
+                                        setStatusFilter(e.target.value);
+                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                            return e.target.value === "Choose Status" || nsr.status === e.target.value;
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value={"Choose Status"}>None</MenuItem>
+                                    <MenuItem value={StatusType.Unassigned}>Unassigned</MenuItem>
+                                    <MenuItem value={StatusType.Assigned}>Assigned</MenuItem>
+                                    <MenuItem value={StatusType.InProgress}>In Progress</MenuItem>
+                                    <MenuItem value={StatusType.Completed}>Completed</MenuItem>
+                                    <MenuItem value={StatusType.Paused}>Paused</MenuItem>
+                                </Select>
+                            </>,
+                            'Priority': <>
+                                <Divider/>
+                                <Select
+                                    value={priorityFilter}
+                                    label=""
+                                    onChange={(e) => {
+                                        setPriorityFilter(e.target.value);
+                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                            return e.target.value === "Choose Priority" || nsr.priority === e.target.value;
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value={"Choose Priority"}>None</MenuItem>
+                                    <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                    <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                    <MenuItem value={PriorityType.High}>High</MenuItem>
+                                    <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                </Select>
+                            </>,
+                            'Employee': <>
+                                <Divider/>
+                                <Select
+                                    value={employeeFilter}
+                                    label=""
+                                    onChange={(e) => {
+                                        setEmployeeFilter(e.target.value);
+                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                            return e.target.value === "Choose Employee" || nsr.assignedID === e.target.value;
+                                        });
+                                    }}
+                                >
+                                    <MenuItem value={"Choose Employee"}>None</MenuItem>
+                                    <MenuItem value={user!.email}>Assigned to you</MenuItem>
+                                    {employeeData.filter(({email}) => {
+                                        return email !== user!.email;
+                                    }).map(({email, firstName, lastName}) =>
+                                        <MenuItem
+                                            value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                    )}
+                                </Select>
+                            </>
+                        }[filterType])}
+                </FormControl>
+            </Menu>
+            <div className="req-filter-button">
+                <IconButton onClick={(e) => {
+                    setMenuAnchor(e.currentTarget);
+                }} style={{borderRadius: 0, width: 72}}>
+                    <FilterListIcon/>
+                </IconButton>
+            </div>
+
+            <br/>
+            <div className="req-list-header">
+                <header>Service Request List</header>
+            </div>
+            <br/>
+            <div className="req-table-container">
+                {(!receivedSR) ? <CircularProgress className="center-text"/> :
+                    (filterSR.length > 0) ?
+                        <TableContainer component={Paper} className="service-tables"
+                                        sx={{width: 1205, maxHeight: window.innerHeight * 0.7}}>
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell/>
+                                        <TableCell>Priority</TableCell>
+                                        <TableCell>Time Created</TableCell>
+                                        <TableCell>Type</TableCell>
+                                        <TableCell>Assigned To</TableCell>
+                                        <TableCell>Status</TableCell>
+                                        <TableCell>Location</TableCell>
+                                        <TableCell>Created by</TableCell>
+                                        <TableCell/>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {arraySR}
+                                </TableBody>
+                            </Table>
+                        </TableContainer> :
+                        (srData.length > 0) ? <p className="center-text">No {{
+                                'Status': "service requests that are " + statusFilter,
+                                'Type': typeFilter + " service requests",
+                                'Priority': priorityFilter + " priority service requests",
+                                'Employee': "service requests assigned to " + ((userEmployee && userEmployee["firstName"] && userEmployee["lastName"]) ?
+                                    userEmployee["firstName"] + " " + userEmployee["lastName"] : userEmployee)
+                            }[filterType]} .</p> :
+                            <p className="center-text">No service requests.</p>}
             </div>
         </div>
     );
