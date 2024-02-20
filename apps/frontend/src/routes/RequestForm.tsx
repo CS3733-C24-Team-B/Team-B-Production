@@ -77,7 +77,7 @@ const RequestButton = styled(Button)(() => ({
 }));
 
 export default function RequestForm() {
-    const [currentTab, setCurrentTab] = React.useState("list-request");
+    const [currentTab, setCurrentTab] = React.useState("statistics");
 
     const handleTabClick = (tab: string) => {
         switch (tab) {
@@ -148,7 +148,6 @@ export default function RequestForm() {
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
                             <div className={"service-form-midcard"}>
-                                <header>Service Request Statistics</header>
                                 <ShowData/>
                             </div>
                         )}
