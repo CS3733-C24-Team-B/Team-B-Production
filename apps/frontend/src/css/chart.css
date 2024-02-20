@@ -1,0 +1,42 @@
+.header-container2 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.chartbox {
+    margin-left: 50px;
+    margin-top: 0;
+    padding: 20px;
+    width: 30%;
+    height: 500px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: end
+}
+
+.top-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "header" "main";
+    background-image: linear-gradient(lightgray 0%, white 35vh);
+}
+
+.data-view-header {
+    justify-self: center;
+    font-family: "Open Sans", sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    grid-row-start: 1;
+    padding-top: 3vh;
+    grid-column-start: 2;
+}
+
+.headerblue {
+    color: #012d5a;
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-size: 36px;
+}

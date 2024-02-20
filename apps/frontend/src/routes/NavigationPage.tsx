@@ -5,22 +5,23 @@ import Topbar from "../components/Topbar.tsx";
 import LeafletMap from "../components/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
-    Autocomplete,
+    Autocomplete, autocompleteClasses,
     Button,
     Checkbox,
     Divider,
     FormControlLabel,
     FormGroup,
-    IconButton,
     Menu,
     MenuItem
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
+import DirectionsIcon from '@mui/icons-material/Directions';
+import SearchIcon from '@mui/icons-material/Search';
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 
 export default function NavigationPage() {
-    const {user, isAuthenticated} = useAuth0();
+    const {user} = useAuth0();
     console.log(user);
     const [nodeData, setNodeData] = useState([]);
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -68,28 +69,38 @@ export default function NavigationPage() {
     }
 
     topbarElems.push(
-        <Autocomplete
-            disablePortal
-            options={currNodes.map(({longName}) => ({label: longName}))}
-            sx={{width: '35%'}}
-            renderInput={(params) => <TextField {...params} label="Find Your Destination" variant={"standard"}/>}
-            value={nodeIDtoName(nodeEnd)}
-            onChange={(newValue) => {
-                if (newValue !== null && newValue.target.innerText !== undefined) {
-                    const nId = nametoNodeID(newValue.target.innerText);
-                    setNodeEnd(nId);
-                    setOpenDrawer(true);
-                } else {
-                    setNodeEnd("");
-                }
-            }}
-        />
+        <div className={"navigation-autocomplete"}>
+            <Autocomplete
+                disablePortal
+                options={currNodes.map(({longName}) => ({label: longName}))}
+                size={"small"}
+                renderInput={(params) => <TextField {...params} label={<p className={"search-label"}>Find Your {<span
+                    className={"action-text"}>Destination</span>}
+                </p>} variant={"outlined"}/>}
+                popupIcon={<SearchIcon/>}
+                sx={{[`& .${autocompleteClasses.popupIndicator}`]: {
+                        transform: "none"
+                    }}}
+                value={nodeIDtoName(nodeEnd)}
+                onChange={(newValue) => {
+                    if (newValue !== null && newValue.target.innerText !== undefined) {
+                        const nId = nametoNodeID(newValue.target.innerText);
+                        setNodeEnd(nId);
+                        setOpenDrawer(true);
+                    } else {
+                        setNodeEnd("");
+                    }
+                }}
+            />
+        </div>
     );
 
-    topbarElems.push(<Button sx={{color: 'white', width: '10%', height: '80%', textTransform: 'none', fontSize: '20px', marginTop: '0.5%'}}
-                             onClick={() => {
-                                 setOpenDrawer(!openDrawer);
-                             }}>
+    topbarElems.push(<Button
+        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Calibri'}}
+        endIcon={<DirectionsIcon/>}
+        onClick={() => {
+            setOpenDrawer(!openDrawer);
+        }}>
         Directions
     </Button>);
 
@@ -157,27 +168,38 @@ export default function NavigationPage() {
             {ChooseAlgo}
         </Menu>
     );
-    topbarElems.push(<IconButton onClick={(e) => {
-        setMenuAnchor(e.currentTarget);
-    }} style={{borderRadius: 0, width: '5%', height: '60%', marginTop: '1%'}}>
-        <SettingsIcon/>
-    </IconButton>);
+    topbarElems.push(<Button
+        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Calibri'}}
+        endIcon={<SettingsIcon/>}
+        onClick={(e) => {
+            setMenuAnchor(e.currentTarget);
+        }}>
+        Settings
+    </Button>);
     topbarElems.push(SettingsMenu);
 
     return (
         <div className={"NavigationContainer"}> {/* expands area across entire screen */}
-            <Topbar elems={topbarElems}/> {/* TopGreen css fixes this to the top */}
-            {isAuthenticated ? <TempNavbar/> : <></>} {/* NavBlue css fixes this to the left */}
+            <Topbar/> {/* TopGreen css fixes this to the top */}
+            <TempNavbar/> {/* NavBlue css fixes this to the left */}
             <div className={"NavigationBackBlue"}> {/* divides area below topbar into navbar and main space */}
-                <div className={"MapArea"}>
-                    <LeafletMap openDrawer={openDrawer}
-                                nodesShow={showNodes}
-                                edgesShow={showEdges}
-                                hallsShow={showHalls}
-                                animate={doAnimation}
-                                algo={algorithm}
-                                endNode={nodeEnd}
-                                changeTopbar={setNodeEnd}/>
+                <div className={"NavigationTwoRows"}>
+                    <div className={"MapControls"}>
+                        <div className={"ControlsLeft"}>
+                            {topbarElems}
+                        </div>
+                    </div>
+                    <div className={"MapArea"}>
+                        <LeafletMap openDrawer={openDrawer}
+                                    nodesShow={showNodes}
+                                    edgesShow={showEdges}
+                                    hallsShow={showHalls}
+                                    animate={doAnimation}
+                                    algo={algorithm}
+                                    endNode={nodeEnd}
+                                    changeTopbar={setNodeEnd}
+                                    changeDrawer={setOpenDrawer}/>
+                    </div>
                 </div>
             </div>
         </div>
