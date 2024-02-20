@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Box, Button,
+import {
+    Box, Button,
     CircularProgress,
     Collapse, Dialog, DialogActions, DialogTitle, FormControl, IconButton,
-    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+} from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -71,7 +73,7 @@ const latoTheme = createTheme({
     },
 });
 
-export default function ServiceRequestTable(){
+export default function ServiceRequestTable() {
     const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     const [nodeData, setNodeData] = useState([]);
@@ -215,13 +217,16 @@ export default function ServiceRequestTable(){
                         'Medium': {color: "midnightblue"},
                         'High': {color: "maroon"},
                         'Emergency': {color: "crimson"}
-                    }[nsr.priority]}> {nsr.priority}
-                        {{
-                            'Low': <ErrorIcon/>,
-                            'Medium': <WarningIcon/>,
-                            'High': <ReportIcon/>,
-                            'Emergency': <NewReleasesIcon/>
-                        }[nsr.priority]}
+                    }[nsr.priority]}>
+                        <div className={"priority-display"}>
+                            {nsr.priority}
+                            {{
+                                'Low': <ErrorIcon/>,
+                                'Medium': <WarningIcon/>,
+                                'High': <ReportIcon/>,
+                                'Emergency': <NewReleasesIcon/>
+                            }[nsr.priority]}
+                        </div>
                     </TableCell>
                     <TableCell>{sqlToDate(nsr.timeCreated.toString()).getMonth() + "/" + sqlToDate(nsr.timeCreated.toString()).getDate() + "/" + sqlToDate(nsr.timeCreated.toString()).getFullYear() +
                         "\n" + (sqlToDate(nsr.timeCreated.toString()).getHours()) + ":" + sqlToDate(nsr.timeCreated.toString()).getMinutes().toLocaleString('en-US', {
