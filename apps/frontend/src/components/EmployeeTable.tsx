@@ -295,7 +295,7 @@ export default function AdminViewer() {
                             Export File
                         </Button>
                         <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                                onChange={downloadTemplate}
+                                onClick={downloadTemplate}
                                 className="export-button"
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",

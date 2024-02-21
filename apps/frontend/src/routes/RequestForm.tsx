@@ -4,8 +4,7 @@ import {useAuth0} from "@auth0/auth0-react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-// import ShowData from "../routes/showData.tsx";
-import PieChart from "../components/PieChart.tsx";
+import PieChartStats from "../components/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -97,8 +96,10 @@ const GokuIcon = createSvgIcon(
 
 const RequestButton = styled(Button)(() => ({
     fontSize: '2.5vh',
-    width: '80%',
-    height: '80%',
+    width: '48%',
+    height: '26%',
+    marginLeft: '1%',
+    marginTop: '1%',
     border: '2px solid black',
     color: 'black',
     backgroundColor: '#CDCCD0',
@@ -113,11 +114,11 @@ const modalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '43%',
+    width: '38vw',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
-    p: 4,
+    p: 4
 };
 
 export default function RequestForm() {
@@ -342,19 +343,18 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 60% 30%')}}>
+                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}>
                         <div className={"service-form-topcard"}>
                             <Button
                                 onClick={() => {
                                     handleTabClick("statistics");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "statistics") ? '#34AD84' : 'black',
+                                style={{
+                                    color: currentTab === 'statistics' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'statistics' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "statistics") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 Statistics
                             </Button>
@@ -362,13 +362,12 @@ export default function RequestForm() {
                                 onClick={() => {
                                     handleTabClick("create-request");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "create-request") ? '#34AD84' : 'black',
+                                style={{
+                                    color: currentTab === 'create-request' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'create-request' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "create-request") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 Create Service Request
                             </Button>
@@ -376,13 +375,12 @@ export default function RequestForm() {
                                 onClick={() => {
                                     handleTabClick("list-request");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "list-request") ? '#34AD84' : 'black',
+                                style={{
+                                    color: currentTab === 'list-request' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'list-request' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "list-request") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 List Service Requests
                             </Button>
@@ -391,8 +389,8 @@ export default function RequestForm() {
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
                             <div className={"service-form-midcard"}>
-                                <div className={"pie-chart"}>
-                                    <PieChart/>
+                                <div className={"pie-chart-stats"}>
+                                    <PieChartStats/>
                                 </div>
                             </div>
                         )}
@@ -530,111 +528,123 @@ export default function RequestForm() {
                             }}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
+                            style={{fontFamily: 'Lato'}}
                         >
                             <Box sx={modalStyle}>
-                                <p>
-                                    Created by {" "}
+                                <p style={{fontSize: '150%', fontWeight: 600}}>
                                     {{
-                                        'sanitation': "Rodrick",
-                                        'medicine': "Rodrick and Piotr",
-                                        'maintenance': "Kenny",
-                                        'transport': "Katy and Cameron",
-                                        'language': "Katie and Hien"
-                                    }[requestType]}
+                                        'sanitation': "Sanitation",
+                                        'medicine': "Medicine",
+                                        'maintenance': "Maintenance",
+                                        'transport': "Internal Transport",
+                                        'language': "Language"
+                                    }[requestType]  + " Request"}
                                 </p>
-                                <div>
-                                    <Autocomplete
-                                        style={{width: window.innerWidth * 0.38}}
-                                        disablePortal
-                                        options={currNodes.map(({nodeID, longName}): NodeType => (
-                                            {label: longName, nid: nodeID}
-                                        ))}
-                                        size={"small"}
-                                        renderInput={(params) =>
-                                            <TextField {...params} label="Location" variant="standard"/>}
-                                        //value={{label: nodeIDtoName(location), nid: location}}
-                                        getOptionLabel={(nd: NodeType) =>
-                                            `${nd.label}`
-                                        }
-                                        getOptionKey={(nd: NodeType) =>
-                                            `${nd.nid}`
-                                        }
-                                        onChange={(newValue, val) => {
-                                            if (val !== null) {
-                                                setLocation(val.nid);
-                                            }
-                                        }}
-                                    />
-                                </div>
-                                <div className="input-field">
-                                    <FormControl className="input-field">
-                                        <InputLabel id="prio-label"
-                                                    variant="standard">Priority</InputLabel>
-                                        <Select
+                                <div className={"modal-div"}>
+                                    <div>
+                                        <Autocomplete
                                             style={{width: window.innerWidth * 0.38}}
-                                            labelId="prio-label"
-                                            id="standard-basic"
-                                            label="Priority"
-                                            variant="standard"
+                                            disablePortal
+                                            options={currNodes.map(({nodeID, longName}): NodeType => (
+                                                {label: longName, nid: nodeID}
+                                            ))}
                                             size={"small"}
-                                            value={prio}
-                                            onChange={(e) => setPrio(e.target.value)}
-                                            required
-                                        >
-                                            <MenuItem value={PriorityType.Low}>Low</MenuItem>
-                                            <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
-                                            <MenuItem value={PriorityType.High}>High</MenuItem>
-                                            <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className="input-field">
-                                    <FormControl>
-                                        <InputLabel id="employee-label"
-                                                    variant="standard">Choose Employee</InputLabel>
-                                        <Select
-                                            labelId="employee-label"
-                                            value={assignTo}
-                                            onChange={async (event: SelectChangeEvent) => {
-                                                setAssignTo(event.target.value);
+                                            renderInput={(params) =>
+                                                <TextField {...params} label="Location" variant="standard"/>}
+                                            //value={{label: nodeIDtoName(location), nid: location}}
+                                            getOptionLabel={(nd: NodeType) =>
+                                                `${nd.label}`
+                                            }
+                                            getOptionKey={(nd: NodeType) =>
+                                                `${nd.nid}`
+                                            }
+                                            onChange={(newValue, val) => {
+                                                if (val !== null) {
+                                                    setLocation(val.nid);
+                                                }
                                             }}
-                                            variant="standard"
-                                            size={"small"}
-                                            style={{width: window.innerWidth * 0.38}}>
-                                            {employeeData.map(({email, firstName, lastName}) =>
-                                                <MenuItem
-                                                    value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                                            )}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div>
-                                    {renderServiceRequestComponent()}
-                                </div>
-                                <div className="top-space">
-                                    <TextField
-                                        style={{width: window.innerWidth * 0.38}}
-                                        multiline
-                                        rows={3}
-                                        id="outlined-multiline-flexible"
-                                        label="Special Notes"
-                                        type="text"
-                                        value={infoText}
-                                        onChange={(e) => setInfoText(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                                <div className="top-space">
-                                    <Button
-                                        style={{
-                                            backgroundColor: "#012D5A",
-                                            width: 220
-                                        }}
-                                        variant="contained"
-                                        onClick={submit}
-                                    >
-                                        Submit Request
-                                    </Button>
+                                        />
+                                    </div>
+                                    <div className="input-field">
+                                        <FormControl className="input-field">
+                                            <InputLabel id="prio-label"
+                                                        variant="standard">Priority</InputLabel>
+                                            <Select
+                                                style={{width: window.innerWidth * 0.38}}
+                                                labelId="prio-label"
+                                                id="standard-basic"
+                                                label="Priority"
+                                                variant="standard"
+                                                size={"small"}
+                                                value={prio}
+                                                onChange={(e) => setPrio(e.target.value)}
+                                                required
+                                            >
+                                                <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                                <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                                <MenuItem value={PriorityType.High}>High</MenuItem>
+                                                <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div className="input-field">
+                                        <FormControl>
+                                            <InputLabel id="employee-label"
+                                                        variant="standard">Choose Employee</InputLabel>
+                                            <Select
+                                                labelId="employee-label"
+                                                value={assignTo}
+                                                onChange={async (event: SelectChangeEvent) => {
+                                                    setAssignTo(event.target.value);
+                                                }}
+                                                variant="standard"
+                                                size={"small"}
+                                                style={{width: window.innerWidth * 0.38}}>
+                                                {employeeData.map(({email, firstName, lastName}) =>
+                                                    <MenuItem
+                                                        value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div>
+                                        {renderServiceRequestComponent()}
+                                    </div>
+                                    <div className="top-space">
+                                        <TextField
+                                            style={{width: window.innerWidth * 0.38}}
+                                            multiline
+                                            rows={3}
+                                            id="outlined-multiline-flexible"
+                                            label="Special Notes"
+                                            type="text"
+                                            value={infoText}
+                                            onChange={(e) => setInfoText(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <p>
+                                        Created by {" "}
+                                        {{
+                                            'sanitation': "Rodrick",
+                                            'medicine': "Rodrick and Piotr",
+                                            'maintenance': "Kenny",
+                                            'transport': "Katy and Cameron",
+                                            'language': "Katie and Hien"
+                                        }[requestType]}
+                                    </p>
+                                    <div className="top-space">
+                                        <Button
+                                            style={{
+                                                backgroundColor: "#34AD84",
+                                                width: 220
+                                            }}
+                                            variant="contained"
+                                            onClick={submit}
+                                        >
+                                            Submit Request
+                                        </Button>
+                                    </div>
                                 </div>
                             </Box>
                         </Modal>

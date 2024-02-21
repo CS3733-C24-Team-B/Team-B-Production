@@ -106,7 +106,12 @@ export default function CSVEdgeDataTable() {
         console.log("Downloading edge CSV template");
 
         try {
-            const res3 = await axios.get('/api/edges/download-template');
+            const accessToken: string = await getAccessTokenSilently();
+            const res3 = await axios.get('/api/edges/download-template', {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
             const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
             a.download = "EdgeDataTemplate.csv";

@@ -4,7 +4,6 @@ import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, Lin
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 // import Navbar from "../components/Navbar.tsx";
-import "../css/chart.css";
 import {useAuth0} from "@auth0/auth0-react";
 import "../css/dashboard.css";
 
@@ -82,18 +81,30 @@ export default function BarChart() {
                     color: 'black', // Sets legend labels (dataset labels) to black
                 },
             },
-            title: {
-                display: true,
-                text: 'Number of Requests by Priority',
-                color: 'black', // Ensures chart title is black
-                font: {
-                    size: 16,
-                },
+        },
+        layout: {
+            padding: {
+                left: 20,
             },
         },
     };
 
     return (
-        <Bar data={barData} options={bar_options}/>
+        <div>
+            <div className={"bar-chart-title"}>
+                Priority Data
+            </div>
+            <div style={{
+                width: '90%',
+                height: '40vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <Bar data={barData} options={bar_options}/>
+            </div>
+        </div>
+
+
     );
 };
