@@ -2,7 +2,7 @@ import createError, { HttpError } from "http-errors";
 import express, { Express, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import { auth } from "express-oauth2-jwt-bearer";
+import {auth} from "express-oauth2-jwt-bearer";
 import pathRouter from "./routes/getPath.ts";
 import readNodesRouter from "./routes/readNodes.ts";
 import readEdgesRouter from "./routes/readEdges.ts";
@@ -32,13 +32,11 @@ app.use("/api/path", pathRouter);
 app.use("/api/nodes/read", readNodesRouter);
 app.use("/api/edges/read", readEdgesRouter);
 
-app.use(
-  auth({
+app.use(auth({
     audience: "/api",
     issuerBaseURL: "https://dev-emppp88ojksbdj0d.us.auth0.com/",
-    tokenSigningAlg: "RS256",
-  }),
-);
+    tokenSigningAlg: "RS256"
+}));
 
 // More routers. All these routers are AFTER the auth,
 // so all these routes require an authentication token.
@@ -67,4 +65,4 @@ app.use((err: HttpError, req: Request, res: Response): void => {
   res.status(err.status || 500);
 });
 
-ex
+export default app; // Export the backend, so that www.ts can start it

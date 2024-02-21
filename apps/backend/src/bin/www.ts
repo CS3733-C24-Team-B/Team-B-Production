@@ -115,4 +115,6 @@ function onListening(): void {
   // If it's a string, simply get it (it's a pipe)
   const bind: string =
     typeof addr === "string" ? "pipe " + addr : "port " + addr?.port; // Otherwise get the port
-  co
+  console.info("Server listening on " + bind); // Debug output that we're listening
+  console.log("Startup complete");
+}

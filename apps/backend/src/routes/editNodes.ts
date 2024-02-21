@@ -7,93 +7,94 @@ const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
 
 router.get("/", async function (req: Request, res: Response) {
-  const node_data: Node[] = await client.node.findMany({
-    include: {
-      serviceRequests: true,
-    },
-  });
-  if (node_data === null) {
-    console.error("No node data found in database");
-    res.sendStatus(204); // no data
-  } else {
-    res.send(JSON.stringify(node_data));
-  }
+
+    const node_data: Node[] = await client.node.findMany({
+        include: {
+            serviceRequests: true
+        }
+    });
+    if (node_data === null) {
+        console.error("No node data found in database");
+        res.sendStatus(204);    // no data
+    }
+    else {
+        res.send(JSON.stringify(node_data));
+    }
+
 });
 
-router.post(
-  "/",
-  upload.single("csvFile"),
-  async function (req: Request, res: Response) {
+router.post("/", upload.single("csvFile"), async function (req: Request, res: Response) {
+
     const nodeFile = req.file;
 
     if (!nodeFile) {
-      console.error("No file was uploaded");
-      return res.sendStatus(400);
+        console.error("No file was uploaded");
+        return res.sendStatus(400);
     }
 
     const nodeData: Node[] = [];
 
     try {
-      const requestData: string = String(nodeFile.buffer);
-      const lines: string[] = requestData.split(/\r?\n/);
-      lines.splice(0, 1); // remove 1st line (column headings)
-      lines.splice(lines.length - 1, 1); // remove last line (empty line)
+        const requestData: string = String(nodeFile.buffer);
+        const lines: string[] = requestData.split(/\r?\n/);
+        lines.splice(0, 1);                     // remove 1st line (column headings)
+        lines.splice(lines.length - 1, 1);      // remove last line (empty line)
 
-      // loop through lines and put into JSON format
-      for (let i: number = 0; i < lines.length; i++) {
-        const data: string[] = lines[i].split(",");
-        if (data.length != 8) {
-          continue;
+        // loop through lines and put into JSON format
+        for (let i: number = 0; i < lines.length; i++) {
+            const data: string[] = lines[i].split(',');
+            if (data.length != 8) {
+                continue;
+            }
+            nodeData[i] = {
+                nodeID: data[0],
+                xcoord: Number(data[1]),
+                ycoord: Number(data[2]),
+                floor: data[3],
+                building: data[4],
+                nodeType: data[5],
+                longName: data[6],
+                shortName: data[7]
+            };
         }
-        nodeData[i] = {
-          nodeID: data[0],
-          xcoord: Number(data[1]),
-          ycoord: Number(data[2]),
-          floor: data[3],
-          building: data[4],
-          nodeType: data[5],
-          longName: data[6],
-          shortName: data[7],
-        };
-      }
 
-      console.log(nodeData.length + " nodes read");
-    } catch (error) {
-      console.error(error);
-      console.error("Unable to read node CSV file");
-      return res.sendStatus(400);
+        console.log(nodeData.length + " nodes read");
+    }
+    catch (error) {
+        console.error(error);
+        console.error("Unable to read node CSV file");
+        return res.sendStatus(400);
     }
 
     try {
-      await client.node.createMany({
-        data: nodeData,
-      });
-      console.info(
-        "Successfully added " + nodeData.length + " nodes to database",
-      );
-    } catch (error) {
-      console.error("Unable to add " + nodeData.length + " nodes to database");
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      ) {
-        console.error(
-          "This data already exists in the database, please upload new data",
-        );
-      } else {
-        console.error(error);
-      }
-      return res.sendStatus(400);
+        await client.node.createMany({
+            data: nodeData
+        });
+        console.info("Successfully added " + nodeData.length + " nodes to database");
+    }
+    catch (error) {
+        console.error("Unable to add " + nodeData.length + " nodes to database");
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+            console.error("This data already exists in the database, please upload new data");
+        }
+        else {
+            console.error(error);
+        }
+        return res.sendStatus(400);
     }
 
     return res.sendStatus(200);
-  },
-);
+});
 
 router.delete("/", async function (req: Request, res: Response) {
-  try {
-    client.node.deleteMany({});
-    return res.status(200).send("Successfully cleared node data from database");
-  } catch (error) {
-    console.error(error);
-    return
+    try {
+        client.node.deleteMany({});
+        return res.status(200).send("Successfully cleared node data from database");
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).send("Could not clear node data from database");
+    }
+});
+
+export default router;
