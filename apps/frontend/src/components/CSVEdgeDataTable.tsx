@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 
-export default function CSVEdgeDataTable(){
+export default function CSVEdgeDataTable() {
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
@@ -50,20 +50,20 @@ export default function CSVEdgeDataTable(){
         </tr>
     );
 
-    function uploadToDB() {
-        console.log("Running Upload to DB");
+    function uploadFile() {
+        console.log("Uploading edge info to database");
 
         try {
             const formData = new FormData();
             const csvFile = document.querySelector('#myFile') as HTMLInputElement;
             if (csvFile == null) {
-                console.log("imagefile should not be null...");
+                console.log("csv file is null");
                 return;
             }
 
             formData.append("csvFile", csvFile.files![0]); // Update based on backend
             getAccessTokenSilently().then((accessToken: string) => {
-                axios.post("/api/edges", formData, {
+                axios.post("/api/edges/upload", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: "Bearer " + accessToken
@@ -75,24 +75,18 @@ export default function CSVEdgeDataTable(){
         }
     }
 
-    async function downloadFromDB() {
-        console.log("Running Download to DB");
+    async function downloadFile() {
+        console.log("Downloading edge info from database");
 
         try {
-            const res3 = await axios.get('/api/edges/read');
+            const accessToken: string = await getAccessTokenSilently();
+            const res3 = await axios.get('/api/edges/download', {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
             console.log(res3);
-            const headers = ['edgeID, startNodeID, endNodeID'];
-            const resCSV = res3.data.reduce((edges: string[], edgeData: {
-                edgeID: string,
-                startNodeID: string,
-                endNodeID: string
-            }) => {
-                const {edgeID, startNodeID, endNodeID} = edgeData;
-                edges.push([edgeID, startNodeID, endNodeID].join(','));
-                return edges;
-            }, []);
-            const data = [...headers, ...resCSV].join('\n');
-            const blob = new Blob([data], {type: "text/csv"});
+            const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
             a.download = "EdgeData.csv";
             a.href = window.URL.createObjectURL(blob);
@@ -105,6 +99,41 @@ export default function CSVEdgeDataTable(){
             a.remove();
         } catch (exception) {
             console.log("post error: " + exception);
+        }
+    }
+
+    async function downloadTemplate() {
+        console.log("Downloading edge CSV template");
+
+        try {
+            const res3 = await axios.get('/api/edges/download-template');
+            const blob = new Blob([res3.data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "EdgeDataTemplate.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            a.dispatchEvent(clickEvt);
+            a.remove();
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
+    async function deleteTable() {
+        console.log("Deleting all edges");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            await axios.delete("/api/edges", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -139,10 +168,10 @@ export default function CSVEdgeDataTable(){
                             }}
                     >
                         Upload File
-                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadFile}/>
                     </Button>
                     <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                            onClick={downloadFromDB}
+                            onClick={downloadFile}
                             className="export-button"
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
@@ -154,6 +183,7 @@ export default function CSVEdgeDataTable(){
                         Export File
                     </Button>
                     <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                            onClick={downloadTemplate}
                             className="export-button"
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
@@ -165,6 +195,7 @@ export default function CSVEdgeDataTable(){
                         Template
                     </Button>
                     <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                            onClick={deleteTable}
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 marginLeft: "5%",
@@ -172,15 +203,6 @@ export default function CSVEdgeDataTable(){
                                 fontFamily: 'Lato',
                                 fontSize: '90%',
                                 textTransform: 'none',
-                            }}
-                            onClick={() => {
-                                getAccessTokenSilently().then((accessToken: string) => {
-                                    axios.delete("/api/nodes", {
-                                        headers: {
-                                            Authorization: "Bearer " + accessToken
-                                        }
-                                    }).then();
-                                });
                             }}>
                         Delete Data
                     </Button>
@@ -192,9 +214,6 @@ export default function CSVEdgeDataTable(){
                 </div>
             </div>
         </div>
-
-
-    )
-        ;
+    );
 }
 
