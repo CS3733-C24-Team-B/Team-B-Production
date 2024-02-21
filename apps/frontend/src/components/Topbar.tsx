@@ -41,11 +41,14 @@ export default function Topbar() {
 
     return (
         <div className={"TopGreen"}>
-            <img src={logo} className={"logo-style"}/>
+            <a href="https://www.brighamandwomens.org" target="_blank">
+                <img src={logo} className={"logo-style"} alt="hospital logo"/>
+            </a>
             <div></div>
             <div className={"profile-card"}>
                 {isAuthenticated ? <p className={"profile-text"}>{getNameOrEmail(user!.email!)}</p> : <></>}
-                {isAuthenticated ? <img src={user && user.picture} className={"profile-icon"} onClick={() => logout()}/> : <AuthenticationButton/>}
+                {isAuthenticated ? <img src={user && user.picture} className={"profile-icon"} onClick={() => logout()}
+                                        alt="profile picture"/> : <AuthenticationButton/>}
             </div>
         </div>
     );
