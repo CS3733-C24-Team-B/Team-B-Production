@@ -23,7 +23,7 @@ export default function SettingsPage() {
         },
     });
     return (
-        <div className={"Container"}> {/* expands area across entire screen */}
+        <div className={"Settings-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
             <TempNavbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
@@ -32,7 +32,7 @@ export default function SettingsPage() {
                         <div className="Settings-TestCard1">
                             <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
                                 <Typography sx={{margin: "30px", fontWeight: 550, fontSize: "1.35rem"}}>
-                                    Navigation Settings
+                                    Settings
                                 </Typography>
                                 {/*START LOCATION*/}<Box style={{display: "flex", marginLeft: "5vw"}}>
                                     <Typography sx={{fontWeight: 500, fontSize: "0.9rem"}}>
@@ -153,14 +153,13 @@ export default function SettingsPage() {
                         <img className="Settings-TestCard2" src={settingsImage}></img>
 
                     </div>
-                    <div className="Settings-TestCard3">
-                        <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-                            <Typography sx={{margin: "30px", fontWeight: 550, fontSize: "1.35rem"}}>
-                                General Settings
-                            </Typography>
-                        </ThemeProvider>
-                    </div>
-
+                    {/*<div className="Settings-TestCard3">*/}
+                    {/*    <ThemeProvider theme={theme}> /!* Apply the Lato font theme *!/*/}
+                    {/*        <Typography sx={{margin: "30px", fontWeight: 550, fontSize: "1.35rem"}}>*/}
+                    {/*            General Settings*/}
+                    {/*        </Typography>*/}
+                    {/*    </ThemeProvider>*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </div>
