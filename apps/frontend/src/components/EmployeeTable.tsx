@@ -325,7 +325,10 @@ export default function AdminViewer() {
                         </Button>
                     </div>
                     <div className={"AD-OneCard2"}>
-                        <p className={"AD-head2"}>Last Updated</p>
+                        <p className={"AD-head2"}>Last Updated:</p>
+                        <br/>
+                        <br/>
+                        <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
                         {/*<p className={"AD-head3"}>21:02</p>*/}
                         {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                     </div>
