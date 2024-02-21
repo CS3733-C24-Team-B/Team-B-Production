@@ -11,3 +11,27 @@
     height: 400px;
     width: 100%;
 }
+
+.bar-chart-title{
+    font-family: 'Lato';
+    font-size: 2.5vh;
+    margin-left: 2%;
+    font-weight: bold;
+    margin-top: 2%;
+}
+
+.stacked-bar-title{
+    font-family: 'Lato';
+    font-size: 2.5vh;
+    margin-left: 2%;
+    font-weight: bold;
+    margin-top: 2%;
+}
+
+.Piechart-title{
+    font-family: 'Lato';
+    font-size: 2.5vh;
+    margin-left: 1.5%;
+    font-weight: bold;
+    margin-top: 1.5%;
+}

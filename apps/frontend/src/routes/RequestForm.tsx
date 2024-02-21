@@ -4,7 +4,7 @@ import {useAuth0} from "@auth0/auth0-react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-import PieChart from "../components/PieChart.tsx";
+import PieChartStats from "../components/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -389,8 +389,8 @@ export default function RequestForm() {
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
                             <div className={"service-form-midcard"}>
-                                <div className={"pie-chart"}>
-                                    <PieChart/>
+                                <div className={"pie-chart-stats"}>
+                                    <PieChartStats/>
                                 </div>
                             </div>
                         )}
