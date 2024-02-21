@@ -3,7 +3,6 @@ import {Bar} from 'react-chartjs-2';
 import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale, BarElement} from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
-import "../css/chart.css";
 import {useAuth0} from "@auth0/auth0-react";
 import "../css/dashboard.css";
 
@@ -110,18 +109,25 @@ export default function StackedBarChart() {
                     }
                 }
             },
-            title: {
-                display: true,
-                text: 'Priority and Status of Requests',
-                font: {
-                    size: 16
-                },
-                color: 'black'
-            }
         }
     };
 
     return (
-        <Bar data={stackBarData} options={stackBarOptions}/>
+        <div>
+            <div className={"stacked-bar-title"}>
+                Request Status Data
+            </div>
+            <div style={{
+                width: '90%',
+                height: '40vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <Bar data={stackBarData} options={stackBarOptions}/>
+            </div>
+
+        </div>
+
     );
 };
