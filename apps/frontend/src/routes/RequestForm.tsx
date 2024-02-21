@@ -43,6 +43,7 @@ import InternalTransportationReq from "../components/InternalTransportRequest.ts
 import LanguageReq from "../components/LanguageRequest.tsx";
 import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
+import {useNavigate} from "react-router-dom";
 
 // Goku icon, probably should not be used in the actual build lmao //
 const GokuIcon = createSvgIcon(
@@ -121,6 +122,7 @@ const modalStyle = {
 };
 
 export default function RequestForm() {
+    const navigate = useNavigate();
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [currentTab, setCurrentTab] = React.useState("create-request");
     const [location, setLocation] = useState("");
@@ -322,7 +324,8 @@ export default function RequestForm() {
     const handleTabClick = (tab: string) => {
         switch (tab) {
             case "list-request":
-                setCurrentTab("list-request");
+                //setCurrentTab("list-request");
+                navigate("/admin-viewer");
                 return;
             case "create-request":
                 setCurrentTab("create-request");
@@ -502,7 +505,9 @@ export default function RequestForm() {
 
                         {/*If current tab is the List request tab*/}
                         {currentTab === "list-request" && (
-                            <ServiceRequestTable/>
+                            <div className={"service-form-ReqList"}>
+                                <ServiceRequestTable/>
+                            </div>
                         )}
 
                         <div className={"service-form-TwoColumnsThirdRow"}>
@@ -513,10 +518,6 @@ export default function RequestForm() {
                                 <StackedBarChart/>
                             </div>
                         </div>
-                    </div>
-                    <div className={"service-form-TwoRows"}>
-                        <div className={"service-form-TestCard"}></div>
-                        <div className={"service-form-TestCard"}></div>
                     </div>
                 </div>
 

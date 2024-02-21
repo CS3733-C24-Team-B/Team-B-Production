@@ -110,11 +110,12 @@ export default function PieChartStats(){
                 Number of Requests in Types
             </div>
             <div className="chart-container" style={{
-                width: '60vw',
+                width: '100%',
                 height: '75vh',
                 display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center'
+                justifyContent: 'center',
+                alignItems: 'center',
+                justifySelf: 'center'
             }}>
                 <Pie data={chartData} options={options}/>
             </div>
