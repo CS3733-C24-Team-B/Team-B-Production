@@ -164,7 +164,7 @@ export default function TempNavbar() {
                         style={{
                             justifyContent: "flex-start",
                             marginLeft: '5%',
-                            fontSize: '25px',
+                            fontSize: '125%',
                             fontFamily: 'Lato'
                         }}
                         startIcon={<InfoIcon style={{

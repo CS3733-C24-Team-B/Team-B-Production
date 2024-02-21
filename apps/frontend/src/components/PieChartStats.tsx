@@ -6,7 +6,7 @@ import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import {useAuth0} from "@auth0/auth0-react";
 import "../css/dashboard.css";
 
-export default function PieChart(){
+export default function PieChartStats(){
     const [srData, setsrData] = useState<ServiceRequest[]>([]);
     const {getAccessTokenSilently} = useAuth0();
     useEffect(() => {
@@ -68,14 +68,17 @@ export default function PieChart(){
     };
 
     const options: ChartOptions<'pie'> = {
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 labels: {
                     font: {
-                        size: 18,
+                        size: 24,
                         family: 'Arial',
                     },
                     color: 'black',
+                    padding: 20,
                 },
                 position: 'right',
             },
@@ -91,32 +94,32 @@ export default function PieChart(){
                 },
                 titleColor: 'white',
             },
-            title: {
-                display: true,
-                text: 'Number of Requests in Types',
-                font: {
-                    size: 20,
-                    family: 'Arial',
-                },
-                color: 'black',
-                align: 'start',
-                padding: {
-                    top: 10,
-                    bottom: 30,
-                },
-            },
         },
         layout: {
             padding: {
                 left: 20,
                 bottom: 100,
+                right: 50,
             },
         },
     };
 
     return (
-        <div className = "chart-container">
-            <Pie data={chartData} options={options}/>
+        <div>
+            <div className={"Piechart-title"}>
+                Number of Requests in Types
+            </div>
+            <div className="chart-container" style={{
+                width: '100%',
+                height: '75vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                justifySelf: 'center'
+            }}>
+                <Pie data={chartData} options={options}/>
+            </div>
         </div>
+
     );
 }

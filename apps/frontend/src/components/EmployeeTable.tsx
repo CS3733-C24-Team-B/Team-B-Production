@@ -59,7 +59,7 @@ export default function AdminViewer() {
             }
             form.append("employeeFile", employeeFile.files![0]);
             getAccessTokenSilently().then((accessToken: string) => {
-                axios.post("/api/employee/bulk-insert", form, {
+                axios.post("/api/admin-employee/upload", form, {
                     headers: {
                         Authorization: "Bearer " + accessToken,
                         "Content-Type": "multipart/form-data"
@@ -76,18 +76,12 @@ export default function AdminViewer() {
 
         try {
             const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/employee", {
+            const res = await axios.get("/api/admin-employee/download", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
             });
-            const headers: string[] = ["email, firstName, lastName"];
-            const resCSV = res.data.reduce((employees: string[], employeeData: UpdateEmployee) => {
-                employees.push([employeeData.email, employeeData.firstName, employeeData.lastName].join(','));
-                return employees;
-            }, []);
-            const data: string = [...headers, ...resCSV].join('\n');
-            const blob: Blob = new Blob([data], {type: "text/csv"});
+            const blob: Blob = new Blob([res.data], {type: "text/csv"});
             const a = document.createElement("a");
             a.download = "EmployeeData.csv";
             a.href = window.URL.createObjectURL(blob);
@@ -98,6 +92,45 @@ export default function AdminViewer() {
             });
             a.dispatchEvent(clickEvent);
             a.remove();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function downloadTemplate() {
+        console.log("Downloading employee CSV template");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/admin-employee/download-template", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const blob: Blob = new Blob([res.data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "EmployeeDataTemplate.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvent: MouseEvent = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            a.dispatchEvent(clickEvent);
+            a.remove();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function deleteTable() {
+        console.log("Deleting all employees");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            await axios.delete("/api/admin-employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
         } catch (error) {
             console.error(error);
         }
@@ -188,10 +221,7 @@ export default function AdminViewer() {
                             console.log("Deleting employee with email " + employee.email);
                             getAccessTokenSilently()
                                 .then((accessToken: string) => {
-                                    axios.delete("/api/employee", {
-                                        data: {
-                                            email: employee.email
-                                        },
+                                    axios.delete("/api/employee/" + employee.email, {
                                         headers: {
                                             Authorization: "Bearer " + accessToken
                                         }
@@ -265,6 +295,7 @@ export default function AdminViewer() {
                             Export File
                         </Button>
                         <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                                onClick={downloadTemplate}
                                 className="export-button"
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
@@ -276,6 +307,7 @@ export default function AdminViewer() {
                             Template
                         </Button>
                         <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                                onClick={deleteTable}
                                 className="export-button"
                                 style={{
                                     backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",

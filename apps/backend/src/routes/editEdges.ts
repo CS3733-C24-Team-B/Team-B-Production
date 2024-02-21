@@ -1,12 +1,18 @@
 import express, { Router, Request, Response } from "express";
 import multer from "multer";
-import {Prisma, Edge} from "database";
 import client from "../bin/database-connection.ts";
+import {EdgeCSVUtility} from "../utilities/CSVUtility.ts";
 
 const router: Router = express.Router();
 const upload: multer.Multer = multer({ storage: multer.memoryStorage() });
+const csvUtility: EdgeCSVUtility = new EdgeCSVUtility();
 
-router.post("/", upload.single("csvFile"), async function (req: Request, res: Response) {
+router.get("/download", async function (req: Request, res: Response) {
+    const csvString: string = await csvUtility.download();
+    return res.status(200).send(csvString);
+});
+
+router.post("/upload", upload.single("csvFile"), async function (req: Request, res: Response) {
 
     const edgeFile = req.file;
 
@@ -15,58 +21,24 @@ router.post("/", upload.single("csvFile"), async function (req: Request, res: Re
         return res.sendStatus(400);
     }
 
-    const edgeData: Edge[] = [];
-
     try {
-        const requestData: string = String(edgeFile.buffer);
-        const lines: string[] = requestData.split(/\r?\n/);
-        lines.splice(0, 1);                     // remove 1st line (column headings)
-        lines.splice(lines.length - 1, 1);      // remove last line (empty line)
-
-        // loop through lines and put into JSON format
-        for (let i: number = 0; i < lines.length; i++) {
-            const data: string[] = lines[i].split(',');
-            if (data.length != 3) {
-                continue;
-            }
-            edgeData[i] = {
-                edgeID: data[0],
-                startNodeID: data[1],
-                endNodeID: data[2]
-            };
-        }
-
-        console.log(edgeData.length + " edges read");
+        await csvUtility.upload(edgeFile);
+        return res.status(200).send("Successfully added edges");
     }
     catch (error) {
         console.error(error);
-        console.error("Unable to read edge CSV file");
         return res.sendStatus(400);
     }
+});
 
-    try {
-        await client.edge.createMany({
-            data: edgeData
-        });
-        console.info("Successfully added " + edgeData.length + " edges to database");
-    }
-    catch (error) {
-        console.error("Unable to add " + edgeData.length + " edges to database");
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code == 'P2002') {
-            console.error("This data already exists in the database, please upload new data");
-        }
-        else {
-            console.error(error);
-        }
-        return res.sendStatus(400);
-    }
-
-    return res.sendStatus(200);
+router.get("/download-template", function (req: Request, res: Response) {
+    const csvString: string = csvUtility.downloadTemplate();
+    return res.status(200).send(csvString);
 });
 
 router.delete("/", async function (req: Request, res: Response) {
     try {
-        client.edge.deleteMany({});
+        await client.edge.deleteMany();
         return res.status(200).send("Successfully cleared edge data from database");
     }
     catch (error) {

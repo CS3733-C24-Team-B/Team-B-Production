@@ -79,6 +79,8 @@ interface MapProps {
     endNode: string;
     changeTopbar: (arg0: string) => void;
     changeDrawer: (arg0: boolean) => void;
+    nodeColor: string;
+    edgeColor: string;
 }
 
 export default function LeafletMap(props : MapProps) {
@@ -102,6 +104,8 @@ export default function LeafletMap(props : MapProps) {
     const startDraw = useRef(0);
     const lMap: Ref<L.Map> = useRef();
     const [floorSet, setFloorSet] = useState(new Set());
+    const [nodeColor, setNodeColor] = useState(props.nodeColor);
+    const [edgeColor, setEdgeColor] = useState(props.edgeColor);
 
     // get auth0 stuff
     const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
@@ -130,6 +134,11 @@ export default function LeafletMap(props : MapProps) {
             setPathData([]);
         }
     }, [props.endNode]);
+
+    useEffect(() => {
+        setNodeColor(props.nodeColor);
+        setEdgeColor(props.edgeColor);
+    }, [props.nodeColor, props.edgeColor]);
 
     useEffect(() => {
         async function fetch() {
@@ -225,7 +234,7 @@ export default function LeafletMap(props : MapProps) {
                     const y2 = transY(nodeIDToYPos(endNodeID));
                     temp.push(<Polyline
                         positions={[[y1, x1], [y2, x2]]}
-                        color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
+                        color={edgeColor} weight={5}></Polyline>);
                 }
             });
         } else {
@@ -238,7 +247,7 @@ export default function LeafletMap(props : MapProps) {
                     if (startX >= 0 && startY >= 0) {
                         temp.push(<Polyline
                             positions={[[transY(startY), transX(startX)], [transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]]}
-                            color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!} weight={5}></Polyline>);
+                            color={edgeColor} weight={5}></Polyline>);
                         const dx = transX(nodeIDToXPos(nr)) - transX(startX);
                         const dy = transY(nodeIDToYPos(nr)) - transY(startY);
                         const steps = 80 * Math.sqrt(dy*dy + dx*dx);
@@ -255,11 +264,11 @@ export default function LeafletMap(props : MapProps) {
                             if (pathLength > 0.2) {
                                 temp.push(<Polyline
                                     positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                    color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!}
+                                    color={edgeColor}
                                     weight={5}></Polyline>);
                                 temp.push(<Polyline
                                     positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                    color={(localStorage.getItem("edgeColor") === null) ? "green" : localStorage.getItem("edgeColor")!}
+                                    color={edgeColor}
                                     weight={5}></Polyline>);
                             }
                         }
@@ -293,7 +302,7 @@ export default function LeafletMap(props : MapProps) {
         setAnimateData(animate);
         setAnimateChanges(changes);
         setFloorSet(fs);
-    }, [currLevel, doAnimation, edgeData, nodeData, pathData, showEdges]);
+    }, [currLevel, doAnimation, edgeColor, edgeData, nodeData, pathData, showEdges]);
 
     function moveLine() {
         if(animateData.length > 0) {
@@ -360,7 +369,7 @@ export default function LeafletMap(props : MapProps) {
                 <CircleMarker fillOpacity={1}
                               center={new LatLng(transY(nodeIDToYPos(nodeStart)), transX(nodeIDToXPos(nodeStart)))}
                               radius={6}
-                              color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}>
+                              color={nodeColor}>
                 </CircleMarker>
             );
         }
@@ -452,8 +461,11 @@ export default function LeafletMap(props : MapProps) {
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
                                 sx={{width: '100%'}}
-                                renderInput={(params) => <TextField {...params} label="Start Node..."/>}
+                                renderInput={(params) => <TextField {...params}
+                                                                    label={<p className="autocomplete-text">Start
+                                                                        Node...</p>}/>}
                                 value={nodeIDtoName(nodeStart)}
+                                ListboxProps={{style: {fontFamily: 'Lato'}}}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
                                         const nId = nametoNodeID(newValue.target.innerText);
@@ -472,8 +484,11 @@ export default function LeafletMap(props : MapProps) {
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
                                 sx={{width: '100%'}}
-                                renderInput={(params) => <TextField {...params} label="End Node..."/>}
+                                renderInput={(params) => <TextField {...params}
+                                                                    label={<p className="autocomplete-text">End
+                                                                        Node...</p>}/>}
                                 value={nodeIDtoName(nodeEnd)}
+                                ListboxProps={{style: {fontFamily: 'Lato'}}}
                                 onChange={(newValue) => {
                                     if (newValue !== null && newValue.target.innerText !== undefined) {
                                         const nId = nametoNodeID(newValue.target.innerText);
@@ -525,7 +540,7 @@ export default function LeafletMap(props : MapProps) {
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
                         <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
-                                      radius={6} color={(localStorage.getItem("nodeColor") === null ? "#3388ff" : localStorage.getItem("nodeColor"))}
+                                      radius={6} color={nodeColor}
                                       eventHandlers={{
                                           click: () => {
                                               if (!showEdges) {

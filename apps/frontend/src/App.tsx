@@ -6,9 +6,8 @@ import CSVNodeData from "./routes/CSVNodeData.tsx";
 import CSVEdgeData from "./routes/CSVEdgeData.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
-import ProfilePage from "./routes/ProfilePage.tsx";
+import ProfilePage from "./routes/TempProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
-import ShowData from "./routes/showData.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
 
 import OldHomePage from "./routes/OldHomePage.tsx";
@@ -22,6 +21,7 @@ import OldSettingsPage from "./routes/OldSettingsPage.tsx";
 
 import NewUITemplete from "./components/NewUITemplete.tsx";
 import AboutPage from "./routes/AboutPage.tsx";
+import About from "./routes/About.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -96,11 +96,6 @@ function App() {
             element: <AdminViewer/>
         },
         {
-            path: "show-data",
-            errorElement: <div/>,
-            element: <ShowData></ShowData>
-        },
-        {
             path: "/old-admin-viewer",
             errorElement: <div/>,
             element: <OldAdminViewer/>
@@ -122,9 +117,14 @@ function App() {
             element: <NewUITemplete/>
         },
         {
-            path: "/about",
+            path: "/about-us",
             errorElement: <div/>,
             element: <AboutPage/>
+        },
+        {
+            path: "/about",
+            errorElement: <div/>,
+            element: <About/>
         }
     ]);
 

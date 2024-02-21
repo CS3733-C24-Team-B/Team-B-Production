@@ -4,9 +4,11 @@ import "../css/topbar.css";
 import {useAuth0} from "@auth0/auth0-react";
 import AuthenticationButton from "./AuthenticationButton";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 export default function Topbar() {
-    const {user, isAuthenticated, getAccessTokenSilently, logout} = useAuth0();
+    const navigate = useNavigate();
+    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [employeeData, setEmployeeData] = useState([]);
 
     useEffect(() => {
@@ -41,11 +43,14 @@ export default function Topbar() {
 
     return (
         <div className={"TopGreen"}>
-            <img src={logo} className={"logo-style"}/>
+            <a href="https://www.brighamandwomens.org" target="_blank">
+                <img src={logo} className={"logo-style"} alt="hospital logo"/>
+            </a>
             <div></div>
             <div className={"profile-card"}>
                 {isAuthenticated ? <p className={"profile-text"}>{getNameOrEmail(user!.email!)}</p> : <></>}
-                {isAuthenticated ? <img src={user && user.picture} className={"profile-icon"} onClick={() => logout()}/> : <AuthenticationButton/>}
+                {isAuthenticated ? <img src={user && user.picture} className={"profile-icon"} onClick={() => navigate("/profile-info")}
+                                        alt="profile picture"/> : <AuthenticationButton/>}
             </div>
         </div>
     );

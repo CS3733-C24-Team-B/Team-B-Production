@@ -42,29 +42,42 @@ export default function CSVNodeDataTable(){
         </tr>
     );
 
-    async function downloadFromDB() {
-        console.log("Running Download to DB");
+    function uploadFile() {
+        console.log("Uploading node info to database");
+        try {
+            const formData = new FormData();
+            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
+            if (csvFile == null) {
+                console.log("csv file is null");
+                return;
+            }
+
+            formData.append("csvFile", csvFile.files![0]); // Update based on backend
+
+            getAccessTokenSilently().then((accessToken: string) => {
+                axios.post('/api/nodes/upload', formData, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then();
+            });
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+    }
+
+    async function downloadFile() {
+        console.log("Downloading node info from database");
 
         try {
-            const res3 = await axios.get('/api/nodes/read');
-            console.log(res3);
-            const headers = ['nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName'];
-            const resCSV = res3.data.reduce((roomNode: string[], roomData: {
-                nodeID: string;
-                xcoord: number;
-                ycoord: number;
-                floor: string;
-                building: string;
-                nodeType: string;
-                longName: string;
-                shortName: string;
-            }) => {
-                const {nodeID, xcoord, ycoord, floor, building, nodeType, longName, shortName} = roomData;
-                roomNode.push([nodeID, xcoord + "", ycoord + "", floor, building, nodeType, longName, shortName].join(','));
-                return roomNode;
-            }, []);
-            const data = [...headers, ...resCSV].join('\n');
-            const blob = new Blob([data], {type: "text/csv"});
+            const accessToken: string = await getAccessTokenSilently();
+            const res3 = await axios.get('/api/nodes/download', {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
             a.download = "NodeData.csv";
             a.href = window.URL.createObjectURL(blob);
@@ -80,30 +93,43 @@ export default function CSVNodeDataTable(){
         }
     }
 
-
-    function uploadToDB() {
-        console.log("Running Upload to DB");
+    async function downloadTemplate() {
+        console.log("Downloading node CSV template");
 
         try {
-            const formData = new FormData();
-            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
-            if (csvFile == null) {
-                console.log("imagefile should not be null...");
-                return;
-            }
-
-            formData.append("csvFile", csvFile.files![0]); // Update based on backend
-
-            getAccessTokenSilently().then((accessToken: string) => {
-                axios.post('/api/nodes', formData, {
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then();
+            const accessToken: string = await getAccessTokenSilently();
+            const res3 = await axios.get('/api/nodes/download-template', {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
             });
+            const blob = new Blob([res3.data], {type: "text/csv"});
+            const a = document.createElement("a");
+            a.download = "NodeDataTemplate.csv";
+            a.href = window.URL.createObjectURL(blob);
+            const clickEvt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            a.dispatchEvent(clickEvt);
+            a.remove();
         } catch (exception) {
             console.log("post error: " + exception);
+        }
+    }
+
+    async function deleteTable() {
+        console.log("Deleting all nodes");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            await axios.delete("/api/nodes", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -138,10 +164,10 @@ export default function CSVNodeDataTable(){
                             }}
                     >
                         Upload File
-                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadToDB}/>
+                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadFile}/>
                     </Button>
                     <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                            onClick={downloadFromDB}
+                            onClick={downloadFile}
                             className="export-button"
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
@@ -153,6 +179,7 @@ export default function CSVNodeDataTable(){
                         Export File
                     </Button>
                     <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                            onClick={downloadTemplate}
                             className="export-button"
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
@@ -172,15 +199,7 @@ export default function CSVNodeDataTable(){
                                 fontSize: '90%',
                                 textTransform: 'none',
                             }}
-                            onClick={() => {
-                                getAccessTokenSilently().then((accessToken: string) => {
-                                    axios.delete("/api/nodes", {
-                                        headers: {
-                                            Authorization: "Bearer " + accessToken
-                                        }
-                                    }).then();
-                                });
-                            }}>
+                            onClick={deleteTable}>
                         Delete Data
                     </Button>
                 </div>
