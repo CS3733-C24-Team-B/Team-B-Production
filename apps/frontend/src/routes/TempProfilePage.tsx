@@ -170,10 +170,10 @@ export default function ProfilePage() {
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}
-                            <Typography variant="h5" gutterBottom>
+                            <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
                                 Profile Information
                             </Typography>
-                            {(user === undefined) ? <CircularProgress/> : <div>
+                            {(user === undefined) ? <CircularProgress/> : <div className={"profile-card-info"}>
                                 <Typography variant="body1" style={listItemStyle}>
                                     <strong>Email:</strong> {email}
                                 </Typography>
@@ -224,11 +224,11 @@ export default function ProfilePage() {
                             </div>}
                     </div>
                     <div className={"Profile-Card"}> {/* Increased marginTop */}
-                            <Typography variant="h5" gutterBottom>
+                            <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
                                 Service Requests
                             </Typography>
-                            {(!receivedSR) ? <CircularProgress/> :
-                                (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
+                            {(!receivedSR) ? <CircularProgress/> : <div className={"profile-card-reqlist"}>
+                                {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq} </div>}
                     </div>
                 </div>
             </div>
