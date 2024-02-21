@@ -110,6 +110,19 @@
     max-height: 30vh;
 }
 
+.top-space {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.modal-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 /*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/
 /*@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");*/
 
