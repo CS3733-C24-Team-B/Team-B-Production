@@ -16,4 +16,7 @@
     this.building = building;
     this.nodeType = nodeType;
     this.longName = longName;
-    this.shortName = s
+    this.shortName = shortName;
+  }
+}*/
+
