@@ -170,65 +170,67 @@ export default function ProfilePage() {
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}
-                            <Typography variant="h5" gutterBottom>
+                        <div className={"Profile-Header-Box"}>
+                            <p className={"Profile-Header"}>
                                 Profile Information
+                            </p>
+                        </div>
+                        {(user === undefined) ? <CircularProgress/> : <div>
+                            <Typography variant="body1" style={listItemStyle}>
+                                <strong>Email:</strong> {email}
                             </Typography>
-                            {(user === undefined) ? <CircularProgress/> : <div>
-                                <Typography variant="body1" style={listItemStyle}>
-                                    <strong>Email:</strong> {email}
-                                </Typography>
-                                <TextField style={listItemStyle} id="standard-basic" label="First name"
-                                           variant="standard"
-                                           value={firstName}
-                                           onChange={(e) => {
-                                               setFirstName(e.target.value);
-                                           }}
-                                           required
-                                />
-                                <TextField style={listItemStyle} id="standard-basic" label="Last name"
-                                           variant="standard"
-                                           value={lastName}
-                                           onChange={(e) => {
-                                               setLastName(e.target.value);
-                                           }}
-                                           required
-                                />
-                                <div style={{marginTop: '20px'}}>
-                                    <Button variant="contained" color="primary" onClick={submit}
-                                            style={{backgroundColor: "#34AD84"}}>
-                                        Update Info
-                                    </Button>
-                                </div>
-                                <div style={{marginTop: '20px'}}>
-                                    <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
-                                            onClick={() => {
-                                                getAccessTokenSilently().then((accessToken: string) => {
-                                                    axios.get("/api/employee/reset-password/" + email, {
-                                                        headers: {
-                                                            Authorization: "Bearer " + accessToken
-                                                        }
-                                                    }).then((res) => {
-                                                        location.href = res.data;
-                                                    });
+                            <TextField style={listItemStyle} id="standard-basic" label="First name"
+                                       variant="standard"
+                                       value={firstName}
+                                       onChange={(e) => {
+                                           setFirstName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <TextField style={listItemStyle} id="standard-basic" label="Last name"
+                                       variant="standard"
+                                       value={lastName}
+                                       onChange={(e) => {
+                                           setLastName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <div style={{marginTop: '20px'}}>
+                                <Button variant="contained" color="primary" onClick={submit}
+                                        style={{backgroundColor: "#34AD84"}}>
+                                    Update Info
+                                </Button>
+                            </div>
+                            <div style={{marginTop: '20px'}}>
+                                <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                        onClick={() => {
+                                            getAccessTokenSilently().then((accessToken: string) => {
+                                                axios.get("/api/employee/reset-password/" + email, {
+                                                    headers: {
+                                                        Authorization: "Bearer " + accessToken
+                                                    }
+                                                }).then((res) => {
+                                                    location.href = res.data;
                                                 });
-                                            }}>
-                                        Change Password
-                                    </Button>
-                                </div>
-                                <div style={{marginTop: '20px'}}>
-                                    <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
-                                            onClick={() => logout()}>
-                                        Log Out
-                                    </Button>
-                                </div>
-                            </div>}
+                                            });
+                                        }}>
+                                    Change Password
+                                </Button>
+                            </div>
+                            <div style={{marginTop: '20px'}}>
+                                <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                        onClick={() => logout()}>
+                                    Log Out
+                                </Button>
+                            </div>
+                        </div>}
                     </div>
                     <div className={"Profile-Card"}> {/* Increased marginTop */}
-                            <Typography variant="h5" gutterBottom>
-                                Service Requests
-                            </Typography>
-                            {(!receivedSR) ? <CircularProgress/> :
-                                (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
+                        <Typography variant="h5" gutterBottom>
+                            Service Requests
+                        </Typography>
+                        {(!receivedSR) ? <CircularProgress/> :
+                            (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
                     </div>
                 </div>
             </div>
