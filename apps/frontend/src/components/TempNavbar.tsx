@@ -49,7 +49,7 @@ export default function TempNavbar() {
                                 justifyContent: "flex-start",
                                 marginLeft: '5%',
                                 fontSize: '125%',
-                                fontFamily: 'Calibri'
+                                fontFamily: 'Lato'
                             }}
                             startIcon={<AccountCircleIcon style={{
                                 fontSize: "150%",
@@ -68,7 +68,7 @@ export default function TempNavbar() {
                                 justifyContent: "flex-start",
                                 marginLeft: '5%',
                                 fontSize: '125%',
-                                fontFamily: 'Calibri'
+                                fontFamily: 'Lato'
                             }}
                             startIcon={<AccountCircleIcon style={{
                                 fontSize: "150%",
@@ -87,7 +87,7 @@ export default function TempNavbar() {
                             justifyContent: "flex-start",
                             marginLeft: '5%',
                             fontSize: '125%',
-                            fontFamily: 'Calibri'
+                            fontFamily: 'Lato'
                         }}
                         startIcon={<NavigationIcon style={{
                             fontSize: "150%",
@@ -107,7 +107,7 @@ export default function TempNavbar() {
                                 justifyContent: "flex-start",
                                 marginLeft: '5%',
                                 fontSize: '125%',
-                                fontFamily: 'Calibri'
+                                fontFamily: 'Lato'
                             }}
                             startIcon={<DesignServicesIcon style={{
                                 fontSize: "150%",
@@ -127,7 +127,7 @@ export default function TempNavbar() {
                                 justifyContent: "flex-start",
                                 marginLeft: '5%',
                                 fontSize: '125%',
-                                fontFamily: 'Calibri'
+                                fontFamily: 'Lato'
                             }}
                             startIcon={<AdminPanelSettingsIcon style={{
                                 fontSize: "150%",
@@ -146,7 +146,7 @@ export default function TempNavbar() {
                             justifyContent: "flex-start",
                             marginLeft: '5%',
                             fontSize: '125%',
-                            fontFamily: 'Calibri'
+                            fontFamily: 'Lato'
                         }}
                         startIcon={<SettingsIcon style={{
                             fontSize: "150%",
@@ -165,7 +165,7 @@ export default function TempNavbar() {
                             justifyContent: "flex-start",
                             marginLeft: '5%',
                             fontSize: '25px',
-                            fontFamily: 'Calibri'
+                            fontFamily: 'Lato'
                         }}
                         startIcon={<InfoIcon style={{
                             fontSize: "150%",

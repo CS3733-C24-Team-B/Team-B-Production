@@ -11,9 +11,10 @@ import {Button} from "@mui/material";
 
 
 
-export default function NewUITemplete() {
+export default function AdminViewer() {
     const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
-    const [currentComponent, setCurrentComponent] = useState('');
+    const [currentComponent, setCurrentComponent] = useState('ServiceRequestTable');
+
     return (
         <div className={"AD-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
@@ -26,7 +27,7 @@ export default function NewUITemplete() {
                                 style={{
                                     color: currentComponent === 'ServiceRequestTable' ? 'black' : 'black',
                                     borderBottom: currentComponent === 'ServiceRequestTable' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Calibri',
+                                    fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }}
@@ -41,7 +42,7 @@ export default function NewUITemplete() {
                                 style={{
                                     color: currentComponent === 'CSVNodeDataTable' ? 'black' : 'black',
                                     borderBottom: currentComponent === 'CSVNodeDataTable' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Calibri',
+                                    fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
@@ -54,7 +55,7 @@ export default function NewUITemplete() {
                                 style={{
                                     color: currentComponent === 'CSVEdgeDataTable' ? 'black' : 'black',
                                     borderBottom: currentComponent === 'CSVEdgeDataTable' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Calibri',
+                                    fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
@@ -67,7 +68,7 @@ export default function NewUITemplete() {
                                 style={{
                                     color: currentComponent === 'EmployeeTable' ? 'black' : 'black',
                                     borderBottom: currentComponent === 'EmployeeTable' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Calibri',
+                                    fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
