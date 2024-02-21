@@ -256,10 +256,11 @@ export default function ServiceRequestTable() {
                                         headers: {
                                             Authorization: "Bearer " + accessToken
                                         }
-                                    }).then();
+                                    }).then(() => {
+                                        setRefresh(!refresh);
+                                    });
                                 });
 
-                                setRefresh(!refresh);
                             }}
                             sx={{fontSize: 15}}>
                             {employeeData.map(({email, firstName, lastName}) =>
