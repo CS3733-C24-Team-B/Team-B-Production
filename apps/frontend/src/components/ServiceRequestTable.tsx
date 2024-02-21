@@ -26,6 +26,7 @@ import {
 } from "common/src/serviceRequestTypes.ts";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 type ServiceRequest = {
     serviceID: number,
@@ -73,6 +74,8 @@ const latoTheme = createTheme({
     },
 });
 
+enum requestSortField { priority, timeCreated, type, assignedTo, status, location, createdBy}
+
 export default function ServiceRequestTable() {
     const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
@@ -90,6 +93,7 @@ export default function ServiceRequestTable() {
     });
     const openMenu = Boolean(menuAnchor);
     const [receivedSR, setReceivedSR] = useState(false);
+    const [sortUp, setSortUp] = useState(true);
 
     console.log(isAuthenticated);
 
@@ -120,6 +124,37 @@ export default function ServiceRequestTable() {
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
     });
+
+    function sortRequests(sortField: requestSortField) {
+        let requestsCopy: ServiceRequest[] = [...srData];
+        switch (sortField) {
+            case requestSortField.priority:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.priority.localeCompare(b.priority));
+                break;
+            case requestSortField.timeCreated:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.timeCreated.localeCompare(b.timeCreated));
+                break;
+            case requestSortField.type:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => getReqType(a).localeCompare(getReqType(b)));
+                break;
+            case requestSortField.assignedTo:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.assignedTo.firstName.localeCompare(b.assignedTo.firstName));
+                break;
+            case requestSortField.status:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.status.localeCompare(b.status));
+                break;
+            case requestSortField.location:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
+                break;
+            case requestSortField.createdBy:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.createdBy.firstName.localeCompare(b.createdBy.firstName));
+                break;
+        }
+        if (!sortUp) {
+            requestsCopy = requestsCopy.reverse();
+        }
+        setSRData(requestsCopy);
+    }
 
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
@@ -508,13 +543,55 @@ export default function ServiceRequestTable() {
                                             <FilterListIcon/>
                                         </IconButton>
                                     </TableCell>
-                                    <TableCell>Priority</TableCell>
-                                    <TableCell>Time Created</TableCell>
-                                    <TableCell>Type</TableCell>
-                                    <TableCell>Assigned To</TableCell>
-                                    <TableCell>Status</TableCell>
-                                    <TableCell>Location</TableCell>
-                                    <TableCell>Created by</TableCell>
+                                    <TableCell>
+                                        Priority
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.priority);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Time Created
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.timeCreated);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Type
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.type);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Assigned To
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.assignedTo);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Status
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.status);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Location
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.location);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
+                                    <TableCell>
+                                        Created by
+                                        <button onClick={() => {
+                                            setSortUp(!sortUp);
+                                            sortRequests(requestSortField.createdBy);
+                                        }}><SwapVertIcon/></button>
+                                    </TableCell>
                                     <TableCell/>
                                 </TableRow>
                             </TableHead>

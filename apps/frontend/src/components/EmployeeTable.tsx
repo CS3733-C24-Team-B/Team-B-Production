@@ -14,6 +14,7 @@ import {styled} from "@mui/material/styles";
 import "../css/servicelist_page.css";
 import "../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -28,12 +29,15 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+enum employeeSortField { email, firstName, lastName }
+
 export default function AdminViewer() {
 
     const {isLoading, getAccessTokenSilently} = useAuth0();
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
     const [dialogID, setDialogID] = useState(-1);
+    const [sortUp, setSortUp] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -51,6 +55,25 @@ export default function AdminViewer() {
             setLoading(false);
         });
     }, [getAccessTokenSilently, refresh]);
+
+    function sortEmployees(sortField: employeeSortField) {
+        let employeesCopy: UpdateEmployee[] = [...employees];
+        switch (sortField) {
+            case employeeSortField.email:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.email.localeCompare(b.email));
+                break;
+            case employeeSortField.firstName:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.firstName.localeCompare(b.firstName));
+                break;
+            case employeeSortField.lastName:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.lastName.localeCompare(b.lastName));
+                break;
+        }
+        if (!sortUp) {
+            employeesCopy = employeesCopy.reverse();
+        }
+        setEmployees(employeesCopy);
+    }
 
     function uploadFile() {
         console.log("Uploading employee info to database");
@@ -260,9 +283,27 @@ export default function AdminViewer() {
                     {loading || isLoading ? <CircularProgress/> :<table className={"employee-tables"}>
                         <thead>
                         <tr>
-                            <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>
+                                Email
+                                <button onClick={() => {
+                                    setSortUp(!sortUp);
+                                    sortEmployees(employeeSortField.email);
+                                }}><SwapVertIcon/></button>
+                            </th>
+                            <th>
+                                First Name
+                                <button onClick={() => {
+                                    setSortUp(!sortUp);
+                                    sortEmployees(employeeSortField.firstName);
+                                }}><SwapVertIcon/></button>
+                            </th>
+                            <th>
+                                Last Name
+                                <button onClick={() => {
+                                    setSortUp(!sortUp);
+                                    sortEmployees(employeeSortField.lastName);
+                                }}><SwapVertIcon/></button>
+                            </th>
                             <th></th>
                             <th></th>
                         </tr>

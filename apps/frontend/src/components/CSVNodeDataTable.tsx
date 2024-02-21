@@ -3,10 +3,12 @@ import axios from "axios";
 import {Button, CircularProgress} from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useAuth0} from "@auth0/auth0-react";
+import {Node} from "database";
 import {styled} from "@mui/material/styles";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -20,17 +22,21 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+enum nodeSortField {
+    off, nodeID, xCoord, yCoord, floor,
+    building, nodeType, longName, shortName
+}
 
 export default function CSVNodeDataTable(){
     const {getAccessTokenSilently} = useAuth0();
-    const [nodeData, setNodeData] = useState([]);
+    const [nodeData, setNodeData] = useState<Node[]>([]);
+    const [sortUp, setSortUp] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/nodes/read");
-            console.log(res.data);
             setNodeData(res.data);
         }
 
@@ -39,11 +45,52 @@ export default function CSVNodeDataTable(){
         });
     }, [refresh]);
 
-    const arrayNode = nodeData.map(({floor, building, longName}, i) =>
+    function sortNodes(sortField: nodeSortField): void {
+        let nodesCopy: Node[] = [...nodeData];
+        switch (sortField) {
+            case nodeSortField.off:
+                return;
+            case nodeSortField.nodeID:
+                nodesCopy.sort((a: Node, b: Node) => a.nodeID.localeCompare(b.nodeID));
+                break;
+            case nodeSortField.xCoord:
+                nodesCopy.sort((a: Node, b: Node) => b.xcoord - a.xcoord);
+                break;
+            case nodeSortField.yCoord:
+                nodesCopy.sort((a: Node, b: Node) => b.ycoord - a.ycoord);
+                break;
+            case nodeSortField.floor:
+                nodesCopy.sort((a: Node, b: Node) => a.floor.localeCompare(b.floor));
+                break;
+            case nodeSortField.building:
+                nodesCopy.sort((a: Node, b: Node) => a.building.localeCompare(b.building));
+                break;
+            case nodeSortField.nodeType:
+                nodesCopy.sort((a: Node, b: Node) => a.nodeType.localeCompare(b.nodeType));
+                break;
+            case nodeSortField.longName:
+                nodesCopy.sort((a: Node, b: Node) => a.longName.localeCompare(b.longName));
+                break;
+            case nodeSortField.shortName:
+                nodesCopy.sort((a: Node, b: Node) => a.shortName.localeCompare(b.shortName));
+                break;
+        }
+        if (!sortUp) {
+            nodesCopy = nodesCopy.reverse();
+        }
+        setNodeData(nodesCopy);
+    }
+
+    const arrayNode = nodeData.map((node: Node, i: number) =>
         <tr key={i}>
-            <td>{longName}</td>
-            <td>{floor}</td>
-            <td>{building}</td>
+            <td>{node.nodeID}</td>
+            <td>{node.xcoord}</td>
+            <td>{node.ycoord}</td>
+            <td>{node.floor}</td>
+            <td>{node.building}</td>
+            <td>{node.nodeType}</td>
+            <td>{node.longName}</td>
+            <td>{node.shortName}</td>
         </tr>
     );
 
@@ -149,9 +196,62 @@ export default function CSVNodeDataTable(){
                 {loading ? <CircularProgress/> : <table className={"tables"}>
                     <thead>
                     <tr>
-                        <th>Room Name</th>
-                        <th>Floor</th>
-                        <th>Building Name</th>
+                        <th>
+                            Node ID
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.nodeID);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            X-Coordinate
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.xCoord);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Y-Coordinate
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.yCoord);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Floor
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.floor);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Building
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.building);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Node Type
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.nodeType);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Long Name
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.longName);
+                            }}><SwapVertIcon/></button>
+                        </th>
+                        <th>
+                            Short Name
+                            <button onClick={() => {
+                                setSortUp(!sortUp);
+                                sortNodes(nodeSortField.shortName);
+                            }}><SwapVertIcon/></button>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -160,7 +260,7 @@ export default function CSVNodeDataTable(){
                 </table>}
             </div>
             <div className={"AD-TwoRows2"}>
-                <div className={"AD-Card3"}>
+            <div className={"AD-Card3"}>
                     <p className={"AD-head"}>Actions</p>
                     <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
                             style={{
@@ -221,12 +321,7 @@ export default function CSVNodeDataTable(){
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
-
-
         </div>
-
-
-    )
-        ;
+    );
 }
 
