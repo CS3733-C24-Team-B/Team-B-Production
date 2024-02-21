@@ -13,7 +13,8 @@ import {Button} from "@mui/material";
 
 export default function AdminViewer() {
     const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
-    const [currentComponent, setCurrentComponent] = useState('');
+    const [currentComponent, setCurrentComponent] = useState('ServiceRequestTable');
+
     return (
         <div className={"AD-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
