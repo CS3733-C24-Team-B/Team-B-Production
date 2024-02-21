@@ -13,35 +13,37 @@ datasource db {
 }
 
 model Node {
-  nodeID     String @id
-  xcoord     Int
-  ycoord     Int
-  floor      String
-  building   String
-  nodeType   String
-  longName   String
-  shortName  String
-  startEdges Edge[] @relation("StartNode")
-  endEdges   Edge[] @relation("EndNode")
+  nodeID          String           @id
+  xcoord          Int
+  ycoord          Int
+  floor           String
+  building        String
+  nodeType        String
+  longName        String
+  shortName       String
+  startEdges      Edge[]           @relation("StartNode")
+  endEdges        Edge[]           @relation("EndNode")
+  serviceRequests ServiceRequest[] @relation("Location")
 }
 
 model Edge {
   edgeID      String @id
-  startNode   Node   @relation("StartNode", fields: [startNodeID], references: [nodeID])
+  startNode   Node   @relation("StartNode", fields: [startNodeID], references: [nodeID], onDelete: Cascade)
   startNodeID String
-  endNode     Node   @relation("EndNode", fields: [endNodeID], references: [nodeID])
+  endNode     Node   @relation("EndNode", fields: [endNodeID], references: [nodeID], onDelete: Cascade)
   endNodeID   String
 }
 
 model ServiceRequest {
   serviceID         Int                       @id @default(autoincrement())
   timeCreated       DateTime                  @default(now())
-  createdBy         Employee                  @relation("Created", fields: [createdByID], references: [email])
-  createdByID       String
+  createdBy         Employee?                 @relation("Created", fields: [createdByID], references: [email], onDelete: SetNull)
+  createdByID       String?
+  location          Node                      @relation("Location", fields: [locationID], references: [nodeID], onDelete: Cascade)
   locationID        String
   priority          String
   status            String
-  assignedTo        Employee?                 @relation("Assigned", fields: [assignedID], references: [email])
+  assignedTo        Employee?                 @relation("Assigned", fields: [assignedID], references: [email], onDelete: SetNull)
   assignedID        String?
   notes             String
   sanitation        SanitationRequest?
@@ -52,40 +54,35 @@ model ServiceRequest {
 }
 
 model SanitationRequest {
-  sanitationID   Int            @id @default(autoincrement())
+  serviceID      Int            @id
   serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
-  serviceID      Int            @unique
   hazards        String
 }
 
 model MaintenanceRequest {
-  maintenanceID  Int            @id @default(autoincrement())
+  serviceID      Int            @id
   serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
-  serviceID      Int            @unique
   details        String
 }
 
 model InternalTransportRequest {
-  internalTransportID Int            @id @default(autoincrement())
-  serviceRequest      ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
-  serviceID           Int            @unique
-  toLocation          String
-  mobilityAid         String
-  patientName         String
+  serviceID      Int            @id
+  serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
+  toLocation     String
+  mobilityAid    String
+  patientName    String
 }
 
 model MedicineRequest {
-  medicineID     Int            @id @default(autoincrement())
+  serviceID      Int            @id
   serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
-  serviceID      Int            @unique
   medicineType   String
   amount         String
 }
 
 model LanguageRequest {
-  languageID     Int            @id @default(autoincrement())
+  serviceID      Int            @id
   serviceRequest ServiceRequest @relation(fields: [serviceID], references: [serviceID], onDelete: Cascade)
-  serviceID      Int            @unique
   language1      String
   language2      String
   when           DateTime

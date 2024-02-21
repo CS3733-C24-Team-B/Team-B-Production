@@ -1,3 +1,5 @@
+import {UpdateEmployee} from "./employeeTypes.ts";
+
 export type NewServiceRequest = {
     createdByID: string,
     locationID: string,
@@ -40,21 +42,18 @@ export type LanguageRequest = NewServiceRequest & {
 export type DeleteRequest = {
     serviceID: number
 }
-
-export type InternalTransportationRequestType = {
-    employee: string;
-    location: string;
-    priority: PriorityType;
-    status: StatusType;
-    toLocation: string;
-    mobilityAid: string;
-    patientName: string;
-}
-
 export type UpdateRequest = {
     serviceID: number,
     assignedTo: string,
     status: StatusType
+}
+
+export enum RequestType {
+    sanitation = "Sanitation",
+    medicine = "Medicine",
+    internalTransport = "Internal Transport",
+    maintenance = "Maintenance",
+    language = "Language"
 }
 
 export enum StatusType {
@@ -72,10 +71,22 @@ export enum PriorityType {
     Emergency = "Emergency"
 }
 
-
-export enum PriorityType {
-    Low = "Low",
-    Medium = "Medium",
-    High = "High",
-    Emergency = "Emergency"
+export interface ServiceRequest {
+    serviceID: number,
+    timeCreated: string,
+    createdBy: UpdateEmployee,
+    createdByID: string,
+    locationID: string,
+    priority: string,
+    status: string,
+    assignedTo: UpdateEmployee,
+    assignedID: string,
+    notes: string,
+    sanitation: SanitationRequest,
+    maintenance: MaintenanceRequest,
+    internalTransport: InternalTransportRequest,
+    medicine: MedicineRequest,
+    language: LanguageRequest,
 }
+
+

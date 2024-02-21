@@ -1,8 +1,5 @@
-/*import background_img from "../images/hpphoto.jpeg";*/
-
 :root {
   /*font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-  /*background-image: url("images/hpphoto.jpeg");*/
   font-size: 18px;
   line-height: 1.4;
   font-synthesis: none;
@@ -72,6 +69,90 @@
   width: 100%;
   height: auto;
   display: block;
+}
+
+.BackBlue{
+    background-color: #012d5a;
+    height: 100%;
+    margin-left: 15%;
+    margin-top: 10vh;
+}
+
+.Container {
+    width: 100%;
+    height: 150vh; {/* set to more than 100vh in order to add scroll */}
+}
+
+.TopGreen {
+    background-color: #34AD84;
+    width: 100%;
+    height: 10%;
+    position: fixed;
+    z-index: 401;
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    grid-template-rows: auto;
+    place-items: center;
+}
+
+.NavBlue {
+    background-color: #012d5a;
+    position: fixed;
+    margin-top: 10vh;
+    height: 100%;
+    width: 15%; /* WHENEVER YOU CHANGE THIS, YOU ALSO NEED TO CHANGE THE margin-left IN .BackBlue */
+}
+
+.icon-spacing {
+    margin-top: 10%;
+    gap: 5%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    horiz-align: left;
+}
+
+.TestCard {
+    background-color: lightgray;
+    border-radius: 15px;
+}
+
+.TwoColumns {
+    background-color: orange;
+    display: grid;
+    grid-template-columns: 80% 20%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    width: 100%;
+    height: 100%;
+}
+
+.TwoColumnsThirdRow {
+    display: grid;
+    grid-template-columns: 34% 64%;
+    grid-template-rows: auto;
+    grid-column-gap: 2%;
+}
+
+/* dont put comments in {} */
+.ThreeRows {
+    background-color: purple;
+    display: grid;
+    grid-template-rows: 6% 60% 30%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-columns: auto;
+    grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
+    margin: 2vw;
+    /* order matter :) \/ */
+    margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+}
+
+.TwoRows {
+    background-color: yellow;
+    margin: 2vw;
+    margin-left: 1vw;
+    display: grid;
+    grid-template-rows: 20% 78%;
+    grid-template-columns: auto;
+    grid-row-gap: 2%;
 }
 
 /* The container <div> - needed to position the dropdown content */
