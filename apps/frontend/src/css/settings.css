@@ -38,7 +38,7 @@
     border-width: 1.5px;
 }
 .Settings-Checkbox-Fields{
-    margin-top: 4.5vh;
+    margin-top: -3.0vh;
     margin-left: -2vw;
 }
 .Settings-Vertical-Line{
@@ -50,7 +50,7 @@
     border-radius: 5px; /* Set border radius */
 }
 .Settings-Color-Selector1{
-    margin-top: 3.0vh;
+    margin-top: -0.5vh;
     margin-left: 1.7vw;
     margin-right: 0.4vw;
 }
