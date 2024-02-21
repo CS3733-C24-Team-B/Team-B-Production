@@ -4,4 +4,3 @@ export default defineProject({
   test: {
     environment: "node",
   },
-});

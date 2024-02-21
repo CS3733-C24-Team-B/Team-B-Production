@@ -6,7 +6,3 @@
     this.edgeID = edgeID;
     this.startNode = startNode;
     this.endNode = endNode;
-  }
-}
-
-*/

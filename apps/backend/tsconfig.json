@@ -9,6 +9,4 @@
     "skipLibCheck": true,
   },
   "ts-node": {
-    "swc": true,
-  },
-}
+    "swc": tr
