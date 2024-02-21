@@ -348,13 +348,13 @@ export default function RequestForm() {
                                 onClick={() => {
                                     handleTabClick("statistics");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "statistics") ? '#34AD84' : 'black',
+                                style={{
+                                    height: '5.5vh',
+                                    color: currentTab === 'statistics' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'statistics' ? '5px solid #34AD84' : '',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "statistics") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 Statistics
                             </Button>
@@ -362,13 +362,13 @@ export default function RequestForm() {
                                 onClick={() => {
                                     handleTabClick("create-request");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "create-request") ? '#34AD84' : 'black',
+                                style={{
+                                    height: '5vh',
+                                    color: currentTab === 'create-request' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'create-request' ? '5px solid #34AD84' : '',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "create-request") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 Create Service Request
                             </Button>
@@ -376,13 +376,13 @@ export default function RequestForm() {
                                 onClick={() => {
                                     handleTabClick("list-request");
                                 }}
-                                sx={{
-                                    alignSelf: 'center',
-                                    height: '3vh',
-                                    color: (currentTab === "list-request") ? '#34AD84' : 'black',
+                                style={{
+                                    height: '5vh',
+                                    color: currentTab === 'list-request' ? 'black' : 'black',
+                                    borderBottom: currentTab === 'list-request' ? '5px solid #34AD84' : '',
                                     fontFamily: 'Lato',
-                                    fontSize: '2.5vh',
-                                    borderBottom: (currentTab === "list-request") ? '5px solid #34AD84' : ''
+                                    fontSize: '100%',
+                                    textTransform: 'none',
                                 }}>
                                 List Service Requests
                             </Button>

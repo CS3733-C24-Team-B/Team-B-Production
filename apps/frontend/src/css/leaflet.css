@@ -89,12 +89,17 @@
     position: absolute;
 }
 
+.autocomplete-text {
+    translate: 0% -62%;
+    font-family: Lato;
+}
+
 .floor-buttons {
     z-index: 1000;
     background-color: white;
     border-radius: 5px;
     position: fixed;
-    bottom: 3%;
+    bottom: 7%;
     right: 2.5%;
     display: flex;
     flex-direction: column;

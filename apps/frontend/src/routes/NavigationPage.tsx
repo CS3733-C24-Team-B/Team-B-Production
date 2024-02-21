@@ -32,6 +32,8 @@ export default function NavigationPage() {
     const [algorithm, setAlgorithm] = useState(0);
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [nodeEnd, setNodeEnd] = useState("");
+    const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor") : "#3388ff");
+    const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
     const openMenu = Boolean(menuAnchor);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
@@ -46,7 +48,6 @@ export default function NavigationPage() {
 
         fetch().then();
     }, []);
-
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
     });
@@ -78,9 +79,12 @@ export default function NavigationPage() {
                     className={"action-text"}>Destination</span>}
                 </p>} variant={"outlined"}/>}
                 popupIcon={<SearchIcon/>}
-                sx={{[`& .${autocompleteClasses.popupIndicator}`]: {
+                sx={{
+                    [`& .${autocompleteClasses.popupIndicator}`]: {
                         transform: "none"
-                    }}}
+                    }
+                }}
+                ListboxProps={{style: {fontFamily: 'Lato'}}}
                 value={nodeIDtoName(nodeEnd)}
                 onChange={(newValue) => {
                     if (newValue !== null && newValue.target.innerText !== undefined) {
@@ -96,7 +100,7 @@ export default function NavigationPage() {
     );
 
     topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
+        sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<DirectionsIcon/>}
         onClick={() => {
             setOpenDrawer(!openDrawer);
@@ -135,6 +139,7 @@ export default function NavigationPage() {
             onChange={(event) => {
                 setAlgorithm(searchTypeToNum(event.target.value));
             }}
+            label="Pathfinding Algorithm"
             size="small"
             style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', margin: '8%', minWidth: '84%'}}
             InputProps={{style: {fontFamily: 'Lato'}}}
@@ -167,10 +172,25 @@ export default function NavigationPage() {
             </FormGroup>
             <Divider/>
             {ChooseAlgo}
+            <Divider/>
+            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+            <input className="Settings-Color-Selector1" type="color"
+                   value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                   onChange={(e) => {
+                       localStorage.setItem("nodeColor", e.target.value);
+                       setNodeColor(e.target.value);
+                   }}/>
+            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+            <input className="Settings-Color-Selector2" type="color"
+                   value={(edgeColor === null ? "#008000" : edgeColor!)}
+                   onChange={(e) => {
+                       localStorage.setItem("edgeColor", e.target.value);
+                       setEdgeColor(e.target.value);
+                   }}/>
         </Menu>
     );
     topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
+        sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
             setMenuAnchor(e.currentTarget);
@@ -199,7 +219,9 @@ export default function NavigationPage() {
                                     algo={algorithm}
                                     endNode={nodeEnd}
                                     changeTopbar={setNodeEnd}
-                                    changeDrawer={setOpenDrawer}/>
+                                    changeDrawer={setOpenDrawer}
+                                    nodeColor={nodeColor!}
+                                    edgeColor={edgeColor!}/>
                     </div>
                 </div>
             </div>
