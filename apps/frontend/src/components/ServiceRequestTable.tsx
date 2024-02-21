@@ -94,6 +94,7 @@ export default function ServiceRequestTable() {
     const openMenu = Boolean(menuAnchor);
     const [receivedSR, setReceivedSR] = useState(false);
     const [sortUp, setSortUp] = useState(true);
+    const [beingSorted, setBeingSorted] = useState(false);
 
     console.log(isAuthenticated);
 
@@ -124,37 +125,6 @@ export default function ServiceRequestTable() {
     const statuses = Object.keys(StatusType).filter((item) => {
         return isNaN(Number(item));
     });
-
-    function sortRequests(sortField: requestSortField) {
-        let requestsCopy: ServiceRequest[] = [...srData];
-        switch (sortField) {
-            case requestSortField.priority:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.priority.localeCompare(b.priority));
-                break;
-            case requestSortField.timeCreated:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.timeCreated.localeCompare(b.timeCreated));
-                break;
-            case requestSortField.type:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => getReqType(a).localeCompare(getReqType(b)));
-                break;
-            case requestSortField.assignedTo:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.assignedTo.firstName.localeCompare(b.assignedTo.firstName));
-                break;
-            case requestSortField.status:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.status.localeCompare(b.status));
-                break;
-            case requestSortField.location:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
-                break;
-            case requestSortField.createdBy:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.createdBy.firstName.localeCompare(b.createdBy.firstName));
-                break;
-        }
-        if (!sortUp) {
-            requestsCopy = requestsCopy.reverse();
-        }
-        setSRData(requestsCopy);
-    }
 
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
@@ -196,12 +166,14 @@ export default function ServiceRequestTable() {
         return new Date(utc.getTime() - offset * 60000);
     }
 
-    srData.sort((srA: ServiceRequest, srB: ServiceRequest) => {
-        // console.log("TIME: " + srA.timeCreated + " " + srB.timeCreated);
-        // console.log(sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf());
-        return sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf();
-        //return timeCreatedA - timeCreatedB;
-    });
+    if(!beingSorted) {
+        srData.sort((srA: ServiceRequest, srB: ServiceRequest) => {
+            // console.log("TIME: " + srA.timeCreated + " " + srB.timeCreated);
+            // console.log(sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf());
+            return sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf();
+            //return timeCreatedA - timeCreatedB;
+        });
+    }
 
     function getNameOrEmail(userEmail: string) {
         let outFirst = "";
@@ -227,6 +199,38 @@ export default function ServiceRequestTable() {
         } else {
             return nId;
         }
+    }
+
+    function sortRequests(sortField: requestSortField) {
+        let requestsCopy: ServiceRequest[] = [...filterSR];
+        switch (sortField) {
+            case requestSortField.priority:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.priority.localeCompare(b.priority));
+                break;
+            case requestSortField.timeCreated:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.timeCreated.localeCompare(b.timeCreated));
+                break;
+            case requestSortField.type:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => getReqType(a).localeCompare(getReqType(b)));
+                break;
+            case requestSortField.assignedTo:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.assignedTo.firstName.localeCompare(b.assignedTo.firstName));
+                break;
+            case requestSortField.status:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.status.localeCompare(b.status));
+                break;
+            case requestSortField.location:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
+                break;
+            case requestSortField.createdBy:
+                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.createdBy.firstName.localeCompare(b.createdBy.firstName));
+                break;
+        }
+        if (!sortUp) {
+            requestsCopy = requestsCopy.reverse();
+        }
+        setBeingSorted(true);
+        setSRData(requestsCopy);
     }
 
     const filterSR = srData.filter(filterFunction);
