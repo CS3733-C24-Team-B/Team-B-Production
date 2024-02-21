@@ -34,6 +34,8 @@ export default function AdminViewer() {
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
     const [dialogID, setDialogID] = useState(-1);
+    const [refresh, setRefresh] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Refresh employee data
     useEffect(() => {
@@ -45,8 +47,10 @@ export default function AdminViewer() {
                 }
             });
             setEmployees(res.data);
-        })();
-    }, [getAccessTokenSilently]);
+        })().then(() => {
+            setLoading(false);
+        });
+    }, [getAccessTokenSilently, refresh]);
 
     function uploadFile() {
         console.log("Uploading employee info to database");
@@ -58,13 +62,16 @@ export default function AdminViewer() {
                 return;
             }
             form.append("employeeFile", employeeFile.files![0]);
+            setLoading(true);
             getAccessTokenSilently().then((accessToken: string) => {
                 axios.post("/api/admin-employee/upload", form, {
                     headers: {
                         Authorization: "Bearer " + accessToken,
                         "Content-Type": "multipart/form-data"
                     }
-                }).then();
+                }).then(() => {
+                    setRefresh(!refresh);
+                });
             });
         } catch (error) {
             console.error(error);
@@ -126,10 +133,12 @@ export default function AdminViewer() {
         console.log("Deleting all employees");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            await axios.delete("/api/admin-employee", {
+            axios.delete("/api/admin-employee", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
+            }).then(() => {
+                setRefresh(!refresh);
             });
         } catch (error) {
             console.error(error);
@@ -244,15 +253,11 @@ export default function AdminViewer() {
         );
     });
 
-    if (isLoading) {
-        return <div className="loading-center"><CircularProgress/></div>;
-    }
-
     return (
             <div className={"AD-TwoColumns2"}>
                 <div className={"AD-TestCard2"}>
                     <br/>
-                    <table className={"employee-tables"}>
+                    {loading || isLoading ? <CircularProgress/> :<table className={"employee-tables"}>
                         <thead>
                         <tr>
                             <th>Email</th>
@@ -265,7 +270,7 @@ export default function AdminViewer() {
                         <tbody>
                         {employeeList}
                         </tbody>
-                    </table>
+                    </table>}
                 </div>
                 <div className={"AD-TwoRows2"}>
                     <div className={"AD-Card3"}>

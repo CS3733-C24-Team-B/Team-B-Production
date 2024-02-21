@@ -170,29 +170,30 @@ export default function ProfilePage() {
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}
-                            <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
-                                Profile Information
+                        <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
+                            Profile Information
+                        </Typography>
+                        {(user === undefined) ? <CircularProgress/> : <div className={"profile-card-info"}>
+                            <Typography variant="body1" style={listItemStyle}>
+                                <strong>Email:</strong> {email}
                             </Typography>
-                            {(user === undefined) ? <CircularProgress/> : <div className={"profile-card-info"}>
-                                <Typography variant="body1" style={listItemStyle}>
-                                    <strong>Email:</strong> {email}
-                                </Typography>
-                                <TextField style={listItemStyle} id="standard-basic" label="First name"
-                                           variant="standard"
-                                           value={firstName}
-                                           onChange={(e) => {
-                                               setFirstName(e.target.value);
-                                           }}
-                                           required
-                                />
-                                <TextField style={listItemStyle} id="standard-basic" label="Last name"
-                                           variant="standard"
-                                           value={lastName}
-                                           onChange={(e) => {
-                                               setLastName(e.target.value);
-                                           }}
-                                           required
-                                />
+                            <TextField style={listItemStyle} id="standard-basic" label="First name"
+                                       variant="standard"
+                                       value={firstName}
+                                       onChange={(e) => {
+                                           setFirstName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <TextField style={listItemStyle} id="standard-basic" label="Last name"
+                                       variant="standard"
+                                       value={lastName}
+                                       onChange={(e) => {
+                                           setLastName(e.target.value);
+                                       }}
+                                       required
+                            />
+                            <div className={"profile-action-buttons"}>
                                 <div style={{marginTop: '20px'}}>
                                     <Button variant="contained" color="primary" onClick={submit}
                                             style={{backgroundColor: "#34AD84"}}>
@@ -221,14 +222,15 @@ export default function ProfilePage() {
                                         Log Out
                                     </Button>
                                 </div>
-                            </div>}
+                            </div>
+                        </div>}
                     </div>
                     <div className={"Profile-Card"}> {/* Increased marginTop */}
-                            <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
-                                Service Requests
-                            </Typography>
-                            {(!receivedSR) ? <CircularProgress/> : <div className={"profile-card-reqlist"}>
-                                {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq} </div>}
+                        <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
+                            Service Requests
+                        </Typography>
+                        {(!receivedSR) ? <CircularProgress/> : <div className={"profile-card-reqlist"}>
+                            {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq} </div>}
                     </div>
                 </div>
             </div>

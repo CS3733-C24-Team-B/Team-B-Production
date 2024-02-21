@@ -43,3 +43,9 @@
 .profile-card-reqlist {
     margin-left: 10%;
 }
+
+.profile-action-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 3%;
+}
