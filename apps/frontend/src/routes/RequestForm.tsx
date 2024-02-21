@@ -3,7 +3,7 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
+import ServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
 import PieChartStats from "../components/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
@@ -43,7 +43,6 @@ import InternalTransportationReq from "../components/InternalTransportRequest.ts
 import LanguageReq from "../components/LanguageRequest.tsx";
 import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
-import {useNavigate} from "react-router-dom";
 
 // Goku icon, probably should not be used in the actual build lmao //
 const GokuIcon = createSvgIcon(
@@ -122,7 +121,6 @@ const modalStyle = {
 };
 
 export default function RequestForm() {
-    const navigate = useNavigate();
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [currentTab, setCurrentTab] = React.useState("create-request");
     const [location, setLocation] = useState("");
@@ -324,8 +322,7 @@ export default function RequestForm() {
     const handleTabClick = (tab: string) => {
         switch (tab) {
             case "list-request":
-                //setCurrentTab("list-request");
-                navigate("/admin-viewer");
+                setCurrentTab("list-request");
                 return;
             case "create-request":
                 setCurrentTab("create-request");
@@ -343,7 +340,8 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}>
+                         // style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}
+                    >
                         <div className={"service-form-topcard"}>
                             <Button
                                 onClick={() => {
