@@ -22,6 +22,7 @@ import OldSettingsPage from "./routes/OldSettingsPage.tsx";
 
 import NewUITemplete from "./components/NewUITemplete.tsx";
 import AboutPage from "./routes/AboutPage.tsx";
+import About from "./routes/About.tsx";
 
 function App() {
     const router = createBrowserRouter([
@@ -122,9 +123,14 @@ function App() {
             element: <NewUITemplete/>
         },
         {
-            path: "/about",
+            path: "/about-us",
             errorElement: <div/>,
             element: <AboutPage/>
+        },
+        {
+            path: "/about",
+            errorElement: <div/>,
+            element: <About/>
         }
     ]);
 
