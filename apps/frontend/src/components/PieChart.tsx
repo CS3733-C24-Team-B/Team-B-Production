@@ -3,7 +3,6 @@ import {Pie} from 'react-chartjs-2';
 import {ChartOptions} from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
-import "../css/chart.css";
 import {useAuth0} from "@auth0/auth0-react";
 import "../css/dashboard.css";
 
@@ -75,25 +74,22 @@ export default function PieChart(){
                     font: {
                         size: 18,
                         family: 'Arial',
-                        // The color property should not be inside font for legend labels
                     },
-                    color: 'black', // Set legend text color to black here
+                    color: 'black',
                 },
-                position: 'bottom',
+                position: 'right',
             },
             tooltip: {
                 bodyFont: {
                     size: 16,
                     family: 'Arial',
-                    // The color property should not be inside font for tooltip body
                 },
-                bodyColor: 'white', // Set tooltip body text color to black here
+                bodyColor: 'white',
                 titleFont: {
                     size: 18,
                     family: 'Arial',
-                    // The color property should not be inside font for tooltip title
                 },
-                titleColor: 'white', // Set tooltip title text color to black here
+                titleColor: 'white',
             },
             title: {
                 display: true,
@@ -102,7 +98,8 @@ export default function PieChart(){
                     size: 20,
                     family: 'Arial',
                 },
-                color: 'black', // This is correctly placed for title
+                color: 'black',
+                align: 'start',
                 padding: {
                     top: 10,
                     bottom: 30,
@@ -117,6 +114,8 @@ export default function PieChart(){
     };
 
     return (
-        <Pie data={chartData} options={options}/>
+        <div className = "chart-container">
+            <Pie data={chartData} options={options}/>
+        </div>
     );
 }

@@ -4,7 +4,6 @@ import {useAuth0} from "@auth0/auth0-react";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-// import ShowData from "../routes/showData.tsx";
 import PieChart from "../components/PieChart.tsx";
 import "../css/serviceform_page.css";
 
@@ -96,8 +95,10 @@ const GokuIcon = createSvgIcon(
 
 const RequestButton = styled(Button)(() => ({
     fontSize: '2.5vh',
-    width: '80%',
-    height: '80%',
+    width: '48%',
+    height: '28%',
+    marginLeft: '1%',
+    marginTop: '1%',
     border: '2px solid black',
     color: 'black',
     backgroundColor: '#CDCCD0',
@@ -339,7 +340,7 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 60% 30%')}}>
+                         style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}>
                         <div className={"service-form-topcard"}>
                             <Button
                                 onClick={() => {

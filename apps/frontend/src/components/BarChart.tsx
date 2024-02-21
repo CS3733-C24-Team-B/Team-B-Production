@@ -4,7 +4,6 @@ import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, Lin
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 // import Navbar from "../components/Navbar.tsx";
-import "../css/chart.css";
 import {useAuth0} from "@auth0/auth0-react";
 import "../css/dashboard.css";
 

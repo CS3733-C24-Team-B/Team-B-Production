@@ -8,7 +8,6 @@ import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
 import ProfilePage from "./routes/ProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
-import ShowData from "./routes/showData.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
 
 import OldHomePage from "./routes/OldHomePage.tsx";
@@ -94,11 +93,6 @@ function App() {
             path: "/admin-viewer",
             errorElement: <div/>,
             element: <AdminViewer/>
-        },
-        {
-            path: "show-data",
-            errorElement: <div/>,
-            element: <ShowData></ShowData>
         },
         {
             path: "/old-admin-viewer",

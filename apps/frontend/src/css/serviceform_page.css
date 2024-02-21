@@ -1,7 +1,7 @@
 .service-form-Container {
     /* Positioning */
     width: 100vw;
-    height: 100vh;
+    height: 150vh;
 }
 
 .service-form-BackBlue{
@@ -9,7 +9,7 @@
     background-color: #012d5a;
 
     /* Positioning */
-    height: 90%;
+    height: 100%;
     margin-left: 15%;
     margin-top: 10vh;
 }
@@ -36,7 +36,7 @@
 .service-form-ThreeRows {
     /* Positioning */
     display: grid;
-    grid-template-rows: 6% 60% 30%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 6% 45% 45%; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
@@ -76,14 +76,6 @@
     border-radius: 15px;
 
     /* Positioning */
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 20% 26% 26% 26%;
-    grid-template-areas:
-            "s1 s1"
-            "s2 s3"
-            "s4 s5"
-            "s6 s6";
     width: 100%;
     height: 100%;
 }
