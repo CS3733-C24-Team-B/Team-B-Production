@@ -55,7 +55,7 @@ h3 {
 
 .FiveRows {
     display: grid;
-    grid-template-rows: 1% 23% 50% 17% 2%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: 4% 22% 50% 15% 2%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
     width: 100%;
     height: 100%;
@@ -72,7 +72,7 @@ h3 {
 .LabelCard {
     background-color: white;
     border-radius: 15px;
-    margin: 15% 6% auto 4vw;
+    margin: 0% 6% auto 4vw;
 }
 
 .ImageCard {

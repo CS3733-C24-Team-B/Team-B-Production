@@ -177,23 +177,28 @@ export default function NavigationPage() {
             <Divider/>
             {ChooseAlgo}
             <Divider/>
-            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
-            <input className="Settings-Color-Selector1" type="color"
-                   value={(nodeColor === null ? "#3388ff" : nodeColor!)}
-                   onChange={(e) => {
-                       localStorage.setItem("nodeColor", e.target.value);
-                       setNodeColor(e.target.value);
-                   }}/>
-            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
-            <input className="Settings-Color-Selector2" type="color"
-                   value={(edgeColor === null ? "#008000" : edgeColor!)}
-                   onChange={(e) => {
-                       localStorage.setItem("edgeColor", e.target.value);
-                       setEdgeColor(e.target.value);
-                   }}/>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+                <input className="Settings-Color-Selector1" type="color"
+                       value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("nodeColor", e.target.value);
+                           setNodeColor(e.target.value);
+                       }}/>
+            </div>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+                <input className="Settings-Color-Selector2" type="color"
+                       value={(edgeColor === null ? "#008000" : edgeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("edgeColor", e.target.value);
+                           setEdgeColor(e.target.value);
+                       }}/>
+            </div>
         </Menu>
-    );
-    topbarElems.push(<Button
+);
+topbarElems.push(
+    <Button
         sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
