@@ -12,7 +12,7 @@ import {
     FormControlLabel,
     FormGroup,
     Menu,
-    MenuItem
+    MenuItem, Switch
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -34,6 +34,7 @@ export default function NavigationPage() {
     const [nodeEnd, setNodeEnd] = useState("");
     const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor") : "#3388ff");
     const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
+    const [goku, setGoku] = useState(localStorage.getItem("goku") !== null ? localStorage.getItem("goku") === "true" : true);
     const openMenu = Boolean(menuAnchor);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
@@ -48,6 +49,11 @@ export default function NavigationPage() {
 
         fetch().then();
     }, []);
+    useEffect(() => {
+        if(!user) {
+            localStorage.removeItem("goku");
+        }
+    }, [user]);
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
     });
@@ -169,27 +175,38 @@ export default function NavigationPage() {
                 <FormControlLabel control={<Checkbox checked={doAnimation}
                                                      onClick={() => setDoAnimation(!doAnimation)}/>}
                                   label={<p className={"settings-text"}>Animate Path</p>}/>
+                {doAnimation && user ?
+                    <FormControlLabel control={<Switch checked={goku} onClick={() => {
+                        localStorage.setItem("goku", !goku + "");
+                        setGoku(!goku);
+                    }}/>}
+                                      label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
             </FormGroup>
             <Divider/>
             {ChooseAlgo}
             <Divider/>
-            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
-            <input className="Settings-Color-Selector1" type="color"
-                   value={(nodeColor === null ? "#3388ff" : nodeColor!)}
-                   onChange={(e) => {
-                       localStorage.setItem("nodeColor", e.target.value);
-                       setNodeColor(e.target.value);
-                   }}/>
-            <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
-            <input className="Settings-Color-Selector2" type="color"
-                   value={(edgeColor === null ? "#008000" : edgeColor!)}
-                   onChange={(e) => {
-                       localStorage.setItem("edgeColor", e.target.value);
-                       setEdgeColor(e.target.value);
-                   }}/>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+                <input className="Settings-Color-Selector1" type="color"
+                       value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("nodeColor", e.target.value);
+                           setNodeColor(e.target.value);
+                       }}/>
+            </div>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+                <input className="Settings-Color-Selector2" type="color"
+                       value={(edgeColor === null ? "#008000" : edgeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("edgeColor", e.target.value);
+                           setEdgeColor(e.target.value);
+                       }}/>
+            </div>
         </Menu>
-    );
-    topbarElems.push(<Button
+);
+topbarElems.push(
+    <Button
         sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
@@ -221,7 +238,8 @@ export default function NavigationPage() {
                                     changeTopbar={setNodeEnd}
                                     changeDrawer={setOpenDrawer}
                                     nodeColor={nodeColor!}
-                                    edgeColor={edgeColor!}/>
+                                    edgeColor={edgeColor!}
+                                    goku={goku}/>
                     </div>
                 </div>
             </div>
