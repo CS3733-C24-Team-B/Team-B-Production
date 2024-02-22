@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Typography, Button, TextField, CircularProgress, Snackbar, Alert, List} from '@mui/material';
+import {Typography, Button, TextField, CircularProgress, Snackbar, Alert} from '@mui/material';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
@@ -109,25 +109,23 @@ export default function ProfilePage() {
         submit().then();
     }, [getAccessTokenSilently, user, isAuthenticated]);
 
-    const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
+    const listItemStyle = {marginLeft: '20px', marginBottom: '20px', fontFamily: 'Lato'};
 
     const arrayReq = srData.map((nsr: ServiceRequest) =>
-        <List>
-            {((nsr.assignedID === email) ? <div key={nsr.serviceID} style={listItemStyle}>
-                <Typography>
-                    <strong>Requester:</strong> {getNameOrEmail(nsr.createdByID)}
-                </Typography>
-                <Typography>
-                    <strong>Type:</strong> {RequestType[getReqType(nsr) as keyof typeof RequestType]}
-                </Typography>
-                <Typography>
-                    <strong>Priority:</strong> {nsr.priority}
-                </Typography>
-                <Typography>
-                    <strong>Status:</strong> {nsr.status}
-                </Typography>
-            </div> : null)}
-        </List>
+        ((nsr.assignedID === email) ? <div key={nsr.serviceID} style={listItemStyle}>
+            <Typography>
+                <strong>Requester:</strong> {getNameOrEmail(nsr.createdByID)}
+            </Typography>
+            <Typography>
+                <strong>Type:</strong> {RequestType[getReqType(nsr) as keyof typeof RequestType]}
+            </Typography>
+            <Typography>
+                <strong>Priority:</strong> {nsr.priority}
+            </Typography>
+            <Typography>
+                <strong>Status:</strong> {nsr.status}
+            </Typography>
+        </div> : null)
     );
 
     function allNull(arr: (object | null)[]) {
@@ -170,7 +168,7 @@ export default function ProfilePage() {
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}
-                        <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
+                        <Typography variant="h5" gutterBottom style={listItemStyle}>
                             Profile Information
                         </Typography>
                         {(user === undefined) ? <CircularProgress/> : <div className={"profile-card-info"}>
@@ -196,7 +194,7 @@ export default function ProfilePage() {
                             <div className={"profile-action-buttons"}>
                                 <div style={{marginTop: '20px'}}>
                                     <Button variant="contained" color="primary" onClick={submit}
-                                            style={{backgroundColor: "#34AD84"}}>
+                                            style={{backgroundColor: "#34AD84", fontFamily: 'Lato'}}>
                                         Update Info
                                     </Button>
                                 </div>
@@ -226,7 +224,7 @@ export default function ProfilePage() {
                         </div>}
                     </div>
                     <div className={"Profile-Card"}> {/* Increased marginTop */}
-                        <Typography variant="h5" gutterBottom style={{marginLeft: '5%'}}>
+                        <Typography variant="h5" gutterBottom style={listItemStyle}>
                             Service Requests
                         </Typography>
                         {(!receivedSR) ? <CircularProgress/> : <div className={"profile-card-reqlist"}>

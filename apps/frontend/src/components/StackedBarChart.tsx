@@ -52,10 +52,10 @@ export default function StackedBarChart() {
         }
     });
     const priorityColors: Record<Priority, string> = {
-        Low: 'blue',
-        Medium: 'yellow',
-        High: 'orange',
-        Emergency: 'red', // Set Emergency to red
+        Low: 'rgba(44,208,158,255)',
+        Medium: 'rgba(71,136,254,255)',
+        High: 'rgba(255,208,119,255)',
+        Emergency: 'rgba(252,74,122,255)',
     };
 
     const datasets = Object.entries(priorityStatusCounts).map(([priority, statuses]) => ({
@@ -65,7 +65,7 @@ export default function StackedBarChart() {
     }));
 
     const stackBarData = {
-        labels: ["Paused", "Completed", "InProgress", "Assigned", "Unassigned"],
+        labels: ["Paused", "Completed", "In Progress", "Assigned", "Unassigned"],
         datasets,
     };
 
@@ -87,8 +87,15 @@ export default function StackedBarChart() {
             },
             y: {
                 stacked: true,
+                beginAtZero: true,
                 ticks: {
-                    color: 'black'
+                    color: 'black',
+                    // Explicitly type the parameter as a number to resolve TS7006
+                    callback: function(value: number) {
+                        if (value % 1 === 0) { // Check if the value is an integer
+                            return value;
+                        }
+                    }
                 },
                 title: {
                     display: true,
