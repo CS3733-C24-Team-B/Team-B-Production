@@ -63,7 +63,13 @@ export default function BarChart() {
             },
             y: {
                 ticks: {
-                    color: 'black', // Ensures y-axis tick labels are black
+                    color: 'black',
+                    // Explicitly type the parameter as a number to resolve TS7006
+                    callback: function(value: number) {
+                        if (value % 1 === 0) { // Check if the value is an integer
+                            return value;
+                        }
+                    }
                 },
                 title: {
                     display: true,
