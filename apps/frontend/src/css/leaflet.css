@@ -94,6 +94,10 @@
     font-family: Lato;
 }
 
+.floor-change-text {
+    color: #34AD84;
+}
+
 .floor-buttons {
     z-index: 1000;
     background-color: white;

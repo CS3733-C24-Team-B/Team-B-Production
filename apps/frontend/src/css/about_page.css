@@ -5,9 +5,9 @@
     grid-template-columns: 49% 49%; /* column ratios are split, also accounts for 2% gap */
     grid-template-rows: auto;
     grid-column-gap: 2%;
-    width: 95%;
     height: 100%;
     margin-left: 2%;
+    margin-right: 2%;
 }
 
 .About-TestCard{
@@ -18,10 +18,12 @@
     display: grid;
     grid-template-columns: 39% 61%;
     grid-template-rows: auto;
+    height: 100%;
 }
 
 .ProfilePicture {
-    margin: 15%;
+    margin-left: 15%;
+    align-self: center;
     width: 70%;
     border-radius: 50%;
 }
@@ -29,13 +31,14 @@
 .TextBox {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     margin-right: 5%;
-    margin-bottom: 5%;
     font-family: Lato, serif;
 }
 
 h2 {
     margin-bottom: 0;
+    margin-top: 0;
     font-size: 200%;
 }
 
@@ -52,17 +55,18 @@ h3 {
 
 .FiveRows {
     display: grid;
-    grid-template-rows: 3% 28% 54% 13% 2%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: 1% 23% 50% 17% 2%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
     width: 100%;
     height: 100%;
+    grid-row-gap: 2%;
 }
 
 .About-NameColumns{
     display: grid;
     grid-template-rows: 17% 17% 17% 17% 17%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
-    gap: 2%;
+    grid-row-gap: 2%;
 }
 
 .LabelCard {

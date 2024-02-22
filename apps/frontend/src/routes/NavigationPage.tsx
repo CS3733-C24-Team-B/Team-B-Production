@@ -12,7 +12,7 @@ import {
     FormControlLabel,
     FormGroup,
     Menu,
-    MenuItem
+    MenuItem, Switch
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -34,6 +34,7 @@ export default function NavigationPage() {
     const [nodeEnd, setNodeEnd] = useState("");
     const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor") : "#3388ff");
     const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
+    const [goku, setGoku] = useState(false);
     const openMenu = Boolean(menuAnchor);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
@@ -169,6 +170,9 @@ export default function NavigationPage() {
                 <FormControlLabel control={<Checkbox checked={doAnimation}
                                                      onClick={() => setDoAnimation(!doAnimation)}/>}
                                   label={<p className={"settings-text"}>Animate Path</p>}/>
+                {doAnimation ?
+                    <FormControlLabel control={<Switch checked={goku} onClick={() => setGoku(!goku)}/>}
+                                      label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
             </FormGroup>
             <Divider/>
             {ChooseAlgo}
@@ -221,7 +225,8 @@ export default function NavigationPage() {
                                     changeTopbar={setNodeEnd}
                                     changeDrawer={setOpenDrawer}
                                     nodeColor={nodeColor!}
-                                    edgeColor={edgeColor!}/>
+                                    edgeColor={edgeColor!}
+                                    goku={goku}/>
                     </div>
                 </div>
             </div>
