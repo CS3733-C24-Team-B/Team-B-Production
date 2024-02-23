@@ -7,6 +7,7 @@ import NavigationIcon from "@mui/icons-material/Navigation";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from '@mui/icons-material/Info';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 export default function TempNavbar() {
 
@@ -174,6 +175,24 @@ export default function TempNavbar() {
                         }}/>}
                         href={"/about"}>
                     About {/*about icon*/}
+                </Button>
+
+                <Button sx={{
+                    color: 'white', width: '80%', textTransform: 'none',
+                    borderBottom: (currentRoute() === "/about") ? '0.7vh solid #34AD84' : ''
+                }}
+                        style={{
+                            justifyContent: "flex-start",
+                            marginLeft: '5%',
+                            fontSize: '125%',
+                            fontFamily: 'Lato'
+                        }}
+                        startIcon={<CreditCardIcon style={{
+                            fontSize: "150%",
+                            minWidth: 40,
+                            color: (currentRoute() === "/about") ? '#34AD84' : 'white'
+                        }}/>}>
+                    Credits {/*about icon*/}
                 </Button>
             </div>
         </div>

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {
-    Box, Button,
+    Box,
     CircularProgress,
-    Collapse, Dialog, DialogActions, DialogTitle, FormControl, IconButton,
-    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+    Collapse, FormControl, IconButton,
+    Menu, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -15,14 +15,12 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import ReportIcon from '@mui/icons-material/Report';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {
     InternalTransportRequest, LanguageRequest,
     MaintenanceRequest, MedicineRequest, PriorityType,
     RequestType,
     SanitationRequest,
-    StatusType,
-    UpdateRequest
+    StatusType
 } from "common/src/serviceRequestTypes.ts";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
@@ -82,7 +80,6 @@ export default function ServiceRequestTable() {
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     const [nodeData, setNodeData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
-    const [refresh, setRefresh] = useState(false);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
     const [typeFilter, setTypeFilter] = useState<string>("Choose Type");
     const [priorityFilter, setPriorityFilter] = useState<string>("Choose Priority");
@@ -122,11 +119,7 @@ export default function ServiceRequestTable() {
         }
 
         fetch().then();
-    }, [refresh, getAccessTokenSilently]);
-
-    const statuses = Object.keys(StatusType).filter((item) => {
-        return isNaN(Number(item));
-    });
+    }, [getAccessTokenSilently]);
 
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
@@ -241,7 +234,6 @@ export default function ServiceRequestTable() {
     function Row(props: { nsr: ServiceRequest }) {
         const {nsr} = props;
         const [open, setOpen] = React.useState(false);
-        const [dialogOpen, setDialogOpen] = React.useState(false);
 
         return (
             <>
@@ -279,124 +271,20 @@ export default function ServiceRequestTable() {
                         RequestType[getReqType(nsr) as keyof typeof RequestType]
                     }</TableCell>
                     <TableCell>
-                        <Select
-                            value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
-                            onChange={async (event: SelectChangeEvent) => {
-
-                                const serviceRequest: UpdateRequest = {
-                                    serviceID: nsr.serviceID,
-                                    assignedTo: event.target.value,
-                                    status: StatusType[nsr.status as keyof typeof StatusType]
-                                };
-
-                                if (nsr.status === StatusType.Unassigned) {
-                                    serviceRequest.status = StatusType.Assigned;
-                                }
-
-                                getAccessTokenSilently().then((accessToken: string) => {
-                                    axios.put("/api/service-request", serviceRequest, {
-                                        headers: {
-                                            Authorization: "Bearer " + accessToken
-                                        }
-                                    }).then(() => {
-                                        setRefresh(!refresh);
-                                    });
-                                });
-
-                            }}
-                            sx={{fontSize: 15}}>
-                            {employeeData.map(({email, firstName, lastName}) =>
-                                <MenuItem
-                                    value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                            )}
-                        </Select>
+                        {getNameOrEmail(nsr.assignedID)}
                     </TableCell>
-                    <TableCell>
-                        <Select
-                            defaultValue={StatusType.Unassigned}
-                            style={{
-                                'Unassigned': {color: "crimson"},
-                                'Assigned': {color: "deepskyblue"},
-                                'In Progress': {color: "turquoise"},
-                                'Completed': {color: "limegreen"},
-                                'Paused': {color: "mediumpurple"}
-                            }[nsr.status]}
-                            value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
-                            onChange={async (event: SelectChangeEvent) => {
-                                const serviceRequest: UpdateRequest = {
-                                    serviceID: nsr.serviceID,
-                                    assignedTo: nsr.assignedID,
-                                    status: StatusType[event.target.value as keyof typeof StatusType]
-                                };
-
-                                getAccessTokenSilently().then((accessToken: string) => {
-                                    axios.put("/api/service-request", serviceRequest, {
-                                        headers: {
-                                            Authorization: "Bearer " + accessToken
-                                        }
-                                    }).then(() => {
-                                        setRefresh(!refresh);
-                                    });
-                                });
-                            }}
-                            sx={{fontSize: 15}}>
-                            {statuses.map((st) =>
-                                <MenuItem value={st} style={{
-                                    'Unassigned': {color: "lightcoral"},
-                                    'Assigned': {color: "deepskyblue"},
-                                    'InProgress': {color: "turquoise"},
-                                    'Completed': {color: "limegreen"},
-                                    'Paused': {color: "mediumpurple"}
-                                }[st]}>{StatusType[st as keyof typeof StatusType]}</MenuItem>
-                            )}
-                        </Select>
+                    <TableCell style={{
+                        'Unassigned': {color: "crimson"},
+                        'Assigned': {color: "deepskyblue"},
+                        'In Progress': {color: "turquoise"},
+                        'Completed': {color: "limegreen"},
+                        'Paused': {color: "mediumpurple"}
+                    }[nsr.status]}>
+                        {StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "In Progress"}
                     </TableCell>
                     <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
                     <TableCell>{getNameOrEmail(nsr.createdByID)}</TableCell>
-                    <TableCell>
-                        <Button
-                            variant="outlined"
-                            style={{color: "#012D5A"}}
-                            onClick={() => {
-                                setDialogOpen(true);
-                            }}>
-                            <DeleteIcon/>
-                        </Button>
-                    </TableCell>
                 </TableRow>
-                <Dialog
-                    open={dialogOpen}
-                    onClose={() => {
-                        setDialogOpen(false);
-                    }}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                        {"Are you sure you want to delete that request?"}
-                    </DialogTitle>
-                    <DialogActions>
-                        <Button onClick={() => {
-                            getAccessTokenSilently().then((accessToken: string) => {
-                                axios.delete("/api/service-request", {
-                                    data: {
-                                        serviceID: nsr.serviceID
-                                    },
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken
-                                    }
-                                }).then();
-                            });
-                            setRefresh(!refresh);
-                            setDialogOpen(false);
-                        }}>Yes</Button>
-                        <Button onClick={() => {
-                            setDialogOpen(false);
-                        }} autoFocus>
-                            No
-                        </Button>
-                    </DialogActions>
-                </Dialog>
                 {open ? <TableRow>
                     <TableCell/>
                     <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={8}>
@@ -539,7 +427,7 @@ export default function ServiceRequestTable() {
             {(!receivedSR) ? <CircularProgress className="center-text"/> :
                 <ThemeProvider theme={latoTheme}>
                     <TableContainer component={Paper} className="service-tables"
-                                    sx={{maxHeight: "70vh"}}>
+                                    sx={{maxHeight: "68vh"}}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
@@ -558,7 +446,7 @@ export default function ServiceRequestTable() {
                                         }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Time Created
+                                        Time <br/> Created
                                         <IconButton style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.timeCreated);
@@ -572,7 +460,7 @@ export default function ServiceRequestTable() {
                                         }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Assigned To
+                                        Assigned <br/> To
                                         <IconButton style={{color: (typeSort === "assignedTo" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.assignedTo);
@@ -593,13 +481,12 @@ export default function ServiceRequestTable() {
                                         }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Created by
+                                        Created <br/> by
                                         <IconButton style={{color: (typeSort === "createdBy" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.createdBy);
                                         }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
-                                    <TableCell/>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -608,7 +495,7 @@ export default function ServiceRequestTable() {
                                         <TableCell/>
                                         <TableCell/>
                                         <TableCell/>
-                                        <TableCell colSpan={6}>
+                                        <TableCell colSpan={5}>
                                             <p>No {{
                                                 'Status': "service requests that are " + statusFilter,
                                                 'Type': typeFilter + " service requests",
@@ -621,7 +508,7 @@ export default function ServiceRequestTable() {
                                         <TableCell/>
                                         <TableCell/>
                                         <TableCell/>
-                                        <TableCell colSpan={6}>
+                                        <TableCell colSpan={5}>
                                             <p>No service requests.</p>
                                         </TableCell>
                                     </TableRow>)}

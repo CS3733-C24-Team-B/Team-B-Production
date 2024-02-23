@@ -36,7 +36,7 @@
 .service-form-ThreeRows {
     /* Positioning */
     display: grid;
-    grid-template-rows: 6% 45% 45%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 6% 50% 40%; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
@@ -106,8 +106,7 @@
 }
 
 .service-form-ReqList {
-    height: 30vh;
-    max-height: 30vh;
+    height: 100%;
 }
 
 .top-space {
