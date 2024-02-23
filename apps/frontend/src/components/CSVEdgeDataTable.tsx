@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Button, CircularProgress} from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useAuth0} from "@auth0/auth0-react";
 import {Edge} from "database";
@@ -8,7 +7,28 @@ import {styled} from "@mui/material/styles";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import SwapVertIcon from "@mui/icons-material/SwapVert";
+import {
+    Button, CircularProgress, IconButton, Paper,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+} from "@mui/material";
+import {ThemeProvider, createTheme} from "@mui/material/styles";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+
+const latoTheme = createTheme({
+    components: {
+        // Name of the component
+        MuiTableCell: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    // Some CSS
+                    fontFamily: 'Lato',
+                },
+            },
+        },
+    },
+});
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -30,6 +50,7 @@ export default function CSVEdgeDataTable() {
     const [sortUp, setSortUp] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [typeSort, setTypeSort] = useState<keyof typeof edgeSortField>();
 
     useEffect(() => {
         async function fetch() {
@@ -60,15 +81,16 @@ export default function CSVEdgeDataTable() {
         if (!sortUp) {
             edgesCopy = edgesCopy.reverse();
         }
+        setTypeSort(edgeSortField[sortField] as keyof typeof edgeSortField);
         setEdgeData(edgesCopy);
     }
 
-    const arrayEdge = edgeData.map((edge: Edge, i) =>
-        <tr key={i}>
-            <td>{edge.edgeID}</td>
-            <td>{edge.startNodeID}</td>
-            <td>{edge.endNodeID}</td>
-        </tr>
+    const arrayEdge = edgeData.map((edge: Edge) =>
+        <TableRow>
+            <TableCell>{edge.edgeID}</TableCell>
+            <TableCell>{edge.startNodeID}</TableCell>
+            <TableCell>{edge.endNodeID}</TableCell>
+        </TableRow>
     );
 
     function uploadFile() {
@@ -172,37 +194,48 @@ export default function CSVEdgeDataTable() {
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
                 <br/>
-                {loading ? <CircularProgress/> :
-                    <table className={"tables"}>
-                        <thead>
-                        <tr>
-                            <th>
-                                Edge ID
-                                <button onClick={() => {
-                                    setSortUp(!sortUp);
-                                    sortEdges(edgeSortField.edgeID);
-                                }}><SwapVertIcon/></button>
-                            </th>
-                            <th>
-                                Start Node
-                                <button onClick={() => {
-                                    setSortUp(!sortUp);
-                                    sortEdges(edgeSortField.startNodeID);
-                                }}><SwapVertIcon/></button>
-                            </th>
-                            <th>
-                                End Node
-                                <button onClick={() => {
-                                    setSortUp(!sortUp);
-                                    sortEdges(edgeSortField.endNodeID);
-                                }}><SwapVertIcon/></button>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {arrayEdge}
-                        </tbody>
-                    </table>}
+                {loading ? <CircularProgress className="center-text"/> :
+                    <ThemeProvider theme={latoTheme}>
+                        <TableContainer component={Paper} className="service-tables"
+                                        sx={{maxHeight: "70vh"}}>
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>
+                                            Edge ID
+                                            <IconButton style={{color: (typeSort === "edgeID" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEdges(edgeSortField.edgeID);
+                                            }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Start Node
+                                            <IconButton style={{color: (typeSort === "startNodeID" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEdges(edgeSortField.startNodeID);
+                                            }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            End Node
+                                            <IconButton style={{color: (typeSort === "endNodeID" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEdges(edgeSortField.endNodeID);
+                                            }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {arrayEdge}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </ThemeProvider>}
             </div>
             <div className={"AD-TwoRows2"}>
                 <div className={"AD-Card3"}>

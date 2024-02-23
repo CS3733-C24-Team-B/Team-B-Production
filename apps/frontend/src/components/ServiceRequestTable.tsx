@@ -26,7 +26,8 @@ import {
 } from "common/src/serviceRequestTypes.ts";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
-import SwapVertIcon from "@mui/icons-material/SwapVert";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 type ServiceRequest = {
     serviceID: number,
@@ -93,8 +94,9 @@ export default function ServiceRequestTable() {
     });
     const openMenu = Boolean(menuAnchor);
     const [receivedSR, setReceivedSR] = useState(false);
-    const [sortUp, setSortUp] = useState(true);
+    const [sortUp, setSortUp] = useState(false);
     const [beingSorted, setBeingSorted] = useState(false);
+    const [typeSort, setTypeSort] = useState<keyof typeof requestSortField>("timeCreated");
 
     console.log(isAuthenticated);
 
@@ -202,7 +204,7 @@ export default function ServiceRequestTable() {
     }
 
     function sortRequests(sortField: requestSortField) {
-        let requestsCopy: ServiceRequest[] = [...filterSR];
+        let requestsCopy: ServiceRequest[] = [...srData];
         switch (sortField) {
             case requestSortField.priority:
                 requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.priority.localeCompare(b.priority));
@@ -229,6 +231,7 @@ export default function ServiceRequestTable() {
         if (!sortUp) {
             requestsCopy = requestsCopy.reverse();
         }
+        setTypeSort(requestSortField[sortField] as keyof typeof requestSortField);
         setBeingSorted(true);
         setSRData(requestsCopy);
     }
@@ -536,7 +539,7 @@ export default function ServiceRequestTable() {
             {(!receivedSR) ? <CircularProgress className="center-text"/> :
                 <ThemeProvider theme={latoTheme}>
                     <TableContainer component={Paper} className="service-tables"
-                                    sx={{width: 1205, maxHeight: "70vh"}}>
+                                    sx={{maxHeight: "70vh"}}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
@@ -549,52 +552,52 @@ export default function ServiceRequestTable() {
                                     </TableCell>
                                     <TableCell>
                                         Priority
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "priority" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.priority);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Time Created
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "timeCreated" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.timeCreated);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Type
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "type" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.type);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Assigned To
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "assignedTo" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.assignedTo);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Status
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "status" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.status);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Location
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "location" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.location);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Created by
-                                        <button onClick={() => {
+                                        <IconButton style={{color: (typeSort === "createdBy" ? "#34AD84" : "")}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.createdBy);
-                                        }}><SwapVertIcon/></button>
+                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
                                     </TableCell>
                                     <TableCell/>
                                 </TableRow>

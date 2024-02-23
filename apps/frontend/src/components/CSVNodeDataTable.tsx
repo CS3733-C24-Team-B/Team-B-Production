@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Button, CircularProgress} from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useAuth0} from "@auth0/auth0-react";
 import {Node} from "database";
@@ -8,7 +7,15 @@ import {styled} from "@mui/material/styles";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
+import {
+    Button, CircularProgress, FormControl, IconButton, Menu, MenuItem, Paper, Select,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+} from "@mui/material";
+import {ThemeProvider, createTheme} from "@mui/material/styles";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import Divider from "@mui/material/Divider";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -22,17 +29,41 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+const latoTheme = createTheme({
+    components: {
+        // Name of the component
+        MuiTableCell: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    // Some CSS
+                    fontFamily: 'Lato',
+                },
+            },
+        },
+    },
+});
+
 enum nodeSortField {
     off, nodeID, xCoord, yCoord, floor,
     building, nodeType, longName, shortName
 }
 
-export default function CSVNodeDataTable(){
+export default function CSVNodeDataTable() {
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState<Node[]>([]);
     const [sortUp, setSortUp] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [typeSort, setTypeSort] = useState<keyof typeof nodeSortField>();
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [filterType, setFilterType] = useState("none");
+    const [filterFunction, setFilterFunction] = useState<(node: Node) => boolean>(() => () => {
+        return true;
+    });
+    const filterOptions = new Set<string>();
+    const [filterVal, setFilterVal] = useState("None");
+    const openMenu = Boolean(menuAnchor);
 
     useEffect(() => {
         async function fetch() {
@@ -78,20 +109,23 @@ export default function CSVNodeDataTable(){
         if (!sortUp) {
             nodesCopy = nodesCopy.reverse();
         }
+        setTypeSort(nodeSortField[sortField] as keyof typeof nodeSortField);
         setNodeData(nodesCopy);
     }
 
-    const arrayNode = nodeData.map((node: Node, i: number) =>
-        <tr key={i}>
-            <td>{node.nodeID}</td>
-            <td>{node.xcoord}</td>
-            <td>{node.ycoord}</td>
-            <td>{node.floor}</td>
-            <td>{node.building}</td>
-            <td>{node.nodeType}</td>
-            <td>{node.longName}</td>
-            <td>{node.shortName}</td>
-        </tr>
+    const filterNode = nodeData.filter(filterFunction);
+
+    const arrayNode = filterNode.map((node: Node) =>
+        <TableRow>
+            <TableCell>{node.nodeID}</TableCell>
+            <TableCell>{node.xcoord}</TableCell>
+            <TableCell>{node.ycoord}</TableCell>
+            <TableCell>{node.floor}</TableCell>
+            <TableCell>{node.building}</TableCell>
+            <TableCell>{node.nodeType}</TableCell>
+            <TableCell>{node.longName}</TableCell>
+            <TableCell>{node.shortName}</TableCell>
+        </TableRow>
     );
 
     function uploadFile() {
@@ -189,78 +223,184 @@ export default function CSVNodeDataTable(){
         }
     }
 
+    function fillOptions(nodeKey: keyof Node) {
+        filterOptions.clear();
+        nodeData.forEach((node) => {
+            filterOptions.add(node[nodeKey] + "");
+        });
+    }
+
+    function FilterSelect(props: { nodeKey: keyof Node }) {
+        const {nodeKey} = props;
+        fillOptions(nodeKey);
+        const arr : string[] = [];
+        const iter = filterOptions.values();
+        for(const str of iter) {
+            arr.push(str);
+        }
+
+        return (
+            <>
+                <Divider/>
+                <Select
+                    value={filterVal}
+                    label=""
+                    onChange={(e) => {
+                        setFilterVal(e.target.value);
+                        setFilterFunction(() => (node: Node) => {
+                            return e.target.value === "None" || node[nodeKey] === e.target.value;
+                        });
+                    }}
+                >
+                    <MenuItem value={"None"}>{"None"}</MenuItem>
+                    {arr.map((str) => (
+                        <MenuItem value={str}>{str}</MenuItem>
+                    ))}
+                </Select>
+            </>
+        );
+    }
+
     return (
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
+                <Menu
+                    open={openMenu}
+                    onClose={() => {
+                        setMenuAnchor(null);
+                    }}
+                    anchorEl={menuAnchor}>
+                    <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
+                        <Select
+                            value={filterType}
+                            label=""
+                            onChange={(e) => {
+                                setFilterVal("None");
+                                setFilterType(e.target.value);
+                                setFilterFunction(() => () => {
+                                    return true;
+                                });
+                            }}
+                        >
+                            <MenuItem value={"none"}>None</MenuItem>
+                            <MenuItem value={"floor"}>Floor</MenuItem>
+                            <MenuItem value={"building"}>Building</MenuItem>
+                            <MenuItem value={"nodeType"}>Node Type</MenuItem>
+                        </Select>
+                        {({
+                            'floor': <FilterSelect nodeKey={'floor'} />,
+                            'building': <FilterSelect nodeKey={'building'} />,
+                            'nodeType': <FilterSelect nodeKey={'nodeType'} />,
+                            'none': <></>
+                        }[filterType])}
+                    </FormControl>
+                </Menu>
+                <IconButton onClick={(e) => {
+                    setMenuAnchor(e.currentTarget);
+                }} style={{borderRadius: 0, width: 72}}>
+                    <FilterListIcon/>
+                </IconButton>
                 <br/>
-                {loading ? <CircularProgress/> : <table className={"tables"}>
-                    <thead>
-                    <tr>
-                        <th>
-                            Node ID
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.nodeID);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            X-Coordinate
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.xCoord);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Y-Coordinate
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.yCoord);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Floor
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.floor);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Building
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.building);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Node Type
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.nodeType);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Long Name
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.longName);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                        <th>
-                            Short Name
-                            <button onClick={() => {
-                                setSortUp(!sortUp);
-                                sortNodes(nodeSortField.shortName);
-                            }}><SwapVertIcon/></button>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {arrayNode}
-                    </tbody>
-                </table>}
+                {loading ? <CircularProgress className="center-text"/> :
+                    <ThemeProvider theme={latoTheme}>
+                        <TableContainer component={Paper} className="service-tables"
+                                        sx={{maxHeight: "70vh"}}>
+                            <Table stickyHeader>
+                                <colgroup>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                    <col width="12.5%"/>
+                                </colgroup>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>
+                                            Node ID
+                                            <IconButton style={{color: (typeSort === "nodeID" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.nodeID);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            X-Coord
+                                            <IconButton style={{color: (typeSort === "xCoord" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.xCoord);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Y-Coord
+                                            <IconButton style={{color: (typeSort === "yCoord" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.yCoord);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Floor
+                                            <IconButton style={{color: (typeSort === "floor" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.floor);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Building
+                                            <IconButton style={{color: (typeSort === "building" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.building);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Node Type
+                                            <IconButton style={{color: (typeSort === "nodeType" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.nodeType);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Long Name
+                                            <IconButton style={{color: (typeSort === "longName" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.longName);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Short Name
+                                            <IconButton style={{color: (typeSort === "shortName" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortNodes(nodeSortField.shortName);
+                                                        }}>{sortUp ? <ArrowUpwardIcon/> :
+                                                <ArrowDownwardIcon/>}</IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {arrayNode}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </ThemeProvider>}
             </div>
             <div className={"AD-TwoRows2"}>
-            <div className={"AD-Card3"}>
+                <div className={"AD-Card3"}>
                     <p className={"AD-head"}>Actions</p>
                     <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
                             style={{
