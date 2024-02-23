@@ -92,6 +92,11 @@ model Employee {
   email            String           @id
   firstName        String?
   lastName         String?
+  profilePicture   String?
+  jobTitle         String?
+  department       String?
+  birthday         DateTime?
+  phoneNumber      String?
   requestsCreated  ServiceRequest[] @relation("Created")
   requestsAssigned ServiceRequest[] @relation("Assigned")
 }

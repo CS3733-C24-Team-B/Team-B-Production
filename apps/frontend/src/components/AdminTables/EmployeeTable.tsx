@@ -64,7 +64,7 @@ export default function AdminViewer() {
             form.append("employeeFile", employeeFile.files![0]);
             setLoading(true);
             getAccessTokenSilently().then((accessToken: string) => {
-                axios.post("/api/admin-employee/upload", form, {
+                axios.post("/api/employee/upload", form, {
                     headers: {
                         Authorization: "Bearer " + accessToken,
                         "Content-Type": "multipart/form-data"
@@ -83,7 +83,7 @@ export default function AdminViewer() {
 
         try {
             const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/admin-employee/download", {
+            const res = await axios.get("/api/employee/download", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
@@ -108,7 +108,7 @@ export default function AdminViewer() {
         console.log("Downloading employee CSV template");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/admin-employee/download-template", {
+            const res = await axios.get("/api/employee/download-template", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
@@ -133,7 +133,7 @@ export default function AdminViewer() {
         console.log("Deleting all employees");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            axios.delete("/api/admin-employee", {
+            axios.delete("/api/employee", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
