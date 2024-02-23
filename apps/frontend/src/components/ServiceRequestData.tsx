@@ -19,24 +19,25 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
                 }
             });
             setsrData(res.data);
-            const res2 = await axios.get(`/api/employee/${user!.email!}`, {
-                params: {
-                    email: user!.email!
-                },
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
+            if(isAuthenticated) {
+                const res2 = await axios.get(`/api/employee/${user!.email!}`, {
+                    params: {
+                        email: user!.email!
+                    },
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
 
-            setEmail(res2.data.email);
-
+                setEmail(res2.data.email);
+            }
 
             const res3 = await axios.get("/api/nodes/read");
             setNodeData(res3.data);
         }
 
         fetchData();
-    }, [getAccessTokenSilently,user]);
+    }, [getAccessTokenSilently, isAuthenticated, user]);
 
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
@@ -59,7 +60,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
     let recentRequests:ServiceRequest[] = [];
     srData.forEach(item => {
         if(item.status===StatusType.Completed){completedCount++;}
-        if(item.assignedTo.email===email){
+        if(item.assignedTo!==null&&item.assignedTo.email===email){
             assignedCount++;
             myRequests.push(item);
         }
@@ -113,9 +114,9 @@ if(dataType==="completed") {
         return (
             <div>
                 <ul>{myRequests.map(obj =>
-                    <div><div style={{color:"green",fontSize:26}}>{getReqType(obj)}</div>
-                        <div style={{fontSize:26}}>Request</div>
-                        <div style={{fontSize:18, marginBlockEnd:20}}>Priority: {obj.priority}<br/>
+                    <div><div style={{color:"green",fontSize:20}}>{getReqType(obj)}</div>
+                        <div style={{fontSize:20}}>Request</div>
+                        <div style={{fontSize:14, marginBlockEnd:12}}>Priority: {obj.priority}<br/>
                         Location: {nodeIDtoName(obj.locationID)}<br/>
                         Notes: {obj.notes}</div></div>)}</ul>
             </div>
@@ -124,10 +125,10 @@ if(dataType==="completed") {
     if(dataType==="recents") {
         return (
             <div>
-                <ul>{recentRequests.slice(0,10).map(obj =>
+                <ul>{recentRequests.slice(0,6).map(obj =>
                       <div>
-                          <div style={{fontSize:26}}>{getReqType(obj)} Request</div>
-                        <div style={{fontSize:18, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
+                          <div style={{fontSize:18}}>{getReqType(obj)} Request</div>
+                        <div style={{fontSize:12, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
             </div>
         );
     }

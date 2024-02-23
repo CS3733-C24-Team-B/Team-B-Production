@@ -7,12 +7,17 @@ import AuthenticationButton from "../components/AuthenticationButton.tsx";
 import axios from "axios";
 import {Button} from "@mui/material";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import PieChart from "../components/PieChart.tsx";
+
+import ServiceRequestData from "../components/ServiceRequestData.tsx";
+
 import {
     InternalTransportRequest, LanguageRequest,
     MaintenanceRequest,
     MedicineRequest,
     SanitationRequest
 } from "common/src/serviceRequestTypes.ts";
+
 
 type ServiceRequest = {
     serviceID: number,
@@ -33,7 +38,7 @@ type ServiceRequest = {
 }
 
 export default function ProfilePage() {
-    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
+    const {user, isAuthenticated, getAccessTokenSilently, logout} = useAuth0();
     const [employeeData, setEmployeeData] = useState([]);
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
 
@@ -61,6 +66,7 @@ export default function ProfilePage() {
     const filterSR = srData.filter((sr: ServiceRequest) => {
         return sr.assignedID === user!.email!;
     });
+    console.log(filterSR);
 
     function getNameOrEmail(userEmail: string) {
         let outFirst = "";
@@ -75,6 +81,26 @@ export default function ProfilePage() {
             }
         });
         return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
+    }
+
+    function getCompleted() {
+        return ServiceRequestData("completed");
+    }
+
+    function getAssigned() {
+        return ServiceRequestData("assigned");
+    }
+
+    function getAvailable() {
+        return ServiceRequestData("available");
+    }
+
+    function getRequests() {
+        return ServiceRequestData("requests");
+    }
+
+    function getRecents() {
+        return ServiceRequestData("recents");
     }
 
 
@@ -98,38 +124,45 @@ export default function ProfilePage() {
                                     Update Info
                                 </Button>
                                 <Button variant="contained" color="primary"
-                                        style={{backgroundColor: "#34AD84"}}>
+                                        style={{backgroundColor: "#34AD84"}} onClick={()=>logout()}>
                                     Log Out
                                 </Button>
                             </div>
+                            </div>
+                        <div className={"Profile-page-bottom-TestCard"}>
+                            <p className={"Profile-page-top-infotext"}>Requests Completed</p>
+                            <p className={"Profile-page-top-infotext"}> {getRecents()} </p>
                         </div>
-                        <div className={"Profile-page-bottom-TestCard"}></div>
                     </div>
                     <div className={"Profile-page-ThreeRows"}>
                         <div className={"ThreeColumnsFirstRow"}>
-                            <div className={"Profile-page-top-infocards"}>
+                        <div className={"Profile-page-top-infocards"}>
                                 <p className={"Profile-page-top-infotext"}>Requests Completed</p>
-                                <p className={"Profile-page-top-infotext"}>-2</p>
+                                <p className={"Profile-page-top-infotext"}> {getCompleted()} </p>
                             </div>
                             <div className={"Profile-page-top-infocards"}>
                                 <p className={"Profile-page-top-infotext"}>Requests Assigned</p>
-                                <p className={"Profile-page-top-infotext"}>{filterSR.length}</p>
+                                <p className={"Profile-page-top-infotext"}>{getAssigned()}</p>
                             </div>
                             <div className={"Profile-page-top-infocards"}>
                                 <p className={"Profile-page-top-infotext"}>Requests Available</p>
-                                <p className={"Profile-page-top-infotext"}>{srData.length}</p>
+                                <p className={"Profile-page-top-infotext"}>{getAvailable()}</p>
                             </div>
                         </div>
                         <div className={"Profile-page-TwoColumnsSecondRow"}>
                             <div className={"Profile-page-myreqcard"}>
-                                <p className={"Profile-page-top-infotext"}>My Requests</p>
+                                <p className={"Profile-page-top-infotext-return"}>My Requests</p>
+                                <div className={"Profile-page-top-infotext-scroll"}>
+                                    <p className={"Profile-page-top-infotext"}> {getRequests()}</p>
+                                </div>
                             </div>
                             <div className={"Profile-page-TwoColumnsSecondRow-SecondRows"}>
-                                <div className={"SecondRow_SecondColumn-TestCard"}></div>
+                                <div className={"SecondRow_SecondColumn-TestCard"}>
+                                    <PieChart/>
+                                </div>
                                 <div className={"SecondRow_SecondColumn-TestCard"}></div>
                             </div>
                         </div>
-                        <div className={"Profile-page-bottom-TestCard"}></div>
                     </div>
                 </div>
             </div>

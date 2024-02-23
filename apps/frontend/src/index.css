@@ -221,6 +221,7 @@ body {
   margin-right: 0;
   margin-bottom: 0;
   margin-top: 0;
+    background-color: #012d5a;
 }
 
 .body {
@@ -243,6 +244,14 @@ td {
     padding-left: 3vw;
     padding-right: 3vw;
 }
+
+ul
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
 
 
 
