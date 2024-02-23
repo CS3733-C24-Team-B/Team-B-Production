@@ -3,7 +3,7 @@ import client from "../bin/database-connection.ts";
 import {
     AStar,
     BFS,
-    DFS,
+    DFS, Dijkstra,
     Pathfind
 } from "../utilities/algorithm.ts";
 const router: Router = express.Router();
@@ -33,6 +33,9 @@ router.get("/:startNode/:endNode/", async function (req: Request, res: Response)
     }
     else if (searchType===2){
         pathfind=new Pathfind(new DFS());
+    }
+    else if (searchType===3){
+        pathfind=new Pathfind(new Dijkstra());
     }
     const p = await pathfind.search(req.params.startNode, req.params.endNode);
     path = p?.map(obj => obj)as string[];

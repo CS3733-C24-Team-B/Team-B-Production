@@ -123,6 +123,8 @@ export default function NavigationPage() {
                 return "BFS";
             case 2:
                 return "DFS";
+            case 3:
+                return "Dijkstra";
         }
         return "A Star";
     }
@@ -135,6 +137,8 @@ export default function NavigationPage() {
                 return 1;
             case "DFS":
                 return 2;
+            case "Dijkstra":
+                return 3;
         }
         return 0;
     }
@@ -154,6 +158,7 @@ export default function NavigationPage() {
             {<MenuItem value={"A Star"} sx={{fontFamily: 'Lato'}}>A*</MenuItem>}
             {<MenuItem value={"BFS"} sx={{fontFamily: 'Lato'}}>BFS</MenuItem>}
             {<MenuItem value={"DFS"} sx={{fontFamily: 'Lato'}}>DFS</MenuItem>}
+            {<MenuItem value={"Dijkstra"} sx={{fontFamily: 'Lato'}}>Dijkstra</MenuItem>}
         </TextField>
     );
     const SettingsMenu = (
