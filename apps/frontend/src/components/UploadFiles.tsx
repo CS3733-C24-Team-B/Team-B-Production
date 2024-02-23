@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 //import axios from "axios";
 import {
     Box,
@@ -23,48 +23,92 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function UploadFiles() {
     const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
-    const [nodeFile, setNodeFile] = useState<HTMLInputElement>();
+    const [nodeFile, setNodeFile] = useState<File>();
     const [nodeFileName, setNodeFileName] = useState<string>("");
-    const [edgeFile, setEdgeFile] = useState<HTMLInputElement>();
+    const [edgeFile, setEdgeFile] = useState<File>();
     const [edgeFileName, setEdgeFileName] = useState<string>("");
-    const [employeeFile, setEmployeeFile] = useState<HTMLInputElement>();
+    const [employeeFile, setEmployeeFile] = useState<File>();
     const [employeeFileName, setEmployeeFileName] = useState<string>("");
-    //const [refresh, setRefresh] = useState(false);
+    const [refresh, setRefresh] = useState(false);
     console.log(user + " " + isAuthenticated);
     console.log(nodeFile + " " + edgeFile + " " + employeeFile);
 
-    function uploadNodeFile(e) {
+    function uploadNodeFile(e: React.ChangeEvent<HTMLInputElement>) {
         setNodeFile(undefined);
-        const csvFile = e.target.files[0];
+        const csvFile = e.target.files![0];
         if (csvFile == null) {
             console.log("csv file is null");
             return;
         }
-        console.log(csvFile);
-        // setNodeFile(csvFile);
-        // setNodeFileName(csvFile.files![0].name);
+        setNodeFile(csvFile);
+        setNodeFileName(csvFile.name);
     }
 
-    function uploadEdgeFile() {
+    function uploadEdgeFile(e: React.ChangeEvent<HTMLInputElement>) {
         setEdgeFile(undefined);
-        const csvFile = document.querySelector('#myFile') as HTMLInputElement;
+        const csvFile = e.target.files![0];
         if (csvFile == null) {
             console.log("csv file is null");
             return;
         }
         setEdgeFile(csvFile);
-        setEdgeFileName(csvFile.files![0].name);
+        setEdgeFileName(csvFile.name);
     }
 
-    function uploadEmployeeFile() {
+    function uploadEmployeeFile(e: React.ChangeEvent<HTMLInputElement>) {
         setEmployeeFile(undefined);
-        const csvFile = document.querySelector('#myFile') as HTMLInputElement;
+        const csvFile = e.target.files![0];
         if (csvFile == null) {
             console.log("csv file is null");
             return;
         }
         setEmployeeFile(csvFile);
-        setEmployeeFileName(csvFile.files![0].name);
+        setEmployeeFileName(csvFile.name);
+    }
+
+    function uploadFile() {
+        console.log("Uploading node info to database");
+        try {
+            if(nodeFile) {
+                const formData = new FormData();
+                formData.append("nodeFile", nodeFile);
+                getAccessTokenSilently().then(async (accessToken: string) => {
+                    await axios.post('/api/nodes/upload', formData, {
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                });
+            }
+            if(edgeFile) {
+                const formData = new FormData();
+                formData.append("edgeFile", edgeFile);
+                getAccessTokenSilently().then(async (accessToken: string) => {
+                    await axios.post('/api/edges/upload', formData, {
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+                });
+            }
+            if(employeeFile) {
+                // const formData = new FormData();
+                // formData.append("employeeFile", employeeFile);
+                // getAccessTokenSilently().then(async (accessToken: string) => {
+                //     await axios.post('/api/admin-employees/upload', formData, {
+                //         headers: {
+                //             Authorization: "Bearer " + accessToken,
+                //             'Content-Type': 'multipart/form-data'
+                //         }
+                //     });
+                // });
+            }
+            setRefresh(!refresh);
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
     }
 
     async function downloadFiles() {
@@ -125,6 +169,15 @@ export default function UploadFiles() {
         }
     }
 
+    useEffect(() => {
+        // setNodeFile(undefined);
+        // setEdgeFile(undefined);
+        // setEmployeeFile(undefined);
+        setNodeFileName("");
+        setEdgeFileName("");
+        setEmployeeFileName("");
+    }, [refresh]);
+
     return (
         <div className="AD-OneCard">
             <div className={"file-buttons"}>
@@ -159,7 +212,9 @@ export default function UploadFiles() {
                             }}
                     >
                         Upload Edge File
-                        <VisuallyHiddenInput id="myFile" type="file" multiple onChange={uploadEdgeFile}/>
+                        <VisuallyHiddenInput id="myFile" type="file" multiple onChange={(e) => {
+                            uploadEdgeFile(e);
+                        }}/>
                     </Button>
                     <p className={"uploaded-files-name"}> {edgeFileName !== "" ? edgeFileName : "No file uploaded"} </p>
                     <Button component="label" variant="contained"
@@ -172,7 +227,9 @@ export default function UploadFiles() {
                             }}
                     >
                         Upload Employee File
-                        <VisuallyHiddenInput id="myFile" type="file" multiple onChange={uploadEmployeeFile}/>
+                        <VisuallyHiddenInput id="myFile" type="file" multiple onChange={(e) => {
+                            uploadEmployeeFile(e);
+                        }}/>
                     </Button>
                     <p className={"uploaded-files-name"}> {employeeFileName !== "" ? employeeFileName : "No file uploaded"} </p>
                 </Box>
@@ -187,6 +244,7 @@ export default function UploadFiles() {
                             textTransform: 'none',
                             justifySelf: 'center'
                         }}
+                        onClick={() => uploadFile()}
                 >
                     Upload Files
                 </Button>
