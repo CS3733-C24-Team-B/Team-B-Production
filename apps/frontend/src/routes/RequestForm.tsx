@@ -3,8 +3,8 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-import PieChartStats from "../components/PieChartStats.tsx";
+import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
+import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -27,8 +27,8 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import GokuIcon from "../components/GokuIcon.tsx";
-import BarChart from "../components/BarChart.tsx";
-import StackedBarChart from "../components/StackedBarChart.tsx";
+import BarChart from "../components/Statistics/BarChart.tsx";
+import StackedBarChart from "../components/Statistics/StackedBarChart.tsx";
 import {
     InternalTransportRequest, LanguageRequest, MaintenanceRequest,
     MedicineRequest,
@@ -36,11 +36,11 @@ import {
     SanitationRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
-import SanitationReq from "../components/SanitationRequest.tsx";
-import MedicineReq from "../components/MedicineRequest.tsx";
-import MaintenanceReq from "../components/MaintenanceRequest.tsx";
-import InternalTransportationReq from "../components/InternalTransportRequest.tsx";
-import LanguageReq from "../components/LanguageRequest.tsx";
+import SanitationReq from "../components/ServiceRequests/SanitationRequest.tsx";
+import MedicineReq from "../components/ServiceRequests/MedicineRequest.tsx";
+import MaintenanceReq from "../components/ServiceRequests/MaintenanceRequest.tsx";
+import InternalTransportationReq from "../components/ServiceRequests/InternalTransportRequest.tsx";
+import LanguageReq from "../components/ServiceRequests/LanguageRequest.tsx";
 import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
 import {useNavigate} from "react-router-dom";

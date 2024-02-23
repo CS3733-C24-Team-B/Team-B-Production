@@ -2,7 +2,7 @@ import React, {SetStateAction, useEffect, useState} from "react";
 import "../css/home_page.css";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import LeafletMap from "../components/LeafletMap.tsx";
+import LeafletMap from "../components/Pathfinding/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
     Autocomplete, autocompleteClasses,

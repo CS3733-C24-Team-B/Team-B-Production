@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import CSVNodeDataTable from "../components/CSVNodeDataTable.tsx";
-import CSVEdgeDataTable from "../components/CSVEdgeDataTable.tsx";
-import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-import EmployeeTable from "../components/EmployeeTable.tsx";
+import NodeTable from "../components/AdminTables/NodeTable.tsx";
+import EdgeTable from "../components/AdminTables/EdgeTable.tsx";
+import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
+import EmployeeTable from "../components/AdminTables/EmployeeTable.tsx";
 import {Button} from "@mui/material";
 
 
@@ -40,27 +40,27 @@ export default function AdminViewer() {
                             </Button>
                             <Button
                                 style={{
-                                    color: currentComponent === 'CSVNodeDataTable' ? 'black' : 'black',
-                                    borderBottom: currentComponent === 'CSVNodeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    color: currentComponent === 'NodeTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'NodeTable' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
-                                setADPageShow(<CSVNodeDataTable/>);
-                                setCurrentComponent('CSVNodeDataTable'); // Set the state to track the current component
+                                setADPageShow(<NodeTable/>);
+                                setCurrentComponent('NodeTable'); // Set the state to track the current component
                             }}>
                                 Node Data
                             </Button>
                             <Button
                                 style={{
-                                    color: currentComponent === 'CSVEdgeDataTable' ? 'black' : 'black',
-                                    borderBottom: currentComponent === 'CSVEdgeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    color: currentComponent === 'EdgeTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'EdgeTable' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
-                                setADPageShow(<CSVEdgeDataTable/>);
-                                setCurrentComponent('CSVEdgeDataTable'); // Set the state to track the current component
+                                setADPageShow(<EdgeTable/>);
+                                setCurrentComponent('EdgeTable'); // Set the state to track the current component
                             }}>
                                Edge Data
                             </Button>

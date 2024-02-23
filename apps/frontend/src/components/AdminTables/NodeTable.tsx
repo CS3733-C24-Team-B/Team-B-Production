@@ -21,43 +21,34 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 
-export default function CSVEdgeDataTable() {
+export default function NodeTable(){
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
-    const [edgeData, setEdgeData] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/nodes/read");
-            const res3 = await axios.get("/api/edges/read");
+            console.log(res.data);
             setNodeData(res.data);
-            setEdgeData(res3.data);
         }
 
         fetch().then(() => {
             setLoading(false);
         });
-    }, [getAccessTokenSilently, refresh]);
+    }, [refresh]);
 
-    function nodeIDtoName(nId: string) {
-        return nodeData.find(({nodeID}) =>
-            nodeID === nId
-        )!["longName"];
-    }
-
-    const arrayEdge = edgeData.map(({edgeID, startNodeID, endNodeID}, i) =>
+    const arrayNode = nodeData.map(({floor, building, longName}, i) =>
         <tr key={i}>
-            <td>{edgeID}</td>
-            <td>{nodeIDtoName(startNodeID)}</td>
-            <td>{nodeIDtoName(endNodeID)}</td>
+            <td>{longName}</td>
+            <td>{floor}</td>
+            <td>{building}</td>
         </tr>
     );
 
     function uploadFile() {
-        console.log("Uploading edge info to database");
-
+        console.log("Uploading node info to database");
         try {
             const formData = new FormData();
             const csvFile = document.querySelector('#myFile') as HTMLInputElement;
@@ -67,12 +58,12 @@ export default function CSVEdgeDataTable() {
             }
 
             formData.append("csvFile", csvFile.files![0]); // Update based on backend
-            setLoading(true);
+
             getAccessTokenSilently().then((accessToken: string) => {
-                axios.post("/api/edges/upload", formData, {
+                axios.post('/api/nodes/upload', formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: "Bearer " + accessToken
+                        Authorization: "Bearer " + accessToken,
+                        'Content-Type': 'multipart/form-data'
                     }
                 }).then(() => {
                     setRefresh(!refresh);
@@ -84,19 +75,18 @@ export default function CSVEdgeDataTable() {
     }
 
     async function downloadFile() {
-        console.log("Downloading edge info from database");
+        console.log("Downloading node info from database");
 
         try {
             const accessToken: string = await getAccessTokenSilently();
-            const res3 = await axios.get('/api/edges/download', {
+            const res3 = await axios.get('/api/nodes/download', {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
             });
-            console.log(res3);
             const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
-            a.download = "EdgeData.csv";
+            a.download = "NodeData.csv";
             a.href = window.URL.createObjectURL(blob);
             const clickEvt = new MouseEvent("click", {
                 view: window,
@@ -111,18 +101,18 @@ export default function CSVEdgeDataTable() {
     }
 
     async function downloadTemplate() {
-        console.log("Downloading edge CSV template");
+        console.log("Downloading node CSV template");
 
         try {
             const accessToken: string = await getAccessTokenSilently();
-            const res3 = await axios.get('/api/edges/download-template', {
+            const res3 = await axios.get('/api/nodes/download-template', {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
             });
             const blob = new Blob([res3.data], {type: "text/csv"});
             const a = document.createElement("a");
-            a.download = "EdgeDataTemplate.csv";
+            a.download = "NodeDataTemplate.csv";
             a.href = window.URL.createObjectURL(blob);
             const clickEvt = new MouseEvent("click", {
                 view: window,
@@ -137,10 +127,10 @@ export default function CSVEdgeDataTable() {
     }
 
     async function deleteTable() {
-        console.log("Deleting all edges");
+        console.log("Deleting all nodes");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            axios.delete("/api/edges", {
+            axios.delete("/api/nodes", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
@@ -156,19 +146,18 @@ export default function CSVEdgeDataTable() {
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
                 <br/>
-                {loading ? <CircularProgress/> :
-                    <table className={"tables"}>
-                        <thead>
-                        <tr>
-                            <th>Edge ID</th>
-                            <th>Start Room</th>
-                            <th>End Room</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {arrayEdge}
-                        </tbody>
-                    </table>}
+                {loading ? <CircularProgress/> : <table className={"tables"}>
+                    <thead>
+                    <tr>
+                        <th>Room Name</th>
+                        <th>Floor</th>
+                        <th>Building Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {arrayNode}
+                    </tbody>
+                </table>}
             </div>
             <div className={"AD-TwoRows2"}>
                 <div className={"AD-Card3"}>
@@ -211,7 +200,6 @@ export default function CSVEdgeDataTable() {
                         Template
                     </Button>
                     <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                            onClick={deleteTable}
                             style={{
                                 backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
                                 marginLeft: "5%",
@@ -219,7 +207,8 @@ export default function CSVEdgeDataTable() {
                                 fontFamily: 'Lato',
                                 fontSize: '90%',
                                 textTransform: 'none',
-                            }}>
+                            }}
+                            onClick={deleteTable}>
                         Delete Data
                     </Button>
                 </div>
@@ -232,7 +221,12 @@ export default function CSVEdgeDataTable() {
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
+
+
         </div>
-    );
+
+
+    )
+        ;
 }
 

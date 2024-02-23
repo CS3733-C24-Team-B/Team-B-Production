@@ -1,5 +1,5 @@
 import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup, Marker, SVGOverlay} from 'react-leaflet';
-import "../css/leaflet.css";
+import "../../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
@@ -13,11 +13,11 @@ import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
 import L from "leaflet";
 import {useAuth0} from "@auth0/auth0-react";
-import lowerlevel1 from "../images/00_thelowerlevel1.png";
-import lowerlevel2 from "../images/00_thelowerlevel2.png";
-import firstfloor from "../images/01_thefirstfloor.png";
-import secondfloor from "../images/02_thesecondfloor.png";
-import thirdfloor from "../images/03_thethirdfloor.png";
+import lowerlevel1 from "../../images/00_thelowerlevel1.png";
+import lowerlevel2 from "../../images/00_thelowerlevel2.png";
+import firstfloor from "../../images/01_thefirstfloor.png";
+import secondfloor from "../../images/02_thesecondfloor.png";
+import thirdfloor from "../../images/03_thethirdfloor.png";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 import {
     InternalTransportRequest, LanguageRequest,
@@ -27,7 +27,7 @@ import {
 } from "common/src/serviceRequestTypes.ts";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CircleIcon from '@mui/icons-material/Circle';
-import GokuIcon from "./GokuIcon.tsx";
+import GokuIcon from "../GokuIcon.tsx";
 
 const FloorLevel = [
     {

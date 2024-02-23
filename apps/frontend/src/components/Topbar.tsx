@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import logo from "../images/BandW-Logo-White.png";
 import "../css/topbar.css";
 import {useAuth0} from "@auth0/auth0-react";
-import AuthenticationButton from "./AuthenticationButton";
+import Button from "@mui/material/Button";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
@@ -41,6 +41,17 @@ export default function Topbar() {
         return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
     }
 
+    const LoginButton = () => {
+        const { loginWithRedirect, user } = useAuth0();
+        console.log(user);
+        return (
+            <Button variant="contained" color="primary" onClick={() => loginWithRedirect()}
+                    style={{ backgroundColor: "white" , color: "black", maxHeight: '50%', fontSize: '70%'}}>
+                Login
+            </Button>
+        );
+    };
+
     return (
         <div className={"TopGreen"}>
             <a href="https://www.brighamandwomens.org" target="_blank">
@@ -50,7 +61,7 @@ export default function Topbar() {
             <div className={"profile-card"}>
                 {isAuthenticated ? <p className={"profile-text"}>{getNameOrEmail(user!.email!)}</p> : <></>}
                 {isAuthenticated ? <img src={user && user.picture} className={"profile-icon"} onClick={() => navigate("/profile-info")}
-                                        alt="profile picture"/> : <AuthenticationButton/>}
+                                        alt="profile picture"/> : <LoginButton/>}
             </div>
         </div>
     );

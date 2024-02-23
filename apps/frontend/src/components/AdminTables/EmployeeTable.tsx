@@ -11,8 +11,8 @@ import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import DeleteIcon from "@mui/icons-material/Delete";
 import {CircularProgress, Dialog, DialogActions, DialogTitle} from "@mui/material";
 import {styled} from "@mui/material/styles";
-import "../css/servicelist_page.css";
-import "../css/admin_page.css";
+import "../../css/servicelist_page.css";
+import "../../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
 
 
