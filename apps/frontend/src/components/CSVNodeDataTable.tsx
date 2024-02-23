@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Button} from "@mui/material";
+import {Button, CircularProgress} from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useAuth0} from "@auth0/auth0-react";
 import {styled} from "@mui/material/styles";
@@ -24,6 +24,9 @@ const VisuallyHiddenInput = styled('input')({
 export default function CSVNodeDataTable(){
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
+    const [refresh, setRefresh] = useState(false);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/nodes/read");
@@ -31,8 +34,10 @@ export default function CSVNodeDataTable(){
             setNodeData(res.data);
         }
 
-        fetch().then();
-    }, []);
+        fetch().then(() => {
+            setLoading(false);
+        });
+    }, [refresh]);
 
     const arrayNode = nodeData.map(({floor, building, longName}, i) =>
         <tr key={i}>
@@ -60,7 +65,9 @@ export default function CSVNodeDataTable(){
                         Authorization: "Bearer " + accessToken,
                         'Content-Type': 'multipart/form-data'
                     }
-                }).then();
+                }).then(() => {
+                    setRefresh(!refresh);
+                });
             });
         } catch (exception) {
             console.log("post error: " + exception);
@@ -123,10 +130,12 @@ export default function CSVNodeDataTable(){
         console.log("Deleting all nodes");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            await axios.delete("/api/nodes", {
+            axios.delete("/api/nodes", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
+            }).then(() => {
+                setRefresh(!refresh);
             });
         } catch (error) {
             console.error(error);
@@ -137,7 +146,7 @@ export default function CSVNodeDataTable(){
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
                 <br/>
-                <table className={"tables"}>
+                {loading ? <CircularProgress/> : <table className={"tables"}>
                     <thead>
                     <tr>
                         <th>Room Name</th>
@@ -148,7 +157,7 @@ export default function CSVNodeDataTable(){
                     <tbody>
                     {arrayNode}
                     </tbody>
-                </table>
+                </table>}
             </div>
             <div className={"AD-TwoRows2"}>
                 <div className={"AD-Card3"}>
@@ -204,7 +213,10 @@ export default function CSVNodeDataTable(){
                     </Button>
                 </div>
                 <div className={"AD-OneCard2"}>
-                    <p className={"AD-head2"}>Last Updated</p>
+                    <p className={"AD-head2"}>Last Updated:</p>
+                    <br/>
+                    <br/>
+                    <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
                     {/*<p className={"AD-head3"}>21:02</p>*/}
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>

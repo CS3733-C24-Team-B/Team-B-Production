@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Typography, Button, TextField, CircularProgress, Snackbar, Alert, List} from '@mui/material';
+import {Typography, Button, TextField, CircularProgress, Snackbar, Alert} from '@mui/material';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
@@ -109,25 +109,23 @@ export default function ProfilePage() {
         submit().then();
     }, [getAccessTokenSilently, user, isAuthenticated]);
 
-    const listItemStyle = {marginLeft: '20px', marginBottom: '20px'};
+    const listItemStyle = {marginLeft: '20px', marginBottom: '20px', fontFamily: 'Lato'};
 
     const arrayReq = srData.map((nsr: ServiceRequest) =>
-        <List>
-            {((nsr.assignedID === email) ? <div key={nsr.serviceID} style={listItemStyle}>
-                <Typography>
-                    <strong>Requester:</strong> {getNameOrEmail(nsr.createdByID)}
-                </Typography>
-                <Typography>
-                    <strong>Type:</strong> {RequestType[getReqType(nsr) as keyof typeof RequestType]}
-                </Typography>
-                <Typography>
-                    <strong>Priority:</strong> {nsr.priority}
-                </Typography>
-                <Typography>
-                    <strong>Status:</strong> {nsr.status}
-                </Typography>
-            </div> : null)}
-        </List>
+        ((nsr.assignedID === email) ? <div key={nsr.serviceID} style={listItemStyle}>
+            <Typography>
+                <strong>Requester:</strong> {getNameOrEmail(nsr.createdByID)}
+            </Typography>
+            <Typography>
+                <strong>Type:</strong> {RequestType[getReqType(nsr) as keyof typeof RequestType]}
+            </Typography>
+            <Typography>
+                <strong>Priority:</strong> {nsr.priority}
+            </Typography>
+            <Typography>
+                <strong>Status:</strong> {nsr.status}
+            </Typography>
+        </div> : null)
     );
 
     function allNull(arr: (object | null)[]) {
@@ -170,12 +168,10 @@ export default function ProfilePage() {
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}
-                        <div className={"Profile-Header-Box"}>
-                            <p className={"Profile-Header"}>
-                                Profile Information
-                            </p>
-                        </div>
-                        {(user === undefined) ? <CircularProgress/> : <div>
+                        <Typography variant="h5" gutterBottom style={listItemStyle}>
+                            Profile Information
+                        </Typography>
+                        {(user === undefined) ? <CircularProgress/> : <div className={"profile-card-info"}>
                             <Typography variant="body1" style={listItemStyle}>
                                 <strong>Email:</strong> {email}
                             </Typography>
@@ -195,42 +191,44 @@ export default function ProfilePage() {
                                        }}
                                        required
                             />
-                            <div style={{marginTop: '20px'}}>
-                                <Button variant="contained" color="primary" onClick={submit}
-                                        style={{backgroundColor: "#34AD84"}}>
-                                    Update Info
-                                </Button>
-                            </div>
-                            <div style={{marginTop: '20px'}}>
-                                <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
-                                        onClick={() => {
-                                            getAccessTokenSilently().then((accessToken: string) => {
-                                                axios.get("/api/employee/reset-password/" + email, {
-                                                    headers: {
-                                                        Authorization: "Bearer " + accessToken
-                                                    }
-                                                }).then((res) => {
-                                                    location.href = res.data;
+                            <div className={"profile-action-buttons"}>
+                                <div style={{marginTop: '20px'}}>
+                                    <Button variant="contained" color="primary" onClick={submit}
+                                            style={{backgroundColor: "#34AD84", fontFamily: 'Lato'}}>
+                                        Update Info
+                                    </Button>
+                                </div>
+                                <div style={{marginTop: '20px'}}>
+                                    <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                            onClick={() => {
+                                                getAccessTokenSilently().then((accessToken: string) => {
+                                                    axios.get("/api/employee/reset-password/" + email, {
+                                                        headers: {
+                                                            Authorization: "Bearer " + accessToken
+                                                        }
+                                                    }).then((res) => {
+                                                        location.href = res.data;
+                                                    });
                                                 });
-                                            });
-                                        }}>
-                                    Change Password
-                                </Button>
-                            </div>
-                            <div style={{marginTop: '20px'}}>
-                                <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
-                                        onClick={() => logout()}>
-                                    Log Out
-                                </Button>
+                                            }}>
+                                        Change Password
+                                    </Button>
+                                </div>
+                                <div style={{marginTop: '20px'}}>
+                                    <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                            onClick={() => logout()}>
+                                        Log Out
+                                    </Button>
+                                </div>
                             </div>
                         </div>}
                     </div>
                     <div className={"Profile-Card"}> {/* Increased marginTop */}
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="h5" gutterBottom style={listItemStyle}>
                             Service Requests
                         </Typography>
-                        {(!receivedSR) ? <CircularProgress/> :
-                            (arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq}
+                        {(!receivedSR) ? <CircularProgress/> : <div className={"profile-card-reqlist"}>
+                            {(arrayReq.length === 0 || allNull(arrayReq)) ? "You have no requests at the moment :)" : arrayReq} </div>}
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {Button} from "@mui/material";
+import {Button, CircularProgress} from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {useAuth0} from "@auth0/auth0-react";
 import {styled} from "@mui/material/styles";
@@ -25,6 +25,9 @@ export default function CSVEdgeDataTable() {
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
+    const [refresh, setRefresh] = useState(false);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         async function fetch() {
             const res = await axios.get("/api/nodes/read");
@@ -33,8 +36,10 @@ export default function CSVEdgeDataTable() {
             setEdgeData(res3.data);
         }
 
-        fetch().then();
-    }, [getAccessTokenSilently]);
+        fetch().then(() => {
+            setLoading(false);
+        });
+    }, [getAccessTokenSilently, refresh]);
 
     function nodeIDtoName(nId: string) {
         return nodeData.find(({nodeID}) =>
@@ -62,13 +67,16 @@ export default function CSVEdgeDataTable() {
             }
 
             formData.append("csvFile", csvFile.files![0]); // Update based on backend
+            setLoading(true);
             getAccessTokenSilently().then((accessToken: string) => {
                 axios.post("/api/edges/upload", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: "Bearer " + accessToken
                     }
-                }).then();
+                }).then(() => {
+                    setRefresh(!refresh);
+                });
             });
         } catch (exception) {
             console.log("post error: " + exception);
@@ -132,10 +140,12 @@ export default function CSVEdgeDataTable() {
         console.log("Deleting all edges");
         try {
             const accessToken: string = await getAccessTokenSilently();
-            await axios.delete("/api/edges", {
+            axios.delete("/api/edges", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
+            }).then(() => {
+                setRefresh(!refresh);
             });
         } catch (error) {
             console.error(error);
@@ -146,18 +156,19 @@ export default function CSVEdgeDataTable() {
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
                 <br/>
-                <table className={"tables"}>
-                    <thead>
-                    <tr>
-                        <th>Edge ID</th>
-                        <th>Start Room</th>
-                        <th>End Room</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {arrayEdge}
-                    </tbody>
-                </table>
+                {loading ? <CircularProgress/> :
+                    <table className={"tables"}>
+                        <thead>
+                        <tr>
+                            <th>Edge ID</th>
+                            <th>Start Room</th>
+                            <th>End Room</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {arrayEdge}
+                        </tbody>
+                    </table>}
             </div>
             <div className={"AD-TwoRows2"}>
                 <div className={"AD-Card3"}>
@@ -213,7 +224,10 @@ export default function CSVEdgeDataTable() {
                     </Button>
                 </div>
                 <div className={"AD-OneCard2"}>
-                    <p className={"AD-head2"}>Last Updated</p>
+                    <p className={"AD-head2"}>Last Updated:</p>
+                    <br/>
+                    <br/>
+                    <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
                     {/*<p className={"AD-head3"}>21:02</p>*/}
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
