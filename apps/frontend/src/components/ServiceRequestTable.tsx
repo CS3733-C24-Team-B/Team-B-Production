@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import axios from "axios";
 import {
     Box, Button,
@@ -503,7 +503,7 @@ export default function ServiceRequestTable() {
                                 <TableRow>
                                     <TableCell>
                                         <IconButton onClick={(e) => {
-                                            setMenuAnchor(e.currentTarget);
+                                            setMenuAnchor(e.currentTarget as unknown as SetStateAction<null>);
                                         }} style={{borderRadius: 0, width: 72}}>
                                             <FilterListIcon/>
                                         </IconButton>

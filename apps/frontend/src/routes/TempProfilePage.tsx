@@ -12,7 +12,7 @@ import {
 } from "common/src/serviceRequestTypes.ts";
 import "../css/profile_page.css";
 import Topbar from "../components/Topbar.tsx";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 
 type ServiceRequest = {
     serviceID: number,
@@ -164,7 +164,7 @@ export default function ProfilePage() {
     return (
         <div className="Profile-Container">
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}>
                 <div className="Profile-TwoRows">
                     <div className={"Profile-Card"}> {/* Increased marginRight */}

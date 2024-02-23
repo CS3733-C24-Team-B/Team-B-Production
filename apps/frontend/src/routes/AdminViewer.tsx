@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import CSVNodeDataTable from "../components/CSVNodeDataTable.tsx";
 import CSVEdgeDataTable from "../components/CSVEdgeDataTable.tsx";
@@ -18,7 +18,7 @@ export default function AdminViewer() {
     return (
         <div className={"AD-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"AD-OneColumn"}>
                     <div className={"AD-TwoRows"}>
