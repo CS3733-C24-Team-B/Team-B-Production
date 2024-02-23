@@ -322,8 +322,7 @@ export default function AdminViewer() {
                                                 onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEmployees(employeeSortField.email);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             First Name
@@ -331,8 +330,7 @@ export default function AdminViewer() {
                                                 onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEmployees(employeeSortField.firstName);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Last Name
@@ -340,8 +338,7 @@ export default function AdminViewer() {
                                                         onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEmployees(employeeSortField.lastName);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell/>
                                         <TableCell/>

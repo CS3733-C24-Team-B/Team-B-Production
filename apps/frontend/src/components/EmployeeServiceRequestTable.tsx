@@ -440,52 +440,52 @@ export default function ServiceRequestTable() {
                                     </TableCell>
                                     <TableCell>
                                         Priority
-                                        <IconButton style={{color: (typeSort === "priority" ? "#34AD84" : "")}} onClick={() => {
+                                        <IconButton style={{color: (typeSort === "priority" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.priority);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Time Created
-                                        <IconButton style={{color: (typeSort === "timeCreated" ? "#34AD84" : "")}} onClick={() => {
+                                        Time <br/> Created
+                                        <IconButton style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.timeCreated);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Type
-                                        <IconButton style={{color: (typeSort === "type" ? "#34AD84" : "")}} onClick={() => {
+                                        <IconButton style={{color: (typeSort === "type" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.type);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Assigned To
-                                        <IconButton style={{color: (typeSort === "assignedTo" ? "#34AD84" : "")}} onClick={() => {
+                                        Assigned <br/> To
+                                        <IconButton style={{color: (typeSort === "assignedTo" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.assignedTo);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Status
-                                        <IconButton style={{color: (typeSort === "status" ? "#34AD84" : "")}} onClick={() => {
+                                        <IconButton style={{color: (typeSort === "status" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.status);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Location
-                                        <IconButton style={{color: (typeSort === "location" ? "#34AD84" : "")}} onClick={() => {
+                                        <IconButton style={{color: (typeSort === "location" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.location);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Created by
-                                        <IconButton style={{color: (typeSort === "createdBy" ? "#34AD84" : "")}} onClick={() => {
+                                        Created <br/> by
+                                        <IconButton style={{color: (typeSort === "createdBy" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
                                             setSortUp(!sortUp);
                                             sortRequests(requestSortField.createdBy);
-                                        }}>{sortUp ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>
+                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>

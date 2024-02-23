@@ -207,8 +207,7 @@ export default function CSVEdgeDataTable() {
                                                         onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEdges(edgeSortField.edgeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Start Node
@@ -216,8 +215,7 @@ export default function CSVEdgeDataTable() {
                                                         onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEdges(edgeSortField.startNodeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             End Node
@@ -225,8 +223,7 @@ export default function CSVEdgeDataTable() {
                                                         onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortEdges(edgeSortField.endNodeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon/> :
-                                                <ArrowDownwardIcon/>}</IconButton>
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
