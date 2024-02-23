@@ -39,7 +39,7 @@ model ServiceRequest {
   timeCreated       DateTime                  @default(now())
   createdBy         Employee?                 @relation("Created", fields: [createdByID], references: [email], onDelete: SetNull)
   createdByID       String?
-  location          Node                      @relation("Location", fields: [locationID], references: [nodeID], onDelete: Cascade)
+  location          Node?                     @relation("Location", fields: [locationID], references: [nodeID], onDelete: SetNull)
   locationID        String
   priority          String
   status            String
