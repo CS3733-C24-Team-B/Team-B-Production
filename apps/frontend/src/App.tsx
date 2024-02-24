@@ -9,6 +9,7 @@ import RequestForm from "./routes/RequestForm.tsx";
 import ProfilePage from "./routes/TempProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
+import Credits from "./routes/Credits.tsx";
 
 import OldHomePage from "./routes/OldHomePage.tsx";
 import OldCSVNodeData from "./routes/OldCSVNodeData.tsx";
@@ -125,7 +126,13 @@ function App() {
             path: "/about",
             errorElement: <div/>,
             element: <About/>
+        },
+        {
+            path: "/credits",
+            errorElement: <div/>,
+            element: <Credits/>
         }
+
     ]);
 
     return <RouterProvider router={router}/>;

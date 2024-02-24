@@ -17,10 +17,10 @@ export default function NewUITemplete() {
                             <div className={"TestCard"}></div>
                         </div>
                     </div>
-                    <div className={"TwoRows"}>
-                        <div className={"TestCard"}></div>
-                        <div className={"TestCard"}></div>
-                    </div>
+                    {/*<div className={"TwoRows"}>*/}
+                    {/*    <div className={"TestCard"}></div>*/}
+                    {/*    <div className={"TestCard"}></div>*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </div>
