@@ -37,6 +37,30 @@
     padding-top: 5%;
 }
 
+.profile-picture-wrapper {
+    display:inline-block;
+    position:relative;
+}
+
+.profile-picture-wrapper:hover {
+    filter: brightness(75%);
+}
+
+.profile-picture {
+    clip-path: circle();
+    width: 25%;
+    margin: 2%;
+}
+
+.profile-picture-input {
+    opacity:0;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
 .profile-card-info {
     align-self: center;
 }

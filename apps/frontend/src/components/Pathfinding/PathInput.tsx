@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import "../css/pathhandler.css";
+import "../../css/pathhandler.css";
 
 export const PathInput: React.FC<{ onDataSubmit: (data: { input1: string; input2: string }) => void }> = ({onDataSubmit,}) => {
     const [input1, setInput1] = useState('');

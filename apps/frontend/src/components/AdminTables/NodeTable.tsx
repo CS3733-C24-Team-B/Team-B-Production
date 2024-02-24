@@ -49,7 +49,7 @@ enum nodeSortField {
     building, nodeType, longName, shortName
 }
 
-export default function CSVNodeDataTable() {
+export default function NodeTable(){
     const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState<Node[]>([]);
     const [sortUp, setSortUp] = useState(true);

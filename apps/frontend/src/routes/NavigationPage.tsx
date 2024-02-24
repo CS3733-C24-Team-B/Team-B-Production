@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import "../css/home_page.css";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import LeafletMap from "../components/LeafletMap.tsx";
+import LeafletMap from "../components/Pathfinding/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
     Autocomplete, autocompleteClasses,
@@ -91,10 +91,11 @@ export default function NavigationPage() {
                     }
                 }}
                 ListboxProps={{style: {fontFamily: 'Lato'}}}
-                value={nodeIDtoName(nodeEnd)}
+                value={{"label": nodeIDtoName(nodeEnd)}}
                 onChange={(newValue) => {
-                    if (newValue !== null && newValue.target.innerText !== undefined) {
-                        const nId = nametoNodeID(newValue.target.innerText);
+                    const input = newValue.target as HTMLElement;
+                    if (input.innerText !== undefined) {
+                        const nId = nametoNodeID(input.innerText);
                         setNodeEnd(nId);
                         setOpenDrawer(true);
                     } else {
@@ -215,7 +216,7 @@ topbarElems.push(
         sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
-            setMenuAnchor(e.currentTarget);
+            setMenuAnchor(e.currentTarget as unknown as SetStateAction<null>);
         }}>
         Settings
     </Button>);
@@ -224,7 +225,7 @@ topbarElems.push(
     return (
         <div className={"NavigationContainer"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"NavigationBackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"NavigationTwoRows"}>
                     <div className={"MapControls"}>

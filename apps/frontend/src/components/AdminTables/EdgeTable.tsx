@@ -44,7 +44,7 @@ const VisuallyHiddenInput = styled('input')({
 
 enum edgeSortField { off, edgeID, startNodeID, endNodeID }
 
-export default function CSVEdgeDataTable() {
+export default function EdgeTable() {
     const {getAccessTokenSilently} = useAuth0();
     const [edgeData, setEdgeData] = useState<Edge[]>([]);
     const [sortUp, setSortUp] = useState(true);
