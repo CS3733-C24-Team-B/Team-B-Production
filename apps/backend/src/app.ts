@@ -10,7 +10,6 @@ import editNodesRouter from "./routes/editNodes.ts";
 import editEdgesRouter from "./routes/editEdges.ts";
 import serviceRouter from "./routes/serviceRequest.ts";
 import employeeRouter from "./routes/employee.ts";
-import adminEmployeeRouter from "./routes/adminEmployee.ts";
 
 const app: Express = express(); // Set up the backend
 
@@ -45,7 +44,6 @@ app.use("/api/nodes", editNodesRouter);
 app.use("/api/edges", editEdgesRouter);
 app.use("/api/service-request", serviceRouter);
 app.use("/api/employee", employeeRouter);
-app.use("/api/admin-employee", adminEmployeeRouter);
 
 /**
  * Catch all 404 errors, and forward them to the error handler
