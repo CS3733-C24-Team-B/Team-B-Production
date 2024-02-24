@@ -7,7 +7,6 @@ import settingsImage
 import {Box, Typography} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Button from "@mui/material/Button";
-// import Button from "@mui/material/Button";
 
 export default function SettingsPage() {
     const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor"));

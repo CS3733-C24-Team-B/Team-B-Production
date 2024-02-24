@@ -7,6 +7,7 @@ import RequestForm from "./routes/RequestForm.tsx";
 import ProfilePage from "./routes/TempProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
+import Credits from "./routes/Credits.tsx";
 import AboutPage from "./routes/AboutPage.tsx";
 import About from "./routes/About.tsx";
 
@@ -60,7 +61,7 @@ function App() {
         {
             path: "/credits",
             errorElement: <div/>,
-            element: <div/>
+            element: <Credits/>
         }
     ]);
 
