@@ -37,14 +37,14 @@ model Edge {
 model ServiceRequest {
   serviceID         Int                       @id @default(autoincrement())
   timeCreated       DateTime                  @default(now())
-  createdBy         Employee?                 @relation("Created", fields: [createdByID], references: [email], onDelete: SetNull)
-  createdByID       String?
-  location          Node                      @relation("Location", fields: [locationID], references: [nodeID], onDelete: Cascade)
-  locationID        String
+  createdBy         Employee                  @relation("Created", fields: [createdByID], references: [email], onDelete: SetDefault)
+  createdByID       String                    @default("softengc24b@gmail.com")
+  location          Node?                     @relation("Location", fields: [locationID], references: [nodeID], onDelete: SetNull)
+  locationID        String?
   priority          String
   status            String
-  assignedTo        Employee?                 @relation("Assigned", fields: [assignedID], references: [email], onDelete: SetNull)
-  assignedID        String?
+  assignedTo        Employee                  @relation("Assigned", fields: [assignedID], references: [email], onDelete: SetDefault)
+  assignedID        String                    @default("softengc24b@gmail.com")
   notes             String
   sanitation        SanitationRequest?
   maintenance       MaintenanceRequest?
@@ -90,8 +90,13 @@ model LanguageRequest {
 
 model Employee {
   email            String           @id
-  firstName        String?
-  lastName         String?
+  firstName        String
+  lastName         String
+  profilePicture   String?
+  jobTitle         String?
+  department       String?
+  birthday         DateTime?
+  phoneNumber      String?
   requestsCreated  ServiceRequest[] @relation("Created")
   requestsAssigned ServiceRequest[] @relation("Assigned")
 }

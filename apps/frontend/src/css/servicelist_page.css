@@ -125,7 +125,8 @@
 }
 
 .center-text {
-    margin: auto;
+    margin-left: 50%;
+    margin-top: 15%;
 }
 
 .info-cell {

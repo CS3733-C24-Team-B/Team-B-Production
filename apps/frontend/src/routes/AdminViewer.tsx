@@ -1,15 +1,12 @@
 import React, {useState} from "react";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import CSVNodeDataTable from "../components/CSVNodeDataTable.tsx";
-import CSVEdgeDataTable from "../components/CSVEdgeDataTable.tsx";
-import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
-import EmployeeTable from "../components/EmployeeTable.tsx";
+import NodeTable from "../components/AdminTables/NodeTable.tsx";
+import EdgeTable from "../components/AdminTables/EdgeTable.tsx";
+import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
+import EmployeeTable from "../components/AdminTables/EmployeeTable.tsx";
+import UploadFiles from "../components/UploadFiles.tsx";
 import {Button} from "@mui/material";
-
-
-
-
 
 export default function AdminViewer() {
     const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
@@ -18,11 +15,11 @@ export default function AdminViewer() {
     return (
         <div className={"AD-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"AD-OneColumn"}>
                     <div className={"AD-TwoRows"}>
-                        <div className={"AD-FourColumns"}>
+                        <div className={"AD-FiveColumns"}>
                             <Button
                                 style={{
                                     color: currentComponent === 'ServiceRequestTable' ? 'black' : 'black',
@@ -40,27 +37,27 @@ export default function AdminViewer() {
                             </Button>
                             <Button
                                 style={{
-                                    color: currentComponent === 'CSVNodeDataTable' ? 'black' : 'black',
-                                    borderBottom: currentComponent === 'CSVNodeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    color: currentComponent === 'NodeTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'NodeTable' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
-                                setADPageShow(<CSVNodeDataTable/>);
-                                setCurrentComponent('CSVNodeDataTable'); // Set the state to track the current component
+                                setADPageShow(<NodeTable/>);
+                                setCurrentComponent('NodeTable'); // Set the state to track the current component
                             }}>
                                 Node Data
                             </Button>
                             <Button
                                 style={{
-                                    color: currentComponent === 'CSVEdgeDataTable' ? 'black' : 'black',
-                                    borderBottom: currentComponent === 'CSVEdgeDataTable' ? '1.4vh solid #34AD84' : 'white',
+                                    color: currentComponent === 'EdgeTable' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'EdgeTable' ? '1.4vh solid #34AD84' : 'white',
                                     fontFamily: 'Lato',
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
-                                setADPageShow(<CSVEdgeDataTable/>);
-                                setCurrentComponent('CSVEdgeDataTable'); // Set the state to track the current component
+                                setADPageShow(<EdgeTable/>);
+                                setCurrentComponent('EdgeTable'); // Set the state to track the current component
                             }}>
                                Edge Data
                             </Button>
@@ -77,7 +74,19 @@ export default function AdminViewer() {
                             }}>
                                 Employee Data
                             </Button>
-
+                            <Button
+                                style={{
+                                    color: currentComponent === 'UploadFiles' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'UploadFiles' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Lato',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }} variant="text" onClick={() => {
+                                    setADPageShow(<UploadFiles/>);
+                                setCurrentComponent('UploadFiles'); // Set the state to track the current component
+                            }}>
+                                Upload Files
+                            </Button>
                         </div>
                         {ADPageShow}
                     </div>

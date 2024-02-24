@@ -1,13 +1,12 @@
 import React, {useState} from "react";
 import "../css/settings.css";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import settingsImage
     from "../images/pngtree-printing-service-illustration-concept-isometric-design-concept-of-web-page-png-image_4853463_1-removebg-preview.png";
 import {Box, Typography} from "@mui/material";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Button from "@mui/material/Button";
-// import Button from "@mui/material/Button";
 
 export default function SettingsPage() {
     const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor"));
@@ -25,7 +24,7 @@ export default function SettingsPage() {
     return (
         <div className={"Settings-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className="Settings-TwoRows">
                     <div className="Settings-TwoColumns">
@@ -150,7 +149,7 @@ export default function SettingsPage() {
                                 </Box>
                             </ThemeProvider>
                         </div>
-                        <img className="Settings-TestCard2" src={settingsImage}></img>
+                        <img className="Settings-TestCard2" src={settingsImage} alt=""></img>
 
                     </div>
                     {/*<div className="Settings-TestCard3">*/}

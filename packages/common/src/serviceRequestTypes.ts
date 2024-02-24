@@ -9,9 +9,10 @@ export type NewServiceRequest = {
     notes: string
 }
 
-export type UpdateServiceRequest = NewServiceRequest & {
-    serviceID: number
-    timeCreated: Date
+export type UpdateServiceRequest =  {
+    serviceID: number,
+    assignedTo: string,
+    status: StatusType
 }
 
 export type SanitationRequest = NewServiceRequest & {

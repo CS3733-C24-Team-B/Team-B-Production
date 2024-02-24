@@ -226,7 +226,7 @@ export function LuisQuote() {
                         Luis's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Does it jiggle" -Steven Hawking
+                        "Sickness is just a mindset" -Luis Alzamora
                     </Typography>
                 </Box>
             </Modal>

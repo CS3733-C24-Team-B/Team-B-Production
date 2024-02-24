@@ -2,14 +2,27 @@ import React, {useEffect, useState } from "react";
 import axios from 'axios';
 import {ServiceRequest, StatusType} from "common/src/serviceRequestTypes.ts";
 import {useAuth0} from "@auth0/auth0-react";
+import {UpdateEmployee} from "common/src/employeeTypes.ts";
 
-export default function ServiceRequestData(dataType:"completed"|"available"|"assigned"|"requests"){
+export default function ServiceRequestData(dataType:"completed"|"available"|"assigned"|"requests"|"recents"|"birthday"){
     const [nodeData, setNodeData] = useState([]);
     const {loginWithRedirect, user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
     const [srData, setsrData] = useState<ServiceRequest[]>([]);
     const [email, setEmail] = useState("");
-
-
+    const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
+    // Refresh employee data
+    useEffect(() => {
+        (async () => {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setEmployees(res.data);
+        })().then(() => {
+        });
+    }, [getAccessTokenSilently]);
     useEffect(() => {
         async function fetchData() {
             const accessToken: string = await getAccessTokenSilently();
@@ -38,6 +51,10 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
         fetchData();
     }, [getAccessTokenSilently,user]);
 
+    function nextBirthday(){
+        return employees.shift();
+    }
+
     function getReqType(nsr: ServiceRequest) {
         if (nsr.sanitation) {
             return "Sanitation";
@@ -56,6 +73,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
     let assignedCount = 0;
     let availableCount = 0;
     let myRequests:ServiceRequest[] = [];
+    let recentRequests:ServiceRequest[] = [];
     srData.forEach(item => {
         if(item.status===StatusType.Completed){completedCount++;}
         if(item.assignedTo.email===email){
@@ -63,6 +81,8 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
             myRequests.push(item);
         }
         if(item.status!==StatusType.Completed){availableCount++;}
+        recentRequests.push(item);
+        recentRequests.sort((a,b) => new Date(a.timeCreated).getTime()-new Date(b.timeCreated).getTime());
     });
 
 
@@ -115,6 +135,24 @@ if(dataType==="completed") {
                         <div style={{fontSize:18, marginBlockEnd:20}}>Priority: {obj.priority}<br/>
                         Location: {nodeIDtoName(obj.locationID)}<br/>
                         Notes: {obj.notes}</div></div>)}</ul>
+            </div>
+        );
+    }
+    if(dataType==="recents") {
+        return (
+            <div>
+                <ul>{recentRequests.slice(0,10).map(obj =>
+                      <div>
+                          <div style={{fontSize:26}}>{getReqType(obj)} Request</div>
+                        <div style={{fontSize:18, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
+            </div>
+        );
+    }
+    if(dataType==="birthday") {
+        return (
+            <div>
+                Next Birthday
+                {nextBirthday()?.firstName} {nextBirthday()?.lastName}
             </div>
         );
     }
