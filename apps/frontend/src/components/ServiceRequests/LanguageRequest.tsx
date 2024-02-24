@@ -19,7 +19,7 @@ const InternalTransportationRequest = ({change1, change2}) => {
     }
 
     return (
-        <>
+        <div className="modal-div">
 
             <div className="input-field">
                 <TextField
@@ -50,7 +50,7 @@ const InternalTransportationRequest = ({change1, change2}) => {
                     required
                 />
             </div>
-        </>
+        </div>
     );
 };
 

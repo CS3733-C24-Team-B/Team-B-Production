@@ -18,7 +18,7 @@ const MedicineRequest = ({ change1, change2 }) => {
     }
 
     return (
-        <>
+        <div className="modal-div">
             <div>
                 <TextField
                     style={{width: window.innerWidth * 0.38}}
@@ -43,7 +43,7 @@ const MedicineRequest = ({ change1, change2 }) => {
                     required
                 />
             </div>
-        </>
+        </div>
     );
 };
 

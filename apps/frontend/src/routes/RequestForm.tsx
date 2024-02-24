@@ -61,6 +61,8 @@ const RequestButton = styled(Button)(() => ({
 
 const modalStyle = {
     position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -111,6 +113,23 @@ export default function RequestForm() {
 
     console.log(isAuthenticated);
 
+    function resetForm() {
+        setRequestType("");
+        setTypeReq("");
+        setMedPressed(false);
+        setSanPressed(false);
+        setMainPressed(false);
+        setTransPressed(false);
+        setLangPressed(false);
+        setLocation("");
+        setPrio("");
+        setInfoText("");
+        setOption1("");
+        setOption2("");
+        setOption3("");
+        setAssignTo("");
+    }
+
     async function submit() {
         const accessToken: string = await getAccessTokenSilently();
         if (typeReq === "sanitation") {
@@ -131,6 +150,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "medicine") {
             const requestSent: MedicineRequest = {
@@ -151,6 +171,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "transport") {
             const requestSent: InternalTransportRequest = {
@@ -172,6 +193,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "language") {
             const requestSent: LanguageRequest = {
@@ -193,6 +215,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "maintenance") {
             const requestSent: MaintenanceRequest = {
@@ -216,7 +239,8 @@ export default function RequestForm() {
             }
         }
 
-        setCurrentTab("list-request");
+        resetForm();
+        //setCurrentTab("list-request");
         //navigate("/requestlist");
     }
 
@@ -598,22 +622,22 @@ export default function RequestForm() {
                             </Box>
                         </Modal>
                     )}
-                    <Snackbar
-                        anchorOrigin={{vertical: "top", horizontal: "center"}}
-                        open={submitAlert}
-                        autoHideDuration={2000}
-                        onClose={() => {
-                            setSubmitAlert(false);
-                        }}>
-                        <Alert
-                            severity="success"
-                            sx={{width: '100%'}}
-                        >
-                            Request form submitted.
-                        </Alert>
-                    </Snackbar>
                 </div>
             </div>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={2000}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity="success"
+                    sx={{width: '100%'}}
+                >
+                    Request form submitted.
+                </Alert>
+            </Snackbar>
         </div>
     );
 

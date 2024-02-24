@@ -47,7 +47,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
     }
 
     return (
-        <>
+        <div className="modal-div">
             <div className="input-field">
                 <Autocomplete
                     style={{width: window.innerWidth * 0.38}}
@@ -104,7 +104,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
                 />
             </div>
 
-        </>
+        </div>
     );
 };
 

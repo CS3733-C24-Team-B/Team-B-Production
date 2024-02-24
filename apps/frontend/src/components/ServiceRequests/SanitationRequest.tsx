@@ -11,7 +11,7 @@ const SanitationRequest = ({ change }) => {
     }
 
     return (
-        <>
+        <div className="modal-div">
             <div className="top-space">
                 <TextField
                     style={{width: window.innerWidth * 0.38}}
@@ -27,7 +27,7 @@ const SanitationRequest = ({ change }) => {
                     required
                 />
             </div>
-        </>
+        </div>
     );
 };
 
