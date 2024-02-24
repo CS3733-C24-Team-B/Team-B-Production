@@ -9,7 +9,3 @@ export type UpdateEmployee = {
     firstName: string,
     lastName: string
 }
-
-export type DeleteEmployee = {
-    email: string
-}

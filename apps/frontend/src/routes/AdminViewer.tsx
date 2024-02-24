@@ -5,11 +5,8 @@ import NodeTable from "../components/AdminTables/NodeTable.tsx";
 import EdgeTable from "../components/AdminTables/EdgeTable.tsx";
 import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
 import EmployeeTable from "../components/AdminTables/EmployeeTable.tsx";
+import UploadFiles from "../components/UploadFiles.tsx";
 import {Button} from "@mui/material";
-
-
-
-
 
 export default function AdminViewer() {
     const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
@@ -22,7 +19,7 @@ export default function AdminViewer() {
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"AD-OneColumn"}>
                     <div className={"AD-TwoRows"}>
-                        <div className={"AD-FourColumns"}>
+                        <div className={"AD-FiveColumns"}>
                             <Button
                                 style={{
                                     color: currentComponent === 'ServiceRequestTable' ? 'black' : 'black',
@@ -77,7 +74,19 @@ export default function AdminViewer() {
                             }}>
                                 Employee Data
                             </Button>
-
+                            <Button
+                                style={{
+                                    color: currentComponent === 'UploadFiles' ? 'black' : 'black',
+                                    borderBottom: currentComponent === 'UploadFiles' ? '1.4vh solid #34AD84' : 'white',
+                                    fontFamily: 'Lato',
+                                    fontSize: '100%',
+                                    textTransform: 'none',
+                                }} variant="text" onClick={() => {
+                                    setADPageShow(<UploadFiles/>);
+                                setCurrentComponent('UploadFiles'); // Set the state to track the current component
+                            }}>
+                                Upload Files
+                            </Button>
                         </div>
                         {ADPageShow}
                     </div>

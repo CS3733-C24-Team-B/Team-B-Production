@@ -9,11 +9,23 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import DeleteIcon from "@mui/icons-material/Delete";
-import {CircularProgress, Dialog, DialogActions, DialogTitle} from "@mui/material";
-import {styled} from "@mui/material/styles";
+import {
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Paper, Table, TableBody,
+    TableCell, TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
+import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
 import "../../css/servicelist_page.css";
 import "../../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import IconButton from "@mui/material/IconButton";
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -28,14 +40,33 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+const latoTheme = createTheme({
+    components: {
+        // Name of the component
+        MuiTableCell: {
+            styleOverrides: {
+                // Name of the slot
+                root: {
+                    // Some CSS
+                    fontFamily: 'Lato',
+                },
+            },
+        },
+    },
+});
+
+enum employeeSortField { email, firstName, lastName }
+
 export default function AdminViewer() {
 
     const {isLoading, getAccessTokenSilently} = useAuth0();
     const [employees, setEmployees] = useState<UpdateEmployee[]>([]);
     const [editRowID, setEditRowID] = useState(-1);
     const [dialogID, setDialogID] = useState(-1);
+    const [sortUp, setSortUp] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [typeSort, setTypeSort] = useState<keyof typeof employeeSortField>();
 
     // Refresh employee data
     useEffect(() => {
@@ -51,6 +82,26 @@ export default function AdminViewer() {
             setLoading(false);
         });
     }, [getAccessTokenSilently, refresh]);
+
+    function sortEmployees(sortField: employeeSortField) {
+        let employeesCopy: UpdateEmployee[] = [...employees];
+        switch (sortField) {
+            case employeeSortField.email:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.email.localeCompare(b.email));
+                break;
+            case employeeSortField.firstName:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.firstName.localeCompare(b.firstName));
+                break;
+            case employeeSortField.lastName:
+                employeesCopy.sort((a: UpdateEmployee, b: UpdateEmployee) => a.lastName.localeCompare(b.lastName));
+                break;
+        }
+        if (!sortUp) {
+            employeesCopy = employeesCopy.reverse();
+        }
+        setTypeSort(employeeSortField[sortField] as keyof typeof employeeSortField);
+        setEmployees(employeesCopy);
+    }
 
     function uploadFile() {
         console.log("Uploading employee info to database");
@@ -148,9 +199,9 @@ export default function AdminViewer() {
     const employeeList = employees.map((employee: UpdateEmployee, index: number) => {
 
         return (
-            <tr>
-                <td>{employee.email}</td>
-                <td> {(editRowID === index) ? (
+            <TableRow>
+                <TableCell>{employee.email}</TableCell>
+                <TableCell> {(editRowID === index) ? (
                     <TextField id="standard-basic" label="First name" variant="standard"
                                value={employee.firstName}
                                onChange={(e) => {
@@ -161,8 +212,8 @@ export default function AdminViewer() {
                 ) : (
                     <p>{employee.firstName}</p>
                 )}
-                </td>
-                <td> {(editRowID === index) ? (
+                </TableCell>
+                <TableCell> {(editRowID === index) ? (
                     <TextField id="standard-basic" label="Last name" variant="standard"
                                value={employee.lastName}
                                onChange={(e) => {
@@ -174,11 +225,12 @@ export default function AdminViewer() {
                 ) : (
                     <p>{employee.lastName}</p>
                 )}
-                </td>
+                </TableCell>
 
-                <td> {(editRowID === index) ? (
+                <TableCell> {(editRowID === index) ? (
                     <Button variant="outlined" style={{
-                        color: "#012D5A"}} onClick={() => {
+                        color: "#012D5A"
+                    }} onClick={() => {
                         console.log("Editing employee with email " + employee.email);
                         console.log(employee);
                         getAccessTokenSilently()
@@ -202,9 +254,9 @@ export default function AdminViewer() {
                     </Button>
                 )}
 
-                </td>
+                </TableCell>
 
-                <td>
+                <TableCell>
                     <Button variant="outlined"
                             style={{color: (employee.email === "softengc24b@gmail.com") ? "grey" : "#012D5A"}}
                             disabled={(employee.email === "softengc24b@gmail.com")}
@@ -213,7 +265,7 @@ export default function AdminViewer() {
                             }}>
                         <DeleteIcon/>
                     </Button>
-                </td>
+                </TableCell>
                 <Dialog
                     open={dialogID === index}
                     onClose={() => {
@@ -249,90 +301,117 @@ export default function AdminViewer() {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </tr>
+            </TableRow>
         );
     });
 
     return (
-            <div className={"AD-TwoColumns2"}>
-                <div className={"AD-TestCard2"}>
-                    <br/>
-                    {loading || isLoading ? <CircularProgress/> :<table className={"employee-tables"}>
-                        <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {employeeList}
-                        </tbody>
-                    </table>}
+        <div className={"AD-TwoColumns2"}>
+            <div className={"AD-TestCard2"}>
+                <br/>
+                {loading || isLoading ? <CircularProgress className="center-text"/> :
+                    <ThemeProvider theme={latoTheme}>
+                        <TableContainer component={Paper} className="service-tables"
+                                        sx={{maxHeight: "70vh"}}>
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>
+                                            Email
+                                            <IconButton style={{color: (typeSort === "email" ? "#34AD84" : "")}}
+                                                onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEmployees(employeeSortField.email);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            First Name
+                                            <IconButton style={{color: (typeSort === "firstName" ? "#34AD84" : "")}}
+                                                onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEmployees(employeeSortField.firstName);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            Last Name
+                                            <IconButton style={{color: (typeSort === "lastName" ? "#34AD84" : "")}}
+                                                        onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortEmployees(employeeSortField.lastName);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        </TableCell>
+                                        <TableCell/>
+                                        <TableCell/>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {employeeList}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </ThemeProvider>}
+            </div>
+            <div className={"AD-TwoRows2"}>
+                <div className={"AD-Card3"}>
+                    <p className={"AD-head"}>Actions</p>
+                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                marginLeft: "5%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none',
+                            }}>
+                        Upload File
+                        <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
+                            onClick={downloadFile}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none'
+                            }}>
+                        Export File
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
+                            onClick={downloadTemplate}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none'
+                            }}>
+                        Template
+                    </Button>
+                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
+                            onClick={deleteTable}
+                            className="export-button"
+                            style={{
+                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
+                                minWidth: "90%",
+                                fontFamily: 'Lato',
+                                fontSize: '90%',
+                                textTransform: 'none'
+                            }}>
+                        Delete Data
+                    </Button>
                 </div>
-                <div className={"AD-TwoRows2"}>
-                    <div className={"AD-Card3"}>
-                        <p className={"AD-head"}>Actions</p>
-                        <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                                style={{
-                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                    marginLeft: "5%",
-                                    minWidth: "90%",
-                                    fontFamily: 'Lato',
-                                    fontSize: '90%',
-                                    textTransform: 'none',
-                                }}>
-                            Upload File
-                            <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
-                        </Button>
-                        <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                                onClick={downloadFile}
-                                className="export-button"
-                                style={{
-                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                    minWidth: "90%",
-                                    fontFamily: 'Lato',
-                                    fontSize: '90%',
-                                    textTransform: 'none'
-                                }}>
-                            Export File
-                        </Button>
-                        <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                                onClick={downloadTemplate}
-                                className="export-button"
-                                style={{
-                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                    minWidth: "90%",
-                                    fontFamily: 'Lato',
-                                    fontSize: '90%',
-                                    textTransform: 'none'
-                                }}>
-                            Template
-                        </Button>
-                        <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                                onClick={deleteTable}
-                                className="export-button"
-                                style={{
-                                    backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                    minWidth: "90%",
-                                    fontFamily: 'Lato',
-                                    fontSize: '90%',
-                                    textTransform: 'none'
-                                }}>
-                            Delete Data
-                        </Button>
-                    </div>
-                    <div className={"AD-OneCard2"}>
-                        <p className={"AD-head2"}>Last Updated:</p>
-                        <br/>
-                        <br/>
-                        <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
-                        {/*<p className={"AD-head3"}>21:02</p>*/}
-                        {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
-                    </div>
+                <div className={"AD-OneCard2"}>
+                    <p className={"AD-head2"}>Last Updated:</p>
+                    <br/>
+                    <br/>
+                    <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
+                    {/*<p className={"AD-head3"}>21:02</p>*/}
+                    {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
+        </div>
     );
 }

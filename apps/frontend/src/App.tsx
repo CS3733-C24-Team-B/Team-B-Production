@@ -56,6 +56,11 @@ function App() {
             path: "/about",
             errorElement: <div/>,
             element: <About/>
+        },
+        {
+            path: "/credits",
+            errorElement: <div/>,
+            element: <div/>
         }
     ]);
 
