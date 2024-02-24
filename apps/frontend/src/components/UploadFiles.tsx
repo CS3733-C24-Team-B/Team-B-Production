@@ -157,7 +157,7 @@ export default function UploadFiles() {
                 const formData = new FormData();
                 formData.append("csvFile", employeeFile);
                 getAccessTokenSilently().then(async (accessToken: string) => {
-                    axios.post('/api/admin-employees/upload', formData, {
+                    axios.post('/api/employee/upload', formData, {
                         headers: {
                             Authorization: "Bearer " + accessToken,
                             'Content-Type': 'multipart/form-data'
@@ -221,7 +221,7 @@ export default function UploadFiles() {
             });
             b.dispatchEvent(clickEvtB);
             b.remove();
-            const res3 = await axios.get("/api/admin-employee/download", {
+            const res3 = await axios.get("/api/employee/download", {
                 headers: {
                     Authorization: "Bearer " + accessToken
                 }
