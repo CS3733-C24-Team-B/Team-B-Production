@@ -62,6 +62,12 @@
     color: #34AD84;
 }
 
+.color-settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
 
 /* DELETE \/ \/ \/ */
 

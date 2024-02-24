@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import "../css/home_page.css";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import LeafletMap from "../components/LeafletMap.tsx";
+import LeafletMap from "../components/Pathfinding/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
     Autocomplete, autocompleteClasses,
@@ -12,7 +12,7 @@ import {
     FormControlLabel,
     FormGroup,
     Menu,
-    MenuItem
+    MenuItem, Switch
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsIcon from '@mui/icons-material/Directions';
@@ -32,6 +32,9 @@ export default function NavigationPage() {
     const [algorithm, setAlgorithm] = useState(0);
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [nodeEnd, setNodeEnd] = useState("");
+    const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor") : "#3388ff");
+    const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
+    const [goku, setGoku] = useState(localStorage.getItem("goku") !== null ? localStorage.getItem("goku") === "true" : true);
     const openMenu = Boolean(menuAnchor);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
@@ -46,7 +49,11 @@ export default function NavigationPage() {
 
         fetch().then();
     }, []);
-
+    useEffect(() => {
+        if(!user) {
+            localStorage.removeItem("goku");
+        }
+    }, [user]);
     const currNodes = nodeData.filter(({nodeType}) => {
         return nodeType !== "HALL";
     });
@@ -78,13 +85,17 @@ export default function NavigationPage() {
                     className={"action-text"}>Destination</span>}
                 </p>} variant={"outlined"}/>}
                 popupIcon={<SearchIcon/>}
-                sx={{[`& .${autocompleteClasses.popupIndicator}`]: {
+                sx={{
+                    [`& .${autocompleteClasses.popupIndicator}`]: {
                         transform: "none"
-                    }}}
-                value={nodeIDtoName(nodeEnd)}
+                    }
+                }}
+                ListboxProps={{style: {fontFamily: 'Lato'}}}
+                value={{"label": nodeIDtoName(nodeEnd)}}
                 onChange={(newValue) => {
-                    if (newValue !== null && newValue.target.innerText !== undefined) {
-                        const nId = nametoNodeID(newValue.target.innerText);
+                    const input = newValue.target as HTMLElement;
+                    if (input.innerText !== undefined) {
+                        const nId = nametoNodeID(input.innerText);
                         setNodeEnd(nId);
                         setOpenDrawer(true);
                     } else {
@@ -96,7 +107,7 @@ export default function NavigationPage() {
     );
 
     topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
+        sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<DirectionsIcon/>}
         onClick={() => {
             setOpenDrawer(!openDrawer);
@@ -112,6 +123,8 @@ export default function NavigationPage() {
                 return "BFS";
             case 2:
                 return "DFS";
+            case 3:
+                return "Dijkstra";
         }
         return "A Star";
     }
@@ -124,6 +137,8 @@ export default function NavigationPage() {
                 return 1;
             case "DFS":
                 return 2;
+            case "Dijkstra":
+                return 3;
         }
         return 0;
     }
@@ -135,6 +150,7 @@ export default function NavigationPage() {
             onChange={(event) => {
                 setAlgorithm(searchTypeToNum(event.target.value));
             }}
+            label="Pathfinding Algorithm"
             size="small"
             style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', margin: '8%', minWidth: '84%'}}
             InputProps={{style: {fontFamily: 'Lato'}}}
@@ -142,6 +158,7 @@ export default function NavigationPage() {
             {<MenuItem value={"A Star"} sx={{fontFamily: 'Lato'}}>A*</MenuItem>}
             {<MenuItem value={"BFS"} sx={{fontFamily: 'Lato'}}>BFS</MenuItem>}
             {<MenuItem value={"DFS"} sx={{fontFamily: 'Lato'}}>DFS</MenuItem>}
+            {<MenuItem value={"Dijkstra"} sx={{fontFamily: 'Lato'}}>Dijkstra</MenuItem>}
         </TextField>
     );
     const SettingsMenu = (
@@ -164,16 +181,42 @@ export default function NavigationPage() {
                 <FormControlLabel control={<Checkbox checked={doAnimation}
                                                      onClick={() => setDoAnimation(!doAnimation)}/>}
                                   label={<p className={"settings-text"}>Animate Path</p>}/>
+                {doAnimation && user ?
+                    <FormControlLabel control={<Switch checked={goku} onClick={() => {
+                        localStorage.setItem("goku", !goku + "");
+                        setGoku(!goku);
+                    }}/>}
+                                      label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
             </FormGroup>
             <Divider/>
             {ChooseAlgo}
+            <Divider/>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+                <input className="Settings-Color-Selector1" type="color"
+                       value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("nodeColor", e.target.value);
+                           setNodeColor(e.target.value);
+                       }}/>
+            </div>
+            <div className={"color-settings"}>
+                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+                <input className="Settings-Color-Selector2" type="color"
+                       value={(edgeColor === null ? "#008000" : edgeColor!)}
+                       onChange={(e) => {
+                           localStorage.setItem("edgeColor", e.target.value);
+                           setEdgeColor(e.target.value);
+                       }}/>
+            </div>
         </Menu>
-    );
-    topbarElems.push(<Button
-        sx={{color: 'black', width: '10%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
+);
+topbarElems.push(
+    <Button
+        sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
         endIcon={<SettingsIcon/>}
         onClick={(e) => {
-            setMenuAnchor(e.currentTarget);
+            setMenuAnchor(e.currentTarget as unknown as SetStateAction<null>);
         }}>
         Settings
     </Button>);
@@ -182,7 +225,7 @@ export default function NavigationPage() {
     return (
         <div className={"NavigationContainer"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"NavigationBackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"NavigationTwoRows"}>
                     <div className={"MapControls"}>
@@ -199,7 +242,10 @@ export default function NavigationPage() {
                                     algo={algorithm}
                                     endNode={nodeEnd}
                                     changeTopbar={setNodeEnd}
-                                    changeDrawer={setOpenDrawer}/>
+                                    changeDrawer={setOpenDrawer}
+                                    nodeColor={nodeColor!}
+                                    edgeColor={edgeColor!}
+                                    goku={goku}/>
                     </div>
                 </div>
             </div>

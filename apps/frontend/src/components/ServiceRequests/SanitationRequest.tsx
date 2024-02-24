@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 const SanitationRequest = ({ change }) => {
     const [additionalField1, setAdditionalField1] = useState("");
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setAdditionalField1(value);
         change(value);
     }

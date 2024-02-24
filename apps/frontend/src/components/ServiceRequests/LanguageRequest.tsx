@@ -7,13 +7,13 @@ const InternalTransportationRequest = ({change1, change2}) => {
     const [language2, setLanguage2] = useState("");
 
     function handleChange1(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setLanguage1(value);
         change1(value);
     }
 
     function handleChange2(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setLanguage2(value);
         change2(value);
     }

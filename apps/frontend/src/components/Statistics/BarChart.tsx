@@ -3,9 +3,8 @@ import {Bar} from 'react-chartjs-2';
 import {Chart as ChartJS, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale, BarElement} from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
-// import Navbar from "../components/Navbar.tsx";
 import {useAuth0} from "@auth0/auth0-react";
-import "../css/dashboard.css";
+import "../../css/dashboard.css";
 
 ChartJS.register(BarElement, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale);
 
@@ -63,7 +62,13 @@ export default function BarChart() {
             },
             y: {
                 ticks: {
-                    color: 'black', // Ensures y-axis tick labels are black
+                    color: 'black',
+                    // Explicitly type the parameter as a number to resolve TS7006
+                    callback: function(value: number) {
+                        if (value % 1 === 0) { // Check if the value is an integer
+                            return value;
+                        }
+                    }
                 },
                 title: {
                     display: true,

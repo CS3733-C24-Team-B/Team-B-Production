@@ -145,7 +145,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string }) => {
     return (
         <div style={{maxHeight: '10%', width: 250}}>
             <Paper style={{minHeight: '30vh', maxHeight: '30vh'}} className={"text-paper"}>
-                <ul>{coordinates.map(obj=><li>{obj}</li>)}</ul>
+                <ul>{coordinates.map(obj=><li style={{fontFamily: 'Lato'}}>{obj}</li>)}</ul>
             </Paper>
             <br/>
             <Button size="small" onClick={speakArray}

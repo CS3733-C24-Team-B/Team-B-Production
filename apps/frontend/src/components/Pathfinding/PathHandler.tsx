@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PathInput from "./PathInput.tsx";
 import {PathPrinter} from "./PathPrinter.tsx";
-import "../css/pathhandler.css";
+import "../../css/pathhandler.css";
 
 export const PathHandler: React.FC = () => {
   const [formData, setFormData] = useState<{ input1: string; input2: string } | null>(null);

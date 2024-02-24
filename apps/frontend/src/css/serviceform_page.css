@@ -36,7 +36,7 @@
 .service-form-ThreeRows {
     /* Positioning */
     display: grid;
-    grid-template-rows: 6% 45% 45%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 6% 50% 40%; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
@@ -63,9 +63,9 @@
     display: grid;
     grid-template-columns: 33% 33% 33%;
     grid-template-rows: auto;
-    justify-content: center;
-    justify-items: center;
-    align-content: center;
+    /*justify-content: center;*/
+    /*justify-items: center;*/
+    /*align-content: center;*/
     width: 100%;
     height: 100%;
 }
@@ -106,8 +106,20 @@
 }
 
 .service-form-ReqList {
-    height: 30vh;
-    max-height: 30vh;
+    height: 100%;
+}
+
+.top-space {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.modal-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 /*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/
