@@ -10,11 +10,12 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
+    Alert,
     CircularProgress,
     Dialog,
     DialogActions,
     DialogTitle,
-    Paper, Table, TableBody,
+    Paper, Snackbar, Table, TableBody,
     TableCell, TableContainer,
     TableHead,
     TableRow
@@ -67,6 +68,9 @@ export default function AdminViewer() {
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [typeSort, setTypeSort] = useState<keyof typeof employeeSortField>();
+    const [submitAlert, setSubmitAlert] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [alertText, setAlertText] = useState("");
 
     // Refresh employee data
     useEffect(() => {
@@ -121,8 +125,16 @@ export default function AdminViewer() {
                         "Content-Type": "multipart/form-data"
                     }
                 }).then(() => {
-                    setRefresh(!refresh);
-                });
+                        setRefresh(!refresh);
+                        setAlertText("Employee data uploaded successfully");
+                        setIsError(false);
+                        setSubmitAlert(true);
+                    },
+                    () => {
+                        setAlertText("There was an error uploading the employee data");
+                        setIsError(true);
+                        setSubmitAlert(true);
+                    });
             });
         } catch (error) {
             console.error(error);
@@ -189,8 +201,16 @@ export default function AdminViewer() {
                     Authorization: "Bearer " + accessToken
                 }
             }).then(() => {
-                setRefresh(!refresh);
-            });
+                    setRefresh(!refresh);
+                    setAlertText("Deleted all employees");
+                    setIsError(false);
+                    setSubmitAlert(true);
+                },
+                () => {
+                    setAlertText("There was an error deleting all employees");
+                    setIsError(true);
+                    setSubmitAlert(true);
+                });
         } catch (error) {
             console.error(error);
         }
@@ -319,26 +339,29 @@ export default function AdminViewer() {
                                         <TableCell>
                                             Email
                                             <IconButton style={{color: (typeSort === "email" ? "#34AD84" : "")}}
-                                                onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEmployees(employeeSortField.email);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortEmployees(employeeSortField.email);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             First Name
                                             <IconButton style={{color: (typeSort === "firstName" ? "#34AD84" : "")}}
-                                                onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEmployees(employeeSortField.firstName);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        onClick={() => {
+                                                            setSortUp(!sortUp);
+                                                            sortEmployees(employeeSortField.firstName);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Last Name
                                             <IconButton style={{color: (typeSort === "lastName" ? "#34AD84" : "")}}
                                                         onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEmployees(employeeSortField.lastName);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                            setSortUp(!sortUp);
+                                                            sortEmployees(employeeSortField.lastName);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell/>
                                         <TableCell/>
@@ -412,6 +435,20 @@ export default function AdminViewer() {
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={3500}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity={isError ? "error" : "success"}
+                    sx={{width: '100%'}}
+                >
+                    {alertText}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
