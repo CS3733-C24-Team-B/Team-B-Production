@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import "../css/profile_page.css";
 import {useAuth0} from "@auth0/auth0-react";
-import AuthenticationButton from "../components/AuthenticationButton.tsx";
+//import AuthenticationButton from "../components/AuthenticationButton.tsx";
 import axios from "axios";
-import {Button} from "@mui/material";
+import {Button, CircularProgress} from "@mui/material";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
-import PieChart from "../components/PieChart.tsx";
+import PieChart from "../components/Statistics/PieChartStats.tsx";
 
 import ServiceRequestData from "../components/ServiceRequestData.tsx";
 
@@ -107,13 +107,13 @@ export default function ProfilePage() {
     return (
         <div className={"Profile-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"Profile-page-TwoColumns"}>
                     <div className={"Profile-page-TwoRows"}>
                         <div className={"Profile-pic-main-TestCard"}>
                             {isAuthenticated ? <img className={"Profile-page-pic"} src={user && user.picture}/> :
-                                <AuthenticationButton/>}
+                                <CircularProgress/>}
                             <div className={"Profile-page-text"}>
                                 <p className={"Profile-page-firstcard-text"}> {user && getNameOrEmail(user!.email!)} </p>
                                 <p className={"Profile-page-firstcard-text"}> {user && user.email} </p>

@@ -3,7 +3,7 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import EmployeeServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
+import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
@@ -315,7 +315,7 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         // style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}
+                        style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : '8% 85%')}}
                     >
                         <div className={"service-form-topcard"}>
                             <Button
@@ -476,18 +476,21 @@ export default function RequestForm() {
                         {/*If current tab is the List request tab*/}
                         {currentTab === "list-request" && (
                             <div className={"service-form-ReqList"}>
-                                <EmployeeServiceRequestTable/>
+                                <ServiceRequestTable/>
                             </div>
                         )}
 
-                        <div className={"service-form-TwoColumnsThirdRow"}>
-                            <div className={"service-form-ChartCard"}>
-                                <BarChart/>
+                        {currentTab === "statistics" && (
+                            <div className={"service-form-TwoColumnsThirdRow"}>
+                                <div className={"service-form-ChartCard"}>
+                                    <BarChart/>
+                                </div>
+                                <div className={"service-form-ChartCard"}>
+                                    <StackedBarChart/>
+                                </div>
                             </div>
-                            <div className={"service-form-ChartCard"}>
-                                <StackedBarChart/>
-                            </div>
-                        </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -511,7 +514,7 @@ export default function RequestForm() {
                                         'maintenance': "Maintenance",
                                         'transport': "Internal Transport",
                                         'language': "Language"
-                                    }[requestType]  + " Request"}
+                                    }[requestType] + " Request"}
                                 </p>
                                 <div className={"modal-div"}>
                                     <div>
