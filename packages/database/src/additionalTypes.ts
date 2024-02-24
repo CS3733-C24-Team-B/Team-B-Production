@@ -21,5 +21,7 @@ export type ServiceRequestWithTypes = Prisma.ServiceRequestGetPayload<{
         internalTransport: true,
         medicine: true,
         language: true
+        createdBy: true,
+        assignedTo: true
     }
 }>

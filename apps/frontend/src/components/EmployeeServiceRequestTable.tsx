@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import axios from "axios";
 import {
     Box,
     CircularProgress,
-    Collapse, FormControl, IconButton,
+    Collapse,FormControl, IconButton,
     Menu, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
@@ -16,34 +16,14 @@ import WarningIcon from '@mui/icons-material/Warning';
 import ReportIcon from '@mui/icons-material/Report';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import {
-    InternalTransportRequest, LanguageRequest,
-    MaintenanceRequest, MedicineRequest, PriorityType,
+    PriorityType,
     RequestType,
-    SanitationRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
-import {UpdateEmployee} from "common/src/employeeTypes.ts";
+import {ServiceRequestWithTypes} from "database";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-
-type ServiceRequest = {
-    serviceID: number,
-    timeCreated: string,
-    createdBy: UpdateEmployee,
-    createdByID: string,
-    locationID: string,
-    priority: string,
-    status: string,
-    assignedTo: UpdateEmployee,
-    assignedID: string,
-    notes: string,
-    sanitation: SanitationRequest,
-    maintenance: MaintenanceRequest,
-    internalTransport: InternalTransportRequest,
-    medicine: MedicineRequest,
-    language: LanguageRequest,
-}
 
 enum RequestSpecifics {
     hazards = "Hazards: ",
@@ -77,7 +57,7 @@ enum requestSortField { priority, timeCreated, type, assignedTo, status, locatio
 
 export default function ServiceRequestTable() {
     const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
-    const [srData, setSRData] = useState<ServiceRequest[]>([]);
+    const [srData, setSRData] = useState<ServiceRequestWithTypes[]>([]);
     const [nodeData, setNodeData] = useState([]);
     const [employeeData, setEmployeeData] = useState([]);
     const [statusFilter, setStatusFilter] = useState<string>("Choose Status");
@@ -86,7 +66,7 @@ export default function ServiceRequestTable() {
     const [employeeFilter, setEmployeeFilter] = useState<string>("Choose Employee");
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [filterType, setFilterType] = useState("Filter by...");
-    const [filterFunction, setFilterFunction] = useState<(nsr: ServiceRequest) => boolean>(() => () => {
+    const [filterFunction, setFilterFunction] = useState<(nsr: ServiceRequestWithTypes) => boolean>(() => () => {
         return true;
     });
     const openMenu = Boolean(menuAnchor);
@@ -121,7 +101,7 @@ export default function ServiceRequestTable() {
         fetch().then();
     }, [getAccessTokenSilently]);
 
-    function getReqType(nsr: ServiceRequest) {
+    function getReqType(nsr: ServiceRequestWithTypes) {
         if (nsr.sanitation) {
             return "sanitation";
         } else if (nsr.medicine) {
@@ -161,28 +141,10 @@ export default function ServiceRequestTable() {
         return new Date(utc.getTime() - offset * 60000);
     }
 
-    if(!beingSorted) {
-        srData.sort((srA: ServiceRequest, srB: ServiceRequest) => {
-            // console.log("TIME: " + srA.timeCreated + " " + srB.timeCreated);
-            // console.log(sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf());
-            return sqlToDate(srA.timeCreated).valueOf() - sqlToDate(srB.timeCreated).valueOf();
-            //return timeCreatedA - timeCreatedB;
+    if (!beingSorted) {
+        srData.sort((srA: ServiceRequestWithTypes, srB: ServiceRequestWithTypes) => {
+            return srA.timeCreated.valueOf() - srB.timeCreated.valueOf();
         });
-    }
-
-    function getNameOrEmail(userEmail: string) {
-        let outFirst = "";
-        let outLast = "";
-        let outEmail = "";
-        employeeData.find(({email, firstName, lastName}) => {
-            if (userEmail === email) {
-                outFirst = firstName;
-                outLast = lastName;
-                outEmail = email;
-                return true;
-            }
-        });
-        return (outFirst === null || outLast === null) ? outEmail : outFirst + " " + outLast;
     }
 
     function nodeNameOrReturn(nId: string) {
@@ -197,28 +159,42 @@ export default function ServiceRequestTable() {
     }
 
     function sortRequests(sortField: requestSortField) {
-        let requestsCopy: ServiceRequest[] = [...srData];
+        let requestsCopy: ServiceRequestWithTypes[] = [...srData];
         switch (sortField) {
             case requestSortField.priority:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.priority.localeCompare(b.priority));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.priority.localeCompare(b.priority));
                 break;
             case requestSortField.timeCreated:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.timeCreated.localeCompare(b.timeCreated));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.timeCreated.getTime() - b.timeCreated.getTime());
                 break;
             case requestSortField.type:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => getReqType(a).localeCompare(getReqType(b)));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => getReqType(a).localeCompare(getReqType(b)));
                 break;
             case requestSortField.assignedTo:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.assignedTo.firstName.localeCompare(b.assignedTo.firstName));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
+                    if (!a.assignedTo) {
+                        return -1;
+                    } else if (!b.assignedTo) {
+                        return 1;
+                    }
+                    return a.assignedTo.firstName!.localeCompare(b.assignedTo.firstName!);
+                });
                 break;
             case requestSortField.status:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.status.localeCompare(b.status));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.status.localeCompare(b.status));
                 break;
             case requestSortField.location:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
                 break;
             case requestSortField.createdBy:
-                requestsCopy.sort((a: ServiceRequest, b: ServiceRequest) => a.createdBy.firstName.localeCompare(b.createdBy.firstName));
+                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) =>  {
+                    if (!a.createdBy) {
+                        return -1;
+                    } else if (!b.createdBy) {
+                        return 1;
+                    }
+                    return a.createdBy.firstName!.localeCompare(b.createdBy.firstName!);
+                });
                 break;
         }
         if (!sortUp) {
@@ -231,7 +207,7 @@ export default function ServiceRequestTable() {
 
     const filterSR = srData.filter(filterFunction);
 
-    function Row(props: { nsr: ServiceRequest }) {
+    function Row(props: { nsr: ServiceRequestWithTypes }) {
         const {nsr} = props;
         const [open, setOpen] = React.useState(false);
 
@@ -271,30 +247,24 @@ export default function ServiceRequestTable() {
                         RequestType[getReqType(nsr) as keyof typeof RequestType]
                     }</TableCell>
                     <TableCell>
-                        {getNameOrEmail(nsr.assignedID)}
+                        {(nsr.assignedID !== null) ? nsr.assignedID : ""}
                     </TableCell>
-                    <TableCell style={{
-                        'Unassigned': {color: "crimson"},
-                        'Assigned': {color: "deepskyblue"},
-                        'In Progress': {color: "turquoise"},
-                        'Completed': {color: "limegreen"},
-                        'Paused': {color: "mediumpurple"}
-                    }[nsr.status]}>
-                        {StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "In Progress"}
+                    <TableCell>
+                        {StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                     </TableCell>
                     <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
-                    <TableCell>{getNameOrEmail(nsr.createdByID)}</TableCell>
+                    <TableCell>{nsr.createdBy ? nsr.createdBy.firstName + " " + nsr.createdBy.lastName : ""}</TableCell>
                 </TableRow>
                 {open ? <TableRow>
                     <TableCell/>
                     <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={8}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{margin: 1}}>
-                                {Object.keys(nsr[getReqType(nsr)]).filter((key) => {
+                                {Object.keys(nsr[getReqType(nsr) as keyof typeof getReqType]).filter((key) => {
                                     console.log("KEY: " + key);
                                     return !key.includes("ID");
                                 }).map((key) => (
-                                    <p>{RequestSpecifics[key as keyof typeof RequestSpecifics] + nodeNameOrReturn(nsr[getReqType(nsr)][key])}</p>
+                                    <p>{RequestSpecifics[key as keyof typeof RequestSpecifics] + nodeNameOrReturn(nsr[getReqType(nsr) as keyof typeof getReqType][key])}</p>
                                 ))}
                                 <p>Notes: {nsr.notes}</p>
                             </Box>
@@ -305,7 +275,7 @@ export default function ServiceRequestTable() {
         );
     }
 
-    const arraySR = filterSR.map((nsr: ServiceRequest) =>
+    const arraySR = filterSR.map((nsr: ServiceRequestWithTypes) =>
         <Row nsr={nsr}/>
     );
 
@@ -347,7 +317,7 @@ export default function ServiceRequestTable() {
                                     label=""
                                     onChange={(e) => {
                                         setTypeFilter(e.target.value);
-                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                        setFilterFunction(() => (nsr: ServiceRequestWithTypes) => {
                                             return e.target.value === "Choose Type" || getReqType(nsr) === e.target.value;
                                         });
                                     }}
@@ -367,7 +337,7 @@ export default function ServiceRequestTable() {
                                     label=""
                                     onChange={(e) => {
                                         setStatusFilter(e.target.value);
-                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                        setFilterFunction(() => (nsr: ServiceRequestWithTypes) => {
                                             return e.target.value === "Choose Status" || nsr.status === e.target.value;
                                         });
                                     }}
@@ -387,7 +357,7 @@ export default function ServiceRequestTable() {
                                     label=""
                                     onChange={(e) => {
                                         setPriorityFilter(e.target.value);
-                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                        setFilterFunction(() => (nsr: ServiceRequestWithTypes) => {
                                             return e.target.value === "Choose Priority" || nsr.priority === e.target.value;
                                         });
                                     }}
@@ -406,7 +376,7 @@ export default function ServiceRequestTable() {
                                     label=""
                                     onChange={(e) => {
                                         setEmployeeFilter(e.target.value);
-                                        setFilterFunction(() => (nsr: ServiceRequest) => {
+                                        setFilterFunction(() => (nsr: ServiceRequestWithTypes) => {
                                             return e.target.value === "Choose Employee" || nsr.assignedID === e.target.value;
                                         });
                                     }}
@@ -427,65 +397,86 @@ export default function ServiceRequestTable() {
             {(!receivedSR) ? <CircularProgress className="center-text"/> :
                 <ThemeProvider theme={latoTheme}>
                     <TableContainer component={Paper} className="service-tables"
-                                    sx={{maxHeight: "68vh"}}>
+                                    sx={{maxHeight: "70vh"}}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>
                                         <IconButton onClick={(e) => {
-                                            setMenuAnchor(e.currentTarget);
+                                            setMenuAnchor(e.currentTarget as unknown as SetStateAction<null>);
                                         }} style={{borderRadius: 0, width: 72}}>
                                             <FilterListIcon/>
                                         </IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Priority
-                                        <IconButton style={{color: (typeSort === "priority" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.priority);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        <IconButton
+                                            style={{color: (typeSort === "priority" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.priority);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Time <br/> Created
-                                        <IconButton style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.timeCreated);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        Time Created
+                                        <IconButton
+                                            style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.timeCreated);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Type
-                                        <IconButton style={{color: (typeSort === "type" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.type);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        <IconButton
+                                            style={{color: (typeSort === "type" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.type);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Assigned <br/> To
-                                        <IconButton style={{color: (typeSort === "assignedTo" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.assignedTo);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        Assigned To
+                                        <IconButton
+                                            style={{color: (typeSort === "assignedTo" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.assignedTo);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Status
-                                        <IconButton style={{color: (typeSort === "status" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.status);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        <IconButton
+                                            style={{color: (typeSort === "status" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.status);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
                                         Location
-                                        <IconButton style={{color: (typeSort === "location" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.location);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        <IconButton
+                                            style={{color: (typeSort === "location" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.location);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Created <br/> by
-                                        <IconButton style={{color: (typeSort === "createdBy" ? "#34AD84" : ""), width: '2vw'}} onClick={() => {
-                                            setSortUp(!sortUp);
-                                            sortRequests(requestSortField.createdBy);
-                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                        Created by
+                                        <IconButton
+                                            style={{color: (typeSort === "createdBy" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.createdBy);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
@@ -519,4 +510,3 @@ export default function ServiceRequestTable() {
         </div>
     );
 }
-

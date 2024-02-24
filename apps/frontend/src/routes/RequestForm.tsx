@@ -3,7 +3,7 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
+import EmployeeServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import "../css/serviceform_page.css";
 
@@ -452,7 +452,7 @@ export default function RequestForm() {
                         {/*If current tab is the List request tab*/}
                         {currentTab === "list-request" && (
                             <div className={"service-form-ReqList"}>
-                                <ServiceRequestTable/>
+                                <EmployeeServiceRequestTable/>
                             </div>
                         )}
 
