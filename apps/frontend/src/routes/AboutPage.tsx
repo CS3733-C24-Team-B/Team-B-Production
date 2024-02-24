@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AboutUsImage from "../images/AboutUsImage.png";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import "../css/about_page.css";
 import Box from "@mui/material/Box";
@@ -69,7 +69,7 @@ export default function AboutPage() {
     return (
         <div className={"AboutContainer"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"FiveRows"}>
                     <div className={"about-header"}>About Us</div>

@@ -16,13 +16,13 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
     }
 
     function handleChange2(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setPatientName(value);
         change2(value);
     }
 
     function handleChange3(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setMobilityAid(value);
         change3(value);
     }
