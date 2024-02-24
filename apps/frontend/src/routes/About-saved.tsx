@@ -13,69 +13,9 @@ import RodrickImage from "../images/profiles/RodrickMoore.png";
 import TempNavbar from "../components/TempNavbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import "../css/about_page.css";
-// import {Button} from "@mui/material";
-// import {styled} from "@mui/material/styles";
-// import PregnantWomanIcon from "@mui/icons-material/PregnantWoman";
-import Popup from 'reactjs-popup';
-import "reactjs-popup/dist/index.css";
 
-// const MemberButton = styled(Button)(() => ({
-//     width: AananImage,
-//     height: AananImage,
-//     marginLeft: AananImage,
-//     marginRight: AananImage,
-// }));
 
 export default function AboutPage() {
-    // const [member, setMember] = useState("");
-    // const [memName, setMemName] = useState("");
-    // const [katyPressed, setKatyPressed] = useState(false);
-    // const [michaelPressed, setMichaelPressed] = useState(false);
-    // const [kaitlinPressed, setKaitlinPressed] = useState(false);
-    // const [hienPressed, setHienPressed] = useState(false);
-    // const [anaanPressed, setAananPressed] = useState(false);
-    // const [cameronPressed, setCameronPressed] = useState(false);
-    // const [kennyPressed, setKennyPressed] = useState(false);
-    // const [luisPressed, setLuisPressed] = useState(false);
-    // const [rodrickPressed, setRodrickPressed] = useState(false);
-    // const [piotrPressed, setPiotrPressed] = use State(false);
-
-    // function displayquote(name: string) {
-    //     let quote: string = "";
-    //     switch(name) {
-    //         case "Katy":
-    //             quote = "\"Sickness is a mindset.\" -Luis Alzamora";
-    //             return;
-    //         case "Michael":
-    //             quote = "\"Quote\" -Person";
-    //             return;
-    //         case "Kaitlin":
-    //             quote = "\"One can have no smaller or greater mastery than mastery of oneself.\" -Leonardo da Vinci";
-    //             return;
-    //         case "Hien":
-    //             quote = "\"Quote\" -Person";
-    //             return;
-    //         case "Aanan":
-    //             quote = "\"Quote\" -Person";
-    //             return;
-    //         case "Cameron":
-    //             quote = "\"We cannot direct the wind, but we can adjust the sails\" -Jimmy Dean";
-    //             return;
-    //         case "Kenny":
-    //             quote = "" + PregnantWomanIcon;
-    //             return;
-    //         case "Luis":
-    //             quote = "\"Sickness is a mindset.\" -Luis Alzamora";
-    //             return;
-    //         case "Rodrick":
-    //             quote = "\"Goku and I'm just getting started\" -Ice Spice";
-    //             return;
-    //         case "Piotr":
-    //             quote = "\"Quote\" -Person";
-    //             return;
-    //     }
-    //     return quote;
-    // }
 
     return (
         <div className={"AboutContainer"}> {/* expands area across entire screen */}
@@ -105,44 +45,15 @@ export default function AboutPage() {
                     <div className={"About-TwoColumns"}>
                         <div className={"About-NameColumns"}>
                             <div className={"About-TestCard"}>
-                                {/*<MemberButton variant = "contained"*/}
-                                {/*              onClick={() => {*/}
-                                {/*                  if (member === "Katy") {*/}
-                                {/*                      setMember("");*/}
-                                {/*                  } else {*/}
-                                {/*                      setMember("Katy");*/}
-                                {/*                  }*/}
-                                {/*                  setMemName("Katy");*/}
-                                {/*                  setKatyPressed(!katyPressed);*/}
-                                {/*                  setMichaelPressed(false);*/}
-                                {/*                  setKaitlinPressed(false);*/}
-                                {/*                  setHienPressed(false);*/}
-                                {/*                  setAananPressed(false);*/}
-                                {/*                  setCameronPressed(false);*/}
-                                {/*                  setKennyPressed(false);*/}
-                                {/*                  setLuisPressed(false);*/}
-                                {/*                  setRodrickPressed(false);*/}
-                                {/*                  setPiotrPressed(false);*/}
-                                {/*              }}*/}
-                                {/*              sx={{justifySelf: 'left', borderRadius: '10px'}}>*/}
-                                {/*</MemberButton>*/}
-                                <Popup trigger =
-                                           { <button><img className={"ProfilePicture"} src={KatyImage} alt="profile picture"/></button>}
-                                       position="left center">
-                                    <div className={"quote-text"}>"This might be sneaky difficult" -Cameron Crane</div>
-                                </Popup>
+                                <img className={"ProfilePicture"} src={KatyImage} alt="profile picture"/>
                                 <div className={"TextBox"}>
-                                <h2> Katy Stuparu</h2>
-                            <h3>Lead Software Engineer & Backend Developer</h3>
+                                    <h2>Katy Stuparu</h2>
+                                    <h3>Lead Software Engineer & Backend Developer</h3>
                                     <p>WPI class of 2025 Computer Science and Robotics Engineering major.</p>
                                 </div>
                             </div>
                             <div className={"About-TestCard"}>
-                                <Popup trigger =
-                                           { <button><img className={"ProfilePicture"} src={MichaelImage} alt="profile picture"/></button>}
-                                       position="left center">
-                                    <div className={"quote-text"}>"Quote" -PersonA</div>
-                                </Popup>
+                                <img className={"ProfilePicture"} src={MichaelImage} alt="profile picture"/>
                                 <div className={"TextBox"}>
                                     <h2>Michael Sensat</h2>
                                     <h3>Assistant Lead Software Engineer & Algorithms Developer</h3>
@@ -150,11 +61,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                             <div className={"About-TestCard"}>
-                                <Popup trigger =
-                                           { <button><img className={"ProfilePicture"} src={KatieImage} alt="profile picture"/></button>}
-                                       position="left center">
-                                    <div className={"quote-text"}>"One can have no smaller or greater mastery than mastery of oneself." -Leonardo da Vinci</div>
-                                </Popup>
+                                <img className={"ProfilePicture"} src={KatieImage} alt="profile picture"/>
                                 <div className={"TextBox"}>
                                     <h2>Kaitlin Kartsen</h2>
                                     <h3>Scrum Master & Backend Developer</h3>
@@ -163,11 +70,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                             <div className={"About-TestCard"}>
-                                <Popup trigger =
-                                           { <button><img className={"ProfilePicture"} src={HienImage} alt="profile picture"/></button>}
-                                       position="left center">
-                                    <div className={"quote-text"}>"Quote" -PersonB</div>
-                                </Popup>
+                                <img className={"ProfilePicture"} src={HienImage} alt="profile picture"/>
                                 <div className={"TextBox"}>
                                     <h2>Hien Pham</h2>
                                     <h3>Full-Time Software Engineer & Backend Developer</h3>
@@ -175,11 +78,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                             <div className={"About-TestCard"}>
-                                <Popup trigger =
-                                           { <button><img className={"ProfilePicture"} src={AananImage} alt="profile picture"/></button>}
-                                       position="left center">
-                                    <div className={"quote-text"}>"Quote" -PersonC</div>
-                                </Popup>
+                                <img className={"ProfilePicture"} src={AananImage} alt="profile picture"/>
                                 <div className={"TextBox"}>
                                     <h2>Aanan Goyal</h2>
                                     <h3>Full-Time Software Engineer & Algorithms Developer</h3>

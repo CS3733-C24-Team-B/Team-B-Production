@@ -118,7 +118,7 @@ h3 {
 .AboutTwoColumns {
     display: grid;
     grid-template-rows: auto; /* column ratios are split, also accounts for 2% gap */
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 45% 55%;
     /*how to make software engineering on same line*/
 }
 
@@ -198,7 +198,7 @@ h3 {
     font-size: 35px;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: .5em;
     font-weight: bold;
 }
 
@@ -207,7 +207,7 @@ h3 {
     font-size:35px;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: .5em;
 }
 
 .name {
@@ -220,7 +220,7 @@ h3 {
 
 .break {
     color: white;
-    line-height: 30%;
+    line-height: .3em;
 }
 
 .meet-text {
