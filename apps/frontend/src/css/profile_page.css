@@ -131,17 +131,19 @@
     background-color: white;
     border-radius: 15px;
     display: grid;
-    width:100%;
+    width:97%;
     max-height: 40vh;
     justify-content: center;
     align-items: center;
     grid-template-rows: 9fr 10fr 1fr;
     grid-template-columns: 100%;
+    padding: 5px;
 }
 
 .Profile-page-firstcard-text {
     font-family: 'Lato', sans-serif;
     font-size: 90%;
+    font-weight: bold;
     margin-top: -1vh;
 }
 

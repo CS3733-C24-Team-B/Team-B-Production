@@ -125,7 +125,7 @@ if(dataType==="completed") {
     if(dataType==="recents") {
         return (
             <div>
-                <ul>{recentRequests.slice(0,6).map(obj =>
+                <ul>{recentRequests.slice(0,5).map(obj =>
                       <div>
                           <div style={{fontSize:18}}>{getReqType(obj)} Request</div>
                         <div style={{fontSize:12, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
