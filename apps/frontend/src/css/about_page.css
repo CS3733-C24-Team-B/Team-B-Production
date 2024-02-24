@@ -55,7 +55,7 @@ h3 {
 
 .FiveRows {
     display: grid;
-    grid-template-rows: 4% 22% 50% 15% 2%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: 4% 22% 50% 12% 5%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
     width: 100%;
     height: 100%;
@@ -84,8 +84,8 @@ h3 {
 }
 
 .AboutImage {
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
 }
 
 .MeetTheTeamCard {
@@ -108,7 +108,7 @@ h3 {
     background-color: white;
     border-radius: 15px;
     padding: 2%;
-    margin: 4% 2% 2%;
+    margin: 2% 2% 2%;
 }
 
 .CopyrightCard {
@@ -261,10 +261,10 @@ h3 {
 .copyright-text {
     margin-left: 10px;
     text-align: left;
-    font-size: 18px;
+    font-size: 1em;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: 130%;
 }
 
 .date {

@@ -70,7 +70,7 @@ export function MichaelQuote() {
                         Michael's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Quote" -PersonA
+                        "I'll be there a little after 3:00" -Piotr Skoczylas
                     </Typography>
                 </Box>
             </Modal>
@@ -122,7 +122,7 @@ export function HienQuote() {
                         Hien's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Quote" -PersonB
+                        "Don't give up on your dreams. Keep sleeping" -Hien Pham
                     </Typography>
                 </Box>
             </Modal>
@@ -148,7 +148,7 @@ export function AananQuote() {
                         Aanan's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Quote" -PersonC
+                        "A day without sunshine is like, you know, night" -Unknown
                     </Typography>
                 </Box>
             </Modal>
@@ -200,7 +200,7 @@ export function KennyQuote() {
                         Kenny's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        <PregnantWomanIcon/>
+                        <PregnantWomanIcon/> "早上好中国，现在我有冰淇淋！" -Michael Sensat
                     </Typography>
                 </Box>
             </Modal>
@@ -226,7 +226,7 @@ export function LuisQuote() {
                         Luis's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Sickness is a mindset." -Luis Alzamora
+                        "Does it jiggle" -Steven Hawking
                     </Typography>
                 </Box>
             </Modal>
@@ -278,7 +278,7 @@ export function PiotrQuote() {
                         Piotr's Favorite Quote:
                     </Typography>
                     <Typography id={"modal-nodal-descriptionKaty"} sx={{ mt: 2 }}>
-                        "Quote" -PersonD
+                        "Ripping Dunkin before the meeting" -Cameron Crane
                     </Typography>
                 </Box>
             </Modal>

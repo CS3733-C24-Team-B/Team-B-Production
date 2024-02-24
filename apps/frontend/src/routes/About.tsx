@@ -123,6 +123,7 @@ export default function AboutPage() {
                     </div>
                     <div className={"AcknowledgementCard"}>
                         <p className={"meet-text"}>Acknowledgements</p>
+                        <p className={"break"}>.</p>
                         <p className={"info"}>Brigham and Women's Hospital, and representative <a className={"blue-info"}>Andrew Shinn.</a></p>
                         <p className={"info"}>Icon made by <a className={"blue-info"}>Freepik</a> from <a href="https://www.flaticon.com" target="_blank" className={"info"}>www.flaticon.com.</a></p>
                     </div>
