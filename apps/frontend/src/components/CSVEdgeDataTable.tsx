@@ -8,7 +8,8 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import {
-    Button, CircularProgress, IconButton, Paper,
+    Alert,
+    Button, CircularProgress, IconButton, Paper, Snackbar,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
@@ -51,6 +52,9 @@ export default function CSVEdgeDataTable() {
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [typeSort, setTypeSort] = useState<keyof typeof edgeSortField>();
+    const [submitAlert, setSubmitAlert] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [alertText, setAlertText] = useState("");
 
     useEffect(() => {
         async function fetch() {
@@ -113,8 +117,17 @@ export default function CSVEdgeDataTable() {
                         Authorization: "Bearer " + accessToken
                     }
                 }).then(() => {
-                    setRefresh(!refresh);
-                });
+                        setRefresh(!refresh);
+                        setAlertText("Edge data sucessfully uploaded");
+                        setIsError(false);
+                        setSubmitAlert(true);
+                    },
+                    () => {
+                        setRefresh(!refresh);
+                        setAlertText("There was an error uploading the edge data. You may need to upload the node data first.");
+                        setIsError(true);
+                        setSubmitAlert(true);
+                    });
             });
         } catch (exception) {
             console.log("post error: " + exception);
@@ -183,8 +196,16 @@ export default function CSVEdgeDataTable() {
                     Authorization: "Bearer " + accessToken
                 }
             }).then(() => {
-                setRefresh(!refresh);
-            });
+                    setRefresh(!refresh);
+                    setAlertText("Edge data deleted");
+                    setIsError(false);
+                    setSubmitAlert(true);
+                },
+                () => {
+                    setAlertText("There was an error deleting the edge data");
+                    setIsError(true);
+                    setSubmitAlert(true);
+                });
         } catch (error) {
             console.error(error);
         }
@@ -205,25 +226,28 @@ export default function CSVEdgeDataTable() {
                                             Edge ID
                                             <IconButton style={{color: (typeSort === "edgeID" ? "#34AD84" : "")}}
                                                         onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEdges(edgeSortField.edgeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                            setSortUp(!sortUp);
+                                                            sortEdges(edgeSortField.edgeID);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Start Node
                                             <IconButton style={{color: (typeSort === "startNodeID" ? "#34AD84" : "")}}
                                                         onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEdges(edgeSortField.startNodeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                            setSortUp(!sortUp);
+                                                            sortEdges(edgeSortField.startNodeID);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             End Node
                                             <IconButton style={{color: (typeSort === "endNodeID" ? "#34AD84" : "")}}
                                                         onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortEdges(edgeSortField.endNodeID);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                            setSortUp(!sortUp);
+                                                            sortEdges(edgeSortField.endNodeID);
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -296,6 +320,20 @@ export default function CSVEdgeDataTable() {
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={3500}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity={isError ? "error" : "success"}
+                    sx={{width: '100%'}}
+                >
+                    {alertText}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-//import axios from "axios";
 import {
+    Alert,
     Box,
-    Button, styled
+    Button, Snackbar, styled,
+    CircularProgress
 } from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -22,7 +23,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function UploadFiles() {
-    const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
+    const {getAccessTokenSilently} = useAuth0();
     const [nodeFile, setNodeFile] = useState<File>();
     const [nodeFileName, setNodeFileName] = useState<string>("");
     const [edgeFile, setEdgeFile] = useState<File>();
@@ -30,8 +31,10 @@ export default function UploadFiles() {
     const [employeeFile, setEmployeeFile] = useState<File>();
     const [employeeFileName, setEmployeeFileName] = useState<string>("");
     const [refresh, setRefresh] = useState(false);
-    console.log(user + " " + isAuthenticated);
-    console.log(nodeFile + " " + edgeFile + " " + employeeFile);
+    const [submitAlert, setSubmitAlert] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [alertText, setAlertText] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     function uploadNodeFile(e: React.ChangeEvent<HTMLInputElement>) {
         setNodeFile(undefined);
@@ -68,47 +71,117 @@ export default function UploadFiles() {
 
     function uploadFile() {
         console.log("Uploading node info to database");
+        setIsLoading(true);
         try {
-            if(nodeFile) {
+            if (nodeFile) {
                 const formData = new FormData();
-                formData.append("nodeFile", nodeFile);
+                formData.append("csvFile", nodeFile);
                 getAccessTokenSilently().then(async (accessToken: string) => {
-                    await axios.post('/api/nodes/upload', formData, {
+                    axios.post('/api/nodes/upload', formData, {
                         headers: {
                             Authorization: "Bearer " + accessToken,
                             'Content-Type': 'multipart/form-data'
                         }
-                    });
-                });
-            }
-            if(edgeFile) {
-                const formData = new FormData();
-                formData.append("edgeFile", edgeFile);
-                getAccessTokenSilently().then(async (accessToken: string) => {
-                    await axios.post('/api/edges/upload', formData, {
-                        headers: {
-                            Authorization: "Bearer " + accessToken,
-                            'Content-Type': 'multipart/form-data'
+                    }).then(() => {
+                        if (edgeFile) {
+                            const formData = new FormData();
+                            formData.append("csvFile", edgeFile);
+                            getAccessTokenSilently().then(async (accessToken: string) => {
+                                axios.post('/api/edges/upload', formData, {
+                                    headers: {
+                                        Authorization: "Bearer " + accessToken,
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                }).then(() => {
+                                    setIsLoading(false);
+                                    setAlertText("Data uploaded successfully");
+                                    setIsError(false);
+                                    setSubmitAlert(true);
+                                },
+                                    () => {
+                                        setIsLoading(false);
+                                        setAlertText("There was an error uploading the edge data");
+                                        setIsError(true);
+                                        setSubmitAlert(true);
+                                    });
+                            });
+                        } else {
+                            setIsLoading(false);
+                            setAlertText("Data uploaded successfully");
+                            setIsError(false);
+                            setSubmitAlert(true);
                         }
-                    });
+                    },
+                        () => {
+                            setIsLoading(false);
+                            setAlertText("There was an error uploading the node data");
+                            setIsError(true);
+                            setSubmitAlert(true);
+                        });
                 });
             }
-            if(employeeFile) {
-                // const formData = new FormData();
-                // formData.append("employeeFile", employeeFile);
-                // getAccessTokenSilently().then(async (accessToken: string) => {
-                //     await axios.post('/api/admin-employees/upload', formData, {
-                //         headers: {
-                //             Authorization: "Bearer " + accessToken,
-                //             'Content-Type': 'multipart/form-data'
-                //         }
-                //     });
-                // });
-            }
-            setRefresh(!refresh);
         } catch (exception) {
             console.log("post error: " + exception);
         }
+        try {
+            if (edgeFile && !nodeFile) {
+                const formData = new FormData();
+                formData.append("csvFile", edgeFile);
+                getAccessTokenSilently().then(async (accessToken: string) => {
+                    axios.post('/api/edges/upload', formData, {
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(() => {
+                            setRefresh(!refresh);
+                            setIsLoading(false);
+                            setAlertText("Data uploaded successfully");
+                            setIsError(false);
+                            setSubmitAlert(true);
+                        },
+                        () => {
+                            setRefresh(!refresh);
+                            setIsLoading(false);
+                            setAlertText("There was an error uploading the edge data. You may need to upload the node data first.");
+                            setIsError(true);
+                            setSubmitAlert(true);
+                        });
+                });
+            }
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+        try {
+            if (employeeFile) {
+                const formData = new FormData();
+                formData.append("csvFile", employeeFile);
+                getAccessTokenSilently().then(async (accessToken: string) => {
+                    axios.post('/api/admin-employees/upload', formData, {
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(() => {
+                            setRefresh(!refresh);
+                            setIsLoading(false);
+                            setAlertText("Data uploaded successfully");
+                            setIsError(false);
+                            setSubmitAlert(true);
+                        },
+                        () => {
+                            setRefresh(!refresh);
+                            setIsLoading(false);
+                            setAlertText("There was an error uploading the employee data");
+                            setIsError(true);
+                            setSubmitAlert(true);
+                        });
+                });
+            }
+        } catch (exception) {
+            console.log("post error: " + exception);
+        }
+        setRefresh(!refresh);
     }
 
     async function downloadFiles() {
@@ -245,8 +318,9 @@ export default function UploadFiles() {
                             justifySelf: 'center'
                         }}
                         onClick={() => uploadFile()}
+                        disabled={isLoading}
                 >
-                    Upload Files
+                    {isLoading ? <CircularProgress/> : "Upload Files"}
                 </Button>
                 <Button component="label" variant="contained" startIcon={<CloudDownloadIcon/>}
                         style={{
@@ -261,6 +335,20 @@ export default function UploadFiles() {
                     Download Files
                 </Button>
             </div>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={3500}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity={isError ? "error" : "success"}
+                    sx={{width: '100%'}}
+                >
+                    {alertText}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

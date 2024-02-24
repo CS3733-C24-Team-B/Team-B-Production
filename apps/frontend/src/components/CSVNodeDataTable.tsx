@@ -8,7 +8,9 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import {
+    Alert,
     Button, CircularProgress, FormControl, IconButton, Menu, MenuItem, Paper, Select,
+    Snackbar,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
@@ -64,6 +66,9 @@ export default function CSVNodeDataTable() {
     const filterOptions = new Set<string>();
     const [filterVal, setFilterVal] = useState("None");
     const openMenu = Boolean(menuAnchor);
+    const [submitAlert, setSubmitAlert] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [alertText, setAlertText] = useState("");
 
     useEffect(() => {
         async function fetch() {
@@ -139,6 +144,7 @@ export default function CSVNodeDataTable() {
             }
 
             formData.append("csvFile", csvFile.files![0]); // Update based on backend
+            setLoading(true);
 
             getAccessTokenSilently().then((accessToken: string) => {
                 axios.post('/api/nodes/upload', formData, {
@@ -148,7 +154,16 @@ export default function CSVNodeDataTable() {
                     }
                 }).then(() => {
                     setRefresh(!refresh);
-                });
+                    setAlertText("Node data uploaded successfully");
+                    setIsError(false);
+                    setSubmitAlert(true);
+                },
+                    () => {
+                        setRefresh(!refresh);
+                        setAlertText("There was an error uploading the node data");
+                        setIsError(true);
+                        setSubmitAlert(true);
+                    });
             });
         } catch (exception) {
             console.log("post error: " + exception);
@@ -217,7 +232,15 @@ export default function CSVNodeDataTable() {
                 }
             }).then(() => {
                 setRefresh(!refresh);
-            });
+                setAlertText("Node data deleted");
+                setIsError(false);
+                setSubmitAlert(true);
+            },
+                () => {
+                    setAlertText("There was an error deleting the node data");
+                    setIsError(true);
+                    setSubmitAlert(true);
+                });
         } catch (error) {
             console.error(error);
         }
@@ -453,6 +476,20 @@ export default function CSVNodeDataTable() {
                     {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
                 </div>
             </div>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={3500}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity={isError ? "error" : "success"}
+                    sx={{width: '100%'}}
+                >
+                    {alertText}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
