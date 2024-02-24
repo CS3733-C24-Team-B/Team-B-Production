@@ -131,21 +131,7 @@ export default function Credits() {
                                 </div>
                             </div>
                         </ThemeProvider>
-
                     </div>
-
-
-                    {/*<div className="Settings-TwoColumns">*/}
-                    {/*    <div className="Settings-TestCard1">*/}
-                    {/*        <ThemeProvider theme={theme}> /!* Apply the Lato font theme *!/*/}
-                    {/*            <Typography sx={{margin: "30px", fontWeight: 550, fontSize: "1.35rem"}}>*/}
-                    {/*                Settings*/}
-                    {/*            </Typography>*/}
-
-                    {/*        </ThemeProvider>*/}
-                    {/*    </div>*/}
-                    {/*    <img className="Settings-TestCard2" src={settingsImage}></img>*/}
-                    {/*</div>*/}
                 </div>
             </div>
         </div>
