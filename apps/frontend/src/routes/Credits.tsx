@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/credits.css";
-import TempNavbar from "../components/TempNavbar.tsx";
+import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {Box, Typography} from "@mui/material";
@@ -26,7 +26,7 @@ export default function Credits() {
     return (
         <div className={"Settings-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
-            <TempNavbar/> {/* NavBlue css fixes this to the left */}
+            <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className="Credits-ThreeRows">
                     <div className="Credits-spacing">
