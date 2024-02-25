@@ -4,7 +4,7 @@ import {
     Box, Button,
     CircularProgress,
     Collapse, Dialog, DialogActions, DialogTitle, FormControl, IconButton,
-    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip
 } from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -171,7 +171,7 @@ export default function ServiceRequestTable() {
         });
     } else {
         srData.sort(sortFunction);
-        if(!sortUp) {
+        if (!sortUp) {
             srData.reverse();
         }
     }
@@ -224,7 +224,7 @@ export default function ServiceRequestTable() {
                 setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
                 break;
             case requestSortField.createdBy:
-                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) =>  {
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
                     if (!a.createdBy) {
                         return -1;
                     } else if (!b.createdBy) {
@@ -256,21 +256,22 @@ export default function ServiceRequestTable() {
                             {open ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
                         </IconButton>
                     </TableCell>
-                    <TableCell sx={{width: 150}} style={{
+                    <TableCell sx={{width: 100, padding: 0}} style={{
                         'Low': {color: "darkolivegreen"},
                         'Medium': {color: "midnightblue"},
                         'High': {color: "maroon"},
                         'Emergency': {color: "crimson"}
                     }[nsr.priority]}>
-                        <div className={"priority-display"}>
-                            {{
-                                'Low': <ErrorIcon/>,
-                                'Medium': <WarningIcon/>,
-                                'High': <ReportIcon/>,
-                                'Emergency': <NewReleasesIcon/>
-                            }[nsr.priority]}
-                            {nsr.priority}
-                        </div>
+                        <Tooltip title={nsr.priority} placement="right">
+                            <div className={"priority-display"} style={{width: 'fit-content'}}>
+                                {{
+                                    'Low': <ErrorIcon/>,
+                                    'Medium': <WarningIcon/>,
+                                    'High': <ReportIcon/>,
+                                    'Emergency': <NewReleasesIcon/>
+                                }[nsr.priority]}
+                            </div>
+                        </Tooltip>
                     </TableCell>
                     <TableCell>{
                         RequestType[getReqType(nsr) as keyof typeof RequestType]
@@ -551,7 +552,7 @@ export default function ServiceRequestTable() {
                                             <FilterListIcon/>
                                         </IconButton>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{width: 100, padding: 0}}>
                                         Priority
                                         <IconButton
                                             style={{color: (typeSort === "priority" ? "#34AD84" : ""), width: '2vw'}}

@@ -144,6 +144,7 @@ export default function LeafletMap(props: MapProps) {
     const [useDefault, setUseDefault] = useState(false);
     const [oldZoom, setOldZoom] = useState("");
     const [showPopups, setShowPopups] = useState(props.showPopups);
+    const [animatePic, setAnimatePic] = useState("");
     const [showPreview, setShowPreview] = useState(false);
 
     // get auth0 stuff
@@ -180,13 +181,35 @@ export default function LeafletMap(props: MapProps) {
     }, [props.nodeColor, props.edgeColor]);
 
     useEffect(() => {
+        const nodeIDToXPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["xcoord"];
+        };
+
+        const nodeIDToYPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["ycoord"];
+        };
+        const nodeIDToFloor = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["floor"];
+        };
+
         if (props.defaultStart === "" || !props.useDefault) {
             setUseDefault(false);
         } else {
             setUseDefault(true);
             setNodeStart(props.defaultStart);
+            if(props.defaultStart !== undefined && nodeData.length > 0) {
+                setSelectedFloor(levelToFloor(nodeIDToFloor(props.defaultStart)));
+                setCurrLevel(nodeIDToFloor(props.defaultStart));
+                lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.defaultStart)), transX(nodeIDToXPos(props.defaultStart))), 6);
+            }
         }
-    }, [props.defaultStart, props.useDefault]);
+    }, [nodeData, props.defaultStart, props.useDefault]);
 
     useEffect(() => {
         const nodeIDToXPos = (nId: string) => {
@@ -234,7 +257,14 @@ export default function LeafletMap(props: MapProps) {
                         Authorization: "Bearer " + accessToken
                     }
                 });
+                const res2 = await axios.get("/api/employee/profile-picture/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        responseType: "arraybuffer"
+                    }
+                });
                 setSRData(res.data);
+                setAnimatePic(res2.data ? "data:image;base64," + res2.data : user!.picture!);
             }
 
             const res3 = await axios.get("/api/nodes/read");
@@ -244,7 +274,7 @@ export default function LeafletMap(props: MapProps) {
         }
 
         fetch().then();
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently, user]);
 
     useEffect(() => {
         async function fetch() {
@@ -414,7 +444,7 @@ export default function LeafletMap(props: MapProps) {
                 (!props.goku ?
                         <ImageOverlay
                             className={"animated-icon"}
-                            url={user! && user!.picture!}
+                            url={animatePic}
                             bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 0.5, animateData[startDraw.current].lng - 0.5), new LatLng(animateData[startDraw.current].lat + 0.5, animateData[startDraw.current].lng + 0.5))}
                             ref={(r) => {
                                 r?.setZIndex(1000);
