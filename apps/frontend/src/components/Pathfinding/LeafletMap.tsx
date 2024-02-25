@@ -17,7 +17,7 @@ import {
     Button,
     Autocomplete,
     Collapse,
-    CircularProgress
+    CircularProgress, Box, Modal
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
@@ -39,6 +39,7 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CircleIcon from '@mui/icons-material/Circle';
 import GokuIcon from "../GokuIcon.tsx";
+import Canvas from "./Canvas.tsx";
 
 const FloorLevel = [
     {
@@ -101,6 +102,21 @@ interface MapProps {
     showPopups: boolean;
 }
 
+const gangnamStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '90vw',
+    maxHeight: '90vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
+
 export default function LeafletMap(props: MapProps) {
     const [nodeData, setNodeData] = useState([]);
     const [edgeData, setEdgeData] = useState([]);
@@ -128,6 +144,7 @@ export default function LeafletMap(props: MapProps) {
     const [useDefault, setUseDefault] = useState(false);
     const [oldZoom, setOldZoom] = useState("");
     const [showPopups, setShowPopups] = useState(props.showPopups);
+    const [showPreview, setShowPreview] = useState(false);
 
     // get auth0 stuff
     const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
@@ -647,7 +664,10 @@ export default function LeafletMap(props: MapProps) {
 
                     <div style={{display: 'grid', width: '90%', gap: '5%'}}>
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
-                        {directions && <ExportPDF textDirections={dirText}/>}
+                        {directions && <Button size="small" variant="outlined" onClick={() => setShowPreview(true)}
+                                style={{color:'#012D5A', borderColor: '#012D5A', fontSize: '1.5vh', width: '100%' }}>
+                            Preview
+                        </Button>}
                     </div>
                 </div>
             </Collapse>
@@ -752,6 +772,19 @@ export default function LeafletMap(props: MapProps) {
                     </button>
                 ))}
             </div>
+            <Modal
+                keepMounted
+                open={showPreview}
+                onClose={() => {
+                    setShowPreview(false);
+                }}
+                style={{fontFamily: 'Lato'}}
+            >
+                <Box sx={gangnamStyle}>
+                    <div id="canvas" style={{maxWidth: '70%', maxHeight: '70%'}}><Canvas/></div>
+                    <ExportPDF map={document.querySelector("#canvas")!} textDirections={dirText}/>
+                </Box>
+            </Modal>
         </div>
     );
 }
