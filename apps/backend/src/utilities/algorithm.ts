@@ -242,9 +242,13 @@ export class Dijkstra implements searchStrategy {
     }
 }
 function calcCost(curr:string,neighbor:MapNode,nodeList:MapNode[]){
-    let weight = 0;
-   weight += Math.sqrt((findNode(nodeList,curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList,curr).ycoord - neighbor.ycoord) ** 2+((nodeToFloor(mapNodeToStar(findNode(nodeList,curr)))-nodeToFloor(mapNodeToStar(neighbor)))*1000)**2);
-    return weight;
+    let weight = 1000;
+    if(findNode(nodeList,curr).nodeType!=="ELEV"){
+        weight=2501;
+    }
+        weight = Math.sqrt((findNode(nodeList, curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList, curr).ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(mapNodeToStar(findNode(nodeList, curr))) - nodeToFloor(mapNodeToStar(neighbor))) * weight) ** 2);
+
+   return weight;
 }
 export class MapNode {
     nodeID: string;
