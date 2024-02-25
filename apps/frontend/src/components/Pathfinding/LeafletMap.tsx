@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
+import {ExportPDF} from "./ExportPDF.tsx";
 import L from "leaflet";
 import {useAuth0} from "@auth0/auth0-react";
 import lowerlevel1 from "../../images/00_thelowerlevel1.png";
@@ -123,6 +124,7 @@ export default function LeafletMap(props: MapProps) {
     const [floorSet, setFloorSet] = useState(new Set());
     const [nodeColor, setNodeColor] = useState(props.nodeColor);
     const [edgeColor, setEdgeColor] = useState(props.edgeColor);
+    const [dirText, setDirText] = useState<string[]>([]);
     const [useDefault, setUseDefault] = useState(false);
     const [oldZoom, setOldZoom] = useState("");
     const [showPopups, setShowPopups] = useState(props.showPopups);
@@ -643,8 +645,9 @@ export default function LeafletMap(props: MapProps) {
                         </Button>
                     </div>
 
-                    <div style={{display: 'grid', maxWidth: '90%'}}>
-                        {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd}/>}
+                    <div style={{display: 'grid', width: '90%', gap: '5%'}}>
+                        {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
+                        {directions && <ExportPDF textDirections={dirText}/>}
                     </div>
                 </div>
             </Collapse>
