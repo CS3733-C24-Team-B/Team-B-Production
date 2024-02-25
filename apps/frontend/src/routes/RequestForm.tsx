@@ -548,7 +548,7 @@ export default function RequestForm() {
                                         <img className={"pillimage"} src={LangIMG} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
-                                <RequestButton variant="contained"
+                                <RequestButton className="requestButton" variant="contained"
                                                onClick={() => {
                                                    if (requestType === "sanitation") {
                                                        setRequestType("");

@@ -1,3 +1,21 @@
+@keyframes sparkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.requestButton:hover .requestCardGrid:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*background-color: red;*/
+    background-image: url('../images/pills.png');
+    animation: sparkle 1s infinite;
+}
+
 .service-form-Container {
     /* Positioning */
     width: 100vw;
