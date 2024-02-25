@@ -109,8 +109,8 @@ const gangnamStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '90vw',
-    maxHeight: '90vh',
+    width: '80vw',
+    maxHeight: '80vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -781,7 +781,7 @@ export default function LeafletMap(props: MapProps) {
                 style={{fontFamily: 'Lato'}}
             >
                 <Box sx={gangnamStyle}>
-                    <div id="canvas" style={{maxWidth: '70%', maxHeight: '70%'}}><Canvas/></div>
+                    <div id="canvas" style={{maxWidth: '50%', maxHeight: '50%'}}><Canvas pathData={pathData}/></div>
                     <ExportPDF map={document.querySelector("#canvas")!} textDirections={dirText}/>
                 </Box>
             </Modal>
