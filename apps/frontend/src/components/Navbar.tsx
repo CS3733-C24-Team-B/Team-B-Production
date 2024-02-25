@@ -5,10 +5,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
-import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from '@mui/icons-material/Info';
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-
+import CreditIcon from '@mui/icons-material/LibraryBooks';
 export default function Navbar() {
 
     const {loginWithRedirect, user, isAuthenticated} = useAuth0();
@@ -118,25 +116,6 @@ export default function Navbar() {
 
                 <Button sx={{
                     color: 'white', width: '80%', textTransform: 'none',
-                    borderBottom: (window.location.pathname === "/settings") ? '0.7vh solid #34AD84' : ''
-                }}
-                        style={{
-                            justifyContent: "flex-start",
-                            marginLeft: '5%',
-                            fontSize: '125%',
-                            fontFamily: 'Lato'
-                        }}
-                        startIcon={<SettingsIcon style={{
-                            fontSize: "150%",
-                            minWidth: 40,
-                            color: (window.location.pathname === "/settings") ? '#34AD84' : 'white'
-                        }}/>}
-                        href={"/settings"}>
-                    Settings {/*settings icon*/}
-                </Button>
-
-                <Button sx={{
-                    color: 'white', width: '80%', textTransform: 'none',
                     borderBottom: (window.location.pathname === "/about") ? '0.7vh solid #34AD84' : ''
                 }}
                         style={{
@@ -164,7 +143,7 @@ export default function Navbar() {
                             fontSize: '125%',
                             fontFamily: 'Lato'
                         }}
-                        startIcon={<CreditCardIcon style={{
+                        startIcon={<CreditIcon style={{
                             fontSize: "150%",
                             minWidth: 40,
                             color: (window.location.pathname === "/credits") ? '#34AD84' : 'white'
