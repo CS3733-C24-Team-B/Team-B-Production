@@ -199,9 +199,9 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             return (
                 <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
                     <hr/>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', fontWeight:"bolder"}}>
-                        {getIcon(obj)}
-                        <div style={{padding:10}}>{obj}</div>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center',alignSelf:"center", fontWeight:"bolder"}}>
+                        <div style={{paddingLeft:10}}>{getIcon(obj)}</div>
+                            <div style={{padding:10}}>{obj}</div>
 
                     </div>
                 </li>
@@ -210,7 +210,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             return (
                 <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        {getIcon(obj)}
+                        <div style={{paddingLeft:10}}>{getIcon(obj)}</div>
                         <div style={{padding:10}}>{obj}</div>
                     </div>
                 </li>
