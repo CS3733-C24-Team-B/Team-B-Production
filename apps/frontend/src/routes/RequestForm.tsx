@@ -8,6 +8,11 @@ import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
 import PillImage from "../images/pills.png";
+import LangIMG from "../images/lang.png";
+import LoudImage from "../images/loud.png";
+import TransportImage from "../images/transport.png";
+import MaintainImage from "../images/maintain.png";
+import CleanImage from "../images/clean.png";
 
 // Material UI imports
 import {
@@ -396,7 +401,7 @@ export default function RequestForm() {
 
                         {/*If current tab is the create request tab*/}
                         {currentTab === "create-request" && (
-                            <div className={"service-form-midcard"}>
+                            <div className={"service-form-midcard2"}>
                                 <header className={"create-service-header"}
                                         style={{fontFamily: 'Lato',fontWeight: '550'}}>
                                     Create Service Request
@@ -474,7 +479,7 @@ export default function RequestForm() {
                                             maxWidth: '80%',
                                         }}>This request is for odering the medicine paitents need to their rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                        <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
@@ -507,7 +512,7 @@ export default function RequestForm() {
                                             maxWidth: '80%',
                                         }}>This request is for odering the medicine paitents need to their rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                        <img className={"pillimage"} src={TransportImage} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
@@ -540,7 +545,7 @@ export default function RequestForm() {
                                             maxWidth: '80%',
                                         }}>This request is for odering the medicine paitents need to their rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                        <img className={"pillimage"} src={LangIMG} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
@@ -573,7 +578,7 @@ export default function RequestForm() {
                                             maxWidth: '80%',
                                         }}>This request is for odering the medicine paitents need to their rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                        <img className={"pillimage"} src={CleanImage} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
@@ -584,7 +589,7 @@ export default function RequestForm() {
                                             fontFamily: 'Lato',
                                             alignSelf: "center",
                                             fontWeight: '100'
-                                        }}>Language Request</p>
+                                        }}>Goku Request</p>
 
                                         <p style={{
                                             fontSize: '80%',
@@ -593,7 +598,7 @@ export default function RequestForm() {
                                             maxWidth: '80%',
                                         }}>This request is for odering the medicine paitents need to their rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                        <img className={"pillimage"} src={LoudImage} alt={"Image"}/>
                                     </div>
                                 </RequestButton>
                             </div>
