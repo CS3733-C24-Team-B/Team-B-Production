@@ -1,7 +1,7 @@
 .service-form-Container {
     /* Positioning */
     width: 100vw;
-    height: 90vh;
+    /* height: 90vh; */
 }
 
 .service-form-BackBlue{
@@ -11,19 +11,7 @@
     /* Positioning */
     height: 100%;
     margin-left: 15%;
-    margin-top: 10vh;
-}
-
-.service-form-TwoColumns {
-    /* Styling */
-    background-color: #012d5a;
-
-    /* Positioning */
-    display: grid;
-    grid-template-columns: 100%; /* column ratios are split, also accounts for 2% gap */
-    grid-template-rows: auto;
-    width: 100%;
-    height: 100%;
+    margin-top: 11.5vh;
 }
 
 .service-form-TwoColumnsThirdRow {
@@ -44,13 +32,13 @@
     margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
 }
 .requestCardGrid{
-    display: grid;
-    grid-template-rows: 8% 18% 55%; /* percentages of Container height, has to add up to 100%, not over */
-    grid-template-columns: auto;
-    grid-row-gap: 2%;
-    max-height: 100%;
+    /*
+    display: grid; */
+    /* grid-template-rows: 8% 18% 55%; percentages of Container height, has to add up to 100%, not over */
+    /*grid-template-columns: auto; */
+    /*grid-row-gap: 2%; */
+    /* max-height: 100%; */
     margin-top: 4%;
-
 }
 
 .pillimage{
@@ -101,7 +89,7 @@
 
     /* Positioning */
     width: 100%;
-    height: 105vh;
+    /*height: 120vh;*/
 }
 
 .create-service-header {
