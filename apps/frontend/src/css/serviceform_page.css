@@ -1,7 +1,7 @@
 .service-form-Container {
     /* Positioning */
     width: 100vw;
-    height: 90vh;
+    /* height: 90vh; */
 }
 
 .service-form-BackBlue{
@@ -11,19 +11,7 @@
     /* Positioning */
     height: 100%;
     margin-left: 15%;
-    margin-top: 10vh;
-}
-
-.service-form-TwoColumns {
-    /* Styling */
-    background-color: #012d5a;
-
-    /* Positioning */
-    display: grid;
-    grid-template-columns: 100%; /* column ratios are split, also accounts for 2% gap */
-    grid-template-rows: auto;
-    width: 100%;
-    height: 100%;
+    margin-top: 11.5vh;
 }
 
 .service-form-TwoColumnsThirdRow {
@@ -40,17 +28,18 @@
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
+    height: 100%;
     /* order matter :) \/ */
     margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
 }
 .requestCardGrid{
-    display: grid;
-    grid-template-rows: 8% 18% 55%; /* percentages of Container height, has to add up to 100%, not over */
-    grid-template-columns: auto;
-    grid-row-gap: 2%;
-    max-height: 100%;
+    /*
+    display: grid; */
+    /* grid-template-rows: 8% 18% 55%; percentages of Container height, has to add up to 100%, not over */
+    /*grid-template-columns: auto; */
+    /*grid-row-gap: 2%; */
+    /* max-height: 100%; */
     margin-top: 4%;
-
 }
 
 .pillimage{
@@ -86,13 +75,97 @@
 }
 
 .service-form-midcard {
-    /* Styling */
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+.statistics-layout {
+    display: flex;
+    height: 100%;
+}
+
+.statistics-cards-container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.stat-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.stat-number-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #34AD84;
+}
+
+#open-requests .stat-number-container {
+    color: #E53E3E;
+}
+
+#employee-of-month .stat-number-container {
+    font-size: 2.25rem;
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+#requests-today .stat-number-container{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    align-items: start;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+}
+
+.stat-card.small {
+    height: 80%;
+}
+
+.stat-card.x-small {
+    height: 120%;
+}
+
+.stat-card.medium {
+    height: 120%;
+}
+
+.stat-card.large {
+    height: 80%;
+}
+
+
+
+.service-form-midcard-right {
+    width: 50%;
+    height: 100%;
     background-color: white;
     border-radius: 15px;
 
-    /* Positioning */
-    width: 100%;
-    height: 100%;
 }
 .service-form-midcard2 {
     /* Styling */
@@ -101,7 +174,7 @@
 
     /* Positioning */
     width: 100%;
-    height: 105vh;
+    /*height: 120vh;*/
 }
 
 .create-service-header {

@@ -115,16 +115,11 @@ router.get("/profile-picture/:email", async function (req: Request, res: Respons
 router.put("/", async function (req: Request, res: Response) {
     const employeeInfo: UpdateEmployee = req.body;
     try {
-        await client.employee.upsert({
+        await client.employee.update({
             where: {
                 email: employeeInfo.email
             },
-            update: {
-                firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
-            },
-            create: {
-                email: employeeInfo.email,
+            data: {
                 firstName: employeeInfo.firstName,
                 lastName: employeeInfo.lastName
             }

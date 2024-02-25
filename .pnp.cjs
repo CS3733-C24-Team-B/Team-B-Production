@@ -3289,6 +3289,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/nodemailer", [\
+      ["npm:6.4.14", {\
+        "packageLocation": "./.yarn/cache/@types-nodemailer-npm-6.4.14-03cb75dde7-0f7e93a7fd.zip/node_modules/@types/nodemailer/",\
+        "packageDependencies": [\
+          ["@types/nodemailer", "npm:6.4.14"],\
+          ["@types/node", "npm:20.11.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/parse-json", [\
       ["npm:4.0.2", {\
         "packageLocation": "./.yarn/cache/@types-parse-json-npm-4.0.2-f87f65692e-5bf62eec37.zip/node_modules/@types/parse-json/",\
@@ -4446,6 +4456,7 @@ const RAW_RUNTIME_STATE =
           ["@types/morgan", "npm:1.9.9"],\
           ["@types/multer", "npm:1.4.11"],\
           ["@types/node", "npm:20.11.5"],\
+          ["@types/nodemailer", "npm:6.4.14"],\
           ["@types/pg", "npm:8.10.9"],\
           ["@types/request", "npm:2.48.12"],\
           ["@types/supertest", "npm:2.0.16"],\
@@ -4463,6 +4474,7 @@ const RAW_RUNTIME_STATE =
           ["jose", "npm:4.15.4"],\
           ["morgan", "npm:1.9.1"],\
           ["multer", "npm:1.4.4"],\
+          ["nodemailer", "npm:6.9.10"],\
           ["nodemon", "npm:3.0.3"],\
           ["pg", "virtual:9a28949798a912c67218bf8cea1001b3cae21be82aaad0589210650a91ed87ad2b921ce3379d36f5723672b5e5a668da59a3e262568425b08570aa654e7b0112#npm:8.11.3"],\
           ["prettier", "npm:3.2.4"],\
@@ -8329,6 +8341,15 @@ const RAW_RUNTIME_STATE =
           ["semver", "npm:7.5.4"],\
           ["tar", "npm:6.2.0"],\
           ["which", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["nodemailer", [\
+      ["npm:6.9.10", {\
+        "packageLocation": "./.yarn/cache/nodemailer-npm-6.9.10-af7a31eaa7-158830ae79.zip/node_modules/nodemailer/",\
+        "packageDependencies": [\
+          ["nodemailer", "npm:6.9.10"]\
         ],\
         "linkType": "HARD"\
       }]\
