@@ -243,10 +243,7 @@ export class Dijkstra implements searchStrategy {
 }
 function calcCost(curr:string,neighbor:MapNode,nodeList:MapNode[]){
     let weight = 0;
-    if(findNode(nodeList,curr).nodeType==="STAI"&&neighbor.nodeType==="STAI"&&neighbor.floor!==findNode(nodeList,curr).floor){
-        weight+=400;
-    }
-   weight += Math.sqrt((findNode(nodeList,curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList,curr).ycoord - neighbor.ycoord) ** 2+((nodeToFloor(mapNodeToStar(findNode(nodeList,curr)))-nodeToFloor(mapNodeToStar(neighbor)))*100)**2);
+   weight += Math.sqrt((findNode(nodeList,curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList,curr).ycoord - neighbor.ycoord) ** 2+((nodeToFloor(mapNodeToStar(findNode(nodeList,curr)))-nodeToFloor(mapNodeToStar(neighbor)))*1000)**2);
     return weight;
 }
 export class MapNode {
