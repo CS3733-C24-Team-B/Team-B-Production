@@ -1,7 +1,7 @@
 .service-form-Container {
     /* Positioning */
     width: 100vw;
-    height: 150vh;
+    height: 90vh;
 }
 
 .service-form-BackBlue{
@@ -36,12 +36,27 @@
 .service-form-ThreeRows {
     /* Positioning */
     display: grid;
-    grid-template-rows: 6% 45% 45%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 6% 50% 40%; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
     /* order matter :) \/ */
     margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+}
+.requestCardGrid{
+    display: grid;
+    grid-template-rows: 8% 18% 55%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-columns: auto;
+    grid-row-gap: 2%;
+    max-height: 100%;
+    margin-top: 4%;
+
+}
+
+.pillimage{
+    height: 30vh;
+    justify-self: center;
+    align-self: center;
 }
 
 .service-form-TwoRows {
@@ -71,13 +86,106 @@
 }
 
 .service-form-midcard {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+.statistics-layout {
+    display: flex;
+    height: 100%;
+}
+
+.statistics-cards-container {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.stat-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.stat-number-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #34AD84;
+}
+
+#open-requests .stat-number-container {
+    color: #E53E3E;
+}
+
+#employee-of-month .stat-number-container {
+    font-size: 2.25rem;
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+#requests-today .stat-number-container{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    align-items: start;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+}
+
+.stat-card.small {
+    height: 80%;
+}
+
+.stat-card.x-small {
+    height: 120%;
+}
+
+.stat-card.medium {
+    height: 120%;
+}
+
+.stat-card.large {
+    height: 80%;
+}
+
+
+
+.service-form-midcard-right {
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+
+}
+.service-form-midcard2 {
     /* Styling */
     background-color: white;
     border-radius: 15px;
 
     /* Positioning */
     width: 100%;
-    height: 100%;
+    height: 105vh;
 }
 
 .create-service-header {
@@ -106,14 +214,11 @@
 }
 
 .service-form-ReqList {
-    height: 30vh;
-    max-height: 30vh;
+    height: 100%;
 }
 
-.top-space {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+.form-submit {
+    align-self: center;
 }
 
 .modal-div {
@@ -121,6 +226,21 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    gap: 1.5vh;
+    overflow-y: auto;
+    overflow-x: clip;
+}
+
+.form-top-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-bottom-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/

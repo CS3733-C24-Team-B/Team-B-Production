@@ -44,6 +44,7 @@
 
 .navigation-autocomplete {
     width: 50%;
+    font-family: Lato;
 }
 
 .search-label {
@@ -62,6 +63,12 @@
     color: #34AD84;
 }
 
+.color-settings {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
 
 /* DELETE \/ \/ \/ */
 

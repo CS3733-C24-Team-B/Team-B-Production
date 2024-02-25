@@ -170,6 +170,82 @@ export class DFS implements searchStrategy {
     }
 }
 
+export class Dijkstra implements searchStrategy {
+
+    async search(startingNode: string, endingNode: string) {
+        console.log("Called Dijkstra's Algorithm");
+        const nodeList = await createNodeList();
+        const edgeList = await createEdgeList();
+        const graph = createGraph(nodeList, edgeList);
+
+        //create openlist
+        const openList:string[] = [];
+        openList.push(startingNode);
+
+        //create cost map
+        const costList:Map<string,number> = new Map();
+        costList.set(startingNode,0);
+
+        //log travel order
+        const lastNode: Map<string,string | null>= new Map();
+        //search through openlist
+        while(openList.length>0){
+
+            openList.sort((obj, obj1)=> (costList.get(obj)||Infinity)-(costList.get(obj1)||Infinity));
+            const curr = openList.shift();
+            if(curr===undefined){
+                return undefined;
+            }
+            //curr is node with lowest cost
+
+            if(curr===endingNode){
+                console.log("Goal node found, returning path");
+                const searchPath:string[] = [];
+                let node = curr;
+                while (node){
+                    searchPath.unshift(node);
+                    if(node!==lastNode.get(lastNode.get(node) as string)) {
+                        node = lastNode.get(node) as string;
+                    }
+                    else{
+                        return [node,node];
+                    }
+
+                }
+                console.log("Goal node found, returned path");
+                return searchPath;
+            }
+            let neighbors: string[] | undefined = graph.adjacencyList.get(curr);
+            if(neighbors?.includes(lastNode.get(curr)!)){
+                neighbors = neighbors?.filter(obj => obj!==lastNode.get(curr));
+            }
+
+            for (const neighbor1 of neighbors as string[]) {
+                const neighbor:MapNode = findNode(nodeList,neighbor1);
+                if(!costList.has(curr)){
+                    return undefined;
+                }
+                const cost =  (costList.get(curr) as number) + calcCost(curr,neighbor,nodeList);
+
+                if(!costList.has(neighbor.nodeID)|| cost  < (costList.get(neighbor.nodeID)||Infinity)){
+
+                    costList.set(neighbor.nodeID,cost);
+                    lastNode.set(neighbor.nodeID,curr);
+                    if(!openList.includes(neighbor.nodeID)){
+                        openList.push(neighbor.nodeID);
+                    }
+                }
+            }
+        }
+
+        return undefined;
+    }
+}
+function calcCost(curr:string,neighbor:MapNode,nodeList:MapNode[]){
+    let weight = 0;
+   weight += Math.sqrt((findNode(nodeList,curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList,curr).ycoord - neighbor.ycoord) ** 2+((nodeToFloor(mapNodeToStar(findNode(nodeList,curr)))-nodeToFloor(mapNodeToStar(neighbor)))*1000)**2);
+    return weight;
+}
 export class MapNode {
     nodeID: string;
     xcoord: number;

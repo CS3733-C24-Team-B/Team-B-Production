@@ -92,7 +92,7 @@
     display: grid;
     grid-template-columns: 20% 60% 20%;
     grid-template-rows: auto;
-    place-items: center;
+    align-items: center;
 }
 
 .NavBlue {
@@ -113,7 +113,7 @@
 }
 
 .TestCard {
-    background-color: lightgray;
+    background-color: white;
     border-radius: 15px;
 }
 
@@ -141,7 +141,7 @@
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
-    /* order matter :) \/ */
+    /**/
     margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
 }
 
@@ -221,6 +221,7 @@ body {
   margin-right: 0;
   margin-bottom: 0;
   margin-top: 0;
+    background-color: #012d5a;
 }
 
 .body {
@@ -243,6 +244,14 @@ td {
     padding-left: 3vw;
     padding-right: 3vw;
 }
+
+ul
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
 
 
 

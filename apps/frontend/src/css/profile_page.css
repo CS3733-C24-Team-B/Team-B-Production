@@ -6,7 +6,6 @@
     grid-row-start: 1;
     padding: 30px;
     width: 50%;
-    marginTop: 20px;
 }
 
 .user-req-data {
@@ -15,37 +14,168 @@
 
 .Profile-Container {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
 }
 
-.Profile-TwoRows {
-    width: 100%;
-    height: 60%;
+.Profile-page-TwoColumns {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: auto;
+    width: 100%;
+    height: 100%;
+}
+
+
+.Profile-page-TwoRows {
+    display: grid;
+    margin: 1vw;
+    grid-template-rows: 40% 60%;
+    grid-template-columns: auto;
+    grid-row-gap: 3%;
+}
+
+.Profile-page-ThreeRows {
+    margin: 1vw;
+    display: grid;
+    grid-template-rows: 10% 62%;
+    grid-template-columns: auto;
+    grid-row-gap: 5%;
+}
+
+.TestCardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Profile-page-top-infocards {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.Profile-page-top-infotext {
+    font-family: Lato;
+    font-weight: 600;
+    font-size: 100%;
+    margin-left: 4%;
+    margin-bottom: 0;
+}
+
+.Profile-page-top-TestCard {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+}
+
+.Profile-page-myreqcard {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+    max-height: 62vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.ThreeColumnsFirstRow {
+    display: grid;
+    grid-template-columns: 32% 32% 32%;
+    grid-template-rows: auto;
+    grid-column-gap: 2%;
+}
+
+.Profile-page-TwoColumnsThirdRow {
+    display: grid;
+    grid-template-columns: 100%;
     grid-template-rows: auto;
 }
 
-.Profile-Card {
-    margin: 2%;
+.Profile-page-TwoColumnsSecondRow{
+    display: grid;
+    grid-template-columns: 59% 39%;
+    grid-template-rows: auto;
+    grid-column-gap: 2%;
+}
+
+.Profile-page-bottom-TestCard{
     background-color: white;
     border-radius: 15px;
+    width: 100%;
+    height: 95%
+}
+
+.Profile-page-TwoColumnsSecondRow-SecondRows{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 58% 38%;
+    grid-row-gap: 4%;
+}
+
+
+.SecondRow_SecondColumn-TestCard{
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+}
+
+.Profile-page-pic {
+    width: auto;
+    height: auto;
+    border-radius: 50%;
+    max-height: 16vh;
+    justify-self: center;
+}
+
+.Profile-pic-main-TestCard {
+    background-color: white;
+    border-radius: 15px;
+    display: grid;
+    width:97%;
+    max-height: 40vh;
+    justify-content: center;
+    align-items: center;
+    grid-template-rows: 9fr 10fr 1fr;
+    grid-template-columns: 100%;
+    padding: 5px;
+}
+
+.Profile-page-firstcard-text {
+    font-family: 'Lato', sans-serif;
+    font-size: 90%;
+    font-weight: bold;
+    margin-top: -1vh;
+}
+
+.Profile-page-text {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    padding-top: 5%;
+    align-items: center;
+    align-self: start;
+    margin-top: 5%;
 }
 
-.profile-card-info {
-    align-self: center;
+.Profile-page-edit-button{
+    margin-bottom: 5%;
+    justify-self: center;
 }
 
-.profile-card-reqlist {
-    margin-left: 10%;
+.Profile-page-top-infotext-return{
+    font-family: Lato;
+    font-weight: 600;
+    font-size: 100%;
+    margin-left: 4%;
+    margin-bottom: 0;
+    position:sticky;
 }
 
-.profile-action-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 3%;
+.Profile-page-top-infotext-scroll{
+    font-family: Lato;
+    font-weight: 600;
+    font-size: 100%;
+    margin-bottom: 0;
+    overflow: auto;
 }
+
+
+
