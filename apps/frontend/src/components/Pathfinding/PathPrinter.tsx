@@ -45,7 +45,7 @@ function determineTurnDirection(previousNode: string, nodeStart: string, nodeEnd
 function directNode(previousNode: string, nodeStart: string, nodeEnd: string) {
 
     if (previousNode.substring(0, 2) != nodeStart.substring(0, 2)) {
-        return "Take the elevator from " + previousNode.substring(0, 2) + " to";
+        return "Take " + previousNode.substring(2,previousNode.indexOf(":"))+" to "+nodeStart.substring(0,2);
     }
     if (nodeStart.substring(0, 2) != nodeEnd.substring(0, 2)) {
         return "";
@@ -124,11 +124,16 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
 
                     if(nodeIDs[i].includes("Elevator")){
                         //if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
+                        joinedwords.push("Starting at " + nodeIDs[i] + " head in the direction of " + nodeIDs[i+1]+ " (" + Math.round(dist / 4) + "ft)");
                         directionsFloor[levels]=joinedwords;
                         joinedwords=["Floor "+coords[i+1].substring(0,2)+""];
                         levels++;
+                        joinedwords.push(direction);
                     }
-                   joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
+                    else{
+                        joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
+
+                    }
 
                     x = parseInt(coords[i].substring(coords[i].indexOf(":") + 1, coords[i].lastIndexOf(":")));
                     y = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
