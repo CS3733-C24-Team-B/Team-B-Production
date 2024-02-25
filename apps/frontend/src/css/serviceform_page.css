@@ -92,6 +92,15 @@
 
     /* Positioning */
     width: 100%;
+    height: 100%;
+}
+.service-form-midcard2 {
+    /* Styling */
+    background-color: white;
+    border-radius: 15px;
+
+    /* Positioning */
+    width: 100%;
     height: 105vh;
 }
 
