@@ -30,7 +30,7 @@ type ServiceRequest = {
     language: LanguageRequest,
 }
 
-export default function ProfilePage() {
+export default function OldProfilePage() {
     const {loginWithRedirect, user, isAuthenticated, isLoading, logout, getAccessTokenSilently} = useAuth0();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");

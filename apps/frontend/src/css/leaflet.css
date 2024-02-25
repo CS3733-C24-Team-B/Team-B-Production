@@ -89,13 +89,27 @@
     position: absolute;
 }
 
+.autocomplete-text {
+    translate: 0% -62%;
+    font-family: Lato;
+}
+
+.floor-change-text {
+    color: #34AD84;
+}
+
+.animated-icon {
+    border-radius: 50%;
+    max-height: 7vh;
+}
+
 .floor-buttons {
     z-index: 1000;
     background-color: white;
     border-radius: 5px;
     position: fixed;
-    bottom: 3%;
-    right: 2.5%;
+    bottom: 7%;
+    right: 2.45%;
     display: flex;
     flex-direction: column;
 }

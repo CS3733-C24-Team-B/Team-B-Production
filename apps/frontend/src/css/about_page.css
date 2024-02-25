@@ -5,9 +5,9 @@
     grid-template-columns: 49% 49%; /* column ratios are split, also accounts for 2% gap */
     grid-template-rows: auto;
     grid-column-gap: 2%;
-    width: 95%;
     height: 100%;
     margin-left: 2%;
+    margin-right: 2%;
 }
 
 .About-TestCard{
@@ -18,10 +18,12 @@
     display: grid;
     grid-template-columns: 39% 61%;
     grid-template-rows: auto;
+    height: 100%;
 }
 
 .ProfilePicture {
-    margin: 15%;
+    margin-left: 15%;
+    align-self: center;
     width: 70%;
     border-radius: 50%;
 }
@@ -29,13 +31,14 @@
 .TextBox {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     margin-right: 5%;
-    margin-bottom: 5%;
     font-family: Lato, serif;
 }
 
 h2 {
     margin-bottom: 0;
+    margin-top: 0;
     font-size: 200%;
 }
 
@@ -52,23 +55,24 @@ h3 {
 
 .FiveRows {
     display: grid;
-    grid-template-rows: 3% 28% 54% 13% 2%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: 4% 22% 50% 12% 5%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
     width: 100%;
     height: 100%;
+    grid-row-gap: 2%;
 }
 
 .About-NameColumns{
     display: grid;
     grid-template-rows: 17% 17% 17% 17% 17%; /* column ratios are split, also accounts for 2% gap */
     grid-template-columns: auto;
-    gap: 2%;
+    grid-row-gap: 2%;
 }
 
 .LabelCard {
     background-color: white;
     border-radius: 15px;
-    margin: 15% 6% auto 4vw;
+    margin: 0% 6% auto 4vw;
 }
 
 .ImageCard {
@@ -80,8 +84,8 @@ h3 {
 }
 
 .AboutImage {
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
 }
 
 .MeetTheTeamCard {
@@ -104,7 +108,7 @@ h3 {
     background-color: white;
     border-radius: 15px;
     padding: 2%;
-    margin: 4% 2% 2%;
+    margin: 2% 2% 2%;
 }
 
 .CopyrightCard {
@@ -114,7 +118,7 @@ h3 {
 .AboutTwoColumns {
     display: grid;
     grid-template-rows: auto; /* column ratios are split, also accounts for 2% gap */
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 45% 55%;
     /*how to make software engineering on same line*/
 }
 
@@ -194,7 +198,7 @@ h3 {
     font-size: 35px;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: .5em;
     font-weight: bold;
 }
 
@@ -203,7 +207,7 @@ h3 {
     font-size:35px;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: .5em;
 }
 
 .name {
@@ -216,7 +220,7 @@ h3 {
 
 .break {
     color: white;
-    line-height: 30%;
+    line-height: .3em;
 }
 
 .meet-text {
@@ -257,10 +261,10 @@ h3 {
 .copyright-text {
     margin-left: 10px;
     text-align: left;
-    font-size: 18px;
+    font-size: 1em;
     font-family: Lato, serif;
     color: black;
-    line-height: 50%;
+    line-height: 130%;
 }
 
 .date {
