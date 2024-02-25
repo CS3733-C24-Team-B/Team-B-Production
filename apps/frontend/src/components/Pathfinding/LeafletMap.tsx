@@ -647,7 +647,7 @@ export default function LeafletMap(props: MapProps) {
 
                     <div style={{display: 'grid', width: '90%', gap: '5%'}}>
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
-                        {dirText && <ExportPDF textDirections={dirText}/>}
+                        {directions && <ExportPDF textDirections={dirText}/>}
                     </div>
                 </div>
             </Collapse>

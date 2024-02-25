@@ -19,15 +19,15 @@ function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:str
     if (crossProduct < -500) {
         // console.log(nodeStart+": "+crossProduct);
         if(crossProduct>-2000){
-            return "Make a slight left ";
+            return "Make a slight left";
         }
-        return "Make a left ";
+        return "Make a left";
     } else if (crossProduct > 500) {
         // console.log(nodeStart+": "+crossProduct);
         if(crossProduct<2000){
-            return "Make a slight right ";
+            return "Make a slight right";
         }
-        return "Make a right ";
+        return "Make a right";
     } else {
         return "";
     }
@@ -35,7 +35,7 @@ function determineTurnDirection(previousNode:string,nodeStart:string,nodeEnd:str
 function directNode(previousNode:string,nodeStart:string,nodeEnd:string){
 
     if(previousNode.substring(0,2)!=nodeStart.substring(0,2)){
-        return "Take the elevator from "+previousNode.substring(0,2)+" to ";
+        return "Take the elevator from "+previousNode.substring(0,2)+" to";
     }
     if(nodeStart.substring(0,2)!=nodeEnd.substring(0,2)){
         return "";
@@ -122,11 +122,12 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             joinedwords=joinedwords.reverse();
 
             setCoords(joinedwords);
-            data.changeText(joinedwords);
         }
 
         fetch().then();
-    }, [data, data.startNode, data.endNode]);
+    }, [data.startNode, data.endNode]);
+
+    data.changeText(coordinates);
 
     const speakArray = () => {
         if (!speaking && window.speechSynthesis) {

@@ -3,23 +3,25 @@ import JsPDF from "jspdf";
 import {Button} from "@mui/material";
 
 // code adapted from https://stackoverflow.com/questions/24272058/word-wrap-in-generated-pdf-using-jspdf
-function addWrappedText(textDirections: string[], doc: JsPDF, textWidth: number = 468, fontSize: number = 14, lineSpacing: number = 20,
-                        xPosition: number = 72, initialYPosition: number = 72, pageWrapInitialYPosition: number = 72) {
+function addWrappedText(textDirections: string[], doc: JsPDF, textWidth: number = 6.5, fontSize: number = 12, lineSpacing: number = 0.25,
+                        xPosition: number = 1, initialYPosition: number = 1, pageWrapInitialYPosition: number = 1, pageWrapMaxYPosition: number = 10) {
     doc.setFontSize(fontSize);
 
-    let textLines: string[] = [];
+    let textLines: string[] = ["Text Directions", ""];
 
-    textDirections.forEach((textDirection: string) => {
+    for (let i: number = 0; i < textDirections.length; i++) {
+        const textDirection: string = (i+1) + ". " + textDirections[i];
         const directionLines: string[] = doc.splitTextToSize(textDirection, textWidth);  // Split the text into lines
         textLines = textLines.concat(directionLines);
-    });
+    }
 
     const pageHeight: number = doc.internal.pageSize.height;        // Get page height, well use this for auto-paging
+    console.log(pageHeight);
 
     let cursorY: number = initialYPosition;
 
     textLines.forEach((lineText: string) => {
-        if (cursorY > pageHeight) { // Auto-paging
+        if (cursorY > pageWrapMaxYPosition) { // Auto-paging
             doc.addPage();
             cursorY = pageWrapInitialYPosition;
         }
@@ -32,7 +34,7 @@ async function exportPDF(textDirections: string[]): Promise<void> {
     try {
         console.log(textDirections);
         // const textDirectionsImage: HTMLCanvasElement = await HTML2Canvas(textDirections);
-        const doc: JsPDF = new JsPDF("portrait", "pt", "a4");
+        const doc: JsPDF = new JsPDF("portrait", "in", [8.5, 11]);
         doc.setFont("Helvetica");
         // doc.addImage(textDirectionsImage, 72, 72, 288, 360);
         console.log(textDirections);
