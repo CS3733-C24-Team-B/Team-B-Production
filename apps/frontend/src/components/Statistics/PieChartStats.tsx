@@ -111,7 +111,7 @@ export default function PieChartStats(){
             </div>
             <div className="chart-container" style={{
                 width: '100%',
-                height: '75vh',
+                height: '60vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

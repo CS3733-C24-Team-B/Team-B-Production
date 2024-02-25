@@ -3,9 +3,16 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import EmployeeServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
+import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
+import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
+import PillImage from "../images/pills.png";
+import LangIMG from "../images/lang.png";
+import LoudImage from "../images/loud.png";
+import TransportImage from "../images/transport.png";
+import MaintainImage from "../images/maintain.png";
+import CleanImage from "../images/clean.png";
 
 // Material UI imports
 import {
@@ -14,6 +21,7 @@ import {
     Button,
     CircularProgress,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Modal,
@@ -21,12 +29,7 @@ import {
     Snackbar
 } from "@mui/material";
 import {styled} from '@mui/material/styles';
-import SanitizerIcon from '@mui/icons-material/Sanitizer';
-import MedicationIcon from '@mui/icons-material/Medication';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import TranslateIcon from '@mui/icons-material/Translate';
-import GokuIcon from "../components/GokuIcon.tsx";
+import CloseIcon from '@mui/icons-material/Close';
 import BarChart from "../components/Statistics/BarChart.tsx";
 import StackedBarChart from "../components/Statistics/StackedBarChart.tsx";
 import {
@@ -45,14 +48,14 @@ import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
 
 const RequestButton = styled(Button)(() => ({
-    fontSize: '2.5vh',
-    width: '48%',
-    height: '26%',
-    marginLeft: '1%',
-    marginTop: '1%',
-    border: '2px solid black',
+    fontSize: '.8em',
+    width: '30.5%',
+    height: '45vh',
+    marginLeft: '2%',
+    marginTop: '2%',
+    border: '.1px solid black',
     color: 'black',
-    backgroundColor: '#CDCCD0',
+    backgroundColor: '#FAFAFA',
     '&:hover': {
         color: 'white',
         backgroundColor: '#34AD84',
@@ -61,10 +64,28 @@ const RequestButton = styled(Button)(() => ({
 
 const modalStyle = {
     position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '38vw',
+    width: '40vw',
+    maxHeight: '90vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
+
+const mapStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70vw',
+    maxHeight: '90vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -91,6 +112,7 @@ export default function RequestForm() {
     const [transPressed, setTransPressed] = useState(false);
     const [langPressed, setLangPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
+    const [showMap, setShowMap] = useState(false);
 
     useEffect(() => {
         async function fetch() {
@@ -110,6 +132,23 @@ export default function RequestForm() {
     }, [getAccessTokenSilently]);
 
     console.log(isAuthenticated);
+
+    function resetForm() {
+        setRequestType("");
+        setTypeReq("");
+        setMedPressed(false);
+        setSanPressed(false);
+        setMainPressed(false);
+        setTransPressed(false);
+        setLangPressed(false);
+        setLocation("");
+        setPrio("");
+        setInfoText("");
+        setOption1("");
+        setOption2("");
+        setOption3("");
+        setAssignTo("");
+    }
 
     async function submit() {
         const accessToken: string = await getAccessTokenSilently();
@@ -131,6 +170,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "medicine") {
             const requestSent: MedicineRequest = {
@@ -151,6 +191,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "transport") {
             const requestSent: InternalTransportRequest = {
@@ -172,6 +213,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "language") {
             const requestSent: LanguageRequest = {
@@ -193,6 +235,7 @@ export default function RequestForm() {
             });
             if (res.status == 200) {
                 console.log("success");
+                setSubmitAlert(true);
             }
         } else if (typeReq === "maintenance") {
             const requestSent: MaintenanceRequest = {
@@ -216,7 +259,8 @@ export default function RequestForm() {
             }
         }
 
-        setCurrentTab("list-request");
+        resetForm();
+        //setCurrentTab("list-request");
         //navigate("/requestlist");
     }
 
@@ -284,6 +328,17 @@ export default function RequestForm() {
         }
     };
 
+    function nodeIDtoName(nId: string) {
+        const node = nodeData.find(({nodeID}) =>
+            nodeID === nId
+        );
+        if (node !== undefined) {
+            return node!["longName"];
+        } else {
+            return "";
+        }
+    }
+
     return (
         <div className={"service-form-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
@@ -291,7 +346,7 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         // style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}
+                        style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : '8% 85%')}}
                     >
                         <div className={"service-form-topcard"}>
                             <Button
@@ -346,9 +401,9 @@ export default function RequestForm() {
 
                         {/*If current tab is the create request tab*/}
                         {currentTab === "create-request" && (
-                            <div className={"service-form-midcard"}>
+                            <div className={"service-form-midcard2"}>
                                 <header className={"create-service-header"}
-                                        style={{fontFamily: 'Lato'}}>
+                                        style={{fontFamily: 'Lato',fontWeight: '550'}}>
                                     Create Service Request
                                 </header>
                                 <RequestButton variant="contained"
@@ -365,9 +420,30 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<MedicationIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Medicine Request
+                                               sx={{
+                                                   justifySelf: 'center',
+                                                   borderRadius: '15px',
+                                                   fontFamily: 'Lato',
+                                                   textTransform: 'none'
+                                               }}>
+                                    {/*Cameron Crane*/}
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Medicine Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -383,9 +459,28 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<WarningAmberIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Maintenance Request
+                                               sx={{justifySelf: 'center',
+                                                   borderRadius: '15px',
+                                                   fontFamily: 'Lato',
+                                                   textTransform: 'none'
+                                }}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Maintance Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -401,9 +496,24 @@ export default function RequestForm() {
                                                    setMainPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<CompareArrowsIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Internal Transport Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato', textTransform: 'none'}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Transport Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={TransportImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -419,9 +529,24 @@ export default function RequestForm() {
                                                    setMainPressed(false);
                                                    setTransPressed(false);
                                                }}
-                                               startIcon={<TranslateIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Language Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Language Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={LangIMG} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -437,14 +562,44 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<SanitizerIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px'}}>
-                                    Sanitation Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Sanitation Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={CleanImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
-                                               startIcon={<GokuIcon style={{fontSize: '6vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px'}}>
-                                    Goku Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Goku Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={LoudImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                             </div>
                         )}
@@ -452,18 +607,21 @@ export default function RequestForm() {
                         {/*If current tab is the List request tab*/}
                         {currentTab === "list-request" && (
                             <div className={"service-form-ReqList"}>
-                                <EmployeeServiceRequestTable/>
+                                <ServiceRequestTable/>
                             </div>
                         )}
 
-                        <div className={"service-form-TwoColumnsThirdRow"}>
-                            <div className={"service-form-ChartCard"}>
-                                <BarChart/>
+                        {currentTab === "statistics" && (
+                            <div className={"service-form-TwoColumnsThirdRow"}>
+                                <div className={"service-form-ChartCard"}>
+                                    <BarChart/>
+                                </div>
+                                <div className={"service-form-ChartCard"}>
+                                    <StackedBarChart/>
+                                </div>
                             </div>
-                            <div className={"service-form-ChartCard"}>
-                                <StackedBarChart/>
-                            </div>
-                        </div>
+                        )}
+
                     </div>
                 </div>
 
@@ -480,23 +638,29 @@ export default function RequestForm() {
                             style={{fontFamily: 'Lato'}}
                         >
                             <Box sx={modalStyle}>
-                                <p style={{fontSize: '150%', fontWeight: 600}}>
-                                    {{
-                                        'sanitation': "Sanitation",
-                                        'medicine': "Medicine",
-                                        'maintenance': "Maintenance",
-                                        'transport': "Internal Transport",
-                                        'language': "Language"
-                                    }[requestType]  + " Request"}
-                                </p>
+                                <div className="form-top-bar">
+                                    <p style={{fontSize: '150%', fontWeight: 600}}>
+                                        {{
+                                            'sanitation': "Sanitation",
+                                            'medicine': "Medicine",
+                                            'maintenance': "Maintenance",
+                                            'transport': "Internal Transport",
+                                            'language': "Language"
+                                        }[requestType] + " Request"}
+                                    </p>
+                                    <IconButton sx={{height: '20%'}} onClick={() => resetForm()}>
+                                        <CloseIcon/>
+                                    </IconButton>
+                                </div>
                                 <div className={"modal-div"}>
-                                    <div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: window.innerWidth * 0.38, gap: '2%'}}>
                                         <Autocomplete
-                                            style={{width: window.innerWidth * 0.38}}
+                                            style={{width: '100%'}}
                                             disablePortal
                                             options={currNodes.map(({nodeID, longName}): NodeType => (
                                                 {label: longName, nid: nodeID}
                                             ))}
+                                            value={{label: nodeIDtoName(location), nid: location}}
                                             size={"small"}
                                             renderInput={(params) =>
                                                 <TextField {...params} label="Location" variant="standard"/>}
@@ -513,6 +677,10 @@ export default function RequestForm() {
                                                 }
                                             }}
                                         />
+                                        <Button variant={"outlined"} style={{color: "#34AD84",
+                                            width: 220, fontSize: '0.7em'}} onClick={() => setShowMap(true)}>
+                                            Choose From Map
+                                        </Button>
                                     </div>
                                     <div className="input-field">
                                         <FormControl className="input-field">
@@ -572,17 +740,9 @@ export default function RequestForm() {
                                             required
                                         />
                                     </div>
-                                    <p>
-                                        Created by {" "}
-                                        {{
-                                            'sanitation': "Rodrick",
-                                            'medicine': "Rodrick and Piotr",
-                                            'maintenance': "Kenny",
-                                            'transport': "Katy and Cameron",
-                                            'language': "Katie and Hien"
-                                        }[requestType]}
-                                    </p>
-                                    <div className="top-space">
+                                </div>
+                                <div className={"form-bottom-bar"}>
+                                    <div className="form-submit">
                                         <Button
                                             style={{
                                                 backgroundColor: "#34AD84",
@@ -594,26 +754,47 @@ export default function RequestForm() {
                                             Submit Request
                                         </Button>
                                     </div>
+                                    <p>
+                                        Created by {" "}
+                                        {{
+                                            'sanitation': "Rodrick",
+                                            'medicine': "Rodrick and Piotr",
+                                            'maintenance': "Kenny",
+                                            'transport': "Katy and Cameron",
+                                            'language': "Katie and Hien"
+                                        }[requestType]}
+                                    </p>
                                 </div>
                             </Box>
                         </Modal>
                     )}
-                    <Snackbar
-                        anchorOrigin={{vertical: "top", horizontal: "center"}}
-                        open={submitAlert}
-                        autoHideDuration={2000}
-                        onClose={() => {
-                            setSubmitAlert(false);
-                        }}>
-                        <Alert
-                            severity="success"
-                            sx={{width: '100%'}}
-                        >
-                            Request form submitted.
-                        </Alert>
-                    </Snackbar>
                 </div>
             </div>
+            <Modal
+                open={showMap}
+                onClose={() => {
+                    setShowMap(false);
+                }}
+                style={{fontFamily: 'Lato'}}
+            >
+                <Box sx={mapStyle}>
+                    <MiniMap change={setLocation} setClose={setShowMap}/>
+                </Box>
+            </Modal>
+            <Snackbar
+                anchorOrigin={{vertical: "top", horizontal: "center"}}
+                open={submitAlert}
+                autoHideDuration={2000}
+                onClose={() => {
+                    setSubmitAlert(false);
+                }}>
+                <Alert
+                    severity="success"
+                    sx={{width: '100%'}}
+                >
+                    Request form submitted.
+                </Alert>
+            </Snackbar>
         </div>
     );
 

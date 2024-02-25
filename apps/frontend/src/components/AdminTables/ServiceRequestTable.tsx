@@ -4,7 +4,7 @@ import {
     Box, Button,
     CircularProgress,
     Collapse, Dialog, DialogActions, DialogTitle, FormControl, IconButton,
-    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
+    Menu, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip
 } from "@mui/material";
 import {useAuth0} from "@auth0/auth0-react";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -54,6 +54,21 @@ const latoTheme = createTheme({
     },
 });
 
+enum prioSort {
+    'Low' = 1,
+    'Medium' = 2,
+    'High' = 3,
+    'Emergency' = 4
+}
+
+enum statusSort {
+    'Unassigned' = 1,
+    'Assigned' = 2,
+    'In Progress' = 3,
+    'Completed' = 4,
+    'Paused' = 5
+}
+
 enum requestSortField { priority, timeCreated, type, assignedTo, status, location, createdBy}
 
 export default function ServiceRequestTable() {
@@ -73,8 +88,11 @@ export default function ServiceRequestTable() {
     });
     const openMenu = Boolean(menuAnchor);
     const [receivedSR, setReceivedSR] = useState(false);
-    const [sortUp, setSortUp] = useState(false);
+    const [sortUp, setSortUp] = useState(true);
     const [beingSorted, setBeingSorted] = useState(false);
+    const [sortFunction, setSortFunction] = useState<(srA: ServiceRequestWithTypes, srB: ServiceRequestWithTypes) => number>(() => () => {
+        return 0;
+    });
     const [typeSort, setTypeSort] = useState<keyof typeof requestSortField>("timeCreated");
 
     console.log(isAuthenticated);
@@ -149,8 +167,13 @@ export default function ServiceRequestTable() {
 
     if (!beingSorted) {
         srData.sort((srA: ServiceRequestWithTypes, srB: ServiceRequestWithTypes) => {
-            return srA.timeCreated.valueOf() - srB.timeCreated.valueOf();
+            return sqlToDate(srA.timeCreated.toString()).getTime() - sqlToDate(srB.timeCreated.toString()).getTime();
         });
+    } else {
+        srData.sort(sortFunction);
+        if (!sortUp) {
+            srData.reverse();
+        }
     }
 
     function nodeNameOrReturn(nId: string) {
@@ -164,20 +187,28 @@ export default function ServiceRequestTable() {
         }
     }
 
+    function sortByPrio(srA: ServiceRequestWithTypes, srB: ServiceRequestWithTypes) {
+        return prioSort[srA.priority as keyof typeof prioSort] - prioSort[srB.priority as keyof typeof prioSort];
+    }
+
+    function sortByStatus(srA: ServiceRequestWithTypes, srB: ServiceRequestWithTypes) {
+        console.log(srA.status);
+        return statusSort[srA.status as keyof typeof statusSort] - statusSort[srB.status as keyof typeof statusSort];
+    }
+
     function sortRequests(sortField: requestSortField) {
-        let requestsCopy: ServiceRequestWithTypes[] = [...srData];
         switch (sortField) {
             case requestSortField.priority:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.priority.localeCompare(b.priority));
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => sortByPrio(a, b));
                 break;
             case requestSortField.timeCreated:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.timeCreated.getTime() - b.timeCreated.getTime());
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => sqlToDate(a.timeCreated.toString()).getTime() - sqlToDate(b.timeCreated.toString()).getTime());
                 break;
             case requestSortField.type:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => getReqType(a).localeCompare(getReqType(b)));
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => getReqType(a).localeCompare(getReqType(b)));
                 break;
             case requestSortField.assignedTo:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
                     if (!a.assignedTo) {
                         return -1;
                     } else if (!b.assignedTo) {
@@ -187,13 +218,13 @@ export default function ServiceRequestTable() {
                 });
                 break;
             case requestSortField.status:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => a.status.localeCompare(b.status));
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => sortByStatus(a, b));
                 break;
             case requestSortField.location:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
                 break;
             case requestSortField.createdBy:
-                requestsCopy.sort((a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) =>  {
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
                     if (!a.createdBy) {
                         return -1;
                     } else if (!b.createdBy) {
@@ -203,12 +234,8 @@ export default function ServiceRequestTable() {
                 });
                 break;
         }
-        if (!sortUp) {
-            requestsCopy = requestsCopy.reverse();
-        }
         setTypeSort(requestSortField[sortField] as keyof typeof requestSortField);
         setBeingSorted(true);
-        setSRData(requestsCopy);
     }
 
     const filterSR = srData.filter(filterFunction);
@@ -229,30 +256,27 @@ export default function ServiceRequestTable() {
                             {open ? <KeyboardArrowDownIcon/> : <KeyboardArrowRightIcon/>}
                         </IconButton>
                     </TableCell>
-                    <TableCell sx={{width: 150}} style={{
+                    <TableCell sx={{width: 100, padding: 0}} style={{
                         'Low': {color: "darkolivegreen"},
                         'Medium': {color: "midnightblue"},
                         'High': {color: "maroon"},
                         'Emergency': {color: "crimson"}
                     }[nsr.priority]}>
-                        <div className={"priority-display"}>
-                            {nsr.priority}
-                            {{
-                                'Low': <ErrorIcon/>,
-                                'Medium': <WarningIcon/>,
-                                'High': <ReportIcon/>,
-                                'Emergency': <NewReleasesIcon/>
-                            }[nsr.priority]}
-                        </div>
+                        <Tooltip title={nsr.priority} placement="right">
+                            <div className={"priority-display"} style={{width: 'fit-content'}}>
+                                {{
+                                    'Low': <ErrorIcon/>,
+                                    'Medium': <WarningIcon/>,
+                                    'High': <ReportIcon/>,
+                                    'Emergency': <NewReleasesIcon/>
+                                }[nsr.priority]}
+                            </div>
+                        </Tooltip>
                     </TableCell>
-                    <TableCell>{sqlToDate(nsr.timeCreated.toString()).getMonth() + "/" + sqlToDate(nsr.timeCreated.toString()).getDate() + "/" + sqlToDate(nsr.timeCreated.toString()).getFullYear() +
-                        "\n" + (sqlToDate(nsr.timeCreated.toString()).getHours()) + ":" + sqlToDate(nsr.timeCreated.toString()).getMinutes().toLocaleString('en-US', {
-                            minimumIntegerDigits: 2,
-                            useGrouping: false
-                        })}</TableCell>
                     <TableCell>{
                         RequestType[getReqType(nsr) as keyof typeof RequestType]
                     }</TableCell>
+                    <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
                     <TableCell>
                         <Select
                             value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
@@ -290,11 +314,11 @@ export default function ServiceRequestTable() {
                         <Select
                             defaultValue={StatusType.Unassigned}
                             style={{
-                                'Unassigned': {color: "crimson"},
-                                'Assigned': {color: "deepskyblue"},
-                                'In Progress': {color: "turquoise"},
-                                'Completed': {color: "limegreen"},
-                                'Paused': {color: "mediumpurple"}
+                                'Unassigned': {color: "maroon"},
+                                'Assigned': {color: "teal"},
+                                'In Progress': {color: "navy"},
+                                'Completed': {color: "olivedrab"},
+                                'Paused': {color: "mediumvioletred"}
                             }[nsr.status]}
                             value={StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "InProgress"}
                             onChange={async (event: SelectChangeEvent) => {
@@ -317,17 +341,21 @@ export default function ServiceRequestTable() {
                             sx={{fontSize: 15}}>
                             {statuses.map((st) =>
                                 <MenuItem value={st} style={{
-                                    'Unassigned': {color: "lightcoral"},
-                                    'Assigned': {color: "deepskyblue"},
-                                    'InProgress': {color: "turquoise"},
-                                    'Completed': {color: "limegreen"},
-                                    'Paused': {color: "mediumpurple"}
+                                    'Unassigned': {color: "maroon"},
+                                    'Assigned': {color: "teal"},
+                                    'InProgress': {color: "navy"},
+                                    'Completed': {color: "olivedrab"},
+                                    'Paused': {color: "mediumvioletred"}
                                 }[st]}>{StatusType[st as keyof typeof StatusType]}</MenuItem>
                             )}
                         </Select>
                     </TableCell>
-                    <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
                     <TableCell>{nsr.createdBy ? nsr.createdBy.firstName + " " + nsr.createdBy.lastName : ""}</TableCell>
+                    <TableCell>{sqlToDate(nsr.timeCreated.toString()).getMonth() + "/" + sqlToDate(nsr.timeCreated.toString()).getDate() + "/" + sqlToDate(nsr.timeCreated.toString()).getFullYear() +
+                        "\n" + (sqlToDate(nsr.timeCreated.toString()).getHours()) + ":" + sqlToDate(nsr.timeCreated.toString()).getMinutes().toLocaleString('en-US', {
+                            minimumIntegerDigits: 2,
+                            useGrouping: false
+                        })}</TableCell>
                     <TableCell>
                         <Button
                             variant="outlined"
@@ -524,7 +552,7 @@ export default function ServiceRequestTable() {
                                             <FilterListIcon/>
                                         </IconButton>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{width: 100, padding: 0}}>
                                         Priority
                                         <IconButton
                                             style={{color: (typeSort === "priority" ? "#34AD84" : ""), width: '2vw'}}
@@ -535,22 +563,22 @@ export default function ServiceRequestTable() {
                                             <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Time Created
-                                        <IconButton
-                                            style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}}
-                                            onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortRequests(requestSortField.timeCreated);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
-                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
-                                    </TableCell>
-                                    <TableCell>
                                         Type
                                         <IconButton
                                             style={{color: (typeSort === "type" ? "#34AD84" : ""), width: '2vw'}}
                                             onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortRequests(requestSortField.type);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                    </TableCell>
+                                    <TableCell>
+                                        Location
+                                        <IconButton
+                                            style={{color: (typeSort === "location" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.location);
                                             }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
                                             <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
@@ -575,22 +603,22 @@ export default function ServiceRequestTable() {
                                             <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>
                                     <TableCell>
-                                        Location
-                                        <IconButton
-                                            style={{color: (typeSort === "location" ? "#34AD84" : ""), width: '2vw'}}
-                                            onClick={() => {
-                                                setSortUp(!sortUp);
-                                                sortRequests(requestSortField.location);
-                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
-                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
-                                    </TableCell>
-                                    <TableCell>
                                         Created by
                                         <IconButton
                                             style={{color: (typeSort === "createdBy" ? "#34AD84" : ""), width: '2vw'}}
                                             onClick={() => {
                                                 setSortUp(!sortUp);
                                                 sortRequests(requestSortField.createdBy);
+                                            }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                            <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                    </TableCell>
+                                    <TableCell>
+                                        Time Created
+                                        <IconButton
+                                            style={{color: (typeSort === "timeCreated" ? "#34AD84" : ""), width: '2vw'}}
+                                            onClick={() => {
+                                                setSortUp(!sortUp);
+                                                sortRequests(requestSortField.timeCreated);
                                             }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
                                             <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                     </TableCell>

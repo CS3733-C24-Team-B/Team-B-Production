@@ -1,7 +1,7 @@
 .service-form-Container {
     /* Positioning */
     width: 100vw;
-    height: 150vh;
+    height: 90vh;
 }
 
 .service-form-BackBlue{
@@ -43,6 +43,21 @@
     /* order matter :) \/ */
     margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
 }
+.requestCardGrid{
+    display: grid;
+    grid-template-rows: 8% 18% 55%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-columns: auto;
+    grid-row-gap: 2%;
+    max-height: 100%;
+    margin-top: 4%;
+
+}
+
+.pillimage{
+    height: 30vh;
+    justify-self: center;
+    align-self: center;
+}
 
 .service-form-TwoRows {
     /* Positioning */
@@ -79,6 +94,15 @@
     width: 100%;
     height: 100%;
 }
+.service-form-midcard2 {
+    /* Styling */
+    background-color: white;
+    border-radius: 15px;
+
+    /* Positioning */
+    width: 100%;
+    height: 105vh;
+}
 
 .create-service-header {
     /* Text Styling */
@@ -109,10 +133,8 @@
     height: 100%;
 }
 
-.top-space {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+.form-submit {
+    align-self: center;
 }
 
 .modal-div {
@@ -120,6 +142,21 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    gap: 1.5vh;
+    overflow-y: auto;
+    overflow-x: clip;
+}
+
+.form-top-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-bottom-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/
