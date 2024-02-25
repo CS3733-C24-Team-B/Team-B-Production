@@ -8254,6 +8254,7 @@ __metadata:
     eslint-config-custom: "workspace:*"
     happy-dom: "npm:^10.6.3"
     husky: "npm:^8.0.0"
+    jspdf: "npm:^2.5.1"
     leaflet: "npm:^1.9.4"
     prettier: "npm:2.8.8"
     prettier-config-custom: "workspace:*"
