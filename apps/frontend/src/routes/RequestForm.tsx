@@ -6,6 +6,9 @@ import Topbar from "../components/Topbar.tsx";
 import ServiceRequestTable from "../components/ServiceRequestTable.tsx";
 import PieChartStats from "../components/PieChartStats.tsx";
 import "../css/serviceform_page.css";
+import CountEmergency from "../components/CountEmergency.tsx";
+import CountOpenRequest from "../components/CountOpenRequest.tsx";
+import CountRequestToday from "../components/CountRequestToday.tsx";
 
 // Material UI imports
 import {
@@ -393,24 +396,37 @@ export default function RequestForm() {
                         {currentTab === "statistics" && (
                             <div className="statistics-layout">
                                 <div className="statistics-cards-container">
-                                    <div className="corner-card-container top-left">
-                                        <div className="stat-card large" id="open-requests">Open Request #</div>
-                                    </div>
-                                    <div className="corner-card-container top-right">
-                                        <div className="stat-card medium" id="requests-today">Requests Created Today</div>
-                                    </div>
-                                    <div className="corner-card-container bottom-left">
-                                        <div className="stat-card x-small" id="employee-of-month">
-                                            <div className="employee-photo"></div>
-                                            Employee Of The Month January
+                                    <div className="stat-card-group left-column">
+                                        <div className="stat-card small" id="emergencies">
+                                            <span className="stat-title">Open Request #</span>
+                                            <div className="stat-number-container">
+                                                <CountOpenRequest/>
+                                            </div>
                                         </div>
+                                        <div className="stat-card x-small" id="employee-of-month">
+                                            <span className="stat-title">Employee Of The Month</span>
+                                            <span className="stat-number-container">Kenny Doan</span>
+                                        </div>
+
                                     </div>
-                                    <div className="corner-card-container bottom-right">
-                                        <div className="stat-card small" id="emergencies"># Of Emergencies</div>
+                                    <div className="stat-card-group right-column">
+                                        <div className="stat-card medium" id="requests-today">
+                                            <span className="stat-title">Requests Created Today</span>
+                                            <div className="stat-number-container">
+                                                <CountRequestToday/>
+                                            </div>
+                                        </div>
+                                        <div className="stat-card large" id="open-requests">
+                                            <span className="stat-title"># of Emergency</span>
+                                            <div className="stat-number-container">
+                                                <CountEmergency/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
+                                <div
+                                    className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
                                     <div>
                                         <PieChartStats/>
                                     </div>

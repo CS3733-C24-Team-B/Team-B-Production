@@ -25,7 +25,7 @@ export default function BarChart() {
 
         fetchData();
     }, [getAccessTokenSilently]);
-
+console.log(srData);
     const priorityCounts = {Low: 0, Medium: 0, High: 0, Emergency: 0};
 
     srData.forEach(item => {

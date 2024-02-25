@@ -71,48 +71,97 @@
 }
 
 .service-form-midcard {
-    /* Styling */
     background-color: white;
     border-radius: 15px;
-
-    /* Positioning */
     width: 100%;
     height: 100%;
 }
 
 .statistics-layout {
     display: flex;
-    height: 100%; /* Adjust this to the height of your container or the viewport height */
+    height: 100%;
 }
 
 .statistics-cards-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns, each taking 50% of width */
-    grid-template-rows: 49% 49%; /* Two rows, each taking 49% of height */
-    width: 50%; /* Half of the statistics-layout container's width */
-    height: 100%; /* Full height of the statistics-layout container */
-    gap: 1%; /* 1% gap between the cards */
-    padding: 1rem; /* Adjust this padding if you want */
-    box-sizing: border-box; /* Padding and borders included in width/height */
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.stat-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.stat-number-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #34AD84;
+}
+
+#open-requests .stat-number-container {
+    color: #E53E3E;
+}
+
+#employee-of-month .stat-number-container {
+    font-size: 2.25rem;
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+#requests-today .stat-number-container{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .stat-card {
-    display: flex;
-    align-items: center; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
-    background-color: #fff;
-    border-radius: 15px;
-    box-sizing: border-box; /* Padding and borders included in width/height */
-}
-
-/* Remove any margin from .stat-card if you had it before to avoid any overflow */
-
-.service-form-midcard-right {
-    width: 50%; /* The other half of the statistics-layout container's width */
-    height: 100%; /* Full height of the statistics-layout container */
     background-color: white;
     border-radius: 15px;
-    /* Adjust additional styling as necessary */
+    box-sizing: border-box;
+    padding: 0.5rem;
+    align-items: start;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+}
+
+.stat-card.small {
+    height: 80%;
+}
+
+.stat-card.x-small {
+    height: 120%;
+}
+
+.stat-card.medium {
+    height: 120%;
+}
+
+.stat-card.large {
+    height: 80%;
+}
+
+
+
+.service-form-midcard-right {
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+
 }
 
 .create-service-header {

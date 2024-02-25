@@ -86,7 +86,7 @@ export default function PieChart(){
                 },
                 bodyColor: 'white',
                 titleFont: {
-                    size: 18,
+                    size: 10,
                     family: 'Arial',
                 },
                 titleColor: 'white',
