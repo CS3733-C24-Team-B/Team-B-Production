@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import EmployeeServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
+import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
 
 // Material UI imports
@@ -14,6 +15,7 @@ import {
     Button,
     CircularProgress,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Modal,
@@ -27,6 +29,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import TranslateIcon from '@mui/icons-material/Translate';
 import GokuIcon from "../components/GokuIcon.tsx";
+import CloseIcon from '@mui/icons-material/Close';
 import BarChart from "../components/Statistics/BarChart.tsx";
 import StackedBarChart from "../components/Statistics/StackedBarChart.tsx";
 import {
@@ -66,7 +69,23 @@ const modalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '38vw',
+    width: '40vw',
+    maxHeight: '90vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
+
+const mapStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70vw',
+    maxHeight: '90vh',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -93,6 +112,7 @@ export default function RequestForm() {
     const [transPressed, setTransPressed] = useState(false);
     const [langPressed, setLangPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
+    const [showMap, setShowMap] = useState(false);
 
     useEffect(() => {
         async function fetch() {
@@ -112,6 +132,7 @@ export default function RequestForm() {
     }, [getAccessTokenSilently]);
 
     console.log(isAuthenticated);
+    console.log("LOC:" + location);
 
     function resetForm() {
         setRequestType("");
@@ -308,6 +329,17 @@ export default function RequestForm() {
         }
     };
 
+    function nodeIDtoName(nId: string) {
+        const node = nodeData.find(({nodeID}) =>
+            nodeID === nId
+        );
+        if (node !== undefined) {
+            return node!["longName"];
+        } else {
+            return "";
+        }
+    }
+
     return (
         <div className={"service-form-Container"}> {/* expands area across entire screen */}
             <Topbar/> {/* TopGreen css fixes this to the top */}
@@ -315,7 +347,7 @@ export default function RequestForm() {
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-TwoColumns"}>
                     <div className={"service-form-ThreeRows"}
-                         // style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}
+                        // style={{gridTemplateRows: (currentTab === "list-request" ? '6% 92% 30%' : '6% 50% 40%')}}
                     >
                         <div className={"service-form-topcard"}>
                             <Button
@@ -504,23 +536,29 @@ export default function RequestForm() {
                             style={{fontFamily: 'Lato'}}
                         >
                             <Box sx={modalStyle}>
-                                <p style={{fontSize: '150%', fontWeight: 600}}>
-                                    {{
-                                        'sanitation': "Sanitation",
-                                        'medicine': "Medicine",
-                                        'maintenance': "Maintenance",
-                                        'transport': "Internal Transport",
-                                        'language': "Language"
-                                    }[requestType]  + " Request"}
-                                </p>
+                                <div className="form-top-bar">
+                                    <p style={{fontSize: '150%', fontWeight: 600}}>
+                                        {{
+                                            'sanitation': "Sanitation",
+                                            'medicine': "Medicine",
+                                            'maintenance': "Maintenance",
+                                            'transport': "Internal Transport",
+                                            'language': "Language"
+                                        }[requestType] + " Request"}
+                                    </p>
+                                    <IconButton sx={{height: '20%'}} onClick={() => resetForm()}>
+                                        <CloseIcon/>
+                                    </IconButton>
+                                </div>
                                 <div className={"modal-div"}>
-                                    <div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: window.innerWidth * 0.38, gap: '2%'}}>
                                         <Autocomplete
-                                            style={{width: window.innerWidth * 0.38}}
+                                            style={{width: '100%'}}
                                             disablePortal
                                             options={currNodes.map(({nodeID, longName}): NodeType => (
                                                 {label: longName, nid: nodeID}
                                             ))}
+                                            value={{label: nodeIDtoName(location), nid: location}}
                                             size={"small"}
                                             renderInput={(params) =>
                                                 <TextField {...params} label="Location" variant="standard"/>}
@@ -537,6 +575,10 @@ export default function RequestForm() {
                                                 }
                                             }}
                                         />
+                                        <Button variant={"outlined"} style={{color: "#34AD84",
+                                            width: 220, fontSize: '0.7em'}} onClick={() => setShowMap(true)}>
+                                            Choose From Map
+                                        </Button>
                                     </div>
                                     <div className="input-field">
                                         <FormControl className="input-field">
@@ -596,17 +638,9 @@ export default function RequestForm() {
                                             required
                                         />
                                     </div>
-                                    <p>
-                                        Created by {" "}
-                                        {{
-                                            'sanitation': "Rodrick",
-                                            'medicine': "Rodrick and Piotr",
-                                            'maintenance': "Kenny",
-                                            'transport': "Katy and Cameron",
-                                            'language': "Katie and Hien"
-                                        }[requestType]}
-                                    </p>
-                                    <div className="top-space">
+                                </div>
+                                <div className={"form-bottom-bar"}>
+                                    <div className="form-submit">
                                         <Button
                                             style={{
                                                 backgroundColor: "#34AD84",
@@ -618,12 +652,33 @@ export default function RequestForm() {
                                             Submit Request
                                         </Button>
                                     </div>
+                                    <p>
+                                        Created by {" "}
+                                        {{
+                                            'sanitation': "Rodrick",
+                                            'medicine': "Rodrick and Piotr",
+                                            'maintenance': "Kenny",
+                                            'transport': "Katy and Cameron",
+                                            'language': "Katie and Hien"
+                                        }[requestType]}
+                                    </p>
                                 </div>
                             </Box>
                         </Modal>
                     )}
                 </div>
             </div>
+            <Modal
+                open={showMap}
+                onClose={() => {
+                    setShowMap(false);
+                }}
+                style={{fontFamily: 'Lato'}}
+            >
+                <Box sx={mapStyle}>
+                    <MiniMap change={setLocation} setClose={setShowMap}/>
+                </Box>
+            </Modal>
             <Snackbar
                 anchorOrigin={{vertical: "top", horizontal: "center"}}
                 open={submitAlert}

@@ -109,10 +109,8 @@
     height: 100%;
 }
 
-.top-space {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+.form-submit {
+    align-self: center;
 }
 
 .modal-div {
@@ -121,6 +119,20 @@
     align-items: center;
     width: 100%;
     gap: 1.5vh;
+    overflow-y: auto;
+    overflow-x: clip;
+}
+
+.form-top-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.form-bottom-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /*\/\/\/\/\/\/ OLD CODE /\/\/\/\/\/\/\/\/*/

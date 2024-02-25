@@ -1,24 +1,39 @@
-import React, {SetStateAction, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../css/home_page.css";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
 import LeafletMap from "../components/Pathfinding/LeafletMap.tsx";
 import {useAuth0} from "@auth0/auth0-react";
 import {
-    Autocomplete, autocompleteClasses,
+    Autocomplete, autocompleteClasses, Box,
     Button,
     Checkbox,
     Divider,
     FormControlLabel,
-    FormGroup,
-    Menu,
-    MenuItem, Switch
+    FormGroup, IconButton,
+    MenuItem, Modal, Switch
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+
+const modalStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '40vw',
+    maxHeight: '90vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
 
 export default function NavigationPage() {
     const {user} = useAuth0();
@@ -30,12 +45,15 @@ export default function NavigationPage() {
     const [showHalls, setShowHalls] = useState(false);
     const [doAnimation, setDoAnimation] = useState(false);
     const [algorithm, setAlgorithm] = useState(0);
-    const [menuAnchor, setMenuAnchor] = useState(null);
     const [nodeEnd, setNodeEnd] = useState("");
+    const [zoomNode, setZoomNode] = useState("");
     const [nodeColor, setNodeColor] = useState(localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor") : "#3388ff");
     const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
     const [goku, setGoku] = useState(localStorage.getItem("goku") !== null ? localStorage.getItem("goku") === "true" : true);
-    const openMenu = Boolean(menuAnchor);
+    const [defaultLocation, setDefaultLocation] = useState(localStorage.getItem("defaultLocation") !== null ? localStorage.getItem("defaultLocation") : "");
+    const [useDefault, setUseDefault] = useState(localStorage.getItem("useDefault") !== null ? localStorage.getItem("useDefault") === "true" : true);
+    const [openMenu, setOpenMenu] = useState(false);
+    const [showPopups, setShowPopups] = useState(localStorage.getItem("usePopups") !== null ? localStorage.getItem("showPopups") === "true" : true);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
         async function fetch() {
@@ -50,7 +68,7 @@ export default function NavigationPage() {
         fetch().then();
     }, []);
     useEffect(() => {
-        if(!user) {
+        if (!user) {
             localStorage.removeItem("goku");
         }
     }, [user]);
@@ -81,14 +99,18 @@ export default function NavigationPage() {
                 disablePortal
                 options={currNodes.map(({longName}) => ({label: longName}))}
                 size={"small"}
-                renderInput={(params) => <TextField {...params} label={<p className={"search-label"}>Find Your {<span
-                    className={"action-text"}>Destination</span>}
-                </p>} variant={"outlined"}/>}
+                renderInput={(params) => <TextField {...params}
+                                                    label={<p className={"search-label"}>Find Your {<span
+                                                        className={"action-text"}>Destination</span>}
+                                                    </p>} variant={"outlined"}/>}
                 popupIcon={<SearchIcon/>}
                 sx={{
                     [`& .${autocompleteClasses.popupIndicator}`]: {
                         transform: "none"
-                    }
+                    },
+                    '& input': {
+                        fontFamily: 'Lato'
+                    },
                 }}
                 ListboxProps={{style: {fontFamily: 'Lato'}}}
                 value={{"label": nodeIDtoName(nodeEnd)}}
@@ -97,6 +119,7 @@ export default function NavigationPage() {
                     if (input.innerText !== undefined) {
                         const nId = nametoNodeID(input.innerText);
                         setNodeEnd(nId);
+                        setZoomNode(nId);
                         setOpenDrawer(true);
                     } else {
                         setNodeEnd("");
@@ -144,82 +167,149 @@ export default function NavigationPage() {
     }
 
     const ChooseAlgo = (
-        <TextField
-            select
-            value={numToSearchType(algorithm)}
-            onChange={(event) => {
-                setAlgorithm(searchTypeToNum(event.target.value));
-            }}
-            label="Pathfinding Algorithm"
-            size="small"
-            style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', margin: '8%', minWidth: '84%'}}
-            InputProps={{style: {fontFamily: 'Lato'}}}
-        >
-            {<MenuItem value={"A Star"} sx={{fontFamily: 'Lato'}}>A*</MenuItem>}
-            {<MenuItem value={"BFS"} sx={{fontFamily: 'Lato'}}>BFS</MenuItem>}
-            {<MenuItem value={"DFS"} sx={{fontFamily: 'Lato'}}>DFS</MenuItem>}
-            {<MenuItem value={"Dijkstra"} sx={{fontFamily: 'Lato'}}>Dijkstra</MenuItem>}
-        </TextField>
+        <div style={{width: '40%', alignSelf: 'center', marginTop: '5%', marginBottom: '5%'}}>
+            <TextField
+                select
+                value={numToSearchType(algorithm)}
+                onChange={(event) => {
+                    setAlgorithm(searchTypeToNum(event.target.value));
+                }}
+                label="Pathfinding Algorithm"
+                size="small"
+                style={{backgroundColor: "white", color: "black", fontSize: '1.5vh', minWidth: '100%'}}
+                InputProps={{style: {fontFamily: 'Lato'}}}
+            >
+                {<MenuItem value={"A Star"} sx={{fontFamily: 'Lato'}}>A*</MenuItem>}
+                {<MenuItem value={"BFS"} sx={{fontFamily: 'Lato'}}>BFS</MenuItem>}
+                {<MenuItem value={"DFS"} sx={{fontFamily: 'Lato'}}>DFS</MenuItem>}
+                {<MenuItem value={"Dijkstra"} sx={{fontFamily: 'Lato'}}>Dijkstra</MenuItem>}
+            </TextField>
+        </div>
     );
+
+    interface NodeType {
+        label: string,
+        nid: string
+    }
+
     const SettingsMenu = (
-        <Menu
+        <Modal
             open={openMenu}
             onClose={() => {
-                setMenuAnchor(null);
+                setOpenMenu(false);
             }}
-            anchorEl={menuAnchor}>
-            <FormGroup style={{minWidth: '10%', gap: 0, padding: 15}}>
-                <FormControlLabel
-                    control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
-                    label={<p className={"settings-text"}>Show Nodes</p>}/>
-                <FormControlLabel
-                    control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
-                    label={<p className={"settings-text"}>Show Edges</p>}/>
-                <FormControlLabel control={<Checkbox checked={showNodes && showHalls}
-                                                     onClick={() => setShowHalls(!showHalls)}/>}
-                                  label={<p className={"settings-text"}>Show Halls</p>}/>
-                <FormControlLabel control={<Checkbox checked={doAnimation}
-                                                     onClick={() => setDoAnimation(!doAnimation)}/>}
-                                  label={<p className={"settings-text"}>Animate Path</p>}/>
-                {doAnimation && user ?
-                    <FormControlLabel control={<Switch checked={goku} onClick={() => {
-                        localStorage.setItem("goku", !goku + "");
-                        setGoku(!goku);
+            style={{fontFamily: 'Lato'}}>
+            <Box sx={modalStyle}>
+                <IconButton style={{alignSelf: 'end'}} onClick={() => setOpenMenu(false)}>
+                    <CloseIcon/>
+                </IconButton>
+                <div style={{alignSelf: 'center'}}>
+                    <FormGroup style={{minWidth: '50%', padding: 15}}>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
+                            label={<p className={"settings-text"}>Show Nodes</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
+                            label={<p className={"settings-text"}>Show Edges</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showNodes && showHalls}
+                                                             onClick={() => setShowHalls(!showHalls)}/>}
+                                          label={<p className={"settings-text"}>Show Halls</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showPopups}
+                                                             onClick={() => {
+                                                                 localStorage.setItem("showPopups", !showPopups + "");
+                                                                 setShowPopups(!showPopups);
+                                                             }}/>}
+                                          label={<p className={"settings-text"}>Show Popups</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={doAnimation}
+                                                             onClick={() => setDoAnimation(!doAnimation)}/>}
+                                          label={<p className={"settings-text"}>Animate Path</p>}/>
+                        {doAnimation && user ?
+                            <FormControlLabel
+                                style={{marginTop: '-10%'}}
+                                control={<Switch checked={goku} onClick={() => {
+                                localStorage.setItem("goku", !goku + "");
+                                setGoku(!goku);
+                            }}/>}
+                                              label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
+                    </FormGroup>
+                </div>
+                <Divider/>
+                {ChooseAlgo}
+                <Divider/>
+                <div className={"color-settings"}>
+                    <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+                    <input className="Settings-Color-Selector1" type="color"
+                           value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                           onChange={(e) => {
+                               localStorage.setItem("nodeColor", e.target.value);
+                               setNodeColor(e.target.value);
+                           }}/>
+                </div>
+                <div className={"color-settings"}>
+                    <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+                    <input className="Settings-Color-Selector2" type="color"
+                           value={(edgeColor === null ? "#008000" : edgeColor!)}
+                           onChange={(e) => {
+                               localStorage.setItem("edgeColor", e.target.value);
+                               setEdgeColor(e.target.value);
+                           }}/>
+                </div>
+                <Divider/>
+                <div style={{alignSelf: 'center', width: '50%'}}>
+                    <Autocomplete
+                        sx={{maxWidth: '100%'}}
+                        disablePortal
+                        options={currNodes.map(({nodeID, longName}): NodeType => (
+                            {label: longName, nid: nodeID}
+                        ))}
+                        size={"small"}
+                        value={{label: nodeIDtoName(defaultLocation!), nid: defaultLocation!}}
+                        renderInput={(params) =>
+                            <TextField {...params} label="Default Starting Location" variant="standard"/>}
+                        //value={{label: nodeIDtoName(location), nid: location}}
+                        getOptionLabel={(nd: NodeType) =>
+                            `${nd.label}`
+                        }
+                        getOptionKey={(nd: NodeType) =>
+                            `${nd.nid}`
+                        }
+                        onChange={(newValue, val) => {
+                            if (val !== null) {
+                                setDefaultLocation(val.nid);
+                                localStorage.setItem("defaultLocation", val.nid);
+                            } else {
+                                setDefaultLocation("");
+                                localStorage.setItem("defaultLocation", "");
+                            }
+                        }}
+                    />
+                    {defaultLocation !== "" ? <FormControlLabel control={<Switch checked={useDefault} onClick={() => {
+                        localStorage.setItem("useDefault", !useDefault + "");
+                        setUseDefault(!useDefault);
                     }}/>}
-                                      label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
-            </FormGroup>
-            <Divider/>
-            {ChooseAlgo}
-            <Divider/>
-            <div className={"color-settings"}>
-                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
-                <input className="Settings-Color-Selector1" type="color"
-                       value={(nodeColor === null ? "#3388ff" : nodeColor!)}
-                       onChange={(e) => {
-                           localStorage.setItem("nodeColor", e.target.value);
-                           setNodeColor(e.target.value);
-                       }}/>
-            </div>
-            <div className={"color-settings"}>
-                <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
-                <input className="Settings-Color-Selector2" type="color"
-                       value={(edgeColor === null ? "#008000" : edgeColor!)}
-                       onChange={(e) => {
-                           localStorage.setItem("edgeColor", e.target.value);
-                           setEdgeColor(e.target.value);
-                       }}/>
-            </div>
-        </Menu>
-);
-topbarElems.push(
-    <Button
-        sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
-        endIcon={<SettingsIcon/>}
-        onClick={(e) => {
-            setMenuAnchor(e.currentTarget as unknown as SetStateAction<null>);
-        }}>
-        Settings
-    </Button>);
+                                                                label={<p className={"settings-text"}>Use
+                                                                    Default?</p>}/> : <></>}
+                </div>
+            </Box>
+        </Modal>
+    );
+    topbarElems.push(
+        <Button
+            sx={{color: 'black', width: '15%', textTransform: 'none', fontSize: '20px', fontFamily: 'Lato'}}
+            endIcon={<SettingsIcon/>}
+            onClick={() => {
+                setOpenMenu(true);
+            }}>
+            Settings
+        </Button>);
     topbarElems.push(SettingsMenu);
 
     return (
@@ -245,7 +335,12 @@ topbarElems.push(
                                     changeDrawer={setOpenDrawer}
                                     nodeColor={nodeColor!}
                                     edgeColor={edgeColor!}
-                                    goku={goku}/>
+                                    goku={goku}
+                                    defaultStart={defaultLocation!}
+                                    useDefault={useDefault}
+                                    changeDefault={setUseDefault}
+                                    zoomNode={zoomNode}
+                                    showPopups={showPopups}/>
                     </div>
                 </div>
             </div>

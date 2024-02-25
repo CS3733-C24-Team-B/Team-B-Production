@@ -83,6 +83,11 @@ interface MapProps {
     nodeColor: string;
     edgeColor: string;
     goku: boolean;
+    defaultStart: string;
+    useDefault: boolean;
+    changeDefault: (arg0: boolean) => void;
+    zoomNode: string;
+    showPopups: boolean;
 }
 
 export default function LeafletMap(props: MapProps) {
@@ -108,6 +113,9 @@ export default function LeafletMap(props: MapProps) {
     const [floorSet, setFloorSet] = useState(new Set());
     const [nodeColor, setNodeColor] = useState(props.nodeColor);
     const [edgeColor, setEdgeColor] = useState(props.edgeColor);
+    const [useDefault, setUseDefault] = useState(false);
+    const [oldZoom, setOldZoom] = useState("");
+    const [showPopups, setShowPopups] = useState(props.showPopups);
 
     // get auth0 stuff
     const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
@@ -141,6 +149,51 @@ export default function LeafletMap(props: MapProps) {
         setNodeColor(props.nodeColor);
         setEdgeColor(props.edgeColor);
     }, [props.nodeColor, props.edgeColor]);
+
+    useEffect(() => {
+        if (props.defaultStart === "" || !props.useDefault) {
+            setUseDefault(false);
+        } else {
+            setUseDefault(true);
+            setNodeStart(props.defaultStart);
+        }
+    }, [props.defaultStart, props.useDefault]);
+
+    useEffect(() => {
+        const nodeIDToXPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["xcoord"];
+        };
+
+        const nodeIDToYPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["ycoord"];
+        };
+
+        const nodeIDToFloor = (nId: string) => {
+            console.log(nodeData.find(({nodeID}) =>
+                nId === nodeID
+            ));
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["floor"];
+        };
+
+        if(props.zoomNode !== oldZoom) {
+            if (nodeIDToFloor(props.zoomNode) !== currLevel) {
+                setSelectedFloor(levelToFloor(nodeIDToFloor(props.zoomNode)));
+                setCurrLevel(nodeIDToFloor(props.zoomNode));
+            }
+            lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.zoomNode)), transX(nodeIDToXPos(props.zoomNode))), 8);
+            setOldZoom(props.zoomNode);
+        }
+    }, [props.zoomNode, nodeData, currLevel, oldZoom]);
+
+    useEffect(() => {
+        setShowPopups(props.showPopups);
+    }, [props.showPopups]);
 
     useEffect(() => {
         async function fetch() {
@@ -262,52 +315,38 @@ export default function LeafletMap(props: MapProps) {
                         for (let i = 0; i < steps; i++) {
                             animate.push(new LatLng(transY(startY) + dy * i / steps, transX(startX) + dx * i / steps));
                         }
-                        if (!doAnimation) {
-                            const midX = transX(startX) + dx / 2;
-                            const midY = transY(startY) + dy / 2;
-                            const angle = Math.atan(dy / dx);
-                            const xMod = (dx === 0) ? 1 : -dx / Math.abs(dx);
-                            const yMod = (dx >= 0) ? -1 : 1;
-                            const pathLength = Math.sqrt(dx * dx + dy * dy);
-                            if (pathLength > 0.2) {
-                                temp.push(<Polyline
-                                    positions={[[midY, midX], [midY + 0.1 * Math.sin(angle + Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle + Math.PI / 4) * xMod]]}
-                                    color={edgeColor}
-                                    weight={5}></Polyline>);
-                                temp.push(<Polyline
-                                    positions={[[midY, midX], [midY + 0.1 * Math.sin(angle - Math.PI / 4) * yMod, midX + 0.1 * Math.cos(angle - Math.PI / 4) * xMod]]}
-                                    color={edgeColor}
-                                    weight={5}></Polyline>);
-                            }
-                        }
                     } else if (prevFloor !== "") {
-                        temp.push(
-                            <Popup position={[transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]} autoClose={false}
-                                   interactive={true}>
-                                <p> {floorChanges + ". Arrive from floor "} <span onClick={() => {
-                                    setSelectedFloor(levelToFloor(prevFloor));
-                                    setCurrLevel(prevFloor);
-                                }}
-                                                                                  className={"floor-change-text"}>{prevFloor}</span>
-                                </p>
-                            </Popup>
-                        );
+                        if(showPopups) {
+                            temp.push(
+                                <Popup position={[transY(nodeIDToYPos(nr)), transX(nodeIDToXPos(nr))]} autoClose={false}
+                                       interactive={true}>
+                                    <p> {floorChanges + ". Arrive from floor "} <span onClick={() => {
+                                        setSelectedFloor(levelToFloor(prevFloor));
+                                        setCurrLevel(prevFloor);
+                                    }}
+                                                                                      className={"floor-change-text"}>{prevFloor}</span>
+                                    </p>
+                                </Popup>
+                            );
+                        }
                         floorChanges++;
                     }
                     startX = nodeIDToXPos(nr);
                     startY = nodeIDToYPos(nr);
                 } else {
                     if (startX >= 0 && startY >= 0) {
-                        temp.push(
-                            <Popup position={[transY(startY), transX(startX)]} autoClose={false} interactive={true}>
-                                <p> {floorChanges + ". Go to floor "} <span onClick={() => {
-                                    setSelectedFloor(levelToFloor(nodeIDToFloor(nr)));
-                                    setCurrLevel(nodeIDToFloor(nr));
-                                }}
-                                                                            className={"floor-change-text"}>{nodeIDToFloor(nr)}</span>
-                                </p>
-                            </Popup>
-                        );
+                        if(showPopups) {
+                            temp.push(
+                                <Popup position={[transY(startY), transX(startX)]} autoClose={false} interactive={true}>
+                                    <p> {floorChanges + ". Go to floor "} <span onClick={() => {
+                                        setSelectedFloor(levelToFloor(nodeIDToFloor(nr)));
+                                        setCurrLevel(nodeIDToFloor(nr));
+                                    }}
+                                                                                className={"floor-change-text"}>{nodeIDToFloor(nr)}</span>
+                                    </p>
+                                </Popup>
+                            );
+                        }
                         floorChanges++;
                         changes.push(animate.length - 1);
                     }
@@ -321,7 +360,7 @@ export default function LeafletMap(props: MapProps) {
         setAnimateData(animate);
         setAnimateChanges(changes);
         setFloorSet(fs);
-    }, [currLevel, doAnimation, edgeColor, edgeData, nodeData, pathData, showEdges]);
+    }, [currLevel, doAnimation, edgeColor, edgeData, nodeData, pathData, showEdges, showPopups]);
 
     function moveLine() {
         if (animateData.length > 0) {
@@ -343,27 +382,33 @@ export default function LeafletMap(props: MapProps) {
                 setRedraw(!redraw);
             }, 20);
             return (
-                    (!props.goku ?
-                            <ImageOverlay
-                                className={"animated-icon"}
-                                url={user! && user!.picture!}
-                                bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 0.5, animateData[startDraw.current].lng - 0.5), new LatLng(animateData[startDraw.current].lat + 0.5, animateData[startDraw.current].lng + 0.5))}
-                                ref={(r) => {
-                                    r?.setZIndex(1000);
-                                }}>
-                            </ImageOverlay>
+                (!props.goku ?
+                        <ImageOverlay
+                            className={"animated-icon"}
+                            url={user! && user!.picture!}
+                            bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 0.5, animateData[startDraw.current].lng - 0.5), new LatLng(animateData[startDraw.current].lat + 0.5, animateData[startDraw.current].lng + 0.5))}
+                            ref={(r) => {
+                                r?.setZIndex(1000);
+                            }}>
+                        </ImageOverlay>
                         :
-                            <SVGOverlay
-                                bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 1, animateData[startDraw.current].lng - 1), new LatLng(animateData[startDraw.current].lat + 1, animateData[startDraw.current].lng + 1))}
-                                ref={(r) => {
-                                    r?.setZIndex(1000);
-                                }}>
-                                <GokuIcon />
-                            </SVGOverlay>
-                        )
+                        <SVGOverlay
+                            bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 1, animateData[startDraw.current].lng - 1), new LatLng(animateData[startDraw.current].lat + 1, animateData[startDraw.current].lng + 1))}
+                            ref={(r) => {
+                                r?.setZIndex(1000);
+                            }}>
+                            <GokuIcon/>
+                        </SVGOverlay>
+                )
             );
         }
     }
+
+    const levelToFloor = (lvl: string) => {
+        return FloorLevel.slice().find(({level}) => {
+            return lvl === level;
+        })!["floor"];
+    };
 
     const nodeIDToXPos = (nId: string) => {
         return nodeData.find(({nodeID}) =>
@@ -392,22 +437,41 @@ export default function LeafletMap(props: MapProps) {
     };
 
     function drawNodeStart() {
-        if (nodeStart !== "" && nodeIDToFloor(nodeStart) === currLevel) {
+        if (nodeStart !== "" && nodeData.length > 0 && nodeIDToFloor(nodeStart) === currLevel) {
             return (
-                <CircleMarker fillOpacity={1}
-                              center={new LatLng(transY(nodeIDToYPos(nodeStart)), transX(nodeIDToXPos(nodeStart)))}
-                              radius={6}
-                              color={nodeColor}>
-                </CircleMarker>
+                <>
+                    {showPopups ? <Popup position={new LatLng(transY(nodeIDToYPos(nodeStart)), transX(nodeIDToXPos(nodeStart)))}
+                            autoClose={false}>
+                        <p>
+                            Starting Node: <span className={"floor-change-text"}>{nodeIDtoName(nodeStart)}</span>
+                        </p>
+                    </Popup> : <></>}
+                    <CircleMarker fillOpacity={1}
+                                  center={new LatLng(transY(nodeIDToYPos(nodeStart)), transX(nodeIDToXPos(nodeStart)))}
+                                  radius={8}
+                                  color={nodeColor}
+                                  ref={(r) => {
+                                      r?.bringToFront();
+                                  }}>
+                    </CircleMarker>
+                </>
             );
         }
     }
 
     function drawNodeEnd() {
-        if (nodeStart !== "" && nodeIDToFloor(nodeEnd) === currLevel) {
+        if (nodeEnd !== "" && nodeIDToFloor(nodeEnd) === currLevel) {
             return (
-                <Marker position={new LatLng(transY(nodeIDToYPos(nodeEnd)), transX(nodeIDToXPos(nodeEnd)))}>
-                </Marker>
+                <>
+                    {showPopups ? <Popup position={new LatLng(transY(nodeIDToYPos(nodeEnd)), transX(nodeIDToXPos(nodeEnd)))}
+                            autoClose={false}>
+                        <p>
+                            Ending Node: <span className={"floor-change-text"}>{nodeIDtoName(nodeEnd)}</span>
+                        </p>
+                    </Popup> : <></>}
+                    <Marker position={new LatLng(transY(nodeIDToYPos(nodeEnd)), transX(nodeIDToXPos(nodeEnd)))}>
+                    </Marker>
+                </>
             );
         }
     }
@@ -509,6 +573,13 @@ export default function LeafletMap(props: MapProps) {
                                     if (input.innerText !== undefined) {
                                         const nId = nametoNodeID(input.innerText);
                                         setNodeStart(nId);
+                                        setUseDefault(false);
+                                        props.changeDefault(false);
+                                        if(nodeIDToFloor(nId) !== currLevel) {
+                                            setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
+                                            setCurrLevel(nodeIDToFloor(nId));
+                                        }
+                                        lMap!.current.setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
                                     } else {
                                         setNodeStart("");
                                         setPathData([]);
@@ -535,6 +606,11 @@ export default function LeafletMap(props: MapProps) {
                                         setNodeEnd(nId);
                                         props.changeDrawer(true);
                                         props.changeTopbar(nId);
+                                        if(nodeIDToFloor(nId) !== currLevel) {
+                                            setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
+                                            setCurrLevel(nodeIDToFloor(nId));
+                                        }
+                                        lMap!.current.setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
                                     } else {
                                         setNodeEnd("");
                                         setPathData([]);
@@ -612,7 +688,9 @@ export default function LeafletMap(props: MapProps) {
                                                       props.changeDrawer(true);
                                                       props.changeTopbar(nodeID);
                                                   } else {
-                                                      setNodeStart(nodeEnd);
+                                                      if (!useDefault) {
+                                                          setNodeStart(nodeEnd);
+                                                      }
                                                       setNodeEnd(nodeID);
                                                       props.changeDrawer(true);
                                                       props.changeTopbar(nodeID);
@@ -670,5 +748,6 @@ LeafletMap.defaultProps = {
     hallsShow: false,
     animate: false,
     algo: 0,
-    goku: false
+    goku: false,
+    defaultStart: ""
 };

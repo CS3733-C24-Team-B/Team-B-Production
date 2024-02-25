@@ -437,7 +437,7 @@ export default function ServiceRequestTable() {
             {(!receivedSR) ? <CircularProgress className="center-text"/> :
                 <ThemeProvider theme={latoTheme}>
                     <TableContainer component={Paper} className="service-tables"
-                                    sx={{maxHeight: "70vh"}}>
+                                    sx={{maxHeight: "67vh"}}>
                         <Table stickyHeader>
                             <TableHead>
                                 <TableRow>

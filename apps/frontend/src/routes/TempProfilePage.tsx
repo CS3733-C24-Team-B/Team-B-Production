@@ -139,7 +139,10 @@ export default function ProfilePage() {
                         <Typography variant="h5" gutterBottom style={listItemStyle}>
                             Profile Information
                         </Typography>
-                        {(user === undefined || employee === undefined) ? <CircularProgress/> :
+                        {(user === undefined || employee === undefined) ? <> <CircularProgress/> <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                                                                                         onClick={() => logout()}>
+                                Log Out
+                            </Button> </>:
                             <div className={"profile-card-info"}>
 
                                 <div className={"profile-picture-wrapper"}>
