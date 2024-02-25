@@ -4,11 +4,10 @@ import "./index.css";
 import HomePage from "./routes/NavigationPage.tsx";
 import RequestList from "./routes/RequestList.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
-import ProfilePage from "./routes/TempProfilePage.tsx";
+import ProfilePage from "./routes/ProfilePage.tsx";
 import AdminViewer from "./routes/AdminViewer.tsx";
 import SettingsPage from "./routes/SettingsPage.tsx";
 import Credits from "./routes/Credits.tsx";
-import AboutPage from "./routes/AboutPage.tsx";
 import About from "./routes/About.tsx";
 
 function App() {
@@ -47,11 +46,6 @@ function App() {
             path: "/settings",
             errorElement: <div/>,
             element: <SettingsPage/>
-        },
-        {
-            path: "/about-us",
-            errorElement: <div/>,
-            element: <AboutPage/>
         },
         {
             path: "/about",

@@ -40,7 +40,7 @@ model ServiceRequest {
   createdBy         Employee                  @relation("Created", fields: [createdByID], references: [email], onDelete: SetDefault)
   createdByID       String                    @default("softengc24b@gmail.com")
   location          Node?                     @relation("Location", fields: [locationID], references: [nodeID], onDelete: SetNull)
-  locationID        String
+  locationID        String?
   priority          String
   status            String
   assignedTo        Employee                  @relation("Assigned", fields: [assignedID], references: [email], onDelete: SetDefault)

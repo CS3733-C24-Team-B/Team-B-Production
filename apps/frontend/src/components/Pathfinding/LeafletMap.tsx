@@ -1,4 +1,14 @@
-import {MapContainer, Tooltip, ImageOverlay, CircleMarker, Polyline, Popup, Marker, SVGOverlay} from 'react-leaflet';
+import {
+    MapContainer,
+    Tooltip,
+    ImageOverlay,
+    CircleMarker,
+    Polyline,
+    Popup,
+    Marker,
+    SVGOverlay,
+    ZoomControl
+} from 'react-leaflet';
 import "../../css/leaflet.css";
 import React, {useState, useEffect, useRef, Ref} from "react";
 import axios from "axios";
@@ -589,7 +599,7 @@ export default function LeafletMap(props: MapProps) {
                         </div>
                         <div className="autocomplete-rows" style={{marginBottom: '10%', width: '100%'}}>
                             {/* End Node */}
-                            <LocationOnIcon style={{marginRight: '3%'}}/>
+                            <LocationOnIcon style={{marginLeft: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -650,7 +660,9 @@ export default function LeafletMap(props: MapProps) {
                 maxBounds={new LatLngBounds(new LatLng(0, 0), new LatLng(34, 56))}
                 ref={lMap}
                 className={"leaflet-container"}
+                zoomControl ={false}
             >
+                <ZoomControl position="topright" />
                 <ImageOverlay
                     url={selectedFloor}
                     bounds={new LatLngBounds(new LatLng(0, 3), new LatLng(34, 53))}
