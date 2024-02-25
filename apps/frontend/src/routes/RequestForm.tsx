@@ -7,6 +7,12 @@ import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.t
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
+import PillImage from "../images/pills.png";
+import LangIMG from "../images/lang.png";
+import LoudImage from "../images/loud.png";
+import TransportImage from "../images/transport.png";
+import MaintainImage from "../images/maintain.png";
+import CleanImage from "../images/clean.png";
 
 // Material UI imports
 import {
@@ -23,12 +29,6 @@ import {
     Snackbar
 } from "@mui/material";
 import {styled} from '@mui/material/styles';
-import SanitizerIcon from '@mui/icons-material/Sanitizer';
-import MedicationIcon from '@mui/icons-material/Medication';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import TranslateIcon from '@mui/icons-material/Translate';
-import GokuIcon from "../components/GokuIcon.tsx";
 import CloseIcon from '@mui/icons-material/Close';
 import BarChart from "../components/Statistics/BarChart.tsx";
 import StackedBarChart from "../components/Statistics/StackedBarChart.tsx";
@@ -48,14 +48,14 @@ import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
 
 const RequestButton = styled(Button)(() => ({
-    fontSize: '2.5vh',
-    width: '48%',
-    height: '26%',
-    marginLeft: '1%',
-    marginTop: '1%',
-    border: '2px solid black',
+    fontSize: '.8em',
+    width: '30.5%',
+    height: '45vh',
+    marginLeft: '2%',
+    marginTop: '2%',
+    border: '.1px solid black',
     color: 'black',
-    backgroundColor: '#CDCCD0',
+    backgroundColor: '#FAFAFA',
     '&:hover': {
         color: 'white',
         backgroundColor: '#34AD84',
@@ -401,9 +401,9 @@ export default function RequestForm() {
 
                         {/*If current tab is the create request tab*/}
                         {currentTab === "create-request" && (
-                            <div className={"service-form-midcard"}>
+                            <div className={"service-form-midcard2"}>
                                 <header className={"create-service-header"}
-                                        style={{fontFamily: 'Lato'}}>
+                                        style={{fontFamily: 'Lato',fontWeight: '550'}}>
                                     Create Service Request
                                 </header>
                                 <RequestButton variant="contained"
@@ -420,9 +420,30 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<MedicationIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Medicine Request
+                                               sx={{
+                                                   justifySelf: 'center',
+                                                   borderRadius: '15px',
+                                                   fontFamily: 'Lato',
+                                                   textTransform: 'none'
+                                               }}>
+                                    {/*Cameron Crane*/}
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Medicine Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -438,9 +459,28 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<WarningAmberIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Maintenance Request
+                                               sx={{justifySelf: 'center',
+                                                   borderRadius: '15px',
+                                                   fontFamily: 'Lato',
+                                                   textTransform: 'none'
+                                }}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Maintance Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -456,9 +496,24 @@ export default function RequestForm() {
                                                    setMainPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<CompareArrowsIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Internal Transport Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato', textTransform: 'none'}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Transport Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={TransportImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -474,9 +529,24 @@ export default function RequestForm() {
                                                    setMainPressed(false);
                                                    setTransPressed(false);
                                                }}
-                                               startIcon={<TranslateIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato'}}>
-                                    Language Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Language Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={LangIMG} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
                                                onClick={() => {
@@ -492,14 +562,44 @@ export default function RequestForm() {
                                                    setTransPressed(false);
                                                    setLangPressed(false);
                                                }}
-                                               startIcon={<SanitizerIcon style={{fontSize: '4vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px'}}>
-                                    Sanitation Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Sanitation Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={CleanImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                                 <RequestButton variant="contained"
-                                               startIcon={<GokuIcon style={{fontSize: '6vh'}}/>}
-                                               sx={{justifySelf: 'center', borderRadius: '15px'}}>
-                                    Goku Request
+                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
+                                    <div className={'requestCardGrid'}>
+                                        <p style={{
+                                            fontSize: '4vh',
+                                            fontFamily: 'Lato',
+                                            alignSelf: "center",
+                                            fontWeight: '100'
+                                        }}>Goku Request</p>
+
+                                        <p style={{
+                                            fontSize: '80%',
+                                            alignSelf: "center",
+                                            justifySelf: "center",
+                                            maxWidth: '80%',
+                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+
+                                        <img className={"pillimage"} src={LoudImage} alt={"Image"}/>
+                                    </div>
                                 </RequestButton>
                             </div>
                         )}
