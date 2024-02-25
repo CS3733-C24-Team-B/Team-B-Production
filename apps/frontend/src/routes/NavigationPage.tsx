@@ -19,6 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from "@mui/material/TextField";
 import axios from "axios";
+import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 
 const modalStyle = {
     position: 'absolute',
@@ -35,15 +36,30 @@ const modalStyle = {
     p: 4
 };
 
+const mapStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70vw',
+    maxHeight: '90vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
+
 export default function NavigationPage() {
     const {user} = useAuth0();
     console.log(user);
     const [nodeData, setNodeData] = useState([]);
     const [openDrawer, setOpenDrawer] = useState(false);
-    const [showNodes, setShowNodes] = useState(true);
-    const [showEdges, setShowEdges] = useState(false);
-    const [showHalls, setShowHalls] = useState(false);
-    const [doAnimation, setDoAnimation] = useState(false);
+    const [showNodes, setShowNodes] = useState(localStorage.getItem("showNodes") !== null ? localStorage.getItem("showNodes") === "true" : true);
+    const [showEdges, setShowEdges] = useState(localStorage.getItem("showEdges") !== null ? localStorage.getItem("showEdges") === "true" : false);
+    const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "true" : false);
+    const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : false);
     const [algorithm, setAlgorithm] = useState(0);
     const [nodeEnd, setNodeEnd] = useState("");
     const [zoomNode, setZoomNode] = useState("");
@@ -53,7 +69,8 @@ export default function NavigationPage() {
     const [defaultLocation, setDefaultLocation] = useState(localStorage.getItem("defaultLocation") !== null ? localStorage.getItem("defaultLocation") : "");
     const [useDefault, setUseDefault] = useState(localStorage.getItem("useDefault") !== null ? localStorage.getItem("useDefault") === "true" : true);
     const [openMenu, setOpenMenu] = useState(false);
-    const [showPopups, setShowPopups] = useState(localStorage.getItem("usePopups") !== null ? localStorage.getItem("showPopups") === "true" : true);
+    const [showPopups, setShowPopups] = useState(localStorage.getItem("showPopups") !== null ? localStorage.getItem("showPopups") === "true" : true);
+    const [showMap, setShowMap] = useState(false);
     const topbarElems: React.ReactNode[] = [];
     useEffect(() => {
         async function fetch() {
@@ -192,6 +209,11 @@ export default function NavigationPage() {
         nid: string
     }
 
+    function setDefLoc(nId: string) {
+        setDefaultLocation(nId);
+        localStorage.setItem("defaultLocation", nId);
+    }
+
     const SettingsMenu = (
         <Modal
             open={openMenu}
@@ -207,38 +229,50 @@ export default function NavigationPage() {
                     <FormGroup style={{minWidth: '50%', padding: 15}}>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
-                            control={<Checkbox checked={showNodes} onClick={() => setShowNodes(!showNodes)}/>}
+                            control={<Checkbox checked={showNodes} onClick={() => {
+                                localStorage.setItem("showNodes", !showNodes + "");
+                                setShowNodes(!showNodes);
+                            }}/>}
                             label={<p className={"settings-text"}>Show Nodes</p>}/>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
-                            control={<Checkbox checked={showEdges} onClick={() => setShowEdges(!showEdges)}/>}
+                            control={<Checkbox checked={showEdges} onClick={() => {
+                                localStorage.setItem("showEdges", !showEdges + "");
+                                setShowEdges(!showEdges);
+                            }}/>}
                             label={<p className={"settings-text"}>Show Edges</p>}/>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
                             control={<Checkbox checked={showNodes && showHalls}
-                                                             onClick={() => setShowHalls(!showHalls)}/>}
-                                          label={<p className={"settings-text"}>Show Halls</p>}/>
+                                               onClick={() => {
+                                                   localStorage.setItem("showHalls", !showHalls + "");
+                                                   setShowHalls(!showHalls);
+                                               }}/>}
+                            label={<p className={"settings-text"}>Show Halls</p>}/>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
                             control={<Checkbox checked={showPopups}
-                                                             onClick={() => {
-                                                                 localStorage.setItem("showPopups", !showPopups + "");
-                                                                 setShowPopups(!showPopups);
-                                                             }}/>}
-                                          label={<p className={"settings-text"}>Show Popups</p>}/>
+                                               onClick={() => {
+                                                   localStorage.setItem("showPopups", !showPopups + "");
+                                                   setShowPopups(!showPopups);
+                                               }}/>}
+                            label={<p className={"settings-text"}>Show Popups</p>}/>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
                             control={<Checkbox checked={doAnimation}
-                                                             onClick={() => setDoAnimation(!doAnimation)}/>}
-                                          label={<p className={"settings-text"}>Animate Path</p>}/>
+                                               onClick={() => {
+                                                   localStorage.setItem("doAnimation", !doAnimation + "");
+                                                   setDoAnimation(!doAnimation);
+                                               }}/>}
+                            label={<p className={"settings-text"}>Animate Path</p>}/>
                         {doAnimation && user ?
                             <FormControlLabel
                                 style={{marginTop: '-10%'}}
                                 control={<Switch checked={goku} onClick={() => {
-                                localStorage.setItem("goku", !goku + "");
-                                setGoku(!goku);
-                            }}/>}
-                                              label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
+                                    localStorage.setItem("goku", !goku + "");
+                                    setGoku(!goku);
+                                }}/>}
+                                label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
                     </FormGroup>
                 </div>
                 <Divider/>
@@ -263,40 +297,49 @@ export default function NavigationPage() {
                            }}/>
                 </div>
                 <Divider/>
-                <div style={{alignSelf: 'center', width: '50%'}}>
-                    <Autocomplete
-                        sx={{maxWidth: '100%'}}
-                        disablePortal
-                        options={currNodes.map(({nodeID, longName}): NodeType => (
-                            {label: longName, nid: nodeID}
-                        ))}
-                        size={"small"}
-                        value={{label: nodeIDtoName(defaultLocation!), nid: defaultLocation!}}
-                        renderInput={(params) =>
-                            <TextField {...params} label="Default Starting Location" variant="standard"/>}
-                        //value={{label: nodeIDtoName(location), nid: location}}
-                        getOptionLabel={(nd: NodeType) =>
-                            `${nd.label}`
-                        }
-                        getOptionKey={(nd: NodeType) =>
-                            `${nd.nid}`
-                        }
-                        onChange={(newValue, val) => {
-                            if (val !== null) {
-                                setDefaultLocation(val.nid);
-                                localStorage.setItem("defaultLocation", val.nid);
-                            } else {
-                                setDefaultLocation("");
-                                localStorage.setItem("defaultLocation", "");
+                <div style={{alignSelf: 'center', width: '80%', marginTop: '2%'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', gap: '2%'}}>
+                        <Autocomplete
+                            sx={{width: '80%'}}
+                            disablePortal
+                            options={currNodes.map(({nodeID, longName}): NodeType => (
+                                {label: longName, nid: nodeID}
+                            ))}
+                            size={"small"}
+                            value={{label: nodeIDtoName(defaultLocation!), nid: defaultLocation!}}
+                            renderInput={(params) =>
+                                <TextField {...params} label="Default Starting Location" variant="standard"/>}
+                            //value={{label: nodeIDtoName(location), nid: location}}
+                            getOptionLabel={(nd: NodeType) =>
+                                `${nd.label}`
                             }
-                        }}
-                    />
-                    {defaultLocation !== "" ? <FormControlLabel control={<Switch checked={useDefault} onClick={() => {
-                        localStorage.setItem("useDefault", !useDefault + "");
-                        setUseDefault(!useDefault);
-                    }}/>}
-                                                                label={<p className={"settings-text"}>Use
-                                                                    Default?</p>}/> : <></>}
+                            getOptionKey={(nd: NodeType) =>
+                                `${nd.nid}`
+                            }
+                            onChange={(newValue, val) => {
+                                if (val !== null) {
+                                    setDefaultLocation(val.nid);
+                                    localStorage.setItem("defaultLocation", val.nid);
+                                } else {
+                                    setDefaultLocation("");
+                                    localStorage.setItem("defaultLocation", "");
+                                }
+                            }}
+                        />
+                        <Button variant={"outlined"} style={{
+                            color: "#34AD84",
+                            width: 220, fontSize: '0.7em'
+                        }} onClick={() => setShowMap(true)}>
+                            Choose From Map
+                        </Button>
+                    </div>
+                    {defaultLocation !== "" ?
+                        <FormControlLabel control={<Switch checked={useDefault} onClick={() => {
+                            localStorage.setItem("useDefault", !useDefault + "");
+                            setUseDefault(!useDefault);
+                        }}/>}
+                                          label={<p className={"settings-text"}>Use
+                                              Default?</p>}/> : <></>}
                 </div>
             </Box>
         </Modal>
@@ -344,6 +387,17 @@ export default function NavigationPage() {
                     </div>
                 </div>
             </div>
+            <Modal
+                open={showMap}
+                onClose={() => {
+                    setShowMap(false);
+                }}
+                style={{fontFamily: 'Lato'}}
+            >
+                <Box sx={mapStyle}>
+                    <MiniMap change={setDefLoc} setClose={setShowMap}/>
+                </Box>
+            </Modal>
         </div>
     );
 }
