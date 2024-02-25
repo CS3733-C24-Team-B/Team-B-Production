@@ -201,7 +201,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                     <hr/>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', fontWeight:"bolder"}}>
                         {getIcon(obj)}
-                        {obj}
+                        <div style={{padding:10}}>{obj}</div>
 
                     </div>
                 </li>
@@ -211,7 +211,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                         {getIcon(obj)}
-                        {obj}
+                        <div style={{padding:10}}>{obj}</div>
                     </div>
                 </li>
             );
