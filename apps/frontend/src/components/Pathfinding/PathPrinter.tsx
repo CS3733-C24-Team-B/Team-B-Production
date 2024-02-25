@@ -9,6 +9,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ElevatorIcon from '@mui/icons-material/Elevator';
 import StairsIcon from '@mui/icons-material/Stairs';
+import DirectionsIcon from '@mui/icons-material/Directions';
 
 function determineTurnDirection(previousNode: string, nodeStart: string, nodeEnd: string): string {
     // Calculate vectors AB and BC
@@ -115,20 +116,24 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             setCoords(["test test2"]);
             for (let i = coords.length - 2; i > 0; i--) {
                 const direction = directNode(coords[i - 1], coords[i], coords[i + 1]);
+
                 if (direction != "") {
                     const currx = parseInt(coords[i].substring(coords[i].indexOf(":") + 1, coords[i].lastIndexOf(":")));
                     const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
                     const dist = Math.sqrt((currx - x) ** 2 + (curry - y) ** 2);
 
-                   joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
-                    if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
+                    if(nodeIDs[i].includes("Elevator")){
+                        //if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
                         directionsFloor[levels]=joinedwords;
-                        joinedwords=["Floor "+coords[i].substring(0,2)];
+                        joinedwords=["Floor "+coords[i+1].substring(0,2)+""];
                         levels++;
                     }
+                   joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
+
                     x = parseInt(coords[i].substring(coords[i].indexOf(":") + 1, coords[i].lastIndexOf(":")));
                     y = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
                 }
+
             }
             directionsFloor[levels]=joinedwords;
             joinedwords.push("Starting at " + nodeIDs[0] + " head in the direction of " + nodeIDs[1]);
@@ -138,7 +143,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
 
                 joinedwords=joinedwords.concat(directionsFloor[i]);
             }
-            joinedwords.push("Floor "+coords[0].substring(0,2));
+            joinedwords.push("Floor "+coords[0].substring(0,2)+"");
                 setCoords(joinedwords.reverse());
 
            // for(let direc in joinedwords){
@@ -148,7 +153,6 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
 
         fetch().then();
     }, [data.startNode, data.endNode]);
-
     function getIcon(startingText: string) {
         if (startingText.startsWith("Starting at")) {
             return <MyLocationIcon/>;
@@ -164,6 +168,8 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             return <ElevatorIcon/>;
         } else if (startingText.startsWith("Take the stairs")) {
             return <StairsIcon/>;
+        } else if (startingText.startsWith("Floor")) {
+            return  <DirectionsIcon/>;
         } else {
             return <PlaceIcon/>;
         }
@@ -187,16 +193,30 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
         }
     };
 
+
     const directionsArray = coordinates.map(function (obj: string) {
-        return (
-            <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                    {getIcon(obj)}
-                    {obj}
-                </div>
-            </li>
-        );
-    });
+        if(obj.startsWith("Floor")) {
+            return (
+                <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
+                    <hr/>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', fontWeight:"bolder"}}>
+                        {getIcon(obj)}
+                        {obj}
+
+                    </div>
+                </li>
+            );
+        } else{
+            return (
+                <li style={{fontFamily: 'Lato', fontSize: '0.75em'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        {getIcon(obj)}
+                        {obj}
+                    </div>
+                </li>
+            );
+        }
+        });
 
     return (
         <div style={{maxHeight: '10%', width: 250}}>
