@@ -5141,6 +5141,7 @@ __metadata:
     eslint-config-custom: "workspace:*"
     eslint-plugin-react-hooks: "npm:^4.6.0"
     eslint-plugin-react-refresh: "npm:^0.4.1"
+    html2canvas: "npm:^1.4.1"
     jspdf: "npm:^2.5.1"
     leaflet: "npm:^1.9.4"
     localforage: "npm:^1.10.0"
@@ -5474,7 +5475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html2canvas@npm:^1.0.0-rc.5":
+"html2canvas@npm:^1.0.0-rc.5, html2canvas@npm:^1.4.1":
   version: 1.4.1
   resolution: "html2canvas@npm:1.4.1"
   dependencies:

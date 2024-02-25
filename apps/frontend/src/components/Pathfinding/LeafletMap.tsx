@@ -119,6 +119,7 @@ export default function LeafletMap(props: MapProps) {
     const [floorSet, setFloorSet] = useState(new Set());
     const [nodeColor, setNodeColor] = useState(props.nodeColor);
     const [edgeColor, setEdgeColor] = useState(props.edgeColor);
+    const [dirText, setDirText] = useState<string[]>([]);
 
     // get auth0 stuff
     const {user, isAuthenticated, isLoading, getAccessTokenSilently} = useAuth0();
@@ -569,8 +570,8 @@ export default function LeafletMap(props: MapProps) {
                     </div>
 
                     <div style={{display: 'grid', width: '90%', gap: '5%'}}>
-                        {directions && <div id="textDirections"><PathPrinter startNode={nodeStart} endNode={nodeEnd}/></div>}
-                        {directions && <ExportPDF component={document.querySelector("#textDirections")!}/>}
+                        {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
+                        {dirText && <ExportPDF textDirections={dirText}/>}
                     </div>
                 </div>
             </Collapse>
