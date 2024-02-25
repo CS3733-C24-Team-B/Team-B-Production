@@ -102,11 +102,8 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 accumulator.push(floor + " " + longName + ":" + xcoord + ":" + ycoord);
                 return accumulator;
             }, []);
-            coords = coords.reverse();
-            // console.log(nodeIDs);
-            coords = coords.reverse();
-            // console.log(coords);
-            setCoords(coords);
+            let directionsFloor: string[][] = [];
+            let levels:number = 0;
             let joinedwords: string[] = ["You have arrived at " + nodeIDs[nodeIDs.length - 1]];
             if (data.startNode === data.endNode) {
                 setCoords(joinedwords);
@@ -115,6 +112,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
             // setPath(nodeIDs);
             let x: number = parseInt(coords[coords.length - 1].substring(coords[coords.length - 1].indexOf(":") + 1, coords[coords.length - 1].lastIndexOf(":")));
             let y: number = parseInt(coords[coords.length - 1].substring(coords[coords.length - 1].lastIndexOf(":") + 1));
+            setCoords(["test test2"]);
             for (let i = coords.length - 2; i > 0; i--) {
                 const direction = directNode(coords[i - 1], coords[i], coords[i + 1]);
                 if (direction != "") {
@@ -122,16 +120,30 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                     const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
                     const dist = Math.sqrt((currx - x) ** 2 + (curry - y) ** 2);
 
-                    joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
-
+                   joinedwords.push(direction + " at " + nodeIDs[i] + " (" + Math.round(dist / 4) + "ft)");
+                    if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
+                        directionsFloor[levels]=joinedwords;
+                        joinedwords=["Floor "+coords[i].substring(0,2)];
+                        levels++;
+                    }
                     x = parseInt(coords[i].substring(coords[i].indexOf(":") + 1, coords[i].lastIndexOf(":")));
                     y = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
                 }
             }
+            directionsFloor[levels]=joinedwords;
             joinedwords.push("Starting at " + nodeIDs[0] + " head in the direction of " + nodeIDs[1]);
-            joinedwords = joinedwords.reverse();
 
-            setCoords(joinedwords);
+            joinedwords = [];
+            for(let i = 0; i < directionsFloor.length;i++){
+
+                joinedwords=joinedwords.concat(directionsFloor[i]);
+            }
+            joinedwords.push("Floor "+coords[0].substring(0,2));
+                setCoords(joinedwords.reverse());
+
+           // for(let direc in joinedwords){
+             //   directionByFloor.set()
+            //}
         }
 
         fetch().then();
