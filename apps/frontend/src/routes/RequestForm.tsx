@@ -391,13 +391,32 @@ export default function RequestForm() {
 
                         {/*If current tab is the statistics tab*/}
                         {currentTab === "statistics" && (
-                            <div className={"service-form-midcard"}>
-                                <div className={"pie-chart-stats"}>
-                                    <PieChartStats/>
+                            <div className="statistics-layout">
+                                <div className="statistics-cards-container">
+                                    <div className="corner-card-container top-left">
+                                        <div className="stat-card large" id="open-requests">Open Request #</div>
+                                    </div>
+                                    <div className="corner-card-container top-right">
+                                        <div className="stat-card medium" id="requests-today">Requests Created Today</div>
+                                    </div>
+                                    <div className="corner-card-container bottom-left">
+                                        <div className="stat-card x-small" id="employee-of-month">
+                                            <div className="employee-photo"></div>
+                                            Employee Of The Month January
+                                        </div>
+                                    </div>
+                                    <div className="corner-card-container bottom-right">
+                                        <div className="stat-card small" id="emergencies"># Of Emergencies</div>
+                                    </div>
+                                </div>
+
+                                <div className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
+                                    <div>
+                                        <PieChartStats/>
+                                    </div>
                                 </div>
                             </div>
                         )}
-
                         {/*If current tab is the create request tab*/}
                         {currentTab === "create-request" && (
                             <div className={"service-form-midcard"}>

@@ -80,6 +80,41 @@
     height: 100%;
 }
 
+.statistics-layout {
+    display: flex;
+    height: 100%; /* Adjust this to the height of your container or the viewport height */
+}
+
+.statistics-cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns, each taking 50% of width */
+    grid-template-rows: 49% 49%; /* Two rows, each taking 49% of height */
+    width: 50%; /* Half of the statistics-layout container's width */
+    height: 100%; /* Full height of the statistics-layout container */
+    gap: 1%; /* 1% gap between the cards */
+    padding: 1rem; /* Adjust this padding if you want */
+    box-sizing: border-box; /* Padding and borders included in width/height */
+}
+
+.stat-card {
+    display: flex;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+    background-color: #fff;
+    border-radius: 15px;
+    box-sizing: border-box; /* Padding and borders included in width/height */
+}
+
+/* Remove any margin from .stat-card if you had it before to avoid any overflow */
+
+.service-form-midcard-right {
+    width: 50%; /* The other half of the statistics-layout container's width */
+    height: 100%; /* Full height of the statistics-layout container */
+    background-color: white;
+    border-radius: 15px;
+    /* Adjust additional styling as necessary */
+}
+
 .create-service-header {
     /* Text Styling */
     font-size: 4vh;
