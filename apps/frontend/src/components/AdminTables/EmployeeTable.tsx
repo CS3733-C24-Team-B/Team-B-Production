@@ -5,9 +5,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
     Alert,
@@ -20,7 +17,7 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 import "../../css/servicelist_page.css";
 import "../../css/admin_page.css";
 import {UpdateEmployee} from "common/src/employeeTypes.ts";
@@ -29,17 +26,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import IconButton from "@mui/material/IconButton";
 
 
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
+
 
 const latoTheme = createTheme({
     components: {
@@ -65,12 +52,12 @@ export default function AdminViewer() {
     const [editRowID, setEditRowID] = useState(-1);
     const [dialogID, setDialogID] = useState(-1);
     const [sortUp, setSortUp] = useState(true);
-    const [refresh, setRefresh] = useState(false);
+    const [refresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [typeSort, setTypeSort] = useState<keyof typeof employeeSortField>();
     const [submitAlert, setSubmitAlert] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [alertText, setAlertText] = useState("");
+    const [isError] = useState(false);
+    const [alertText] = useState("");
 
     // Refresh employee data
     useEffect(() => {
@@ -105,115 +92,6 @@ export default function AdminViewer() {
         }
         setTypeSort(employeeSortField[sortField] as keyof typeof employeeSortField);
         setEmployees(employeesCopy);
-    }
-
-    function uploadFile() {
-        console.log("Uploading employee info to database");
-        try {
-            const form: FormData = new FormData();
-            const employeeFile = document.querySelector('#employeeFile') as HTMLInputElement;
-            if (employeeFile == null) {
-                console.log("csv file is null");
-                return;
-            }
-            form.append("employeeFile", employeeFile.files![0]);
-            setLoading(true);
-            getAccessTokenSilently().then((accessToken: string) => {
-                axios.post("/api/employee/upload", form, {
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-                        "Content-Type": "multipart/form-data"
-                    }
-                }).then(() => {
-                        setRefresh(!refresh);
-                        setAlertText("Employee data uploaded successfully");
-                        setIsError(false);
-                        setSubmitAlert(true);
-                    },
-                    () => {
-                        setAlertText("There was an error uploading the employee data");
-                        setIsError(true);
-                        setSubmitAlert(true);
-                    });
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function downloadFile() {
-        console.log("Downloading employee info from database");
-
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/employee/download", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            const blob: Blob = new Blob([res.data], {type: "text/csv"});
-            const a = document.createElement("a");
-            a.download = "EmployeeData.csv";
-            a.href = window.URL.createObjectURL(blob);
-            const clickEvent: MouseEvent = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            });
-            a.dispatchEvent(clickEvent);
-            a.remove();
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function downloadTemplate() {
-        console.log("Downloading employee CSV template");
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/employee/download-template", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            const blob: Blob = new Blob([res.data], {type: "text/csv"});
-            const a = document.createElement("a");
-            a.download = "EmployeeDataTemplate.csv";
-            a.href = window.URL.createObjectURL(blob);
-            const clickEvent: MouseEvent = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true
-            });
-            a.dispatchEvent(clickEvent);
-            a.remove();
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function deleteTable() {
-        console.log("Deleting all employees");
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            axios.delete("/api/employee", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            }).then(() => {
-                    setRefresh(!refresh);
-                    setAlertText("Deleted all employees");
-                    setIsError(false);
-                    setSubmitAlert(true);
-                },
-                () => {
-                    setAlertText("There was an error deleting all employees");
-                    setIsError(true);
-                    setSubmitAlert(true);
-                });
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     const employeeList = employees.map((employee: UpdateEmployee, index: number) => {
@@ -373,67 +251,6 @@ export default function AdminViewer() {
                             </Table>
                         </TableContainer>
                     </ThemeProvider>}
-            </div>
-            <div className={"AD-TwoRows2"}>
-                <div className={"AD-Card3"}>
-                    <p className={"AD-head"}>Actions</p>
-                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                marginLeft: "5%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none',
-                            }}>
-                        Upload File
-                        <VisuallyHiddenInput id="employeeFile" type="file" onChange={uploadFile}/>
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                            onClick={downloadFile}
-                            className="export-button"
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none'
-                            }}>
-                        Export File
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                            onClick={downloadTemplate}
-                            className="export-button"
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none'
-                            }}>
-                        Template
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                            onClick={deleteTable}
-                            className="export-button"
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none'
-                            }}>
-                        Delete Data
-                    </Button>
-                </div>
-                <div className={"AD-OneCard2"}>
-                    <p className={"AD-head2"}>Last Updated:</p>
-                    <br/>
-                    <br/>
-                    <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
-                    {/*<p className={"AD-head3"}>21:02</p>*/}
-                    {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
-                </div>
             </div>
             <Snackbar
                 anchorOrigin={{vertical: "top", horizontal: "center"}}

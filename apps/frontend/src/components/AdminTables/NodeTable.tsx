@@ -1,15 +1,8 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {useAuth0} from "@auth0/auth0-react";
 import {Node} from "database";
-import {styled} from "@mui/material/styles";
-import IosShareIcon from "@mui/icons-material/IosShare";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import {
-    Alert,
-    Button, CircularProgress, FormControl, IconButton, Menu, MenuItem, Paper, Select,
+    Alert, CircularProgress, FormControl, IconButton, Menu, MenuItem, Paper, Select,
     Snackbar,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
@@ -18,18 +11,6 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import Divider from "@mui/material/Divider";
 import FilterListIcon from "@mui/icons-material/FilterList";
-
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
 
 const latoTheme = createTheme({
     components: {
@@ -52,10 +33,9 @@ enum nodeSortField {
 }
 
 export default function NodeTable(){
-    const {getAccessTokenSilently} = useAuth0();
     const [nodeData, setNodeData] = useState<Node[]>([]);
     const [sortUp, setSortUp] = useState(true);
-    const [refresh, setRefresh] = useState(false);
+    const [refresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [typeSort, setTypeSort] = useState<keyof typeof nodeSortField>();
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -67,8 +47,8 @@ export default function NodeTable(){
     const [filterVal, setFilterVal] = useState("None");
     const openMenu = Boolean(menuAnchor);
     const [submitAlert, setSubmitAlert] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [alertText, setAlertText] = useState("");
+    const [isError] = useState(false);
+    const [alertText] = useState("");
 
     useEffect(() => {
         async function fetch() {
@@ -132,119 +112,6 @@ export default function NodeTable(){
             <TableCell>{node.shortName}</TableCell>
         </TableRow>
     );
-
-    function uploadFile() {
-        console.log("Uploading node info to database");
-        try {
-            const formData = new FormData();
-            const csvFile = document.querySelector('#myFile') as HTMLInputElement;
-            if (csvFile == null) {
-                console.log("csv file is null");
-                return;
-            }
-
-            formData.append("csvFile", csvFile.files![0]); // Update based on backend
-            setLoading(true);
-
-            getAccessTokenSilently().then((accessToken: string) => {
-                axios.post('/api/nodes/upload', formData, {
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then(() => {
-                    setRefresh(!refresh);
-                    setAlertText("Node data uploaded successfully");
-                    setIsError(false);
-                    setSubmitAlert(true);
-                },
-                    () => {
-                        setRefresh(!refresh);
-                        setAlertText("There was an error uploading the node data");
-                        setIsError(true);
-                        setSubmitAlert(true);
-                    });
-            });
-        } catch (exception) {
-            console.log("post error: " + exception);
-        }
-    }
-
-    async function downloadFile() {
-        console.log("Downloading node info from database");
-
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            const res3 = await axios.get('/api/nodes/download', {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            const blob = new Blob([res3.data], {type: "text/csv"});
-            const a = document.createElement("a");
-            a.download = "NodeData.csv";
-            a.href = window.URL.createObjectURL(blob);
-            const clickEvt = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true,
-            });
-            a.dispatchEvent(clickEvt);
-            a.remove();
-        } catch (exception) {
-            console.log("post error: " + exception);
-        }
-    }
-
-    async function downloadTemplate() {
-        console.log("Downloading node CSV template");
-
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            const res3 = await axios.get('/api/nodes/download-template', {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            const blob = new Blob([res3.data], {type: "text/csv"});
-            const a = document.createElement("a");
-            a.download = "NodeDataTemplate.csv";
-            a.href = window.URL.createObjectURL(blob);
-            const clickEvt = new MouseEvent("click", {
-                view: window,
-                bubbles: true,
-                cancelable: true,
-            });
-            a.dispatchEvent(clickEvt);
-            a.remove();
-        } catch (exception) {
-            console.log("post error: " + exception);
-        }
-    }
-
-    async function deleteTable() {
-        console.log("Deleting all nodes");
-        try {
-            const accessToken: string = await getAccessTokenSilently();
-            axios.delete("/api/nodes", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            }).then(() => {
-                setRefresh(!refresh);
-                setAlertText("Node data deleted");
-                setIsError(false);
-                setSubmitAlert(true);
-            },
-                () => {
-                    setAlertText("There was an error deleting the node data");
-                    setIsError(true);
-                    setSubmitAlert(true);
-                });
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     function fillOptions(nodeKey: keyof Node) {
         filterOptions.clear();
@@ -413,68 +280,6 @@ export default function NodeTable(){
                             </Table>
                         </TableContainer>
                     </ThemeProvider>}
-            </div>
-            <div className={"AD-TwoRows2"}>
-                <div className={"AD-Card3"}>
-                    <p className={"AD-head"}>Actions</p>
-                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon/>}
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                marginLeft: "5%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none',
-                            }}
-                    >
-                        Upload File
-                        <VisuallyHiddenInput id="myFile" type="file" onChange={uploadFile}/>
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<IosShareIcon/>}
-                            onClick={downloadFile}
-                            className="export-button"
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none',
-                            }}>
-                        Export File
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<SimCardDownloadIcon/>}
-                            onClick={downloadTemplate}
-                            className="export-button"
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none',
-                            }}>
-                        Template
-                    </Button>
-                    <Button component="label" variant="contained" startIcon={<DeleteIcon/>}
-                            style={{
-                                backgroundColor: "#34AD84", margin: "8%", maxHeight: "60%",
-                                marginLeft: "5%",
-                                minWidth: "90%",
-                                fontFamily: 'Lato',
-                                fontSize: '90%',
-                                textTransform: 'none',
-                            }}
-                            onClick={deleteTable}>
-                        Delete Data
-                    </Button>
-                </div>
-                <div className={"AD-OneCard2"}>
-                    <p className={"AD-head2"}>Last Updated:</p>
-                    <br/>
-                    <br/>
-                    <p className={"AD-head2"}>12:02pm, 2/20/2024</p>
-                    {/*<p className={"AD-head3"}>21:02</p>*/}
-                    {/*<p className={"AD-head4"}>May 23, 2023</p>*/}
-                </div>
             </div>
             <Snackbar
                 anchorOrigin={{vertical: "top", horizontal: "center"}}
