@@ -334,7 +334,7 @@ export default function UploadFiles() {
 
     return (
         <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-            <div className="AD-TwoRows3">
+            <div className="AD-TwoRows2">
                 {/*IMPORT FILES*/}
                 <div className="AD-OneCard">
                     <Typography style={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
@@ -374,8 +374,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setNodeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -416,8 +416,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setEdgeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -458,8 +458,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setEmployeeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -467,7 +467,7 @@ export default function UploadFiles() {
                     </div>
 
                     <Button disabled={isLoading || (!nodeFile && !edgeFile && !employeeFile)} sx={{
-                        marginTop: "3vh",
+                        marginTop: "0vh",
                         backgroundColor: "#34AD84",
                         color: "white",
                         width: "50%",
@@ -510,8 +510,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "30%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteNodes());
                                 setShowDialog(true);
@@ -543,8 +543,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "30%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteEdges());
                                 setShowDialog(true);
@@ -576,8 +576,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "26%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteEmployees());
                                 setShowDialog(true);
