@@ -4,7 +4,7 @@ import {EmailUtility} from "../utilities/EmailUtility.ts";
 import client from "../bin/database-connection.ts";
 import {
     NewServiceRequest, UpdateRequest, DeleteRequest, SanitationRequest, MaintenanceRequest,
-    InternalTransportRequest, LanguageRequest, MedicineRequest
+    InternalTransportRequest, LanguageRequest, MedicineRequest, GokuRequest
 } from "common/src/serviceRequestTypes.ts";
 
 const router: Router = express.Router();
@@ -166,7 +166,11 @@ router.post("/language", async function (req: Request, res: Response) {
 });
 
 router.post("/goku", async function (req: Request, res: Response) {
-
+    const gokuRequest: GokuRequest = req.body;
+    const mailingList: string[] = (await client.employee.findMany({ select: { email: true } })).map((obj) => obj.email);
+    console.log(mailingList);
+    await emailUtility.gokuRequest(['kastuparu@wpi.edu'], gokuRequest.title, gokuRequest.announcement, gokuRequest.sender);
+    return res.status(200).send("Successfully sent GOKU request email");
 });
 
 router.put('/', async function (req: Request, res: Response) {
