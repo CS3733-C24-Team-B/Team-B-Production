@@ -469,7 +469,7 @@ export default function RequestForm() {
                                 <div className={'requestCardGrid'}>
                                     <p style={cardTitle}>Maintenance Request</p>
 
-                                    <p style={cardText}>For ordering maintenance and general upkeep services to rooms</p>
+                                    <p style={cardText}>For ordering maintenance and general upkeep services to rooms. This request works for all room types</p>
 
                                     <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
                                 </div>
