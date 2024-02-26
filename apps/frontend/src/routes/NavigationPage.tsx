@@ -59,6 +59,7 @@ export default function NavigationPage() {
     const [showNodes, setShowNodes] = useState(localStorage.getItem("showNodes") !== null ? localStorage.getItem("showNodes") === "true" : true);
     const [showEdges, setShowEdges] = useState(localStorage.getItem("showEdges") !== null ? localStorage.getItem("showEdges") === "true" : false);
     const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "true" : false);
+    const [showIcons, setShowIcons] = useState(localStorage.getItem("showIcons") !== null ? localStorage.getItem("showIcons") === "true" : false);
     const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : false);
     const [algorithm, setAlgorithm] = useState(0);
     const [nodeEnd, setNodeEnd] = useState("");
@@ -234,6 +235,25 @@ export default function NavigationPage() {
                                 setShowNodes(!showNodes);
                             }}/>}
                             label={<p className={"settings-text"}>Show Nodes</p>}/>
+                        {showNodes &&
+                            <div style={{display: "flex", flexDirection: 'column', marginLeft: '10%'}}>
+                                <FormControlLabel
+                                    style={{marginTop: '-10%'}}
+                                    control={<Checkbox checked={showHalls}
+                                                       onClick={() => {
+                                                           localStorage.setItem("showHalls", !showHalls + "");
+                                                           setShowHalls(!showHalls);
+                                                       }}/>}
+                                    label={<p className={"settings-text"}>Show Halls</p>}/>
+                                <FormControlLabel
+                                    style={{marginTop: '-10%'}}
+                                    control={<Checkbox checked={showIcons}
+                                                       onClick={() => {
+                                                           localStorage.setItem("showIcons", !showIcons + "");
+                                                           setShowIcons(!showIcons);
+                                                       }}/>}
+                                    label={<p className={"settings-text"}>Show Icons</p>}/>
+                            </div>}
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
                             control={<Checkbox checked={showEdges} onClick={() => {
@@ -241,14 +261,6 @@ export default function NavigationPage() {
                                 setShowEdges(!showEdges);
                             }}/>}
                             label={<p className={"settings-text"}>Show Edges</p>}/>
-                        <FormControlLabel
-                            style={{marginTop: '-10%'}}
-                            control={<Checkbox checked={showNodes && showHalls}
-                                               onClick={() => {
-                                                   localStorage.setItem("showHalls", !showHalls + "");
-                                                   setShowHalls(!showHalls);
-                                               }}/>}
-                            label={<p className={"settings-text"}>Show Halls</p>}/>
                         <FormControlLabel
                             style={{marginTop: '-10%'}}
                             control={<Checkbox checked={showPopups}
@@ -383,7 +395,8 @@ export default function NavigationPage() {
                                     useDefault={useDefault}
                                     changeDefault={setUseDefault}
                                     zoomNode={zoomNode}
-                                    showPopups={showPopups}/>
+                                    showPopups={showPopups}
+                                    showIcons={showIcons}/>
                     </div>
                 </div>
             </div>

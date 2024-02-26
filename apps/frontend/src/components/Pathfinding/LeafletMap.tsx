@@ -40,6 +40,18 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CircleIcon from '@mui/icons-material/Circle';
 import GokuIcon from "../GokuIcon.tsx";
 import Canvas from "./Canvas.tsx";
+import SignpostIcon from '@mui/icons-material/Signpost';
+import WcIcon from '@mui/icons-material/Wc';
+import WorkIcon from '@mui/icons-material/Work';
+import ElevatorIcon from '@mui/icons-material/Elevator';
+import ScienceIcon from '@mui/icons-material/Science';
+import ShowerIcon from '@mui/icons-material/Shower';
+import DoorSlidingIcon from '@mui/icons-material/DoorSliding';
+import InfoIcon from '@mui/icons-material/Info';
+import StairsIcon from '@mui/icons-material/Stairs';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
+import LocalDiningIcon from '@mui/icons-material/LocalDining';
+import HubIcon from '@mui/icons-material/Hub';
 
 const FloorLevel = [
     {
@@ -100,6 +112,7 @@ interface MapProps {
     changeDefault: (arg0: boolean) => void;
     zoomNode: string;
     showPopups: boolean;
+    showIcons: boolean;
 }
 
 const gangnamStyle = {
@@ -132,20 +145,35 @@ enum NodeTypeEnum {
     CONF = "This is a conference room. Doctors may be conversing here.",
 }
 
-// enum NodeImages {
-//     HALL = "https://static.thenounproject.com/png/54045-200.png",
-//     REST = "https://media.istockphoto.com/id/858148398/vector/man-and-woman-icon-black-icon-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=6g1C85c81GYGx5HBpUAV7zaPq6cFrqf1j-ylEGfGcNQ=",
-//     DEPT = "https://png.pngtree.com/png-clipart/20190630/original/pngtree-vector-office-icon-png-image_4171301.jpg",
-//     ELEV = "https://cdn-icons-png.flaticon.com/512/948/948747.png",
-//     LABS = "https://thumbs.dreamstime.com/b/chemistry-lab-glassware-icon-vector-filled-flat-sign-solid-pictogram-white-science-symbol-logo-illustration-pixel-perfect-98555312.jpg",
-//     BATH = "https://media.istockphoto.com/id/1423250805/vector/toilet-sign-icon-vector-design-illustration.jpg?s=612x612&w=0&k=20&c=KJBng8G4z5v_EFqhGIYUWhZWnQfKMc8vVCt6aFzF9d0=",
-//     EXIT = "https://static.vecteezy.com/system/resources/previews/007/371/949/original/exit-icon-exit-sign-illustration-isolated-on-white-background-exit-way-sign-for-people-warning-sign-board-fit-for-template-a-signboard-or-sticker-in-public-places-vector.jpg",
-//     INFO = "https://images.freeimages.com/clg/istock/previews/8284/82848319-information-icon.jpg",
-//     STAI = "https://t4.ftcdn.net/jpg/03/82/13/87/360_F_382138721_JGspEpFK8VVJJ5ZjzIIp1pxweK6wvHY5.jpg",
-//     SERV = "https://i.etsystatic.com/36262552/r/il/d0fc1d/4196921884/il_570xN.4196921884_4xhv.jpg",
-//     RETL = "https://i.pinimg.com/564x/4e/24/f5/4e24f523182e09376bfe8424d556610a.jpg",
-//     CONF = "https://media.istockphoto.com/id/1308441968/vector/business-meeting-discussion-teamwork-activity-people-around-the-table-vector-illustration.jpg?s=612x612&w=0&k=20&c=4M9kpOdag0ZyOXZy_olU1aimyXbSToD3tNEkzckPRV0=",
-// }
+enum NodeImages {
+    HALL = "https://static.thenounproject.com/png/54045-200.png",
+    REST = "https://media.istockphoto.com/id/858148398/vector/man-and-woman-icon-black-icon-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=6g1C85c81GYGx5HBpUAV7zaPq6cFrqf1j-ylEGfGcNQ=",
+    DEPT = "https://png.pngtree.com/png-clipart/20190630/original/pngtree-vector-office-icon-png-image_4171301.jpg",
+    ELEV = "https://cdn-icons-png.flaticon.com/512/948/948747.png",
+    LABS = "https://thumbs.dreamstime.com/b/chemistry-lab-glassware-icon-vector-filled-flat-sign-solid-pictogram-white-science-symbol-logo-illustration-pixel-perfect-98555312.jpg",
+    BATH = "https://media.istockphoto.com/id/1423250805/vector/toilet-sign-icon-vector-design-illustration.jpg?s=612x612&w=0&k=20&c=KJBng8G4z5v_EFqhGIYUWhZWnQfKMc8vVCt6aFzF9d0=",
+    EXIT = "https://static.vecteezy.com/system/resources/previews/007/371/949/original/exit-icon-exit-sign-illustration-isolated-on-white-background-exit-way-sign-for-people-warning-sign-board-fit-for-template-a-signboard-or-sticker-in-public-places-vector.jpg",
+    INFO = "https://images.freeimages.com/clg/istock/previews/8284/82848319-information-icon.jpg",
+    STAI = "https://t4.ftcdn.net/jpg/03/82/13/87/360_F_382138721_JGspEpFK8VVJJ5ZjzIIp1pxweK6wvHY5.jpg",
+    SERV = "https://i.etsystatic.com/36262552/r/il/d0fc1d/4196921884/il_570xN.4196921884_4xhv.jpg",
+    RETL = "https://i.pinimg.com/564x/4e/24/f5/4e24f523182e09376bfe8424d556610a.jpg",
+    CONF = "https://media.istockphoto.com/id/1308441968/vector/business-meeting-discussion-teamwork-activity-people-around-the-table-vector-illustration.jpg?s=612x612&w=0&k=20&c=4M9kpOdag0ZyOXZy_olU1aimyXbSToD3tNEkzckPRV0=",
+}
+
+const NodeIcons = {
+    HALL: <SignpostIcon/>,
+    REST: <WcIcon/>,
+    DEPT: <WorkIcon/>,
+    ELEV: <ElevatorIcon/>,
+    LABS: <ScienceIcon/>,
+    BATH: <ShowerIcon/>,
+    EXIT: <DoorSlidingIcon/>,
+    INFO: <InfoIcon/>,
+    STAI: <StairsIcon/>,
+    SERV: <RoomServiceIcon/>,
+    RETL: <LocalDiningIcon/>,
+    CONF: <HubIcon/>
+};
 
 export default function LeafletMap(props: MapProps) {
     const [nodeData, setNodeData] = useState([]);
@@ -176,6 +204,7 @@ export default function LeafletMap(props: MapProps) {
     const [showPopups, setShowPopups] = useState(props.showPopups);
     const [animatePic, setAnimatePic] = useState("");
     const [showPreview, setShowPreview] = useState(false);
+    const [showIcons, setShowIcons] = useState(props.showIcons);
     // const [nodeImage, setNodeImage] = useState("");
 
     // get auth0 stuff
@@ -277,6 +306,10 @@ export default function LeafletMap(props: MapProps) {
     useEffect(() => {
         setShowPopups(props.showPopups);
     }, [props.showPopups]);
+
+    useEffect(() => {
+        setShowIcons(props.showIcons);
+    }, [props.showIcons]);
 
     useEffect(() => {
         async function fetch() {
@@ -636,35 +669,7 @@ export default function LeafletMap(props: MapProps) {
     }
 
     function nodeTypeDescriptors(nodeType: string):string {
-        switch (nodeType) {
-            case "BATH": // bathrooms
-                return NodeTypeEnum.BATH;
-            case "CONF": // conference rooms
-                return NodeTypeEnum.CONF;
-            case "DEPT": // department rooms
-                return NodeTypeEnum.DEPT;
-            case "ELEV": // elevators
-                return NodeTypeEnum.ELEV;
-            case "EXIT": // exits
-                return NodeTypeEnum.EXIT;
-            case "HALL": // hallways
-                return NodeTypeEnum.HALL;
-            case "INFO": // information points
-                return NodeTypeEnum.INFO;
-            case "LABS": // laboratory rooms
-                return NodeTypeEnum.LABS;
-            case "REST": // restrooms
-                return NodeTypeEnum.REST;
-            case "RETL": // retail
-                return NodeTypeEnum.RETL;
-            case "SERV": // service rooms
-                return NodeTypeEnum.SERV;
-            case "STAI": // stairs
-                return NodeTypeEnum.STAI;
-
-            default:
-                return "";
-        }
+        return NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum];
     }
 
     // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
@@ -806,7 +811,31 @@ export default function LeafletMap(props: MapProps) {
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
+                        ((showIcons) ? <SVGOverlay interactive={true}
+                            bounds={new LatLngBounds(new LatLng(34.8 - (ycoord * 34 / 3400) - 0.25, (xcoord * 50 / 5000) + 3 - 0.25), new LatLng(34.8 - (ycoord * 34 / 3400) + 0.25, (xcoord * 50 / 5000) + 3 + 0.25))}
+                                                   eventHandlers={{
+                                                       click: () => {
+                                                           if (!showEdges) {
+                                                               if (nodeStart === "") {
+                                                                   setNodeStart(nodeID);
+                                                               } else if (nodeEnd === "") {
+                                                                   setNodeEnd(nodeID);
+                                                                   props.changeDrawer(true);
+                                                                   props.changeTopbar(nodeID);
+                                                               } else {
+                                                                   if (!useDefault) {
+                                                                       setNodeStart(nodeEnd);
+                                                                   }
+                                                                   setNodeEnd(nodeID);
+                                                                   props.changeDrawer(true);
+                                                                   props.changeTopbar(nodeID);
+                                                               }
+                                                           }
+                                                       }
+                                                   }}>
+                                {NodeIcons[nodeType as keyof typeof NodeIcons]}
+                        </SVGOverlay> :
+                            <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
                                       radius={6} color={nodeColor}
                                       eventHandlers={{
                                           click: () => {
@@ -834,6 +863,7 @@ export default function LeafletMap(props: MapProps) {
                                     {longName} <br/>
                                     <Divider/> <br/>
                                     {nodeTypeDescriptors(nodeType)} <br/>
+                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]}/>
                                     {/* Display service request data here */}
                                     {srData.map((serviceRequest) => (
                                         <div key={serviceRequest.serviceID}>
@@ -850,7 +880,7 @@ export default function LeafletMap(props: MapProps) {
                                     ))}
                                 </div>
                             </Tooltip>
-                        </CircleMarker> : <></>)
+                        </CircleMarker>) : <></>)
                 ))}
                 {lineData}
                 {nodeStart !== "" ? drawNodeStart() : <></>}
@@ -897,5 +927,6 @@ LeafletMap.defaultProps = {
     animate: false,
     algo: 0,
     goku: false,
-    defaultStart: ""
+    defaultStart: "",
+    showIcons: false
 };
