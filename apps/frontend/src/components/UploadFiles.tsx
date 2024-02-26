@@ -260,6 +260,66 @@ export default function UploadFiles() {
         setShowDialog(false);
     }
 
+    async function downloadNodes() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/nodes/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "NodeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
+    async function downloadEdges() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/edges/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "EdgeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
+    async function downloadEmployees() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/employee/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "EmployeeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
     async function downloadFiles() {
         console.log("Downloading node info from database");
 
@@ -468,7 +528,7 @@ export default function UploadFiles() {
 
                     <Button disabled={isLoading || (!nodeFile && !edgeFile && !employeeFile)} sx={{
                         marginTop: "0vh",
-                        backgroundColor: "#34AD84",
+                        backgroundColor: (isLoading || (!nodeFile && !edgeFile && !employeeFile)) ? "lightgray" : "#34AD84",
                         color: "white",
                         width: "50%",
                         marginLeft: "25%",
@@ -489,7 +549,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadNodes()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Node Data File:
@@ -522,7 +582,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadEdges()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Edge Data File:
@@ -555,7 +615,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadEmployees()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Employee Data File:

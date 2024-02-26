@@ -649,6 +649,12 @@ export default function LeafletMap(props: MapProps) {
         }
     }, [nodeEnd]);
 
+    useEffect(() => {
+        if(pathData.length < 1) {
+            setDirections(false);
+        }
+    }, [pathData]);
+
     function handleDirections() {
         setDirections(!directions);
     }
@@ -718,7 +724,7 @@ export default function LeafletMap(props: MapProps) {
                         </div>
                         <div className="autocomplete-rows" style={{marginBottom: '10%', width: '100%'}}>
                             {/* End Node */}
-                            <LocationOnIcon style={{marginLeft: '3%'}}/>
+                            <LocationOnIcon style={{marginRight: '3%'}}/>
                             <Autocomplete
                                 disablePortal
                                 options={currNodes.map(({longName}) => ({label: longName}))}
@@ -752,8 +758,9 @@ export default function LeafletMap(props: MapProps) {
                     {/* Text Directions */}
                     <div>
                         <Button variant="contained" size="small" onClick={handleDirections}
+                                disabled={pathData.length < 1}
                                 style={{
-                                    backgroundColor: "#012D5A",
+                                    backgroundColor: pathData.length < 1 ? "lightgray" : "#012D5A",
                                     width: '100%',
                                     marginBottom: '20px',
                                     fontSize: '1.5vh'
@@ -800,7 +807,9 @@ export default function LeafletMap(props: MapProps) {
                                     props.changeDrawer(true);
                                     props.changeTopbar(closestNodeToLatLng(ev.latlng));
                                 } else {
-                                    setNodeStart(nodeEnd);
+                                    if (!useDefault) {
+                                        setNodeStart(nodeEnd);
+                                    }
                                     setNodeEnd(closestNodeToLatLng(ev.latlng));
                                     props.changeDrawer(true);
                                     props.changeTopbar(closestNodeToLatLng(ev.latlng));
