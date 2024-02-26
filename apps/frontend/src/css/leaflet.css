@@ -1,144 +1,144 @@
 .leaflet-container {
-    width: 98%;
-    height: 73.5vh;
-    margin: 1%;
+  width: 98%;
+  height: 73.5vh;
+  margin: 1%;
 }
 
 .google-maps-collapse {
-    position: fixed;
-    z-index: 1001; /* ensure it's above the Leaflet map */
-    width: 100%;
-    min-height: 73.5%;
-    background-color: white;
+  position: fixed;
+  z-index: 1001; /* ensure it's above the Leaflet map */
+  width: 100%;
+  min-height: 73.5%;
+  background-color: white;
 }
 
 .text-paper {
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .map-buttons {
-    position: fixed;
-    top: 4%;
-    left: 10%; /* adjust left positioning as needed */
-    z-index: 1000; /* ensure it's above the Leaflet map */
-    display: grid;
-    width: 100%;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(10, 10%);
-    grid-template-areas: "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10";
-    align-items: end;
+  position: fixed;
+  top: 4%;
+  left: 10%; /* adjust left positioning as needed */
+  z-index: 1000; /* ensure it's above the Leaflet map */
+  display: grid;
+  width: 100%;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(10, 10%);
+  grid-template-areas: "s1 s2 s3 s4 s5 s6 s7 s8 s9 s10";
+  align-items: end;
 }
 
 .search-button {
-    grid-area: s2;
-    justify-self: start;
-    width: 150%;
+  grid-area: s2;
+  justify-self: start;
+  width: 150%;
 }
 
 .floor-button {
-    grid-area: s4;
-    margin-left: 50px;
+  grid-area: s4;
+  margin-left: 50px;
 }
 
 .button3 {
-    grid-area: s9;
+  grid-area: s9;
 }
 
 .drawer-content {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .drawer-search-bars {
-    margin-bottom: 10px;
-    display: grid;
-    grid-template-rows: 50% 50%;
-    grid-row-gap: 10%;
-    grid-template-columns: auto;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  grid-row-gap: 10%;
+  grid-template-columns: auto;
 }
 
 .autocomplete-rows {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .drawer-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
 }
 
 .drawer-buttons > button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .open-drawer {
-    margin-left: 0;
-    margin-bottom: -38%;
-    position: absolute;
+  margin-left: 0;
+  margin-bottom: -38%;
+  position: absolute;
 }
 
 .checkboxes {
-    margin-left: 75%;
-    margin-bottom: -38%;
-    position: absolute;
+  margin-left: 75%;
+  margin-bottom: -38%;
+  position: absolute;
 }
 
 .autocomplete-text {
-    translate: 0% -62%;
-    font-family: Lato;
+  translate: 0% -62%;
+  font-family: Lato;
 }
 
 .floor-change-text {
-    color: #34AD84;
+  color: #34ad84;
 }
 
 .animated-icon {
-    border-radius: 50%;
-    max-height: 7vh;
+  border-radius: 50%;
+  max-height: 7vh;
 }
 
 .floor-buttons {
-    z-index: 1000;
-    background-color: white;
-    border-radius: 5px;
-    position: fixed;
-    bottom: 7%;
-    right: 2.45%;
-    display: flex;
-    flex-direction: column;
+  z-index: 1000;
+  background-color: white;
+  border-radius: 5px;
+  position: fixed;
+  bottom: 7%;
+  right: 2.45%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mui-btn {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: white;
-    color: black;
-    margin: 5px;
-    cursor: pointer;
-    border: 2px solid transparent; /* Add border */
-    outline: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 1rem; /* Adjust font size if necessary */
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  margin: 5px;
+  cursor: pointer;
+  border: 2px solid transparent; /* Add border */
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1rem; /* Adjust font size if necessary */
 }
 
 .mui-btn.selected {
-    background-color: gray;
-    color: white;
-    border-color: gray; /* Change border color when selected */
+  background-color: gray;
+  color: white;
+  border-color: gray; /* Change border color when selected */
 }
 
 .mui-btn.highlighted {
-    background-color: #34AD84;
-    color: white;
-    border-color: #34AD84;
+  background-color: #34ad84;
+  color: white;
+  border-color: #34ad84;
 }

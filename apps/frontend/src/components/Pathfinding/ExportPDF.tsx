@@ -1,6 +1,6 @@
 import JsPDF from "jspdf";
 import HTML2Canvas from "html2canvas";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
 
 /*
 // code adapted from https://stackoverflow.com/questions/24272058/word-wrap-in-generated-pdf-using-jspdf
@@ -31,29 +31,43 @@ function addWrappedText(textDirections: string[], doc: JsPDF, textWidth: number 
     });
 }*/
 
-async function exportPDF(map: HTMLElement, textDirections: string[]): Promise<void> {
-    try {
-        console.log(map);
-        console.log(textDirections);
-        const mapImage: HTMLCanvasElement = await HTML2Canvas(map);
-        const doc: JsPDF = new JsPDF("portrait", "in", [8.5, 11]);
-        doc.setFont("Helvetica");
-        doc.addImage(mapImage, 0, 0, 10, 6.8);
+async function exportPDF(
+  map: HTMLElement,
+  textDirections: string[],
+): Promise<void> {
+  try {
+    console.log(map);
+    console.log(textDirections);
+    const mapImage: HTMLCanvasElement = await HTML2Canvas(map);
+    const doc: JsPDF = new JsPDF("portrait", "in", [8.5, 11]);
+    doc.setFont("Helvetica");
+    doc.addImage(mapImage, 0, 0, 10, 6.8);
 
-        // addWrappedText(textDirections, doc);
+    // addWrappedText(textDirections, doc);
 
-        doc.save("HospitalKioskDirections.pdf");
-    } catch (error) {
-        console.error(error);
-    }
+    doc.save("HospitalKioskDirections.pdf");
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export const ExportPDF = (data: {map: HTMLElement, textDirections: string[]}) => {
-
-    return (
-        <Button size="small" variant="outlined" onClick={() => exportPDF(data.map, data.textDirections)}
-                style={{color:'#012D5A', borderColor: '#012D5A', fontSize: '1.5vh', width: '100%' }}>
-            Export Directions
-        </Button>
-    );
+export const ExportPDF = (data: {
+  map: HTMLElement;
+  textDirections: string[];
+}) => {
+  return (
+    <Button
+      size="small"
+      variant="outlined"
+      onClick={() => exportPDF(data.map, data.textDirections)}
+      style={{
+        color: "#012D5A",
+        borderColor: "#012D5A",
+        fontSize: "1.5vh",
+        width: "100%",
+      }}
+    >
+      Export Directions
+    </Button>
+  );
 };

@@ -1,10 +1,13 @@
 import { test } from "vitest";
 import {
-    breadthFirstSearch,
-    createEdgeList,
-    createNodeList, findNode, pathfindAStar, pathFindBFS,
-    readEdgeCSV,
-    readNodeCSV
+  breadthFirstSearch,
+  createEdgeList,
+  createNodeList,
+  findNode,
+  pathfindAStar,
+  pathFindBFS,
+  readEdgeCSV,
+  readNodeCSV,
 } from "../src/utilities/algorithm.ts";
 
 /*function sum(a: number, b: number) {
@@ -18,31 +21,32 @@ test("nodelist", () => {
   createNodeList();
 });
 test("edgeList", () => {
-    createEdgeList();
+  createEdgeList();
 });
 
 test("addEdgesToDB", () => {
-    readEdgeCSV("/Users/katystuparu/WebstormProjects/Team-B-Production/apps/backend/src/csvs/L1Edges.csv");
+  readEdgeCSV(
+    "/Users/katystuparu/WebstormProjects/Team-B-Production/apps/backend/src/csvs/L1Edges.csv",
+  );
 });
 
-test("bfs",() =>{
-    breadthFirstSearch();
+test("bfs", () => {
+  breadthFirstSearch();
 });
 
-test("findNode",() =>{
-    findNode("CCONF003L1");
+test("findNode", () => {
+  findNode("CCONF003L1");
 });
-test("pathfindBFS",() =>{
-    pathFindBFS("WELEV00HL1","CSERV001L1");
+test("pathfindBFS", () => {
+  pathFindBFS("WELEV00HL1", "CSERV001L1");
 });
 
-
-test("addNodeToDB", () =>{
-    readNodeCSV("src/csvs/L1Nodes.csv");
+test("addNodeToDB", () => {
+  readNodeCSV("src/csvs/L1Nodes.csv");
 });
 test("readNodeCSV", () => {
-   console.log(readNodeCSV("src/csvs/L1Nodes.csv")[1].data.nodeID);
+  console.log(readNodeCSV("src/csvs/L1Nodes.csv")[1].data.nodeID);
 });
 test("aStar", () => {
-    console.log(pathfindAStar("CHALL002L1","CCONF003L1"));
+  console.log(pathfindAStar("CHALL002L1", "CCONF003L1"));
 });
