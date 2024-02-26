@@ -63,7 +63,7 @@ export default function Topbar() {
             <a href="https://www.brighamandwomens.org" target="_blank">
                 <img src={logo} className={"logo-style"} alt="hospital logo"/>
             </a>
-            <div></div>
+            <div id="google_translate_element"></div>
             <div className={"profile-card"}>
                 {isAuthenticated ?
                     <p className={"profile-text"}>
