@@ -4,7 +4,6 @@ import {ChartOptions} from 'chart.js';
 import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import {useAuth0} from "@auth0/auth0-react";
-import "../../css/dashboard.css";
 
 export default function PieChartStats(){
     const [srData, setsrData] = useState<ServiceRequest[]>([]);
@@ -74,7 +73,7 @@ export default function PieChartStats(){
             legend: {
                 labels: {
                     font: {
-                        size: 24,
+                        size: 15,
                         family: 'Arial',
                     },
                     color: 'black',
@@ -94,6 +93,20 @@ export default function PieChartStats(){
                 },
                 titleColor: 'white',
             },
+            title: {
+                display: true,
+                text: 'Number of Requests in Types',
+                font: {
+                    size: 25,
+                    family: 'Lato', // Set the font family to Lato
+                },
+                color: 'black',
+                align: 'start',
+                padding: {
+                    top: 10,
+                    bottom: 30,
+                },
+            },
         },
         layout: {
             padding: {
@@ -106,12 +119,9 @@ export default function PieChartStats(){
 
     return (
         <div>
-            <div className={"Piechart-title"}>
-                Number of Requests in Types
-            </div>
             <div className="chart-container" style={{
                 width: '100%',
-                height: '60vh',
+                height: '75vh',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

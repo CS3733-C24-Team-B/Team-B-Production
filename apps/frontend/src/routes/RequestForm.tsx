@@ -7,6 +7,9 @@ import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.t
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
+import CountEmergency from "../components/CountEmergency.tsx";
+import CountOpenRequest from "../components/CountOpenRequest.tsx";
+import CountRequestToday from "../components/CountRequestToday.tsx";
 import PillImage from "../images/pills.png";
 import LangIMG from "../images/lang.png";
 import LoudImage from "../images/loud.png";
@@ -411,14 +414,47 @@ export default function RequestForm() {
                         </Button>
                     </div>
 
-                    {/*If current tab is the statistics tab*/}
-                    {currentTab === "statistics" && (
-                        <div className={"service-form-midcard"}>
-                            <div className={"pie-chart-stats"}>
-                                <PieChartStats/>
+                        {/*If current tab is the statistics tab*/}
+                        {currentTab === "statistics" && (
+                            <div className="statistics-layout">
+                                <div className="statistics-cards-container">
+                                    <div className="stat-card-group left-column">
+                                        <div className="stat-card small" id="emergencies">
+                                            <span className="stat-title">Open Request #</span>
+                                            <div className="stat-number-container">
+                                                <CountOpenRequest/>
+                                            </div>
+                                        </div>
+                                        <div className="stat-card x-small" id="employee-of-month">
+                                            <span className="stat-title">Employee Of The Month</span>
+                                            <span className="stat-number-container">Kenny Doan</span>
+                                        </div>
+
+                                    </div>
+                                    <div className="stat-card-group right-column">
+                                        <div className="stat-card medium" id="requests-today">
+                                            <span className="stat-title">Requests Created Today</span>
+                                            <div className="stat-number-container">
+                                                <CountRequestToday/>
+                                            </div>
+                                        </div>
+                                        <div className="stat-card large" id="open-requests">
+                                            <span className="stat-title"># of Emergency</span>
+                                            <div className="stat-number-container">
+                                                <CountEmergency/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
+                                    <div>
+                                        <PieChartStats/>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
                     {/*If current tab is the create request tab*/}
                     {currentTab === "create-request" && (

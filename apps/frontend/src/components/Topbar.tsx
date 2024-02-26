@@ -15,28 +15,32 @@ export default function Topbar() {
 
     useEffect(() => {
         async function fetch() {
+
             if (isAuthenticated) {
+                let accessToken: string = "";
                 try {
-                    const accessToken: string = await getAccessTokenSilently();
-                    const res2 = await axios.get("/api/employee/" + user!.email, {
-                        headers: {
-                            Authorization: "Bearer " + accessToken
-                        }
-                    });
-
-                    setEmployee(res2.data);
-
-                    const res = await axios.get("/api/employee/profile-picture/" + user!.email, {
-                        headers: {
-                            Authorization: "Bearer " + accessToken,
-                            responseType: "arraybuffer"
-                        }
-                    });
-
-                    setProfilePicture(res.data ? "data:image;base64," + res.data : user!.picture!);
+                    accessToken = await getAccessTokenSilently();
                 } catch (error) {
                     await loginWithRedirect();
                 }
+
+                const res2 = await axios.get("/api/employee/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
+
+                setEmployee(res2.data);
+
+                const res = await axios.get("/api/employee/profile-picture/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        responseType: "arraybuffer"
+                    }
+                });
+
+                setProfilePicture(res.data ? "data:image;base64," + res.data : user!.picture!);
+
             }
         }
 
