@@ -260,6 +260,66 @@ export default function UploadFiles() {
         setShowDialog(false);
     }
 
+    async function downloadNodes() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/nodes/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "NodeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
+    async function downloadEdges() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/edges/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "EdgeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
+    async function downloadEmployees() {
+        const accessToken: string = await getAccessTokenSilently();
+        const res = await axios.get('/api/employee/download', {
+            headers: {
+                Authorization: "Bearer " + accessToken
+            }
+        });
+        const blob = new Blob([res.data], {type: "text/csv"});
+        const a = document.createElement("a");
+        a.download = "EmployeeData.csv";
+        a.href = window.URL.createObjectURL(blob);
+        const clickEvt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        a.dispatchEvent(clickEvt);
+        a.remove();
+    }
+
     async function downloadFiles() {
         console.log("Downloading node info from database");
 
@@ -334,7 +394,7 @@ export default function UploadFiles() {
 
     return (
         <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-            <div className="AD-TwoRows3">
+            <div className="AD-TwoRows2">
                 {/*IMPORT FILES*/}
                 <div className="AD-OneCard">
                     <Typography style={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
@@ -374,8 +434,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setNodeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -416,8 +476,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setEdgeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -458,8 +518,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "50%",
-                                marginLeft: "25%"
+                                width: "65%",
+                                marginLeft: "15%"
                             }} onClick={() => setEmployeeFile(undefined)}>
                                 CLEAR FILE
                             </Button>
@@ -467,8 +527,8 @@ export default function UploadFiles() {
                     </div>
 
                     <Button disabled={isLoading || (!nodeFile && !edgeFile && !employeeFile)} sx={{
-                        marginTop: "3vh",
-                        backgroundColor: "#34AD84",
+                        marginTop: "0vh",
+                        backgroundColor: (isLoading || (!nodeFile && !edgeFile && !employeeFile)) ? "lightgray" : "#34AD84",
                         color: "white",
                         width: "50%",
                         marginLeft: "25%",
@@ -489,7 +549,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadNodes()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Node Data File:
@@ -510,8 +570,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "30%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteNodes());
                                 setShowDialog(true);
@@ -522,7 +582,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadEdges()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Edge Data File:
@@ -543,8 +603,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "30%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteEdges());
                                 setShowDialog(true);
@@ -555,7 +615,7 @@ export default function UploadFiles() {
                         <Box>
                             <div className={"upload-download-div"}>
                                 <Box sx={{display: "flex", justifyContent: "center"}}>
-                                    <img src={downloadImage} width="9%" height="65%"/>
+                                    <img src={downloadImage} className={"download-icon"} onClick={() => downloadEmployees()}/>
                                     <Box sx={{display: "grid"}}>
                                         <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.20em"}}>
                                             Employee Data File:
@@ -576,8 +636,8 @@ export default function UploadFiles() {
                                 marginTop: "3vh",
                                 border: '1px solid #34AD84',
                                 color: "#34AD84",
-                                width: "37%",
-                                marginLeft: "39%"
+                                width: "50%",
+                                marginLeft: "26%"
                             }} onClick={() => {
                                 setDialogDelete(() => () => deleteEmployees());
                                 setShowDialog(true);
