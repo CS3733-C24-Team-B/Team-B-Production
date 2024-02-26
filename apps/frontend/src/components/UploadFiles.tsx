@@ -6,7 +6,7 @@ import {
     Snackbar,
     // styled,
     CircularProgress,
-    ThemeProvider, createTheme, Typography
+    ThemeProvider, createTheme, Typography, Dialog, DialogTitle, DialogActions
 } from "@mui/material";
 import {DropzoneAreaBase} from 'material-ui-dropzone';
 import {useAuth0} from "@auth0/auth0-react";
@@ -37,6 +37,8 @@ export default function UploadFiles() {
     const [isError, setIsError] = useState(false);
     const [alertText, setAlertText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [dialogDelete, setDialogDelete] = useState(() => deleteNodes);
+    const [showDialog, setShowDialog] = useState(false);
 
     // function uploadNodeFile(e: React.ChangeEvent<HTMLInputElement>) {
     //     setNodeFile(undefined);
@@ -207,6 +209,7 @@ export default function UploadFiles() {
         } catch (error) {
             console.error(error);
         }
+        setShowDialog(false);
     }
 
     async function deleteEdges() {
@@ -230,6 +233,31 @@ export default function UploadFiles() {
         } catch (error) {
             console.error(error);
         }
+        setShowDialog(false);
+    }
+
+    async function deleteEmployees() {
+        console.log("Deleting all employees");
+        try {
+            const accessToken: string = await getAccessTokenSilently();
+            axios.delete("/api/employee", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            }).then(() => {
+                    setAlertText("Data deleted successfully");
+                    setIsError(false);
+                    setSubmitAlert(true);
+                },
+                () => {
+                    setAlertText("There was an error deleting the data");
+                    setIsError(true);
+                    setSubmitAlert(true);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+        setShowDialog(false);
     }
 
     async function downloadFiles() {
@@ -309,7 +337,7 @@ export default function UploadFiles() {
             <div className="AD-TwoRows3">
                 {/*IMPORT FILES*/}
                 <div className="AD-OneCard">
-                    <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
+                    <Typography style={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
                         Import Files
                     </Typography>
 
@@ -344,8 +372,8 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "50%",
                                 marginLeft: "25%"
                             }} onClick={() => setNodeFile(undefined)}>
@@ -386,8 +414,8 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "50%",
                                 marginLeft: "25%"
                             }} onClick={() => setEdgeFile(undefined)}>
@@ -428,8 +456,8 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "50%",
                                 marginLeft: "25%"
                             }} onClick={() => setEmployeeFile(undefined)}>
@@ -440,12 +468,12 @@ export default function UploadFiles() {
 
                     <Button disabled={isLoading || (!nodeFile && !edgeFile && !employeeFile)} sx={{
                         marginTop: "3vh",
-                        backgroundColor: "#2196F3",
+                        backgroundColor: "#34AD84",
                         color: "white",
                         width: "50%",
                         marginLeft: "25%",
                         '&:hover': {
-                            backgroundColor: 'rgba(33,150,243,0.78)', // Adjust hover background color
+                            backgroundColor: "#34AD84", // Adjust hover background color
                         },
                     }} onClick={() => uploadFile()}>
                         {isLoading ? <CircularProgress/> : "UPLOAD ALL FILES"}
@@ -454,7 +482,7 @@ export default function UploadFiles() {
 
                 {/*EXPORT FILES*/}
                 <div className="AD-OneCard">
-                    <Typography sx={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
+                    <Typography style={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
                         Export Files
                     </Typography>
                     <Box sx={{display: "flex", marginTop: "6vh"}}>
@@ -480,11 +508,14 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "37%",
                                 marginLeft: "39%"
-                            }} onClick={() => deleteNodes()}>
+                            }} onClick={() => {
+                                setDialogDelete(() => () => deleteNodes());
+                                setShowDialog(true);
+                            }}>
                                 DELETE ALL DATA
                             </Button>
                         </Box>
@@ -510,11 +541,14 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "37%",
                                 marginLeft: "39%"
-                            }} onClick={() => deleteEdges()}>
+                            }} onClick={() => {
+                                setDialogDelete(() => () => deleteEdges());
+                                setShowDialog(true);
+                            }}>
                                 DELETE ALL DATA
                             </Button>
                         </Box>
@@ -540,10 +574,13 @@ export default function UploadFiles() {
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
-                                border: '1px solid #2196F3',
-                                color: "#2196F3",
+                                border: '1px solid #34AD84',
+                                color: "#34AD84",
                                 width: "37%",
                                 marginLeft: "39%"
+                            }} onClick={() => {
+                                setDialogDelete(() => () => deleteEmployees());
+                                setShowDialog(true);
                             }}>
                                 DELETE ALL DATA
                             </Button>
@@ -576,6 +613,26 @@ export default function UploadFiles() {
                         {alertText}
                     </Alert>
                 </Snackbar>
+                <Dialog
+                    open={showDialog}
+                    onClose={() => {
+                        setShowDialog(false);
+                    }}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Are you sure you want to delete this data?"}
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={dialogDelete} sx={{color: "#34AD84"}}>Yes</Button>
+                        <Button onClick={() => {
+                            setShowDialog(false);
+                        }} autoFocus sx={{color: "#34AD84"}}>
+                            No
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </ThemeProvider>
     );
