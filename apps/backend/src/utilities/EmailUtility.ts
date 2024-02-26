@@ -23,4 +23,13 @@ export class EmailUtility {
             console.log("Successfully sent assigned service request email to " + email);
         });
     }
+
+    public async gokuRequest(emails: string[], title: string, announcement: string, sender: string): Promise<void> {
+        return await this.transporter.sendMail({
+            from: this.email,
+            bcc: emails,
+            subject: "GOKU: " + title,
+            text: announcement + "\n" + sender + " sent this email to all hospital staff as part of a GOKU request: Give Ongoing Knowledge Urgently."
+        });
+    }
 }

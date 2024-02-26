@@ -12,10 +12,11 @@
     /*margin: 2vw;*/     /*if you want gap between navbar and page*/
 
     width: 98.2%;
-    height: 165%;
+    height: 188%;
 }
 
 .Credits-spacing {
+    height: 110%;
     display: flex; /*change to grid if you want the old version to work*/
     justify-content: center;
     /*margin-bottom: 5%;*/
