@@ -80,7 +80,8 @@ export default function LeafletMiniMap(props : {change: (arg0: string) => void, 
                 />
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     (floor === currLevel && nodeType !== "HALL") ?
-                        <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
+                        <CircleMarker color={localStorage.getItem("nodeColor") !== null ? localStorage.getItem("nodeColor")! : "#3388ff"}
+                            center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
                                       radius={6}
                                       eventHandlers={{
                                           click: () => {
