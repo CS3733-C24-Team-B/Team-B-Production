@@ -1,0 +1,16 @@
+.stats-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.stats-number {
+    font-size: 3em; /* Adjust size as needed */
+    font-weight: bold;
+    color: #d9534f; /* Example color: adjust as needed */
+}
+
+.stats-label {
+    font-size: 1em;
+    color: #333; /* Example color: adjust as needed */
+    margin-top: 5px;
+}

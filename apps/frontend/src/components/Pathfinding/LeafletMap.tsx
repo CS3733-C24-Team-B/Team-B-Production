@@ -17,7 +17,7 @@ import {
     Button,
     Autocomplete,
     Collapse,
-    CircularProgress, Divider
+    CircularProgress, Box, Modal, Divider
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
@@ -39,6 +39,7 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CircleIcon from '@mui/icons-material/Circle';
 import GokuIcon from "../GokuIcon.tsx";
+import Canvas from "./Canvas.tsx";
 
 const FloorLevel = [
     {
@@ -101,6 +102,21 @@ interface MapProps {
     showPopups: boolean;
 }
 
+const gangnamStyle = {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80vw',
+    maxHeight: '80vh',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+};
+
 enum NodeTypeEnum {
     HALL = "This is a hallway. Go through these to navigate from room to room.",
     REST = "This is a restroom. There are accessible and family options available.",
@@ -158,6 +174,8 @@ export default function LeafletMap(props: MapProps) {
     const [useDefault, setUseDefault] = useState(false);
     const [oldZoom, setOldZoom] = useState("");
     const [showPopups, setShowPopups] = useState(props.showPopups);
+    const [animatePic, setAnimatePic] = useState("");
+    const [showPreview, setShowPreview] = useState(false);
     // const [nodeImage, setNodeImage] = useState("");
 
     // get auth0 stuff
@@ -194,13 +212,35 @@ export default function LeafletMap(props: MapProps) {
     }, [props.nodeColor, props.edgeColor]);
 
     useEffect(() => {
+        const nodeIDToXPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["xcoord"];
+        };
+
+        const nodeIDToYPos = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["ycoord"];
+        };
+        const nodeIDToFloor = (nId: string) => {
+            return nodeData.find(({nodeID}) =>
+                nId === nodeID
+            )!["floor"];
+        };
+
         if (props.defaultStart === "" || !props.useDefault) {
             setUseDefault(false);
         } else {
             setUseDefault(true);
             setNodeStart(props.defaultStart);
+            if(props.defaultStart !== undefined && nodeData.length > 0) {
+                setSelectedFloor(levelToFloor(nodeIDToFloor(props.defaultStart)));
+                setCurrLevel(nodeIDToFloor(props.defaultStart));
+                lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.defaultStart)), transX(nodeIDToXPos(props.defaultStart))), 6);
+            }
         }
-    }, [props.defaultStart, props.useDefault]);
+    }, [nodeData, props.defaultStart, props.useDefault]);
 
     useEffect(() => {
         const nodeIDToXPos = (nId: string) => {
@@ -248,7 +288,14 @@ export default function LeafletMap(props: MapProps) {
                         Authorization: "Bearer " + accessToken
                     }
                 });
+                const res2 = await axios.get("/api/employee/profile-picture/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        responseType: "arraybuffer"
+                    }
+                });
                 setSRData(res.data);
+                setAnimatePic(res2.data ? "data:image;base64," + res2.data : user!.picture!);
             }
 
             const res3 = await axios.get("/api/nodes/read");
@@ -258,7 +305,7 @@ export default function LeafletMap(props: MapProps) {
         }
 
         fetch().then();
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently, user]);
 
     useEffect(() => {
         async function fetch() {
@@ -428,7 +475,7 @@ export default function LeafletMap(props: MapProps) {
                 (!props.goku ?
                         <ImageOverlay
                             className={"animated-icon"}
-                            url={user! && user!.picture!}
+                            url={animatePic}
                             bounds={new LatLngBounds(new LatLng(animateData[startDraw.current].lat - 0.5, animateData[startDraw.current].lng - 0.5), new LatLng(animateData[startDraw.current].lat + 0.5, animateData[startDraw.current].lng + 0.5))}
                             ref={(r) => {
                                 r?.setZIndex(1000);
@@ -712,7 +759,10 @@ export default function LeafletMap(props: MapProps) {
 
                     <div style={{display: 'grid', width: '90%', gap: '5%'}}>
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
-                        {directions && <ExportPDF textDirections={dirText}/>}
+                        {directions && <Button size="small" variant="outlined" onClick={() => setShowPreview(true)}
+                                style={{color:'#012D5A', borderColor: '#012D5A', fontSize: '1.5vh', width: '100%' }}>
+                            Preview
+                        </Button>}
                     </div>
                 </div>
             </Collapse>
@@ -822,6 +872,19 @@ export default function LeafletMap(props: MapProps) {
                     </button>
                 ))}
             </div>
+            <Modal
+                keepMounted
+                open={showPreview}
+                onClose={() => {
+                    setShowPreview(false);
+                }}
+                style={{fontFamily: 'Lato'}}
+            >
+                <Box sx={gangnamStyle}>
+                    <div id="canvas" style={{maxWidth: '50%', maxHeight: '50%'}}><Canvas pathData={pathData}/></div>
+                    <ExportPDF map={document.querySelector("#canvas")!} textDirections={dirText}/>
+                </Box>
+            </Modal>
         </div>
     );
 }
