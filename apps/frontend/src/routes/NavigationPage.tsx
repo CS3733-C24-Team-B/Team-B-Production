@@ -59,6 +59,7 @@ export default function NavigationPage() {
     const [showNodes, setShowNodes] = useState(localStorage.getItem("showNodes") !== null ? localStorage.getItem("showNodes") === "true" : true);
     const [showEdges, setShowEdges] = useState(localStorage.getItem("showEdges") !== null ? localStorage.getItem("showEdges") === "true" : false);
     const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "true" : false);
+    const [showIcons, setShowIcons] = useState(localStorage.getItem("showIcons") !== null ? localStorage.getItem("showIcons") === "true" : false);
     const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : false);
     const [algorithm, setAlgorithm] = useState(0);
     const [nodeEnd, setNodeEnd] = useState("");
@@ -352,6 +353,136 @@ export default function NavigationPage() {
                                               label={<p className={"settings-text"}>Use
                                                   Default?</p>}/> : <></>}
                     </div>
+                <IconButton style={{alignSelf: 'end'}} onClick={() => setOpenMenu(false)}>
+                    <CloseIcon/>
+                </IconButton>
+                <div style={{alignSelf: 'center'}}>
+                    <FormGroup style={{minWidth: '50%', padding: 15}}>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showNodes} onClick={() => {
+                                localStorage.setItem("showNodes", !showNodes + "");
+                                setShowNodes(!showNodes);
+                            }}/>}
+                            label={<p className={"settings-text"}>Show Nodes</p>}/>
+                        {showNodes &&
+                            <div style={{display: "flex", flexDirection: 'column', marginLeft: '10%'}}>
+                                <FormControlLabel
+                                    style={{marginTop: '-10%'}}
+                                    control={<Checkbox checked={showHalls}
+                                                       onClick={() => {
+                                                           localStorage.setItem("showHalls", !showHalls + "");
+                                                           setShowHalls(!showHalls);
+                                                       }}/>}
+                                    label={<p className={"settings-text"}>Show Halls</p>}/>
+                                <FormControlLabel
+                                    style={{marginTop: '-10%'}}
+                                    control={<Checkbox checked={showIcons}
+                                                       onClick={() => {
+                                                           localStorage.setItem("showIcons", !showIcons + "");
+                                                           setShowIcons(!showIcons);
+                                                       }}/>}
+                                    label={<p className={"settings-text"}>Show Icons</p>}/>
+                            </div>}
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showEdges} onClick={() => {
+                                localStorage.setItem("showEdges", !showEdges + "");
+                                setShowEdges(!showEdges);
+                            }}/>}
+                            label={<p className={"settings-text"}>Show Edges</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={showPopups}
+                                               onClick={() => {
+                                                   localStorage.setItem("showPopups", !showPopups + "");
+                                                   setShowPopups(!showPopups);
+                                               }}/>}
+                            label={<p className={"settings-text"}>Show Popups</p>}/>
+                        <FormControlLabel
+                            style={{marginTop: '-10%'}}
+                            control={<Checkbox checked={doAnimation}
+                                               onClick={() => {
+                                                   localStorage.setItem("doAnimation", !doAnimation + "");
+                                                   setDoAnimation(!doAnimation);
+                                               }}/>}
+                            label={<p className={"settings-text"}>Animate Path</p>}/>
+                        {doAnimation && user ?
+                            <FormControlLabel
+                                style={{marginTop: '-10%'}}
+                                control={<Switch checked={goku} onClick={() => {
+                                    localStorage.setItem("goku", !goku + "");
+                                    setGoku(!goku);
+                                }}/>}
+                                label={<p className={"settings-text"}>Goku?</p>}/> : <></>}
+                    </FormGroup>
+                </div>
+                <Divider/>
+                {ChooseAlgo}
+                <Divider/>
+                <div className={"color-settings"}>
+                    <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Node Color</p>
+                    <input className="Settings-Color-Selector1" type="color"
+                           value={(nodeColor === null ? "#3388ff" : nodeColor!)}
+                           onChange={(e) => {
+                               localStorage.setItem("nodeColor", e.target.value);
+                               setNodeColor(e.target.value);
+                           }}/>
+                </div>
+                <div className={"color-settings"}>
+                    <p className={"settings-text"} style={{fontSize: "80%", paddingLeft: 15}}>Edge Color</p>
+                    <input className="Settings-Color-Selector2" type="color"
+                           value={(edgeColor === null ? "#008000" : edgeColor!)}
+                           onChange={(e) => {
+                               localStorage.setItem("edgeColor", e.target.value);
+                               setEdgeColor(e.target.value);
+                           }}/>
+                </div>
+                <Divider/>
+                <div style={{alignSelf: 'center', width: '80%', marginTop: '2%'}}>
+                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', gap: '2%'}}>
+                        <Autocomplete
+                            sx={{width: '80%'}}
+                            disablePortal
+                            options={currNodes.map(({nodeID, longName}): NodeType => (
+                                {label: longName, nid: nodeID}
+                            ))}
+                            size={"small"}
+                            value={{label: nodeIDtoName(defaultLocation!), nid: defaultLocation!}}
+                            renderInput={(params) =>
+                                <TextField {...params} label="Default Starting Location" variant="standard"/>}
+                            //value={{label: nodeIDtoName(location), nid: location}}
+                            getOptionLabel={(nd: NodeType) =>
+                                `${nd.label}`
+                            }
+                            getOptionKey={(nd: NodeType) =>
+                                `${nd.nid}`
+                            }
+                            onChange={(newValue, val) => {
+                                if (val !== null) {
+                                    setDefaultLocation(val.nid);
+                                    localStorage.setItem("defaultLocation", val.nid);
+                                } else {
+                                    setDefaultLocation("");
+                                    localStorage.setItem("defaultLocation", "");
+                                }
+                            }}
+                        />
+                        <Button variant={"outlined"} style={{
+                            color: "#34AD84",
+                            width: 220, fontSize: '0.7em'
+                        }} onClick={() => setShowMap(true)}>
+                            Choose From Map
+                        </Button>
+                    </div>
+                    {defaultLocation !== "" ?
+                        <FormControlLabel control={<Switch checked={useDefault} onClick={() => {
+                            localStorage.setItem("useDefault", !useDefault + "");
+                            setUseDefault(!useDefault);
+                        }}/>}
+                                          label={<p className={"settings-text"}>Use
+                                              Default?</p>}/> : <></>}
+                </div>
             </Box>
         </Modal>
 );
@@ -394,7 +525,8 @@ topbarElems.push(
                                     useDefault={useDefault}
                                     changeDefault={setUseDefault}
                                     zoomNode={zoomNode}
-                                    showPopups={showPopups}/>
+                                    showPopups={showPopups}
+                                    showIcons={showIcons}/>
                     </div>
                 </div>
             </div>
