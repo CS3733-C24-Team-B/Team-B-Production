@@ -26,7 +26,7 @@
 .AD-TwoRows {
     background-color: #012d5a;
     display: grid;
-    grid-template-rows: 15vh 85vh; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 10vh 85vh; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin-top: 1%;
