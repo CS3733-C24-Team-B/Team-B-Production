@@ -10,7 +10,6 @@
     grid-template-columns: auto;
     row-gap: 1vw;
     /*margin: 2vw;*/     /*if you want gap between navbar and page*/
-
     width: 98.2%;
     height: 188%;
 }
