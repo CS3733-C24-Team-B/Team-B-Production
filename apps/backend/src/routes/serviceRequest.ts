@@ -165,6 +165,10 @@ router.post("/language", async function (req: Request, res: Response) {
     }
 });
 
+router.post("/goku", async function (req: Request, res: Response) {
+
+});
+
 router.put('/', async function (req: Request, res: Response) {
     const serviceRequest: UpdateRequest = req.body;
     let previousAssignedTo = serviceRequest.assignedTo;
