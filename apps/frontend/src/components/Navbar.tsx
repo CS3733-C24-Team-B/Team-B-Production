@@ -57,7 +57,7 @@ export default function Navbar() {
 
                 <Button sx={{
                     color: 'white', width: '80%', textTransform: 'none',
-                    borderBottom: (window.location.pathname === "/home") ? '0.7vh solid #34AD84' : ''
+                    borderBottom: (window.location.pathname === "/home" || window.location.pathname === "/") ? '0.7vh solid #34AD84' : ''
                 }}
                         style={{
                             justifyContent: "flex-start",
@@ -68,7 +68,7 @@ export default function Navbar() {
                         startIcon={<NavigationIcon style={{
                             fontSize: "150%",
                             minWidth: 40,
-                            color: (window.location.pathname === "/home") ? '#34AD84' : 'white'
+                            color: (window.location.pathname === "/home" || window.location.pathname === "/") ? '#34AD84' : 'white'
                         }}/>}
                         href={"/home"}>
                     Navigation {/*naviagtion icon*/}
