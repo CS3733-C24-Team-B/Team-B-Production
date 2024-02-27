@@ -49,16 +49,6 @@ router.get("/:email?", async function (req: Request, res: Response) {
     }
 });
 
-router.get("/next-birthday", async function (req: Request, res: Response) {
-    const today: Date = new Date();
-    const employees: Employee[] = await client.employee.findMany();
-    const nextBirthday: Employee = employees[0];
-    for (let i: number = 1; i < employees.length; i++) {
-        const currentEmployee: Employee = employees[i];
-        if (nextBirthday.birthday.getMonth() - today.getMonth())
-    }
-});
-
 router.get("/reset-password/:email", async function (req: Request, res: Response) {
     const email: string = req.params.email;
     const resetPasswordLink: string = await auth0Utility.resetPassword(email);
