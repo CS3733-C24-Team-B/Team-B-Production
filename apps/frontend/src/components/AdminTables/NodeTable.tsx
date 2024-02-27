@@ -32,7 +32,7 @@ enum nodeSortField {
     building, nodeType, longName, shortName
 }
 
-export default function NodeTable(){
+export default function NodeTable() {
     const [nodeData, setNodeData] = useState<Node[]>([]);
     const [sortUp, setSortUp] = useState(true);
     const [refresh] = useState(false);
@@ -123,9 +123,9 @@ export default function NodeTable(){
     function FilterSelect(props: { nodeKey: keyof Node }) {
         const {nodeKey} = props;
         fillOptions(nodeKey);
-        const arr : string[] = [];
+        const arr: string[] = [];
         const iter = filterOptions.values();
-        for(const str of iter) {
+        for (const str of iter) {
             arr.push(str);
         }
 
@@ -178,9 +178,9 @@ export default function NodeTable(){
                             <MenuItem value={"nodeType"}>Node Type</MenuItem>
                         </Select>
                         {({
-                            'floor': <FilterSelect nodeKey={'floor'} />,
-                            'building': <FilterSelect nodeKey={'building'} />,
-                            'nodeType': <FilterSelect nodeKey={'nodeType'} />,
+                            'floor': <FilterSelect nodeKey={'floor'}/>,
+                            'building': <FilterSelect nodeKey={'building'}/>,
+                            'nodeType': <FilterSelect nodeKey={'nodeType'}/>,
                             'none': <></>
                         }[filterType])}
                     </FormControl>
@@ -196,71 +196,103 @@ export default function NodeTable(){
                         <TableContainer component={Paper} className="service-tables"
                                         sx={{maxHeight: "70vh"}}>
                             <Table stickyHeader>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
+                                <col width="12.5%"/>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>
                                             Node ID
-                                            <IconButton style={{color: (typeSort === "nodeID" ? "#34AD84" : ""), width: '2vw'}}
-                                                        onClick={() => {
-                                                            setSortUp(!sortUp);
-                                                            sortNodes(nodeSortField.nodeID);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                            <IconButton
+                                                style={{color: (typeSort === "nodeID" ? "#34AD84" : ""), width: '2vw'}}
+                                                onClick={() => {
+                                                    setSortUp(!sortUp);
+                                                    sortNodes(nodeSortField.nodeID);
+                                                }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             X-Coord
-                                            <IconButton style={{color: (typeSort === "xCoord" ? "#34AD84" : ""), width: '2vw'}}
-                                                        onClick={() => {
-                                                            setSortUp(!sortUp);
-                                                            sortNodes(nodeSortField.xCoord);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                            <IconButton
+                                                style={{color: (typeSort === "xCoord" ? "#34AD84" : ""), width: '2vw'}}
+                                                onClick={() => {
+                                                    setSortUp(!sortUp);
+                                                    sortNodes(nodeSortField.xCoord);
+                                                }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Y-Coord
-                                            <IconButton style={{color: (typeSort === "yCoord" ? "#34AD84" : ""), width: '2vw'}}
-                                                        onClick={() => {
-                                                            setSortUp(!sortUp);
-                                                            sortNodes(nodeSortField.yCoord);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                            <IconButton
+                                                style={{color: (typeSort === "yCoord" ? "#34AD84" : ""), width: '2vw'}}
+                                                onClick={() => {
+                                                    setSortUp(!sortUp);
+                                                    sortNodes(nodeSortField.yCoord);
+                                                }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Floor
-                                            <IconButton style={{color: (typeSort === "floor" ? "#34AD84" : ""), width: '2vw'}}
-                                                        onClick={() => {
-                                                            setSortUp(!sortUp);
-                                                            sortNodes(nodeSortField.floor);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                            <IconButton
+                                                style={{color: (typeSort === "floor" ? "#34AD84" : ""), width: '2vw'}}
+                                                onClick={() => {
+                                                    setSortUp(!sortUp);
+                                                    sortNodes(nodeSortField.floor);
+                                                }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Building
-                                            <IconButton style={{color: (typeSort === "building" ? "#34AD84" : ""), width: '2vw'}}
+                                            <IconButton style={{
+                                                color: (typeSort === "building" ? "#34AD84" : ""),
+                                                width: '2vw'
+                                            }}
                                                         onClick={() => {
                                                             setSortUp(!sortUp);
                                                             sortNodes(nodeSortField.building);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Node Type
-                                            <IconButton style={{color: (typeSort === "nodeType" ? "#34AD84" : ""), width: '1.5vw'}}
+                                            <IconButton style={{
+                                                color: (typeSort === "nodeType" ? "#34AD84" : ""),
+                                                width: '1.5vw'
+                                            }}
                                                         onClick={() => {
                                                             setSortUp(!sortUp);
                                                             sortNodes(nodeSortField.nodeType);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Long Name
-                                            <IconButton style={{color: (typeSort === "longName" ? "#34AD84" : ""), width: '2vw'}}
+                                            <IconButton style={{
+                                                color: (typeSort === "longName" ? "#34AD84" : ""),
+                                                width: '2vw'
+                                            }}
                                                         onClick={() => {
                                                             setSortUp(!sortUp);
                                                             sortNodes(nodeSortField.longName);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                         <TableCell>
                                             Short Name
-                                            <IconButton style={{color: (typeSort === "shortName" ? "#34AD84" : ""), width: '1.5vw'}}
+                                            <IconButton style={{
+                                                color: (typeSort === "shortName" ? "#34AD84" : ""),
+                                                width: '1.5vw'
+                                            }}
                                                         onClick={() => {
                                                             setSortUp(!sortUp);
                                                             sortNodes(nodeSortField.shortName);
-                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> : <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
+                                                        }}>{sortUp ? <ArrowUpwardIcon style={{fontSize: '0.65em'}}/> :
+                                                <ArrowDownwardIcon style={{fontSize: '0.65em'}}/>}</IconButton>
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
