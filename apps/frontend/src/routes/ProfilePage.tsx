@@ -301,7 +301,7 @@ export default function ProfilePage() {
                                         <PieChartStats srlist={employee!.requestsAssigned} title={"My Requests"}/>
                                     </div>
                                     <div className={"SecondRow_SecondColumn-TestCard"}>
-                                        <div style={{display: 'flex', flexDirection: 'column', marginTop:'8.5%', maxWidth: '100%', justifySelf: 'center', alignContent: 'center', rowGap:'20px', alignSelf: 'center'}}>
+                                        <div style={{display: 'flex', flexDirection: 'column', marginTop:'8.5%', maxWidth: '100%', justifySelf: 'center', alignItems: 'center', alignContent: 'center', rowGap:'20px', alignSelf: 'center'}}>
                                         <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84", justifySelf: "center"}}
                                                 onClick={() => {
                                                     getAccessTokenSilently().then((accessToken: string) => {
