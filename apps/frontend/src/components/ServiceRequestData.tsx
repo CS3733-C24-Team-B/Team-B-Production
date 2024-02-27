@@ -45,25 +45,23 @@ export default function ServiceRequestData(
         },
       });
       setsrData(res.data);
-      if (isAuthenticated) {
-        const res2 = await axios.get(`/api/employee/${user!.email!}`, {
-          params: {
-            email: user!.email!,
-          },
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
-        });
+      const res2 = await axios.get(`/api/employee/${user!.email!}`, {
+        params: {
+          email: user!.email!,
+        },
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      });
 
-        setEmail(res2.data.email);
-      }
+      setEmail(res2.data.email);
 
       const res3 = await axios.get("/api/nodes/read");
       setNodeData(res3.data);
     }
 
-    fetchData();
-  }, [getAccessTokenSilently, isAuthenticated, user]);
+    fetchData().then();
+  }, [getAccessTokenSilently, user]);
 
   function nextBirthday() {
     return employees.shift();
@@ -92,7 +90,7 @@ export default function ServiceRequestData(
     if (item.status === StatusType.Completed) {
       completedCount++;
     }
-    if (item.assignedTo !== null && item.assignedTo.email === email) {
+    if (item.assignedTo.email === email) {
       assignedCount++;
       myRequests.push(item);
     }
@@ -135,11 +133,11 @@ export default function ServiceRequestData(
         <ul>
           {myRequests.map((obj) => (
             <div>
-              <div style={{ color: "green", fontSize: 20 }}>
+              <div style={{ color: "green", fontSize: 26 }}>
                 {getReqType(obj)}
               </div>
-              <div style={{ fontSize: 20 }}>Request</div>
-              <div style={{ fontSize: 14, marginBlockEnd: 12 }}>
+              <div style={{ fontSize: 26 }}>Request</div>
+              <div style={{ fontSize: 18, marginBlockEnd: 20 }}>
                 Priority: {obj.priority}
                 <br />
                 Location: {nodeIDtoName(obj.locationID)}
@@ -156,10 +154,10 @@ export default function ServiceRequestData(
     return (
       <div>
         <ul>
-          {recentRequests.slice(0, 5).map((obj) => (
+          {recentRequests.slice(0, 10).map((obj) => (
             <div>
-              <div style={{ fontSize: 18 }}>{getReqType(obj)} Request</div>
-              <div style={{ fontSize: 12, marginBlockEnd: 20 }}>
+              <div style={{ fontSize: 26 }}>{getReqType(obj)} Request</div>
+              <div style={{ fontSize: 18, marginBlockEnd: 20 }}>
                 {nodeIDtoName(obj.locationID)}
               </div>
             </div>
@@ -171,7 +169,6 @@ export default function ServiceRequestData(
   if (dataType === "birthday") {
     return (
       <div>
-        Next Birthday
         {nextBirthday()?.firstName} {nextBirthday()?.lastName}
       </div>
     );

@@ -14,6 +14,7 @@ import axios from "axios";
 import { ServiceRequest } from "common/src/serviceRequestTypes.ts";
 import { useAuth0 } from "@auth0/auth0-react";
 import "../../css/dashboard.css";
+import { ChartOptions } from "chart.js";
 
 ChartJS.register(
   BarElement,
@@ -39,7 +40,7 @@ export default function BarChart() {
       setsrData(res.data);
     }
 
-    fetchData();
+    fetchData().then();
   }, [getAccessTokenSilently]);
   console.log(srData);
   const priorityCounts = { Low: 0, Medium: 0, High: 0, Emergency: 0 };
@@ -62,7 +63,7 @@ export default function BarChart() {
     ],
   };
 
-  const bar_options = {
+  const bar_options: ChartOptions<"bar"> = {
     aspectRatio: 2,
     maintainAspectRatio: true,
     scales: {
@@ -83,11 +84,14 @@ export default function BarChart() {
         ticks: {
           color: "black",
           // Explicitly type the parameter as a number to resolve TS7006
-          callback: function (value: number) {
+          callback: function (
+            tickValue: string | number,
+          ): string | number | null | undefined {
+            const value = Number(tickValue);
             if (value % 1 === 0) {
-              // Check if the value is an integer
               return value;
             }
+            return undefined; // Explicitly return undefined for non-integer values
           },
         },
         title: {

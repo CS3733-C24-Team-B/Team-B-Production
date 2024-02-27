@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { TextField } from "@mui/material";
 
 // Hien and Katie
-const InternalTransportationRequest = ({ change1, change2 }) => {
+const InternalTransportationRequest = (props: {
+  change1: (arg0: string) => void;
+  change2: (arg0: string) => void;
+}) => {
+  const { change1, change2 } = props;
   const [language1, setLanguage1] = useState("");
   const [language2, setLanguage2] = useState("");
 

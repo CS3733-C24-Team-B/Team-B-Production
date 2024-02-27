@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 
 // Rodrick and Piotr
-const MedicineRequest = ({ change1, change2 }) => {
+const MedicineRequest = (props: {
+  change1: (arg0: string) => void;
+  change2: (arg0: string) => void;
+}) => {
+  const { change1, change2 } = props;
   const [additionalField1, setAdditionalField1] = useState("");
   const [additionalField2, setAdditionalField2] = useState("");
   function handleChange1(

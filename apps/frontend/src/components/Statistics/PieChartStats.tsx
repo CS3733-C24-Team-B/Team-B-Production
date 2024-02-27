@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Pie } from "react-chartjs-2";
 import { ChartOptions } from "chart.js";
-import axios from "axios";
 import { ServiceRequest } from "common/src/serviceRequestTypes.ts";
-import { useAuth0 } from "@auth0/auth0-react";
+import "../../css/dashboard.css";
 
-export default function PieChartStats() {
-  const [srData, setsrData] = useState<ServiceRequest[]>([]);
-  const { getAccessTokenSilently } = useAuth0();
-  useEffect(() => {
-    async function fetchData() {
-      const accessToken: string = await getAccessTokenSilently();
-      const res = await axios.get("/api/service-request", {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      });
-      setsrData(res.data);
-    }
-
-    fetchData();
-  }, [getAccessTokenSilently]);
+export default function PieChartStats(props: {
+  srlist: ServiceRequest[];
+  title: string;
+}) {
+  const { srlist, title } = props;
+  // const [srData, setsrData] = useState<ServiceRequest[]>([]);
+  // const {getAccessTokenSilently} = useAuth0();
+  // useEffect(() => {
+  //     async function fetchData() {
+  //         const accessToken: string = await getAccessTokenSilently();
+  //         const res = await axios.get("/api/service-request", {
+  //             headers: {
+  //                 Authorization: "Bearer " + accessToken
+  //             }
+  //         });
+  //         setsrData(res.data);
+  //     }
+  //
+  //     fetchData();
+  // }, [getAccessTokenSilently]);
 
   const categories = {
     internalTransport: 0,
@@ -30,7 +33,7 @@ export default function PieChartStats() {
     language: 0,
   };
 
-  srData.forEach((item) => {
+  srlist.forEach((item) => {
     if (item.internalTransport !== null) categories.internalTransport++;
     if (item.language !== null) categories.language++;
     if (item.maintenance !== null) categories.maintenance++;
@@ -40,12 +43,10 @@ export default function PieChartStats() {
 
   function formatLabel(label: string): string {
     const withSpaces = label.replace(/([A-Z])/g, " $1");
-    const capitalizedWords = withSpaces
+    return withSpaces
       .split(" ")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(" ");
-
-    return capitalizedWords;
   }
 
   const chartData = {
@@ -95,7 +96,7 @@ export default function PieChartStats() {
       },
       title: {
         display: true,
-        text: "Number of Requests in Types",
+        text: title,
         font: {
           size: 25,
           family: "Lato", // Set the font family to Lato
@@ -112,11 +113,31 @@ export default function PieChartStats() {
       padding: {
         left: 20,
         bottom: 100,
-        right: 50,
       },
     },
   };
 
+  if (title === "My Requests") {
+    return (
+      <div>
+        <div
+          className="chart-container"
+          style={{
+            width: "100%",
+            height: "50vh",
+            maxWidth: "100%",
+            maxHeight: "200%",
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "end",
+            justifySelf: "end",
+          }}
+        >
+          <Pie data={chartData} options={options} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <div
@@ -124,10 +145,12 @@ export default function PieChartStats() {
         style={{
           width: "100%",
           height: "75vh",
+          maxWidth: "100%",
+          maxHeight: "200%",
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          justifySelf: "center",
+          justifyContent: "end",
+          alignItems: "end",
+          justifySelf: "end",
         }}
       >
         <Pie data={chartData} options={options} />

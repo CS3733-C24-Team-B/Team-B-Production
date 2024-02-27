@@ -15,9 +15,9 @@ import {
 } from "@mui/material";
 import { DropzoneAreaBase } from "material-ui-dropzone";
 import { useAuth0 } from "@auth0/auth0-react";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 // import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+// import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import axios from "axios";
 import downloadImage from "../images/downloadImage.png";
 // const VisuallyHiddenInput = styled('input')({
@@ -444,51 +444,23 @@ export default function UploadFiles() {
               <div style={{ minWidth: "15vw" }}>
                 {nodeFile ? (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          {nodeFile.name}
-                        </p>
-                        <InsertDriveFileIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={nodeFile.name}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setNodeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 ) : (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          Upload Node File
-                        </p>
-                        <CloudUploadIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={"Upload Node File"}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setNodeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 )}
               </div>
@@ -509,51 +481,23 @@ export default function UploadFiles() {
               <div style={{ minWidth: "15vw" }}>
                 {edgeFile ? (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          {edgeFile.name}
-                        </p>
-                        <InsertDriveFileIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={edgeFile.name}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setEdgeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 ) : (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          Upload Edge File
-                        </p>
-                        <CloudUploadIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={"Upload Edge File"}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setEdgeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 )}
               </div>
@@ -574,51 +518,23 @@ export default function UploadFiles() {
               <div style={{ minWidth: "15vw" }}>
                 {employeeFile ? (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          {employeeFile.name}
-                        </p>
-                        <InsertDriveFileIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={employeeFile.name}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setEmployeeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 ) : (
                   <DropzoneAreaBase
-                    style={{ minWidth: "100%" }}
-                    dropzoneText={
-                      <>
-                        <p
-                          style={{
-                            fontFamily: "Lato",
-                            margin: "1%",
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          Upload Employee File
-                        </p>
-                        <CloudUploadIcon />
-                      </>
-                    }
-                    Icon={"none"}
+                    dropzoneText={"Upload Employee File"}
                     filesLimit={1}
                     showAlerts={false}
                     onAdd={(files) => {
                       setEmployeeFile(files[0].file);
                     }}
+                    fileObjects={[]}
                   />
                 )}
               </div>
@@ -672,6 +588,7 @@ export default function UploadFiles() {
                     src={downloadImage}
                     className={"download-icon"}
                     onClick={() => downloadNodes()}
+                    alt={""}
                   />
                   <Box sx={{ display: "grid" }}>
                     <Typography
@@ -719,6 +636,7 @@ export default function UploadFiles() {
                     src={downloadImage}
                     className={"download-icon"}
                     onClick={() => downloadEdges()}
+                    alt={""}
                   />
                   <Box sx={{ display: "grid" }}>
                     <Typography
@@ -766,6 +684,7 @@ export default function UploadFiles() {
                     src={downloadImage}
                     className={"download-icon"}
                     onClick={() => downloadEmployees()}
+                    alt={""}
                   />
                   <Box sx={{ display: "grid" }}>
                     <Typography

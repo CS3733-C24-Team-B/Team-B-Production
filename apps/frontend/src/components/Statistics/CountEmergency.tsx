@@ -3,13 +3,13 @@ import axios from "axios";
 import { ServiceRequest } from "common/src/serviceRequestTypes.ts";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function CountOpenRequest() {
+export default function CountEmergency() {
   const [srData, setsrData] = useState<ServiceRequest[]>([]);
-  const [countOfOpenRequests, setCountOfOpenRequests] = useState<number>(0);
+  const [countOfEmergencyRequests, setCountOfEmergencyRequests] =
+    useState<number>(0);
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    let isMounted = true;
     async function fetchData() {
       try {
         const accessToken: string = await getAccessTokenSilently();
@@ -21,25 +21,22 @@ export default function CountOpenRequest() {
             },
           },
         );
-        if (isMounted) setsrData(response.data);
+        setsrData(response.data);
       } catch (error) {
         console.error("Error fetching service request data", error);
         // You can handle errors by setting some state variable here
       }
     }
 
-    fetchData();
-    return () => {
-      isMounted = false;
-    };
+    fetchData().then();
   }, [getAccessTokenSilently]);
 
   useEffect(() => {
     const count = srData.filter(
-      (request) => request.status !== "Completed",
+      (request) => request.priority === "Emergency",
     ).length;
-    setCountOfOpenRequests(count);
+    setCountOfEmergencyRequests(count);
   }, [srData]);
 
-  return countOfOpenRequests;
+  return countOfEmergencyRequests;
 }

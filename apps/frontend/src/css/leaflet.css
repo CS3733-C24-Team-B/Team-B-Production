@@ -90,8 +90,8 @@
 }
 
 .autocomplete-text {
-  translate: 0% -62%;
-  font-family: Lato;
+  translate: 0 -62%;
+  font-family: Lato, serif;
 }
 
 .floor-change-text {

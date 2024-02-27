@@ -10,7 +10,7 @@ import {
   ZoomControl,
 } from "react-leaflet";
 import "../../css/leaflet.css";
-import React, { useState, useEffect, useRef, Ref } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { LatLng, LatLngBounds } from "leaflet";
 import {
@@ -198,7 +198,7 @@ export default function LeafletMap(props: MapProps) {
   const [redraw, setRedraw] = useState(false);
   const [doAnimation, setDoAnimation] = useState(false);
   const startDraw = useRef(0);
-  const lMap: Ref<L.Map> = useRef();
+  const lMap = useRef(null);
   const [floorSet, setFloorSet] = useState(new Set());
   const [nodeColor, setNodeColor] = useState(props.nodeColor);
   const [edgeColor, setEdgeColor] = useState(props.edgeColor);
@@ -265,7 +265,7 @@ export default function LeafletMap(props: MapProps) {
       if (props.defaultStart !== undefined && nodeData.length > 0) {
         setSelectedFloor(levelToFloor(nodeIDToFloor(props.defaultStart)));
         setCurrLevel(nodeIDToFloor(props.defaultStart));
-        lMap!.current.setView(
+        (lMap!.current! as L.Map).setView(
           new LatLng(
             transY(nodeIDToYPos(props.defaultStart)),
             transX(nodeIDToXPos(props.defaultStart)),
@@ -295,7 +295,7 @@ export default function LeafletMap(props: MapProps) {
         setSelectedFloor(levelToFloor(nodeIDToFloor(props.zoomNode)));
         setCurrLevel(nodeIDToFloor(props.zoomNode));
       }
-      lMap!.current.setView(
+      (lMap!.current! as L.Map).setView(
         new LatLng(
           transY(nodeIDToYPos(props.zoomNode)),
           transX(nodeIDToXPos(props.zoomNode)),
@@ -845,7 +845,7 @@ export default function LeafletMap(props: MapProps) {
                       setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
                       setCurrLevel(nodeIDToFloor(nId));
                     }
-                    lMap!.current.setView(
+                    (lMap!.current! as L.Map).setView(
                       new LatLng(
                         transY(nodeIDToYPos(nId)),
                         transX(nodeIDToXPos(nId)),
@@ -888,7 +888,7 @@ export default function LeafletMap(props: MapProps) {
                       setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
                       setCurrLevel(nodeIDToFloor(nId));
                     }
-                    lMap!.current.setView(
+                    (lMap!.current! as L.Map).setView(
                       new LatLng(
                         transY(nodeIDToYPos(nId)),
                         transX(nodeIDToXPos(nId)),
@@ -1075,6 +1075,7 @@ export default function LeafletMap(props: MapProps) {
                       <img
                         style={{ maxWidth: "20%", maxHeight: "20%" }}
                         src={NodeImages[nodeType as keyof typeof NodeImages]}
+                        alt=""
                       />
                       {/* Display service request data here */}
                       {srData.map((serviceRequest) => (
@@ -1112,15 +1113,9 @@ export default function LeafletMap(props: MapProps) {
           .map(({ floor, level }) => (
             <button
               key={floor}
-              className={`mui-btn mui-btn--fab ${
-                currLevel === level
-                  ? "selected"
-                  : floorSet.has(level)
-                    ? "highlighted"
-                    : ""
-              }`}
+              className={`mui-btn mui-btn--fab ${currLevel === level ? "selected" : floorSet.has(level) ? "highlighted" : ""}`}
               onClick={() => {
-                lMap!.current.setZoom(5.5);
+                (lMap!.current! as L.Map).setZoom(5.5);
                 setSelectedFloor(floor);
                 setCurrLevel(level);
               }}

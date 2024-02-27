@@ -298,8 +298,8 @@ export default function ServiceRequestTable() {
       case requestSortField.location:
         setSortFunction(
           () => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) =>
-            nodeNameOrReturn(a.locationID).localeCompare(
-              nodeNameOrReturn(b.locationID),
+            nodeNameOrReturn(a.locationID!).localeCompare(
+              nodeNameOrReturn(b.locationID!),
             ),
         );
         break;
@@ -365,7 +365,7 @@ export default function ServiceRequestTable() {
           <TableCell>
             {RequestType[getReqType(nsr) as keyof typeof RequestType]}
           </TableCell>
-          <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
+          <TableCell>{nodeNameOrReturn(nsr.locationID!)}</TableCell>
           <TableCell>
             <Select
               value={
@@ -425,7 +425,7 @@ export default function ServiceRequestTable() {
               onChange={async (event: SelectChangeEvent) => {
                 const serviceRequest: UpdateServiceRequest = {
                   serviceID: nsr.serviceID,
-                  assignedTo: nsr.assignedID,
+                  assignedTo: nsr.assignedID!,
                   status:
                     StatusType[event.target.value as keyof typeof StatusType],
                 };

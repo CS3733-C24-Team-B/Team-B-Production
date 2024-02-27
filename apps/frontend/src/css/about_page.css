@@ -1,213 +1,214 @@
-.About-TwoColumns {
-  background-color: #012d5a;
-  display: grid;
-  grid-template-columns: 49% 49%; /* column ratios are split, also accounts for 2% gap */
-  grid-template-rows: auto;
-  grid-column-gap: 2%;
-  height: 100%;
-  margin-left: 2%;
-  margin-right: 2%;
+
+.About-TwoColumns{
+    background-color: #012d5a;
+    display: grid;
+    grid-template-columns: 49% 49%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-rows: auto;
+    grid-column-gap: 2%;
+    height: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
-.About-TestCard {
-  border-radius: 15px;
-  background-color: white;
-  border-style: solid;
-  border-color: #34ad84;
-  display: grid;
-  grid-template-columns: 39% 61%;
-  grid-template-rows: auto;
-  height: 100%;
+.About-TestCard{
+    border-radius: 15px;
+    background-color: white;
+    border-style: solid;
+    border-color: #34AD84;
+    display: grid;
+    grid-template-columns: 39% 61%;
+    grid-template-rows: auto;
+    height: 100%;
 }
 
 .ProfilePicture {
-  margin-left: 15%;
-  align-self: center;
-  width: 70%;
-  border-radius: 50%;
+    margin-left: 15%;
+    align-self: center;
+    width: 70%;
+    border-radius: 50%;
 }
 
 .TextBox {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 5%;
-  font-family: Lato, serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 5%;
+    font-family: Lato, serif;
 }
 
 h2 {
-  margin-bottom: 0;
-  margin-top: 0;
-  font-size: 200%;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-size: 200%;
 }
 
 h3 {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 100%;
 }
 
 .AboutContainer {
-  width: 100%;
-  height: 300vh;
+    width: 100%;
+    height: 300vh; {/* set to more than 100vh in order to add scroll */}
 }
 
 .FiveRows {
-  display: grid;
-  grid-template-rows: 4% 22% 50% 12% 5%; /* column ratios are split, also accounts for 2% gap */
-  grid-template-columns: auto;
-  width: 100%;
-  height: 100%;
-  grid-row-gap: 2%;
+    display: grid;
+    grid-template-rows: 4% 22% 50% 12% 5%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-columns: auto;
+    width: 100%;
+    height: 100%;
+    grid-row-gap: 2%;
 }
 
-.About-NameColumns {
-  display: grid;
-  grid-template-rows: 17% 17% 17% 17% 17%; /* column ratios are split, also accounts for 2% gap */
-  grid-template-columns: auto;
-  grid-row-gap: 2%;
+.About-NameColumns{
+    display: grid;
+    grid-template-rows: 17% 17% 17% 17% 17%; /* column ratios are split, also accounts for 2% gap */
+    grid-template-columns: auto;
+    grid-row-gap: 2%;
 }
 
 .LabelCard {
-  background-color: white;
-  border-radius: 15px;
-  margin: 0 6% auto 4vw;
+    background-color: white;
+    border-radius: 15px;
+    margin: 0 6% auto 4vw;
 }
 
 .ImageCard {
-  margin: 0 40px 0 1%;
-  height: 80%;
-  width: 80%;
-  text-align: center;
-  background-color: #012d5a;
+    margin: 0 40px 0 1%;
+    height: 80%;
+    width: 80%;
+    text-align: center;
+    background-color: #012d5a;
 }
 
 .AboutImage {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .MeetTheTeamCard {
-  background-color: white;
-  border-radius: 15px;
-  margin: 15% 40px 0 4vw;
+    background-color: white;
+    border-radius: 15px;
+    margin: 15% 40px 0 4vw;
 }
 
 .FourColumns {
-  display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 30% 70%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 30% 70%;
 }
 
 .Picture {
-  margin: 13.2% 6% 3% 4vw;
+    margin: 13.2% 6% 3% 4vw;
 }
 
 .AcknowledgementCard {
-  background-color: white;
-  border-radius: 15px;
-  padding: 2%;
-  margin: 2% 2% 2%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 2%;
+    margin: 2% 2% 2%;
 }
 
 .CopyrightCard {
-  background-color: white;
+    background-color: white;
 }
 
 .AboutTwoColumns {
-  display: grid;
-  grid-template-rows: auto; /* column ratios are split, also accounts for 2% gap */
-  grid-template-columns: 45% 55%;
-  /*how to make software engineering on same line*/
+    display: grid;
+    grid-template-rows: auto; /* column ratios are split, also accounts for 2% gap */
+    grid-template-columns: 45% 55%;
+    /*how to make software engineering on same line*/
 }
 
 .about-header {
-  margin: 2% 0.5% 0.5% 5vw;
-  font-size: 60px;
-  font-family: Lato, serif;
-  color: #009ca6;
+    margin: 2% 0.5% 0.5% 5vw;
+    font-size: 60px;
+    font-family: Lato, serif;
+    color: #009CA6;
 }
 
 .welcome-text {
-  margin: 5%;
-  margin-inside: 10%;
-  font-size: 35px;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 0.5em;
-  font-weight: bold;
+    margin: 5%;
+    margin-inside: 10%;
+    font-size: 35px;
+    font-family: Lato, serif;
+    color: black;
+    line-height: .5em;
+    font-weight: bold;
 }
 
 .course-info {
-  margin: 5%;
-  font-size: 35px;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 0.5em;
+    margin: 5%;
+    font-size:35px;
+    font-family: Lato, serif;
+    color: black;
+    line-height: .5em;
 }
 
 .name {
-  margin: 5%;
-  font-size: 35px;
-  font-family: Lato, serif;
-  color: #009ca6;
-  line-height: 50%;
+    margin: 5%;
+    font-size: 35px;
+    font-family: Lato, serif;
+    color: #009CA6;
+    line-height: 50%;
 }
 
 .break {
-  color: white;
-  line-height: 0.3em;
+    color: white;
+    line-height: .3em;
 }
 
 .meet-text {
-  margin: 1.5%;
-  font-size: 35px;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 95%;
-  font-weight: bold;
+    margin: 1.5%;
+    font-size: 35px;
+    font-family: Lato, serif;
+    color: black;
+    line-height: 95%;
+    font-weight: bold;
 }
 
 .position {
-  margin: 5%;
-  font-size: 32px;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 50%;
+    margin: 5%;
+    font-size:32px;
+    font-family: Lato, serif;
+    color: black;
+    line-height: 50%;
 }
 
 .info {
-  font-size: 100%;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 50%;
+    font-size: 100%;
+    font-family: Lato, serif;
+    color: black;
+    line-height: 50%;
 }
 
 .blue-info {
-  font-size: 100%;
-  font-family: Lato, serif;
-  color: #009ca6;
-  line-height: 95%;
+    font-size:100%;
+    font-family: Lato, serif;
+    color: #009CA6;
+    line-height: 95%;
 }
 
 .acknowledgements-text {
-  font-size: 70%;
+    font-size: 70%;
 }
 
 .copyright-text {
-  margin-left: 10px;
-  text-align: left;
-  font-size: 1em;
-  font-family: Lato, serif;
-  color: black;
-  line-height: 130%;
+    margin-left: 10px;
+    text-align: left;
+    font-size: 1em;
+    font-family: Lato, serif;
+    color: black;
+    line-height: 130%;
 }
 
 .date {
-  margin-right: 15px;
-  margin-bottom: 15px;
-  text-align: right;
-  font-size: 18px;
-  font-family: Lato, serif;
-  color: black;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    text-align: right;
+    font-size: 18px;
+    font-family: Lato, serif;
+    color: black;
 }

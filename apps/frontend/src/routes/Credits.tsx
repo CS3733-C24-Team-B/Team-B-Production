@@ -73,13 +73,13 @@ export default function Credits() {
                           marginBottom: "3vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover>
                           },
                         }}
                       >
                         Material UI
                       </Typography>
-                      <img className="C-MUI" src={MUI}></img>
+                      <img className="C-MUI" src={MUI} alt={"something"}></img>
                     </div>
                   </a>
                   <a
@@ -96,13 +96,17 @@ export default function Credits() {
                           marginBottom: "3.2vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover
                           },
                         }}
                       >
                         Express.js
                       </Typography>
-                      <img className="C-Express" src={Exp}></img>
+                      <img
+                        className="C-Express"
+                        src={Exp}
+                        alt={"something"}
+                      ></img>
                     </div>
                   </a>
                   <a
@@ -119,13 +123,17 @@ export default function Credits() {
                           marginBottom: "-1vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover
                           },
                         }}
                       >
                         FreePik
                       </Typography>
-                      <img className="C-Fpik" src={Fpik}></img>
+                      <img
+                        className="C-Fpik"
+                        src={Fpik}
+                        alt={"something"}
+                      ></img>
                     </div>
                   </a>
                 </div>
@@ -144,13 +152,17 @@ export default function Credits() {
                           fontSize: "2rem",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover>
                           },
                         }}
                       >
                         Auth0
                       </Typography>
-                      <img className="C-AZero" src={AZero}></img>
+                      <img
+                        className="C-AZero"
+                        src={AZero}
+                        alt={"something"}
+                      ></img>
                     </div>
                   </a>
                   <a
@@ -167,13 +179,13 @@ export default function Credits() {
                           marginTop: "1vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover>
                           },
                         }}
                       >
                         Axios
                       </Typography>
-                      <img className="C-Axs" src={Axs}></img>
+                      <img className="C-Axs" src={Axs} alt={"something"}></img>
                     </div>
                   </a>
                   <a
@@ -186,7 +198,11 @@ export default function Credits() {
                       <a className="Credits-Mini-Titles">
                         <h2>Leaflet</h2>
                       </a>
-                      <img className="C-Leaf" src={Leaf}></img>
+                      <img
+                        className="C-Leaf"
+                        src={Leaf}
+                        alt={"something"}
+                      ></img>
                     </div>
                   </a>
                 </div>
@@ -205,13 +221,13 @@ export default function Credits() {
                           marginTop: "1vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover
                           },
                         }}
                       >
                         Prisma
                       </Typography>
-                      <img className="C-Pma" src={Pma}></img>
+                      <img className="C-Pma" src={Pma} alt={"something"}></img>
                     </div>
                   </a>
                   <a
@@ -228,13 +244,13 @@ export default function Credits() {
                           marginTop: "-1vh",
                           color: "black",
                           "&:hover": {
-                            color: "black", // Use the default text color on hover}}>
+                            color: "black", // Use the default text color on hover
                           },
                         }}
                       >
                         React
                       </Typography>
-                      <img className="C-Rct" src={Rct}></img>
+                      <img className="C-Rct" src={Rct} alt={"something"}></img>
                     </div>
                   </a>
                 </div>

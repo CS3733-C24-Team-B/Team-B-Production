@@ -374,7 +374,11 @@ export default function NavigationPage() {
                     }}
                   />
                 }
-                label={<p className={"goku-text"}>Hall Nodes</p>}
+                label={
+                  <p className={!showNodes ? "goku-disabled" : "goku-text"}>
+                    Hall Nodes
+                  </p>
+                }
               />
               <FormControlLabel
                 style={{ marginTop: "-5%" }}
@@ -388,7 +392,11 @@ export default function NavigationPage() {
                     }}
                   />
                 }
-                label={<p className={"goku-text"}>Icon Nodes</p>}
+                label={
+                  <p className={!showNodes ? "goku-disabled" : "goku-text"}>
+                    Icon Nodes
+                  </p>
+                }
               />
               <FormControlLabel
                 style={{ marginTop: "-5%" }}
@@ -464,7 +472,11 @@ export default function NavigationPage() {
                     }}
                   />
                 }
-                label={<p className={"goku-text"}>Goku Animation</p>}
+                label={
+                  <p className={!doAnimation ? "goku-disabled" : "goku-text"}>
+                    Goku Animation
+                  </p>
+                }
               />
             </FormGroup>
           </div>

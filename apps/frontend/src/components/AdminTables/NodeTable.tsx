@@ -238,6 +238,14 @@ export default function NodeTable() {
               sx={{ maxHeight: "70vh" }}
             >
               <Table stickyHeader>
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
+                <col width="12.5%" />
                 <TableHead>
                   <TableRow>
                     <TableCell>
