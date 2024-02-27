@@ -13,6 +13,7 @@
     "docker:build": "cd $PROJECT_CWD && docker build --target prod-frontend --tag irwright13/softeng-mqp:frontend --platform linux/amd64 .",
     "docker:upload": "docker push irwright13/softeng-mqp:frontend"
   },
+  "proxy": "http://127.0.0.1:5000",
   "dependencies": {
     "@auth0/auth0-react": "^2.1.1",
     "@emotion/react": "^11.11.3",
