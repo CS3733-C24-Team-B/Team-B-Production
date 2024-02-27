@@ -88,7 +88,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 accumulator.push(longName);
                 return accumulator;
             }, []);
-            let coords = res2.data.reduce((accumulator: string[], roomData: {
+            const coords = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
                 xcoord: number;
                 ycoord: number;
@@ -103,7 +103,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 accumulator.push(floor + " " + longName + ":" + xcoord + ":" + ycoord);
                 return accumulator;
             }, []);
-            let directionsFloor: string[][] = [];
+            const directionsFloor: string[][] = [];
             let levels:number = 0;
             let joinedwords: string[] = ["You have arrived at " + nodeIDs[nodeIDs.length - 1]];
             if (data.startNode === data.endNode) {
