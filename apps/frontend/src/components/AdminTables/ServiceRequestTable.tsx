@@ -324,7 +324,7 @@ export default function ServiceRequestTable() {
                             onChange={async (event: SelectChangeEvent) => {
                                 const serviceRequest: UpdateServiceRequest = {
                                     serviceID: nsr.serviceID,
-                                    assignedTo: nsr.assignedID,
+                                    assignedTo: nsr.assignedID!,
                                     status: StatusType[event.target.value as keyof typeof StatusType]
                                 };
 
