@@ -317,7 +317,11 @@ export default function ProfilePage() {
                                             Change Password
                                         </Button>
                                         <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84", }}
-                                                onClick={() => logout()}>
+                                                onClick={() => logout({
+                                                    logoutParams: {
+                                                        returnTo: window.location.origin
+                                                    }
+                                                })}>
                                             Log Out
                                         </Button>
                                     </div>
