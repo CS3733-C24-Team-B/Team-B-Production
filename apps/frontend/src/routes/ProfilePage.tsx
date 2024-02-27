@@ -187,8 +187,8 @@ export default function ProfilePage() {
                                     overflow: 'hidden',
                                     borderRadius: '50%',
                                     border: '2px solid #34AD84',
-                                    maxHeight: '24vh',
-                                    maxWidth: '24vh'
+                                    maxHeight: '21vh',
+                                    maxWidth: '21vh'
                                 }}>
                                     <label htmlFor={"newProfilePicture"}>
                                         <img src={profilePicture} alt="profile picture"
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                                                  width: 'auto',
                                                  height: 'auto',
                                                  borderRadius: '50%',
-                                                 maxHeight: '24vh',
+                                                 maxHeight: '21vh',
                                                  justifySelf: 'center'
                                              }}/>
                                     </label>
@@ -300,6 +300,7 @@ export default function ProfilePage() {
                                             <p className={"Profile-page-top-infotext"}
                                                style={{fontSize: 50, color: "#34AD84"}}>Kenny Doan!</p>
                                         </div>
+                                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop:'8.5%'}}>
                                         <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
                                                 onClick={() => {
                                                     getAccessTokenSilently().then((accessToken: string) => {
@@ -318,6 +319,7 @@ export default function ProfilePage() {
                                                 onClick={() => logout()}>
                                             Log Out
                                         </Button>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

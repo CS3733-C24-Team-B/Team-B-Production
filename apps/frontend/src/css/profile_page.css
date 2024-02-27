@@ -193,7 +193,7 @@
     max-height: 85vh;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 2fr 3fr 0.5fr;
+    grid-template-rows: 2fr 5fr 0.5fr;
     grid-template-columns: 100%;
     padding: 5px;
 }
@@ -211,12 +211,13 @@
     align-items: center;
     align-self: start;
     margin-top: 5%;
-    row-gap: 15px;
+    row-gap: 8px;
 }
 
 .Profile-page-edit-button{
     display: grid;
     margin-bottom: 5%;
+    margin-top: 5%;
     justify-self: center;
     row-gap: 20px;
 }
