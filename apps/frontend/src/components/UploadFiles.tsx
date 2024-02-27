@@ -407,7 +407,6 @@ export default function UploadFiles() {
                                 {nodeFile ?
                                     <DropzoneAreaBase
                                         dropzoneText={nodeFile.name}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {
@@ -415,7 +414,6 @@ export default function UploadFiles() {
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
                                         dropzoneText={"Upload Node File"}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {
@@ -437,7 +435,6 @@ export default function UploadFiles() {
                                 {edgeFile ?
                                     <DropzoneAreaBase
                                         dropzoneText={edgeFile.name}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {
@@ -445,7 +442,6 @@ export default function UploadFiles() {
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
                                         dropzoneText={"Upload Edge File"}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {
@@ -467,7 +463,6 @@ export default function UploadFiles() {
                                 {employeeFile ?
                                     <DropzoneAreaBase
                                         dropzoneText={employeeFile.name}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {
@@ -475,7 +470,6 @@ export default function UploadFiles() {
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
                                         dropzoneText={"Upload Employee File"}
-                                        Icon={<></>}
                                         filesLimit={1}
                                         showAlerts={false}
                                         onAdd={(files) => {

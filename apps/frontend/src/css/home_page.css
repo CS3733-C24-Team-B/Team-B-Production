@@ -219,12 +219,11 @@ canvas {
 }
 
 .goku-text {
-    if(disabled) {
-    color: dimgray;
-    font-family: Lato, serif;
-}
-    else {
         color: black;
         font-family: Lato, serif;
-    }
+}
+
+.goku-disabled {
+    color: dimgray;
+    font-family: Lato, serif;
 }

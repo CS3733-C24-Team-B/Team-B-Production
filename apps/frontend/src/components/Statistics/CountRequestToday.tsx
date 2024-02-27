@@ -25,7 +25,7 @@ export default function CountRequestToday () {
             }
         }
 
-        fetchData();
+        fetchData().then();
         return () => {
             isMounted = false; // clean up the effect when the component unmounts
         };

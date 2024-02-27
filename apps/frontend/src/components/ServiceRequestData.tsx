@@ -20,8 +20,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
                 }
             });
             setEmployees(res.data);
-        })().then(() => {
-        });
+        })().then();
     }, [getAccessTokenSilently]);
     useEffect(() => {
         async function fetchData() {
@@ -48,7 +47,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
             setNodeData(res3.data);
         }
 
-        fetchData();
+        fetchData().then();
     }, [getAccessTokenSilently,user]);
 
     function nextBirthday(){
@@ -72,8 +71,8 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
     let completedCount = 0;
     let assignedCount = 0;
     let availableCount = 0;
-    let myRequests:ServiceRequest[] = [];
-    let recentRequests:ServiceRequest[] = [];
+    const myRequests:ServiceRequest[] = [];
+    const recentRequests:ServiceRequest[] = [];
     srData.forEach(item => {
         if(item.status===StatusType.Completed){completedCount++;}
         if(item.assignedTo.email===email){

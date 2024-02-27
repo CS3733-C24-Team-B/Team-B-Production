@@ -56,11 +56,11 @@ export default function NavigationPage() {
     console.log(user);
     const [nodeData, setNodeData] = useState([]);
     const [openDrawer, setOpenDrawer] = useState(false);
-    const [showNodes, setShowNodes] = useState(localStorage.getItem("showNodes") !== null ? localStorage.getItem("showNodes") === "false" : true);
+    const [showNodes, setShowNodes] = useState(localStorage.getItem("showNodes") !== null ? localStorage.getItem("showNodes") === "true" : true);
     const [showEdges, setShowEdges] = useState(localStorage.getItem("showEdges") !== null ? localStorage.getItem("showEdges") === "true" : false);
-    const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "false" : true);
-    const [showIcons, setShowIcons] = useState(localStorage.getItem("showIcons") !== null ? localStorage.getItem("showIcons") === "false" : true);
-    const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "false" : true);
+    const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "true" : false);
+    const [showIcons, setShowIcons] = useState(localStorage.getItem("showIcons") !== null ? localStorage.getItem("showIcons") === "true" : false);
+    const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : true);
     const [algorithm, setAlgorithm] = useState(0);
     const [nodeEnd, setNodeEnd] = useState("");
     const [zoomNode, setZoomNode] = useState("");
@@ -68,7 +68,7 @@ export default function NavigationPage() {
     const [edgeColor, setEdgeColor] = useState(localStorage.getItem("edgeColor") !== null ? localStorage.getItem("edgeColor") : "#008000");
     const [goku, setGoku] = useState(localStorage.getItem("goku") !== null ? localStorage.getItem("goku") === "false" : true);
     const [defaultLocation, setDefaultLocation] = useState(localStorage.getItem("defaultLocation") !== null ? localStorage.getItem("defaultLocation") : "");
-    const [useDefault, setUseDefault] = useState(localStorage.getItem("useDefault") !== null ? localStorage.getItem("useDefault") === "true" : true);
+    const [useDefault, setUseDefault] = useState(localStorage.getItem("useDefault") !== null ? localStorage.getItem("useDefault") === "true" : false);
     const [openMenu, setOpenMenu] = useState(false);
     const [showPopups, setShowPopups] = useState(localStorage.getItem("showPopups") !== null ? localStorage.getItem("showPopups") === "true" : true);
     const [showMap, setShowMap] = useState(false);
@@ -250,7 +250,7 @@ export default function NavigationPage() {
                                                            localStorage.setItem("showHalls", !showHalls + "");
                                                            setShowHalls(!showHalls);
                                                        }}/>}
-                                    label={<p className={"goku-text"}>Hall Nodes</p>}/>
+                                    label={<p className={!showNodes ? "goku-disabled" : "goku-text"}>Hall Nodes</p>}/>
                                 <FormControlLabel
                                     style={{marginTop: '-5%'}}
                                     control={<Switch disabled={!showNodes} checked={showIcons}
@@ -258,7 +258,7 @@ export default function NavigationPage() {
                                                            localStorage.setItem("showIcons", !showIcons + "");
                                                            setShowIcons(!showIcons);
                                                        }}/>}
-                                    label={<p className={"goku-text"}>Icon Nodes</p>}/>
+                                    label={<p className={!showNodes ? "goku-disabled" : "goku-text"}>Icon Nodes</p>}/>
                                 <FormControlLabel
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={useDefault}
@@ -282,6 +282,8 @@ export default function NavigationPage() {
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={showPopups}
                                                        onClick={() => {
+                                                           localStorage.setItem("doAnimation", "false");
+                                                           setDoAnimation(false);
                                                            localStorage.setItem("showPopups", !showPopups + "");
                                                            setShowPopups(!showPopups);
                                                        }}/>}
@@ -290,6 +292,8 @@ export default function NavigationPage() {
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={doAnimation}
                                                        onClick={() => {
+                                                           localStorage.setItem("showPopups", "false");
+                                                           setShowPopups(false);
                                                            localStorage.setItem("doAnimation", !doAnimation + "");
                                                            setDoAnimation(!doAnimation);
                                                            if (doAnimation) {setGoku(!doAnimation);}
@@ -302,7 +306,7 @@ export default function NavigationPage() {
                                         localStorage.setItem("goku", !goku + "");
                                         setGoku(!goku);
                                     }}/>}
-                                    label={<p className={"goku-text"}>Goku Animation</p>}/>
+                                    label={<p className={!doAnimation ? "goku-disabled" : "goku-text"}>Goku Animation</p>}/>
                             </FormGroup>
                         </div>
                     </div>
