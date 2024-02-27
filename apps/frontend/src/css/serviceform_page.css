@@ -65,7 +65,7 @@
 
     /* Positioning */
     display: grid;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 33.33% 33.33% 33.33%;
     grid-template-rows: auto;
     /*justify-content: center;*/
     /*justify-items: center;*/
