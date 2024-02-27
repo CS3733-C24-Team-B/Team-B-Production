@@ -228,7 +228,8 @@ export default function ProfilePage() {
                                                onChange={(e) => setDepartment(e.target.value)}/>
                                     <DatePicker label="Birthday" slotProps={{textField: {required: true}}}
                                                 value={birthday}
-                                                onChange={(e) => setBirthday(dayjs(e))}/>
+                                                onChange={(e) => setBirthday(dayjs(e))}
+                                    sx={{width: '80%'}}/>
                                 </div>
                                 <div className={"Profile-page-edit-button"}>
                                     <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
