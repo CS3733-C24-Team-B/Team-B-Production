@@ -675,8 +675,8 @@ export default function LeafletMap(props: MapProps) {
         return "";
     }
 
-    function nodeTypeDescriptors(nodeType: string): string {
-        return NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum];
+    function nodeTypeDescriptors(nodeType: string) {
+        return (<p style={{whiteSpace: 'normal', maxWidth: '20vw'}}>{NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum]}</p>);
     }
 
     // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
@@ -906,11 +906,14 @@ export default function LeafletMap(props: MapProps) {
                                       }}>
                             <Tooltip>
                                 {/*{longName + ": " + xcoord + ", " + ycoord}*/}
-                                <div>
+                                <div style={{minWidth: '20vw'}}>
                                     {longName} <br/>
                                     <Divider/> <br/>
-                                    {nodeTypeDescriptors(nodeType)} <br/>
-                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
+                                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                                        <img style={{maxWidth: '20%'}}
+                                             src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
+                                        {nodeTypeDescriptors(nodeType)}
+                                    </div>
                                     {/* Display service request data here */}
                                     {srData.map((serviceRequest) => (
                                         <div key={serviceRequest.serviceID}>
@@ -927,7 +930,7 @@ export default function LeafletMap(props: MapProps) {
                                     ))}
                                 </div>
                             </Tooltip>
-                        </CircleMarker>) : <></>)
+                            </CircleMarker>) : <></>)
                 ))}
                 {lineData}
                 {nodeStart !== "" ? drawNodeStart() : <></>}
