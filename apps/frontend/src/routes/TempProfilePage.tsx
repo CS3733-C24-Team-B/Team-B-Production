@@ -111,6 +111,7 @@ export default function ProfilePage() {
             firstName: firstName,
             lastName: lastName
         };
+
         const accessToken: string = await getAccessTokenSilently();
         const res = await axios.put("/api/employee", employeeInfo, {
             headers: {

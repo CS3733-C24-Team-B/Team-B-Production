@@ -39,7 +39,7 @@ import {
     InternalTransportRequest, LanguageRequest, MaintenanceRequest,
     MedicineRequest,
     PriorityType,
-    SanitationRequest,
+    SanitationRequest, ServiceRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
 import SanitationReq from "../components/ServiceRequests/SanitationRequest.tsx";
@@ -138,6 +138,21 @@ export default function RequestForm() {
     const [langPressed, setLangPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
     const [showMap, setShowMap] = useState(false);
+    const [srData, setsrData] = useState<ServiceRequest[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setsrData(res.data);
+        }
+
+        fetchData();
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -450,7 +465,7 @@ export default function RequestForm() {
                                 <div
                                     className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
                                     <div>
-                                        <PieChartStats/>
+                                        <PieChartStats srlist={srData} title={"Number of Requests in Types"}/>
                                     </div>
                                 </div>
                             </div>
