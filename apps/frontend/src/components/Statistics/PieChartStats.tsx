@@ -81,6 +81,7 @@ export default function PieChartStats(props: {
           padding: 20,
         },
         position: "right",
+        maxWidth: 200,
       },
       tooltip: {
         bodyFont: {

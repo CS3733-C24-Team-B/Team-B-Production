@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import LowerLevel1 from "../../images/00_thelowerlevel1.png";
 import axios from "axios";
 
-export default function Canvas(props: { pathData: string[] }) {
-  const { pathData } = props;
+export default function Canvas(props: {
+  pathData: string[];
+  floorImg: string;
+}) {
+  const { pathData, floorImg } = props;
   const [nodeData, setNodeData] = useState([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasCtxRef = React.useRef<CanvasRenderingContext2D | null>(null);
@@ -31,6 +33,13 @@ export default function Canvas(props: { pathData: string[] }) {
     }
   }, []);
 
+  useEffect(() => {
+    setMinX(-1);
+    setMaxX(-1);
+    setMinY(-1);
+    setMaxY(-1);
+  }, [pathData]);
+
   const nodeIDToXPos = (nId: string) => {
     return nodeData.find(({ nodeID }) => nId === nodeID)!["xcoord"];
   };
@@ -48,7 +57,7 @@ export default function Canvas(props: { pathData: string[] }) {
   // };
 
   const image = new Image();
-  image.src = LowerLevel1;
+  image.src = floorImg;
   setTimeout(draw, 100);
 
   function draw() {
@@ -76,18 +85,21 @@ export default function Canvas(props: { pathData: string[] }) {
     }
     setWidth(maxX - minX);
     setHeight(maxY - minY);
-    ctx!.drawImage(image, 0 - minX, 0 - minY, 5000, 3400);
+    ctx!.drawImage(image, 0, 0, 5000, 3400);
     if (pathData.length > 0 && nodeData.length > 0) {
       let startX = -1;
       let startY = -1;
       for (const nr of pathData) {
-        const toX = nodeIDToXPos(nr) - minX;
-        const toY = nodeIDToYPos(nr) - minY;
+        const toX = nodeIDToXPos(nr);
+        const toY = nodeIDToYPos(nr);
         if (startX !== -1 && startY !== -1) {
           ctx!.beginPath();
           ctx?.moveTo(startX, startY);
           ctx?.lineTo(toX, toY);
-          ctx!.strokeStyle = "green";
+          ctx!.strokeStyle =
+            localStorage.getItem("edgeColor") !== null
+              ? localStorage.getItem("edgeColor")!
+              : "#008000";
           ctx!.lineWidth = 15;
           ctx!.stroke();
         }
@@ -99,5 +111,5 @@ export default function Canvas(props: { pathData: string[] }) {
 
   console.log(width + " " + height);
 
-  return <canvas ref={canvasRef} height={height} width={width} />;
+  return <canvas ref={canvasRef} height={3400} width={5000} />;
 }

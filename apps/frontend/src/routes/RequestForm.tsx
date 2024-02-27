@@ -543,7 +543,11 @@ export default function RequestForm() {
               </div>
 
               <div
-                className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}
+                className={`service-form-midcard ${
+                  currentTab === "statistics"
+                    ? "service-form-midcard-right"
+                    : ""
+                }`}
               >
                 <div>
                   <PieChartStats

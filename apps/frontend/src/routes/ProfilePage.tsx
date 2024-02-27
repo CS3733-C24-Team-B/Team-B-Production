@@ -329,7 +329,12 @@ export default function ProfilePage() {
                     Next Birthday
                   </p>
                   <div className={"Profile-page-top-infotext-scroll"}>
-                    <p className={"Profile-page-top-infotext"}>Kenny Doan</p>
+                    <p
+                      className={"Profile-page-top-infotext"}
+                      style={{ fontSize: 50, color: "#34AD84" }}
+                    >
+                      Kenny Doan!
+                    </p>
                   </div>
                 </div>
               </div>

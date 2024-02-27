@@ -63,7 +63,7 @@ export default function NavigationPage() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [showNodes, setShowNodes] = useState(
     localStorage.getItem("showNodes") !== null
-      ? localStorage.getItem("showNodes") === "false"
+      ? localStorage.getItem("showNodes") === "true"
       : true,
   );
   const [showEdges, setShowEdges] = useState(
@@ -73,17 +73,17 @@ export default function NavigationPage() {
   );
   const [showHalls, setShowHalls] = useState(
     localStorage.getItem("showHalls") !== null
-      ? localStorage.getItem("showHalls") === "false"
-      : true,
+      ? localStorage.getItem("showHalls") === "true"
+      : false,
   );
   const [showIcons, setShowIcons] = useState(
     localStorage.getItem("showIcons") !== null
-      ? localStorage.getItem("showIcons") === "false"
-      : true,
+      ? localStorage.getItem("showIcons") === "true"
+      : false,
   );
   const [doAnimation, setDoAnimation] = useState(
     localStorage.getItem("doAnimation") !== null
-      ? localStorage.getItem("doAnimation") === "false"
+      ? localStorage.getItem("doAnimation") === "true"
       : true,
   );
   const [algorithm, setAlgorithm] = useState(0);
@@ -112,7 +112,7 @@ export default function NavigationPage() {
   const [useDefault, setUseDefault] = useState(
     localStorage.getItem("useDefault") !== null
       ? localStorage.getItem("useDefault") === "true"
-      : true,
+      : false,
   );
   const [openMenu, setOpenMenu] = useState(false);
   const [showPopups, setShowPopups] = useState(
@@ -434,6 +434,8 @@ export default function NavigationPage() {
                   <Checkbox
                     checked={showPopups}
                     onClick={() => {
+                      localStorage.setItem("doAnimation", "false");
+                      setDoAnimation(false);
                       localStorage.setItem("showPopups", !showPopups + "");
                       setShowPopups(!showPopups);
                     }}
@@ -447,6 +449,8 @@ export default function NavigationPage() {
                   <Checkbox
                     checked={doAnimation}
                     onClick={() => {
+                      localStorage.setItem("showPopups", "false");
+                      setShowPopups(false);
                       localStorage.setItem("doAnimation", !doAnimation + "");
                       setDoAnimation(!doAnimation);
                       if (doAnimation) {
