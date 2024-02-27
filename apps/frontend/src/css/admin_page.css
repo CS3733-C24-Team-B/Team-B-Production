@@ -58,7 +58,7 @@
     height: 100%;
 }
 .AD-head{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-size: 2.5vh;
     margin-left: 7%;
     font-weight: 600;
@@ -151,7 +151,7 @@
     background-color: rgba(0, 0, 0, 0);
     grid-column-start: 2;
     border-radius: .9vw;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 .upload-download-div { /*DELETE AFTER UPLOADFILES HAS BEEN UPDATED*/
     width: 100%;
@@ -186,7 +186,7 @@
 }
 
 .uploaded-files-name {
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 .DragDropSubstitute{ /*DELETE AFTER DRAG AND DROP HAVE BEEN IMPLEMENTED*/
     width: 15vw;

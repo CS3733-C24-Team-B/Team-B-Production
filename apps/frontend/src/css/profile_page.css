@@ -84,7 +84,7 @@
 }
 
 .Profile-page-top-infotext {
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-left: 4%;
@@ -220,7 +220,7 @@
 }
 
 .Profile-page-top-infotext-return{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-left: 4%;
@@ -230,7 +230,7 @@
 }
 
 .Profile-page-top-infotext-scroll{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-bottom: 0;
