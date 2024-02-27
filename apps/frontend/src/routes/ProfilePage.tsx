@@ -14,7 +14,8 @@ import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import ServiceRequestData from "../components/ServiceRequestData.tsx";
 
 import {
-    InternalTransportRequest, LanguageRequest,
+    InternalTransportRequest,
+    LanguageRequest,
     MaintenanceRequest,
     MedicineRequest,
     SanitationRequest
@@ -44,6 +45,7 @@ export default function ProfilePage() {
     const {user, isAuthenticated, getAccessTokenSilently, logout} = useAuth0();
     const [srData, setSRData] = useState<ServiceRequest[]>([]);
     const [employee, setEmployee] = useState<EmployeeWithSR>();
+    const [employees, setEmployees] = useState<EmployeeWithSR[]>([]);
     const [, setFirstName] = useState("");
     const [, setLastName] = useState("");
     const [profilePicture, setProfilePicture] = useState("");
@@ -68,6 +70,15 @@ export default function ProfilePage() {
                 }
             });
 
+            const res3 = await axios.get("/api/employee/", {
+                params: {
+                    email: user!.email!
+                },
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setEmployees(res3.data);
             setEmployee(res.data);
             setFirstName(res.data.firstName);
             setLastName(res.data.lastName);
@@ -97,7 +108,7 @@ export default function ProfilePage() {
         fetch().then();
     }, [getAccessTokenSilently, user]);
 
-
+console.log(employees);
     const filterSR = srData.filter((sr: ServiceRequest) => {
         return sr.assignedID === user!.email!;
     });
@@ -141,9 +152,6 @@ export default function ProfilePage() {
         return ServiceRequestData("requests");
     }
 
-    function getBirthday() {
-        return ServiceRequestData("birthday");
-    }
 
 
     return (
@@ -170,7 +178,7 @@ export default function ProfilePage() {
                                         maxHeight: '24vh',
                                         maxWidth: '24vh'
                                     }}>
-                                        <label for={"newProfilePicture"}>
+                                        <label htmlFor={"newProfilePicture"}>
                                             <img src={profilePicture} alt="profile picture"
                                                  style={{
                                                      width: 'auto',
@@ -191,13 +199,13 @@ export default function ProfilePage() {
                                             Email: {employee?.email}
                                         </p>
                                         <p className={"Profile-page-firstcard-text"}>
-                                            Phone Number: {employee?.phoneNumber}
+                                            Phone Number: +1-(888)-888-8888
                                         </p>
                                         <p className={"Profile-page-firstcard-text"}>
-                                            Job Title: {employee?.jobTitle}
+                                            Job Title: Hospital Admin
                                         </p>
                                         <p className={"Profile-page-firstcard-text"}>
-                                            Department: {employee?.department}
+                                            Department: IT
                                         </p>
                                         <p className={"Profile-page-firstcard-text"}>
                                             Birthday: {(employee?.birthday === null) ? (new Date()).toDateString() : employee?.birthday.toDateString()}
@@ -272,9 +280,9 @@ export default function ProfilePage() {
                                     <PieChartStats srlist={filterSR} title={"My Requests"}/>
                                 </div>
                                 <div className={"SecondRow_SecondColumn-TestCard"}>
-                                    <p className={"Profile-page-top-infotext-return"}>Birthday</p>
+                                    <p className={"Profile-page-top-infotext-return"}>Next Birthday</p>
                                     <div className={"Profile-page-top-infotext-scroll"}>
-                                        <p className={"Profile-page-top-infotext"}>{getBirthday()}</p>
+                                        <p className={"Profile-page-top-infotext"}>Kenny Doan</p>
                                     </div>
                                 </div>
                             </div>
