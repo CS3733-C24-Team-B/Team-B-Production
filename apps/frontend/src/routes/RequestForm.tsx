@@ -408,7 +408,7 @@ export default function RequestForm() {
             <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-ThreeRows"}
-                     style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : '8% 85%')}}
+                     style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : (currentTab === "create-request" ? '8vh 85%' : '8vh 55vh'))}}
                 >
                     <div className={"service-form-topcard"}>
                         <Button
@@ -860,7 +860,5 @@ export default function RequestForm() {
                 </Alert>
             </Snackbar>;
         </div>
-    )
-        ;
-
+    );
 }
