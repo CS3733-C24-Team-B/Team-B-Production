@@ -872,7 +872,7 @@ export default function LeafletMap(props: MapProps) {
                                     {longName} <br/>
                                     <Divider/> <br/>
                                     {nodeTypeDescriptors(nodeType)} <br/>
-                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]}/>
+                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
                                     {/* Display service request data here */}
                                     {srData.map((serviceRequest) => (
                                         <div key={serviceRequest.serviceID}>

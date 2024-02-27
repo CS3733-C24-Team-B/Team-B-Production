@@ -7,13 +7,13 @@ const MedicineRequest = (props: { change1: (arg0: string) => void, change2: (arg
     const [additionalField1, setAdditionalField1] = useState("");
     const [additionalField2, setAdditionalField2] = useState("");
     function handleChange1(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setAdditionalField1(value);
         change1(value);
     }
 
     function handleChange2(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setAdditionalField2(value);
         change2(value);
     }
