@@ -210,26 +210,31 @@ export default function ProfilePage() {
                                     <TextField className={"Profile-page-firstcard-text"} id="standard-basic"
                                                label="First Name" variant="outlined" required
                                                value={firstName}
-                                               onChange={(e) => setFirstName(e.target.value)}/>
+                                               onChange={(e) => setFirstName(e.target.value)}
+                                               sx={{width: '15vw'}}/>
                                     <TextField className={"Profile-page-firstcard-text"} id="standard-basic"
                                                label="Last Name" variant="outlined" required
                                                value={lastName}
-                                               onChange={(e) => setLastName(e.target.value)}/>
+                                               onChange={(e) => setLastName(e.target.value)}
+                                               sx={{width: '15vw'}}/>
                                     <MuiTelInput className={"Profile-page-firstcard-text"} label="Phone Number"
                                                  defaultCountry="US" forceCallingCode disableDropdown
-                                                 value={phoneNumber} onChange={setPhoneNumber}/>
+                                                 value={phoneNumber} onChange={setPhoneNumber}
+                                                 sx={{width: '15vw'}}/>
                                     <TextField className={"Profile-page-firstcard-text"} id="standard-basic"
                                                label="Job Title" variant="outlined" required
                                                value={jobTitle}
-                                               onChange={(e) => setJobTitle(e.target.value)}/>
+                                               onChange={(e) => setJobTitle(e.target.value)}
+                                               sx={{width: '15vw'}}/>
                                     <TextField className={"Profile-page-firstcard-text"} id="standard-basic"
                                                label="Department" variant="outlined" required
                                                value={department}
-                                               onChange={(e) => setDepartment(e.target.value)}/>
+                                               onChange={(e) => setDepartment(e.target.value)}
+                                               sx={{width: '15vw'}}/>
                                     <DatePicker label="Birthday" slotProps={{textField: {required: true}}}
                                                 value={birthday}
                                                 onChange={(e) => setBirthday(dayjs(e))}
-                                    sx={{width: '80%'}}/>
+                                    sx={{width: '15vw'}}/>
                                 </div>
                                 <div className={"Profile-page-edit-button"}>
                                     <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
