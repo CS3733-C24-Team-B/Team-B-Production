@@ -26,7 +26,7 @@
 .AD-TwoRows {
     background-color: #012d5a;
     display: grid;
-    grid-template-rows: 8% 88%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 10vh 85vh; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin-top: 1%;
@@ -35,25 +35,15 @@
     /*margin-right: 1vw; !* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows *!*/
 }
 
-.AD-TwoRows2 {
-    background-color: #012d5a;
-    display: grid;
-    grid-template-rows: 60% 38%; /* percentages of Container height, has to add up to 100%, not over */
-    grid-template-columns: auto;
-    grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
-    margin-top: 1%;
-    margin-right: 1%;
-    /*!* order matter :) \/ *!*/
-    /*margin-right: 1vw; !* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows *!*/
-}
-.AD-TwoRows3 {
+.AD-ThreeRows {
      background-color: #012d5a;
      display: grid;
-     height: 135%;
-     grid-template-rows: 54% 42%; /* percentages of Container height, has to add up to 100%, not over */
+     height: 190%;
+     grid-template-rows: 57% 37%; /* percentages of Container height, has to add up to 100%, not over. I went over though */
      grid-template-columns: auto;
      grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
-     margin-right: 1%;
+    margin-top: 1%;
+    margin-right: 1%;
      /*!* order matter :) \/ *!*/
      /*margin-right: 1vw; !* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows *!*/
  }
@@ -68,7 +58,7 @@
     height: 100%;
 }
 .AD-head{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-size: 2.5vh;
     margin-left: 7%;
     font-weight: 600;
@@ -111,6 +101,12 @@
     border-radius: 15px;
     padding-top: 2%;
 }
+.AD-OneCard1 {
+    margin-top: 1.9vh;
+    background-color: white;
+    border-radius: 15px;
+    padding-top: 2%;
+}
 
 .AD-OneCard2 {
     background-color: white;
@@ -130,6 +126,7 @@
 
 }
 .AD-TestCard2 {
+    margin-top: 1.9vh;
     background-color: white;
     border-radius: 15px;
     overflow: auto;
@@ -154,7 +151,7 @@
     background-color: rgba(0, 0, 0, 0);
     grid-column-start: 2;
     border-radius: .9vw;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 .upload-download-div { /*DELETE AFTER UPLOADFILES HAS BEEN UPDATED*/
     width: 100%;
@@ -189,7 +186,7 @@
 }
 
 .uploaded-files-name {
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 .DragDropSubstitute{ /*DELETE AFTER DRAG AND DROP HAVE BEEN IMPLEMENTED*/
     width: 15vw;
@@ -197,6 +194,14 @@
     background-color: #c1cbc9;
 }
 
+.download-icon {
+    width: 9%;
+    height: 65%;
+}
+
+.download-icon:hover {
+    transform: scale(1.1);
+}
 
 /*DELETE LATER */
 

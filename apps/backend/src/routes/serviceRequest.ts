@@ -1,12 +1,14 @@
 import express, {Request, Response, Router} from "express";
 import {ServiceRequest} from "database";
+import {EmailUtility} from "../utilities/EmailUtility.ts";
 import client from "../bin/database-connection.ts";
 import {
     NewServiceRequest, UpdateRequest, DeleteRequest, SanitationRequest, MaintenanceRequest,
-    InternalTransportRequest, LanguageRequest, MedicineRequest
+    InternalTransportRequest, LanguageRequest, MedicineRequest, GokuRequest
 } from "common/src/serviceRequestTypes.ts";
 
 const router: Router = express.Router();
+const emailUtility: EmailUtility = new EmailUtility();
 
 router.get('/', async function (req: Request, res: Response) {
     const serviceRequest: ServiceRequest[] = await client.serviceRequest.findMany({
@@ -163,8 +165,32 @@ router.post("/language", async function (req: Request, res: Response) {
     }
 });
 
+router.post("/goku", async function (req: Request, res: Response) {
+    const gokuRequest: GokuRequest = req.body;
+    const mailingList: string[] = (await client.employee.findMany({ select: { email: true } })).map((obj) => obj.email);
+    const employee = await client.employee.findUnique({
+        where: {
+            email: gokuRequest.sender
+        }
+    });
+    await emailUtility.gokuRequest(mailingList, gokuRequest.title, gokuRequest.announcement, employee!.firstName + " " + employee!.lastName);
+    return res.status(200).send("Successfully sent GOKU request email");
+});
+
 router.put('/', async function (req: Request, res: Response) {
     const serviceRequest: UpdateRequest = req.body;
+    let previousAssignedTo = serviceRequest.assignedTo;
+
+    try {
+        const currentRequest: ServiceRequest | null = await client.serviceRequest.findUnique({
+            where: { serviceID: serviceRequest.serviceID }
+        });
+        previousAssignedTo = currentRequest!.assignedID!;
+    } catch (error) {
+        console.error(error);
+        return res.status(400).send("Service request with ID " + serviceRequest.serviceID + " does not exist");
+    }
+
     try {
         await client.serviceRequest.update({
             where: {
@@ -179,6 +205,11 @@ router.put('/', async function (req: Request, res: Response) {
                 status: serviceRequest.status
             }
         });
+
+        if (previousAssignedTo !== serviceRequest.assignedTo) {
+            await emailUtility.assignedServiceRequest(serviceRequest.assignedTo);
+        }
+
         return res.status(200).send("Successfully updated service request with ID " + serviceRequest.serviceID);
     } catch (error) {
         console.error(error);

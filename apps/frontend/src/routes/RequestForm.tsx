@@ -40,6 +40,8 @@ import {
     MedicineRequest,
     PriorityType,
     SanitationRequest,
+    ServiceRequest,
+    GokuRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
 import SanitationReq from "../components/ServiceRequests/SanitationRequest.tsx";
@@ -49,13 +51,15 @@ import InternalTransportationReq from "../components/ServiceRequests/InternalTra
 import LanguageReq from "../components/ServiceRequests/LanguageRequest.tsx";
 import TextField from "@mui/material/TextField";
 import {SelectChangeEvent} from "@mui/material/Select";
+import GokuReq from "../components/ServiceRequests/GokuReq.tsx";
 
 const RequestButton = styled(Button)(() => ({
     fontSize: '.8em',
     width: '30.5%',
-    height: '45vh',
+    // height: '45vh',
     marginLeft: '2%',
     marginTop: '2%',
+    marginBottom: '2%',
     border: '.1px solid black',
     color: 'black',
     backgroundColor: '#FAFAFA',
@@ -64,6 +68,27 @@ const RequestButton = styled(Button)(() => ({
         backgroundColor: '#34AD84',
     },
 }));
+
+const cardTitle = {
+    fontSize: '4vh',
+    fontFamily: 'Lato',
+    alignSelf: "center",
+    fontWeight: '100',
+    marginBottom: '0'
+};
+
+const cardText = {
+    fontSize: '80%',
+    alignSelf: "center",
+    justifySelf: "center",
+};
+
+const cardSX = {
+    justifySelf: 'center',
+    borderRadius: '15px',
+    fontFamily: 'Lato',
+    textTransform: "none"
+};
 
 const modalStyle = {
     position: 'absolute',
@@ -114,8 +139,24 @@ export default function RequestForm() {
     const [mainPressed, setMainPressed] = useState(false);
     const [transPressed, setTransPressed] = useState(false);
     const [langPressed, setLangPressed] = useState(false);
+    const [gokuPressed, setGokuPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
     const [showMap, setShowMap] = useState(false);
+    const [srData, setsrData] = useState<ServiceRequest[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setsrData(res.data);
+        }
+
+        fetchData();
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -154,6 +195,7 @@ export default function RequestForm() {
     }
 
     async function submit() {
+        console.log("TEST: " + typeReq);
         const accessToken: string = await getAccessTokenSilently();
         if (typeReq === "sanitation") {
             const requestSent: SanitationRequest = {
@@ -260,6 +302,22 @@ export default function RequestForm() {
                 console.log("success");
                 setSubmitAlert(true);
             }
+        } else if (typeReq === "goku") {
+            const requestSent: GokuRequest = {
+                title: option1,
+                announcement: option2,
+                sender: user!.email!
+            };
+            const res = await axios.post("/api/service-request/goku", requestSent, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            if (res.status == 200) {
+                console.log("success");
+                setSubmitAlert(true);
+            }
         }
 
         resetForm();
@@ -294,6 +352,8 @@ export default function RequestForm() {
             case "language":
                 return <LanguageReq change1={handleChange1} change2={handleChange2}/>;
             // Add cases for other service request types
+            case "goku":
+                return <GokuReq change1={handleChange1} change2={handleChange2}/>;
             default:
                 return null;
         }
@@ -347,422 +407,389 @@ export default function RequestForm() {
             <Topbar/> {/* TopGreen css fixes this to the top */}
             <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
-                <div className={"service-form-TwoColumns"}>
-                    <div className={"service-form-ThreeRows"}
-                        style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : '8% 85%')}}
-                    >
-                        <div className={"service-form-topcard"}>
-                            <Button
-                                onClick={() => {
-                                    handleTabClick("statistics");
-                                }}
-                                style={{
-                                    color: currentTab === 'statistics' ? 'black' : 'black',
-                                    borderBottom: currentTab === 'statistics' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Lato',
-                                    fontSize: '100%',
-                                    textTransform: 'none',
-                                }}>
-                                Statistics
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    handleTabClick("create-request");
-                                }}
-                                style={{
-                                    color: currentTab === 'create-request' ? 'black' : 'black',
-                                    borderBottom: currentTab === 'create-request' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Lato',
-                                    fontSize: '100%',
-                                    textTransform: 'none',
-                                }}>
-                                Create Service Request
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    handleTabClick("list-request");
-                                }}
-                                style={{
-                                    color: currentTab === 'list-request' ? 'black' : 'black',
-                                    borderBottom: currentTab === 'list-request' ? '1.4vh solid #34AD84' : 'white',
-                                    fontFamily: 'Lato',
-                                    fontSize: '100%',
-                                    textTransform: 'none',
-                                }}>
-                                List Service Requests
-                            </Button>
-                        </div>
+                <div className={"service-form-ThreeRows"}
+                     style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : (currentTab === "create-request" ? '8vh 85%' : '8vh 55vh'))}}
+                >
+                    <div className={"service-form-topcard"}>
+                        <Button
+                            onClick={() => {
+                                handleTabClick("statistics");
+                            }}
+                            style={{
+                                color: currentTab === 'statistics' ? 'black' : 'black',
+                                borderBottom: currentTab === 'statistics' ? '1.4vh solid #34AD84' : 'white',
+                                fontFamily: 'Lato',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                            Statistics
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                handleTabClick("create-request");
+                            }}
+                            style={{
+                                color: currentTab === 'create-request' ? 'black' : 'black',
+                                borderBottom: currentTab === 'create-request' ? '1.4vh solid #34AD84' : 'white',
+                                fontFamily: 'Lato',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                            Create Service Request
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                handleTabClick("list-request");
+                            }}
+                            style={{
+                                color: currentTab === 'list-request' ? 'black' : 'black',
+                                borderBottom: currentTab === 'list-request' ? '1.4vh solid #34AD84' : 'white',
+                                fontFamily: 'Lato',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                            List Service Requests
+                        </Button>
+                    </div>
 
-                        {/*If current tab is the statistics tab*/}
-                        {currentTab === "statistics" && (
-                            <div className="statistics-layout">
-                                <div className="statistics-cards-container">
-                                    <div className="stat-card-group left-column">
-                                        <div className="stat-card small" id="emergencies">
-                                            <span className="stat-title">Open Request #</span>
-                                            <div className="stat-number-container">
-                                                <CountOpenRequest/>
-                                            </div>
+                    {/*If current tab is the statistics tab*/}
+                    {currentTab === "statistics" && (
+                        <div className="statistics-layout">
+                            <div className="statistics-cards-container">
+                                <div className="stat-card-group left-column">
+                                    <div className="stat-card small" id="emergencies">
+                                        <span className="stat-title">Open Request #</span>
+                                        <div className="stat-number-container">
+                                            <CountOpenRequest/>
                                         </div>
-                                        <div className="stat-card x-small" id="employee-of-month">
-                                            <span className="stat-title">Employee Of The Month</span>
-                                            <span className="stat-number-container">Kenny Doan</span>
-                                        </div>
-
                                     </div>
-                                    <div className="stat-card-group right-column">
-                                        <div className="stat-card medium" id="requests-today">
-                                            <span className="stat-title">Requests Created Today</span>
-                                            <div className="stat-number-container">
-                                                <CountRequestToday/>
-                                            </div>
+                                    <div className="stat-card x-small" id="employee-of-month">
+                                        <span className="stat-title">Employee Of The Month</span>
+                                        <span className="stat-number-container">Kenny Doan</span>
+                                    </div>
+
+                                </div>
+                                <div className="stat-card-group right-column">
+                                    <div className="stat-card medium" id="requests-today">
+                                        <span className="stat-title">Requests Created Today</span>
+                                        <div className="stat-number-container">
+                                            <CountRequestToday/>
                                         </div>
-                                        <div className="stat-card large" id="open-requests">
-                                            <span className="stat-title"># of Emergency</span>
-                                            <div className="stat-number-container">
-                                                <CountEmergency/>
-                                            </div>
+                                    </div>
+                                    <div className="stat-card large" id="open-requests">
+                                        <span className="stat-title"># of Emergency</span>
+                                        <div className="stat-number-container">
+                                            <CountEmergency/>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
                                 <div
                                     className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
                                     <div>
-                                        <PieChartStats/>
+                                        <PieChartStats srlist={srData} title={"Number of Requests in Types"}/>
                                     </div>
                                 </div>
                             </div>
                         )}
 
-                        {/*If current tab is the create request tab*/}
-                        {currentTab === "create-request" && (
-                            <div className={"service-form-midcard2"}>
-                                <header className={"create-service-header"}
-                                        style={{fontFamily: 'Lato',fontWeight: '550'}}>
-                                    Create Service Request
-                                </header>
-                                <RequestButton variant="contained"
-                                               onClick={() => {
-                                                   if (requestType === "medicine") {
-                                                       setRequestType("");
-                                                   } else {
-                                                       setRequestType("medicine");
-                                                   }
-                                                   setTypeReq("medicine");
-                                                   setMedPressed(!medPressed);
-                                                   setSanPressed(false);
-                                                   setMainPressed(false);
-                                                   setTransPressed(false);
-                                                   setLangPressed(false);
-                                               }}
-                                               sx={{
-                                                   justifySelf: 'center',
-                                                   borderRadius: '15px',
-                                                   fontFamily: 'Lato',
-                                                   textTransform: 'none'
-                                               }}>
-                                    {/*Cameron Crane*/}
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Medicine Request</p>
+                    {/*If current tab is the create request tab*/}
+                    {currentTab === "create-request" && (
+                        <div className={"service-form-midcard2"}>
+                            <header className={"create-service-header"}
+                                    style={{fontFamily: 'Lato', fontWeight: '550'}}>
+                                Create Service Request
+                            </header>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "medicine") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("medicine");
+                                               }
+                                               setTypeReq("medicine");
+                                               setMedPressed(!medPressed);
+                                               setSanPressed(false);
+                                               setMainPressed(false);
+                                               setTransPressed(false);
+                                               setLangPressed(false);
+                                               setGokuPressed(false);
+                                           }}
+                                           sx={cardSX}>
+                                {/*Cameron Crane*/}
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>Medicine Request</p>
 
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
+                                    <p style={cardText}>For ordering the medicine that patients need directly to their
+                                        rooms</p>
 
-                                        <img className={"pillimage"} src={PillImage} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                                <RequestButton variant="contained"
-                                               onClick={() => {
-                                                   if (requestType === "maintenance") {
-                                                       setRequestType("");
-                                                   } else {
-                                                       setRequestType("maintenance");
-                                                   }
-                                                   setTypeReq("maintenance");
-                                                   setMainPressed(!mainPressed);
-                                                   setSanPressed(false);
-                                                   setMedPressed(false);
-                                                   setTransPressed(false);
-                                                   setLangPressed(false);
-                                               }}
-                                               sx={{justifySelf: 'center',
-                                                   borderRadius: '15px',
-                                                   fontFamily: 'Lato',
-                                                   textTransform: 'none'
-                                }}>
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Maintance Request</p>
-
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
-
-                                        <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                                <RequestButton variant="contained"
-                                               onClick={() => {
-                                                   if (requestType === "transport") {
-                                                       setRequestType("");
-                                                   } else {
-                                                       setRequestType("transport");
-                                                   }
-                                                   setTypeReq("transport");
-                                                   setTransPressed(!transPressed);
-                                                   setMedPressed(false);
-                                                   setSanPressed(false);
-                                                   setMainPressed(false);
-                                                   setLangPressed(false);
-                                               }}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato', textTransform: 'none'}}>
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Transport Request</p>
-
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
-
-                                        <img className={"pillimage"} src={TransportImage} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                                <RequestButton variant="contained"
-                                               onClick={() => {
-                                                   if (requestType === "language") {
-                                                       setRequestType("");
-                                                   } else {
-                                                       setRequestType("language");
-                                                   }
-                                                   setTypeReq("language");
-                                                   setLangPressed(!langPressed);
-                                                   setSanPressed(false);
-                                                   setMedPressed(false);
-                                                   setMainPressed(false);
-                                                   setTransPressed(false);
-                                               }}
-                                               sx={{justifySelf: 'center', borderRadius: '15px', fontFamily: 'Lato',textTransform: "none"}}>
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Language Request</p>
-
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
-
-                                        <img className={"pillimage"} src={LangIMG} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                                <RequestButton variant="contained"
-                                               onClick={() => {
-                                                   if (requestType === "sanitation") {
-                                                       setRequestType("");
-                                                   } else {
-                                                       setRequestType("sanitation");
-                                                   }
-                                                   setTypeReq("sanitation");
-                                                   setSanPressed(!sanPressed);
-                                                   setMedPressed(false);
-                                                   setMainPressed(false);
-                                                   setTransPressed(false);
-                                                   setLangPressed(false);
-                                               }}
-                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Sanitation Request</p>
-
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
-
-                                        <img className={"pillimage"} src={CleanImage} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                                <RequestButton variant="contained"
-                                               sx={{justifySelf: 'center', borderRadius: '15px',textTransform: "none"}}>
-                                    <div className={'requestCardGrid'}>
-                                        <p style={{
-                                            fontSize: '4vh',
-                                            fontFamily: 'Lato',
-                                            alignSelf: "center",
-                                            fontWeight: '100'
-                                        }}>Goku Request</p>
-
-                                        <p style={{
-                                            fontSize: '80%',
-                                            alignSelf: "center",
-                                            justifySelf: "center",
-                                            maxWidth: '80%',
-                                        }}>This request is for odering the medicine paitents need to their rooms</p>
-
-                                        <img className={"pillimage"} src={LoudImage} alt={"Image"}/>
-                                    </div>
-                                </RequestButton>
-                            </div>
-                        )}
-
-                        {/*If current tab is the List request tab*/}
-                        {currentTab === "list-request" && (
-                            <div className={"service-form-ReqList"}>
-                                <ServiceRequestTable/>
-                            </div>
-                        )}
-
-                        {currentTab === "statistics" && (
-                            <div className={"service-form-TwoColumnsThirdRow"}>
-                                <div className={"service-form-ChartCard"}>
-                                    <BarChart/>
+                                    <img className={"pillimage"} src={PillImage} alt={"Image"}/>
                                 </div>
-                                <div className={"service-form-ChartCard"}>
-                                    <StackedBarChart/>
-                                </div>
-                            </div>
-                        )}
+                            </RequestButton>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "maintenance") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("maintenance");
+                                               }
+                                               setTypeReq("maintenance");
+                                               setMainPressed(!mainPressed);
+                                               setSanPressed(false);
+                                               setMedPressed(false);
+                                               setTransPressed(false);
+                                               setLangPressed(false);
+                                               setGokuPressed(false);
+                                           }}
+                                           sx={cardSX}>
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>Maintenance Request</p>
 
-                    </div>
+                                    <p style={cardText}>For ordering maintenance and general upkeep services to rooms.
+                                        This request works for all room types</p>
+
+                                    <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
+                                </div>
+                            </RequestButton>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "transport") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("transport");
+                                               }
+                                               setTypeReq("transport");
+                                               setTransPressed(!transPressed);
+                                               setMedPressed(false);
+                                               setSanPressed(false);
+                                               setMainPressed(false);
+                                               setLangPressed(false);
+                                               setGokuPressed(false);
+                                           }}
+                                           sx={cardSX}>
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>Transport Request</p>
+
+                                    <p style={cardText}>For transporting patients who need assistance moving from one
+                                        room to another</p>
+
+                                    <img className={"pillimage"} src={TransportImage} alt={"Image"}/>
+                                </div>
+                            </RequestButton>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "language") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("language");
+                                               }
+                                               setTypeReq("language");
+                                               setLangPressed(!langPressed);
+                                               setSanPressed(false);
+                                               setMedPressed(false);
+                                               setMainPressed(false);
+                                               setTransPressed(false);
+                                               setGokuPressed(false);
+                                           }}
+                                           sx={cardSX}>
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>Language Request</p>
+
+                                    <p style={cardText}>For ordering a translator to assist a patient who doesn't speak
+                                        the same language as hospital staff</p>
+
+                                    <img className={"pillimage"} src={LangIMG} alt={"Image"}
+                                         style={{maxWidth: '100%'}}/>
+                                </div>
+                            </RequestButton>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "sanitation") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("sanitation");
+                                               }
+                                               setTypeReq("sanitation");
+                                               setSanPressed(!sanPressed);
+                                               setMedPressed(false);
+                                               setMainPressed(false);
+                                               setTransPressed(false);
+                                               setLangPressed(false);
+                                               setGokuPressed(false);
+                                           }}
+                                           sx={cardSX}>
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>Sanitation Request</p>
+
+                                    <p style={cardText}>For requesting cleaning services to rooms for general cleaning
+                                        or specific instances</p>
+
+                                    <img className={"pillimage"} src={CleanImage} alt={"Image"}/>
+                                </div>
+                            </RequestButton>
+                            <RequestButton variant="contained"
+                                           onClick={() => {
+                                               if (requestType === "goku") {
+                                                   setRequestType("");
+                                               } else {
+                                                   setRequestType("goku");
+                                               }
+                                               setTypeReq("goku");
+                                               setSanPressed(false);
+                                               setMedPressed(false);
+                                               setMainPressed(false);
+                                               setTransPressed(false);
+                                               setLangPressed(false);
+                                               setGokuPressed(!gokuPressed);
+                                           }}
+                                           sx={cardSX}>
+                                <div className={'requestCardGrid'}>
+                                    <p style={cardTitle}>GOKU Request</p>
+
+                                    <p style={cardText}>Give Ongoing Knowledge Urgently (GOKU) to all hospital staff</p>
+
+                                    <img className={"pillimage"} src={LoudImage} alt={"Image"}/>
+                                </div>
+                            </RequestButton>
+                        </div>
+                    )}
+
+                    {/*If current tab is the List request tab*/}
+                    {currentTab === "list-request" && (
+                        <div className={"service-form-ReqList"}>
+                            <ServiceRequestTable/>
+                        </div>
+                    )}
+
+                    {currentTab === "statistics" && (
+                        <div className={"service-form-TwoColumnsThirdRow"}>
+                            <div className={"service-form-ChartCard"}>
+                                <BarChart/>
+                            </div>
+                            <div className={"service-form-ChartCard"}>
+                                <StackedBarChart/>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
+            </div>
 
-                <div className="form-container">
-                    {/* Render the form contents only if a service request type is selected */}
-                    {requestType && (
-                        <Modal
-                            open={requestType !== ""}
-                            onClose={() => {
-                                setRequestType("");
-                            }}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                            style={{fontFamily: 'Lato'}}
-                        >
-                            <Box sx={modalStyle}>
-                                <div className="form-top-bar">
-                                    <p style={{fontSize: '150%', fontWeight: 600}}>
-                                        {{
-                                            'sanitation': "Sanitation",
-                                            'medicine': "Medicine",
-                                            'maintenance': "Maintenance",
-                                            'transport': "Internal Transport",
-                                            'language': "Language"
-                                        }[requestType] + " Request"}
-                                    </p>
-                                    <IconButton sx={{height: '20%'}} onClick={() => resetForm()}>
-                                        <CloseIcon/>
-                                    </IconButton>
-                                </div>
-                                <div className={"modal-div"}>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: window.innerWidth * 0.38, gap: '2%'}}>
-                                        <Autocomplete
-                                            style={{width: '100%'}}
-                                            disablePortal
-                                            options={currNodes.map(({nodeID, longName}): NodeType => (
-                                                {label: longName, nid: nodeID}
-                                            ))}
-                                            value={{label: nodeIDtoName(location), nid: location}}
-                                            size={"small"}
-                                            renderInput={(params) =>
-                                                <TextField {...params} label="Location" variant="standard"/>}
-                                            //value={{label: nodeIDtoName(location), nid: location}}
-                                            getOptionLabel={(nd: NodeType) =>
-                                                `${nd.label}`
-                                            }
-                                            getOptionKey={(nd: NodeType) =>
-                                                `${nd.nid}`
-                                            }
-                                            onChange={(newValue, val) => {
-                                                if (val !== null) {
-                                                    setLocation(val.nid);
+            <div className="form-container">
+                {/* Render the form contents only if a service request type is selected */}
+                {requestType && (
+                    <Modal
+                        open={requestType !== ""}
+                        onClose={() => {
+                            setRequestType("");
+                        }}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        style={{fontFamily: 'Lato'}}
+                    >
+                        <Box sx={modalStyle}>
+                            <div className="form-top-bar">
+                                <p style={{fontSize: '150%', fontWeight: 600}}>
+                                    {{
+                                        'sanitation': "Sanitation",
+                                        'medicine': "Medicine",
+                                        'maintenance': "Maintenance",
+                                        'transport': "Internal Transport",
+                                        'language': "Language",
+                                        'goku': "GOKU"
+                                    }[requestType] + " Request"}
+                                </p>
+                                <IconButton sx={{height: '20%'}} onClick={() => resetForm()}>
+                                    <CloseIcon/>
+                                </IconButton>
+                            </div>
+                            <div className={"modal-div"}>
+                                {requestType !== "goku" &&
+                                    <>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            width: window.innerWidth * 0.38,
+                                            gap: '2%'
+                                        }}>
+                                            <Autocomplete
+                                                style={{width: '100%'}}
+                                                disablePortal
+                                                options={currNodes.map(({nodeID, longName}): NodeType => (
+                                                    {label: longName, nid: nodeID}
+                                                ))}
+                                                value={{label: nodeIDtoName(location), nid: location}}
+                                                size={"small"}
+                                                renderInput={(params) =>
+                                                    <TextField {...params} label="Location" variant="standard"/>}
+                                                //value={{label: nodeIDtoName(location), nid: location}}
+                                                getOptionLabel={(nd: NodeType) =>
+                                                    `${nd.label}`
                                                 }
-                                            }}
-                                        />
-                                        <Button variant={"outlined"} style={{color: "#34AD84",
-                                            width: 220, fontSize: '0.7em'}} onClick={() => setShowMap(true)}>
-                                            Choose From Map
-                                        </Button>
-                                    </div>
-                                    <div className="input-field">
-                                        <FormControl className="input-field">
-                                            <InputLabel id="prio-label"
-                                                        variant="standard">Priority</InputLabel>
-                                            <Select
-                                                style={{width: window.innerWidth * 0.38}}
-                                                labelId="prio-label"
-                                                id="standard-basic"
-                                                label="Priority"
-                                                variant="standard"
-                                                size={"small"}
-                                                value={prio}
-                                                onChange={(e) => setPrio(e.target.value)}
-                                                required
-                                            >
-                                                <MenuItem value={PriorityType.Low}>Low</MenuItem>
-                                                <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
-                                                <MenuItem value={PriorityType.High}>High</MenuItem>
-                                                <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div className="input-field">
-                                        <FormControl>
-                                            <InputLabel id="employee-label"
-                                                        variant="standard">Choose Employee</InputLabel>
-                                            <Select
-                                                labelId="employee-label"
-                                                value={assignTo}
-                                                onChange={async (event: SelectChangeEvent) => {
-                                                    setAssignTo(event.target.value);
+                                                getOptionKey={(nd: NodeType) =>
+                                                    `${nd.nid}`
+                                                }
+                                                onChange={(newValue, val) => {
+                                                    if (val !== null) {
+                                                        setLocation(val.nid);
+                                                    }
                                                 }}
-                                                variant="standard"
-                                                size={"small"}
-                                                style={{width: window.innerWidth * 0.38}}>
-                                                {employeeData.map(({email, firstName, lastName}) =>
-                                                    <MenuItem
-                                                        value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
-                                                )}
-                                            </Select>
-                                        </FormControl>
-                                    </div>
-                                    <div>
-                                        {renderServiceRequestComponent()}
-                                    </div>
+                                            />
+                                            <Button variant={"outlined"} style={{
+                                                color: "#34AD84",
+                                                width: 220, fontSize: '0.7em'
+                                            }} onClick={() => setShowMap(true)}>
+                                                Choose From Map
+                                            </Button>
+                                        </div>
+                                        <div className="input-field">
+                                            <FormControl className="input-field">
+                                                <InputLabel id="prio-label"
+                                                            variant="standard">Priority</InputLabel>
+                                                <Select
+                                                    style={{width: window.innerWidth * 0.38}}
+                                                    labelId="prio-label"
+                                                    id="standard-basic"
+                                                    label="Priority"
+                                                    variant="standard"
+                                                    size={"small"}
+                                                    value={prio}
+                                                    onChange={(e) => setPrio(e.target.value)}
+                                                    required
+                                                >
+                                                    <MenuItem value={PriorityType.Low}>Low</MenuItem>
+                                                    <MenuItem value={PriorityType.Medium}>Medium</MenuItem>
+                                                    <MenuItem value={PriorityType.High}>High</MenuItem>
+                                                    <MenuItem value={PriorityType.Emergency}>Emergency</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                        <div className="input-field">
+                                            <FormControl>
+                                                <InputLabel id="employee-label"
+                                                            variant="standard">Choose Employee</InputLabel>
+                                                <Select
+                                                    labelId="employee-label"
+                                                    value={assignTo}
+                                                    onChange={async (event: SelectChangeEvent) => {
+                                                        setAssignTo(event.target.value);
+                                                    }}
+                                                    variant="standard"
+                                                    size={"small"}
+                                                    style={{width: window.innerWidth * 0.38}}>
+                                                    {employeeData.map(({email, firstName, lastName}) =>
+                                                        <MenuItem
+                                                            value={email}>{(firstName === null || lastName === null) ? email : firstName + " " + lastName}</MenuItem>
+                                                    )}
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                    </>}
+                                <div>
+                                    {renderServiceRequestComponent()}
+                                </div>
+                                {requestType !== "goku" &&
                                     <div className="top-space">
                                         <TextField
                                             style={{width: window.innerWidth * 0.38}}
@@ -775,36 +802,37 @@ export default function RequestForm() {
                                             onChange={(e) => setInfoText(e.target.value)}
                                             required
                                         />
-                                    </div>
+                                    </div>}
+                            </div>
+                            <div className={"form-bottom-bar"}>
+                                <div className="form-submit">
+                                    <Button
+                                        style={{
+                                            backgroundColor: "#34AD84",
+                                            width: 220
+                                        }}
+                                        variant="contained"
+                                        onClick={submit}
+                                    >
+                                        Submit Request
+                                    </Button>
                                 </div>
-                                <div className={"form-bottom-bar"}>
-                                    <div className="form-submit">
-                                        <Button
-                                            style={{
-                                                backgroundColor: "#34AD84",
-                                                width: 220
-                                            }}
-                                            variant="contained"
-                                            onClick={submit}
-                                        >
-                                            Submit Request
-                                        </Button>
-                                    </div>
-                                    <p>
-                                        Created by {" "}
-                                        {{
-                                            'sanitation': "Rodrick",
-                                            'medicine': "Rodrick and Piotr",
-                                            'maintenance': "Kenny",
-                                            'transport': "Katy and Cameron",
-                                            'language': "Katie and Hien"
-                                        }[requestType]}
-                                    </p>
-                                </div>
-                            </Box>
-                        </Modal>
-                    )}
-                </div>
+                                <p>
+                                    Created by {" "}
+                                    {{
+                                        'sanitation': "Rodrick",
+                                        'medicine': "Rodrick and Piotr",
+                                        'maintenance': "Kenny",
+                                        'transport': "Katy and Cameron",
+                                        'language': "Katie and Hien",
+                                        'goku': "Goku"
+                                    }[requestType]}
+                                </p>
+                            </div>
+                        </Box>
+                    </Modal>
+                )}
+
             </div>
             <Modal
                 open={showMap}
@@ -816,7 +844,7 @@ export default function RequestForm() {
                 <Box sx={mapStyle}>
                     <MiniMap change={setLocation} setClose={setShowMap}/>
                 </Box>
-            </Modal>
+            </Modal>;
             <Snackbar
                 anchorOrigin={{vertical: "top", horizontal: "center"}}
                 open={submitAlert}
@@ -830,8 +858,7 @@ export default function RequestForm() {
                 >
                     Request form submitted.
                 </Alert>
-            </Snackbar>
+            </Snackbar>;
         </div>
     );
-
 }

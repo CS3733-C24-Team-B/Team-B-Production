@@ -6,11 +6,13 @@ import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {Box, Typography} from "@mui/material";
 
 import MUI from "../images/creditsLogos/material UI.png";
-import Fpik from "../images/creditsLogos/FreePik.jpg";
+import Exp from "../images/creditsLogos/expressLOGO.png";
+import Fpik from "../images/creditsLogos/FreePik.png";
 import AZero from "../images/creditsLogos/Auth0.png";
 import Axs from "../images/creditsLogos/axios.png";
 import Leaf from "../images/creditsLogos/leaflet.jpg";
-
+import Pma from "../images/creditsLogos/prisma logo.png";
+import Rct from "../images/creditsLogos/reacr logo.png";
 
 export default function Credits() {
 
@@ -28,113 +30,129 @@ export default function Credits() {
             <Topbar/> {/* TopGreen css fixes this to the top */}
             <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"BackBlue"}> {/* divides area below topbar into navbar and main space */}
-                <div className="Credits-ThreeRows">
-                    <div className="Credits-spacing">
-                        <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-                            {/*HEADER BOX*/}
-                            <div className={"Credits-TestCard"}>
-                                <Typography
-                                    sx={{marginTop: "1vh", marginLeft: "1vw", fontWeight: 550, fontSize: "1.35rem"}}>
-                                    Credits Page
-                                </Typography>
-                            </div>
-
-                            {/*FRAMEWORKS BOX*/}
-                            <div className={"Credits-TestCard1"}>
-                                <div>
-                                    <Typography sx={{
-                                        marginTop: "3vh",
-                                        marginLeft: "5vw",
-                                        fontWeight: 500,
-                                        fontSize: "1.15rem"
-                                    }}>
-                                        Frameworks
-                                    </Typography>
-                                    <Box sx={{marginTop: "1vh", marginLeft: "7vw",}}>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://mui.com/material-ui/">
+                <div className="Credits-NoRows">
+                    <div></div>
+                    <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
+                        <div className="Credits-TestCard1">
+                            <Typography
+                                sx={{marginTop: "1.5vh", marginLeft: "1.5vw", fontWeight: 550, fontSize: "2.35rem"}}>
+                                Credits Page:
+                            </Typography>
+                            <Typography
+                                sx={{marginTop: "2vh", marginBottom: "5vh", marginLeft: "2.5vw", fontWeight: 550, fontSize: "1.35rem"}}>
+                                Frameworks and Softwares
+                            </Typography>
+                            <Box sx={{marginBottom: "2vh"}}>
+                                <div className={"Credits-spacing"}>
+                                    <a className="No-Link" href="https://mui.com/material-ui/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{
+                                                fontWeight: 600,
+                                                fontSize: "2rem",
+                                                marginBottom: "3vh",
+                                                color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }
+                                            }}>
                                                 Material UI
-                                            </a>
-                                        </Typography>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            Express
-                                        </Typography>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://www.freepik.com/">
-                                                Fpik
-                                            </a>
-                                        </Typography>
-                                    </Box>
-                                </div>
-                                <div className="credit-logos">
-                                    <a href="https://mui.com/material-ui/">
-                                        <img className="C-MUI" src={MUI}></img>
+                                            </Typography>
+                                            <img className="C-MUI" src={MUI}  alt={"something"}></img>
+                                        </div>
                                     </a>
-                                    <a href="https://www.freepik.com/">
-                                        <img className="C-Fpik" src={Fpik}></img>
+                                    <a className="No-Link" href="https://expressjs.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "3.2vh", color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Express.js
+                                            </Typography>
+                                            <img className="C-Express" src={Exp} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://www.freepik.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "-1vh", color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                FreePik
+                                            </Typography>
+                                            <img className="C-Fpik" src={Fpik} alt={"something"}></img>
+                                        </div>
                                     </a>
                                 </div>
-                            </div>
 
-
-                            {/*LIBRARY BOX*/}
-                            <div className={"Credits-TestCard2"}>
-                                <div>
-                                    <Typography
-                                        sx={{
-                                            marginTop: "3vh",
-                                            marginLeft: "5vw",
-                                            fontWeight: 500,
-                                            fontSize: "1.15rem",
-                                            width: "100%"
-                                        }}>
-                                        Software Libraries
-                                    </Typography>
-                                    <Box sx={{marginTop: "1vh", marginLeft: "7vw"}}>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://react.dev/">
-                                                React
-                                            </a>
-                                        </Typography>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://www.prisma.io/">
-                                                Prisma
-                                            </a>
-                                        </Typography>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://axios-http.com/docs/intro">
-                                                Axios
-                                            </a>
-                                        </Typography>
-                                        <Typography sx={{marginBottom: "1vh"}}>
-                                            <a href="https://auth0.com/">
+                                <div className="Credits-spacing">
+                                    <a className="No-Link" href="https://auth0.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
                                                 Auth0
+                                            </Typography>
+                                                <img className="C-AZero" src={AZero} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://axios-http.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Axios
+                                            </Typography>
+                                            <img className="C-Axs" src={Axs} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://leafletjs.com" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <a className="Credits-Mini-Titles">
+                                                <h2>Leaflet</h2>
                                             </a>
-                                        </Typography>
-                                        <Typography>
-                                            <a href="https://leafletjs.com/">
-                                                Leaflet
-                                            </a>
-                                        </Typography>
-                                    </Box>
-                                </div>
-                                <div className="credit-logos">
-                                    <a href="https://mui.com/material-ui/">
-                                        <img className="C-AZero" src={AZero}></img>
-                                    </a>
-                                    <a href="https://www.freepik.com/">
-                                        <img className="C-Axs" src={Axs}></img>
-                                    </a>
-                                    <a href="https://mui.com/material-ui/">
-                                        <img className="C-Leaf" src={Leaf}></img>
+                                                <img className="C-Leaf" src={Leaf} alt={"something"}></img>
+                                        </div>
                                     </a>
                                 </div>
-                            </div>
-                        </ThemeProvider>
-                    </div>
+                                <div className={"Credits-spacing"}>
+                                    <a className="No-Link" href="https://www.prisma.io/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Prisma
+                                            </Typography>
+                                            <img className="C-Pma" src={Pma} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://react.dev/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "-1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                React
+                                            </Typography>
+                                                <img className="C-Rct" src={Rct} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                </div>
+                            </Box>
+                        </div>
+                    </ThemeProvider>
                 </div>
             </div>
         </div>
-    )
-        ;
+    );
 }

@@ -1,86 +1,89 @@
 .Settings-Container {
     width: 100%;
-    height: 100vh;
 }
 
-.Credits-ThreeRows {
+.Credits-NoRows {
     /*background-color: orange;*/
     display: grid;
-    /*grid-template-columns: 80% 20%; !* column ratios are split, also accounts for 2% gap *!*/
-
-    width: 100%;
+    grid-template-rows: 1% 96%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-columns: auto;
+    row-gap: 1vw;
+    /*margin: 2vw;*/     /*if you want gap between navbar and page*/
+    width: 98.2%;
     height: 100%;
-    /*background-color: orange;*/
-    /*display: grid;*/
-    /*grid-template-rows: 10% 45% 45% ; !* percentages of Container height, has to add up to 100%, not over *!*/
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*grid-row-gap: 2%;*/
 }
 
 .Credits-spacing {
-    /*background-color: purple;*/
-    display: grid;
-    grid-template-rows: 10% 43% 43%; /* percentages of Container height, has to add up to 100%, not over */
-    grid-template-columns: auto;
-    grid-row-gap: 3%; /* make sure to account for gap percentage when defining areas */
-    margin: 2vw;
-    /**/
-    margin-right: 2vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+    display: flex; /*change to grid if you want the old version to work*/
+    justify-content: center;
+    /*margin-bottom: 5%;*/
+    column-gap: 1.5vw;     /*remove if you want old version to work*/
+    margin-top: 1.5%;
+    /*background-color: orange;*/
+}
+.No-Link{
+    text-decoration: none;
 }
 
-
-.Credits-TestCard {
-    display: flex;
-    background-color: white;
-    border-radius: 15px;
-}
 .Credits-TestCard1 {
-    display: flex;
     background-color: white;
     border-radius: 15px;
 }
 
-.credit-logos {
-    margin-left: 15vw;
+.Credits-TestCard2 {
+    width: 22.5vw;
+    height: 20.6vw;
+    background-color: white;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5); /* Add box shadow with RGBA color */
+    border-radius: 15px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 
+}
+.Credits-Mini-Titles h2 {
+    margin-bottom: 4vh;
+    font-family: 'Lato', sans-serif;
+    text-decoration: none; /* Remove underline */
+    color: #000; /* Set color to black */
 }
 
 .C-MUI {
-    width: 60%;
-    height: 60%;
+    width: 13vw;
 }
 
 .C-Express {
-    width: 35%;
+    width: 15vw;
 }
 
 .C-Fpik {
-    width: 75%;
-    height: 75%;
-}
-.Credits-TestCard2 {
-    display: flex;
-    background-color: white;
-    border-radius: 15px;
+    margin-top: 2vh;
+    width: 14vw;
 }
 
 .C-AZero {
-    width: 55%;
-    height: 55%;
+    margin-top: 3vh;
+    width: 10.5vw;
 }
 
 .C-Axs {
-    margin-left: -3vw;
-    width: 120%;
-    height: 120%;
+    width: 18vw;
 }
 
 .C-Leaf {
-    width: 40%;
-    height: 40%;
+    margin-top: -2.5vh;
+    width: 13vw;
+}
+
+.C-Pma{
+    margin-top: 2vh;
+    width: 11vw;
+}
+
+.C-Rct{
+    margin-top: 5vh;
+    width: 12vw;
 }
 

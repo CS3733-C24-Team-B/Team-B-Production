@@ -29,7 +29,7 @@
 .Profile-page-TwoRows {
     display: grid;
     margin: 1vw;
-    grid-template-rows: 40% 60%;
+    grid-template-rows: 100%;
     grid-template-columns: auto;
     grid-row-gap: 3%;
 }
@@ -52,16 +52,67 @@
     border-radius: 15px;
     width: 100%;
     display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.InfoContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center vertically */
+}
+
+.TextContainer {
+    flex: 2;
+    display: flex;
     flex-direction: column;
 }
 
+.Text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top:0.25vh;
+    font-size: small;
+}
+
+.Number {
+    margin-top: 0;
+    margin-bottom: 1vh;
+    text-align: start;
+}
+
 .Profile-page-top-infotext {
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-left: 4%;
-    margin-bottom: 0;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
+
+
+.InfoContainer svg {
+    width: 36px;
+    height: 36px;
+    z-index: 2;
+    color:#FFFFFF;
+}
+
+.CircleBackground {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #34AD84;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 100%;
+}
+
 
 .Profile-page-top-TestCard {
     background-color: white;
@@ -73,7 +124,7 @@
     background-color: white;
     border-radius: 15px;
     width: 100%;
-    max-height: 62vh;
+    max-height: 73.25vh;
     display: flex;
     flex-direction: column;
 }
@@ -117,6 +168,9 @@
     background-color: white;
     border-radius: 15px;
     width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+    justify-content: center;
 }
 
 .Profile-page-pic {
@@ -127,15 +181,19 @@
     justify-self: center;
 }
 
+.Profile-page-pic > input {
+    display: none;
+}
+
 .Profile-pic-main-TestCard {
     background-color: white;
     border-radius: 15px;
     display: grid;
     width:97%;
-    max-height: 40vh;
+    max-height: 85vh;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 9fr 10fr 1fr;
+    grid-template-rows: 2fr 4fr 0.5fr;
     grid-template-columns: 100%;
     padding: 5px;
 }
@@ -153,6 +211,7 @@
     align-items: center;
     align-self: start;
     margin-top: 5%;
+    row-gap: 15px;
 }
 
 .Profile-page-edit-button{
@@ -161,21 +220,27 @@
 }
 
 .Profile-page-top-infotext-return{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-left: 4%;
+    margin-top: 2%;
     margin-bottom: 0;
     position:sticky;
 }
 
 .Profile-page-top-infotext-scroll{
-    font-family: Lato;
+    font-family: Lato, serif;
     font-weight: 600;
     font-size: 100%;
     margin-bottom: 0;
     overflow: auto;
 }
+
+.Profile-page-pic:hover{
+    filter:brightness(75%);
+}
+
 
 
 

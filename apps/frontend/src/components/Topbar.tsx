@@ -5,38 +5,40 @@ import {useAuth0} from "@auth0/auth0-react";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import {Employee} from "database";
-import {useNavigate} from "react-router-dom";
 
 export default function Topbar() {
-    const navigate = useNavigate();
     const {user, isAuthenticated, getAccessTokenSilently, loginWithRedirect} = useAuth0();
     const [employee, setEmployee] = useState<Employee>();
     const [profilePicture, setProfilePicture] = useState("");
 
     useEffect(() => {
         async function fetch() {
+
             if (isAuthenticated) {
+                let accessToken: string = "";
                 try {
-                    const accessToken: string = await getAccessTokenSilently();
-                    const res2 = await axios.get("/api/employee/" + user!.email, {
-                        headers: {
-                            Authorization: "Bearer " + accessToken
-                        }
-                    });
-
-                    setEmployee(res2.data);
-
-                    const res = await axios.get("/api/employee/profile-picture/" + user!.email, {
-                        headers: {
-                            Authorization: "Bearer " + accessToken,
-                            responseType: "arraybuffer"
-                        }
-                    });
-
-                    setProfilePicture(res.data ? "data:image;base64," + res.data : user!.picture!);
+                    accessToken = await getAccessTokenSilently();
                 } catch (error) {
                     await loginWithRedirect();
                 }
+
+                const res2 = await axios.get("/api/employee/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
+
+                setEmployee(res2.data);
+
+                const res = await axios.get("/api/employee/profile-picture/" + user!.email, {
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                        responseType: "arraybuffer"
+                    }
+                });
+
+                setProfilePicture(res.data ? "data:image;base64," + res.data : user!.picture!);
+
             }
         }
 
@@ -59,15 +61,16 @@ export default function Topbar() {
             <a href="https://www.brighamandwomens.org" target="_blank">
                 <img src={logo} className={"logo-style"} alt="hospital logo"/>
             </a>
-            <div></div>
+            <div className="translate-card" id="google_translate_element"></div>
             <div className={"profile-card"}>
                 {isAuthenticated ?
                     <p className={"profile-text"}>
                         {employee === undefined ? "" : employee.firstName + " " + employee.lastName}
                     </p> : <></>}
                 {isAuthenticated ?
-                    <img src={profilePicture} className={"profile-icon"} onClick={() => navigate("/profile-info")}
-                         alt="profile picture"/> : <LoginButton/>}
+                    <a href={"/profile-info"}>
+                    <img src={profilePicture} className={"profile-icon"}
+                         alt="profile picture"/> </a> : <LoginButton/>}
             </div>
         </div>
     );

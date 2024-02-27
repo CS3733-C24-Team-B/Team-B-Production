@@ -1,7 +1,8 @@
 import JsPDF from "jspdf";
-// import HTML2Canvas from "html2canvas";
+import HTML2Canvas from "html2canvas";
 import {Button} from "@mui/material";
 
+/*
 // code adapted from https://stackoverflow.com/questions/24272058/word-wrap-in-generated-pdf-using-jspdf
 function addWrappedText(textDirections: string[], doc: JsPDF, textWidth: number = 6.5, fontSize: number = 12, lineSpacing: number = 0.25,
                         xPosition: number = 1, initialYPosition: number = 1, pageWrapInitialYPosition: number = 1, pageWrapMaxYPosition: number = 10) {
@@ -28,31 +29,29 @@ function addWrappedText(textDirections: string[], doc: JsPDF, textWidth: number 
         doc.text(lineText, xPosition, cursorY);
         cursorY += lineSpacing;
     });
-}
+}*/
 
-async function exportPDF(textDirections: string[]): Promise<void> {
+async function exportPDF(map: HTMLElement, textDirections: string[]): Promise<void> {
     try {
+        console.log(map);
         console.log(textDirections);
-        // const textDirectionsImage: HTMLCanvasElement = await HTML2Canvas(textDirections);
+        const mapImage: HTMLCanvasElement = await HTML2Canvas(map);
         const doc: JsPDF = new JsPDF("portrait", "in", [8.5, 11]);
         doc.setFont("Helvetica");
-        // doc.addImage(textDirectionsImage, 72, 72, 288, 360);
-        console.log(textDirections);
+        doc.addImage(mapImage, 0, 0, 10, 6.8);
 
-        addWrappedText(textDirections, doc);
+        // addWrappedText(textDirections, doc);
 
-        // const text: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-        // addWrappedText(text, doc);
         doc.save("HospitalKioskDirections.pdf");
     } catch (error) {
         console.error(error);
     }
 }
 
-export const ExportPDF = (data: {textDirections: string[]}) => {
+export const ExportPDF = (data: {map: HTMLElement, textDirections: string[]}) => {
 
     return (
-        <Button size="small" variant="outlined" onClick={() => exportPDF(data.textDirections)}
+        <Button size="small" variant="outlined" onClick={() => exportPDF(data.map, data.textDirections)}
                 style={{color:'#012D5A', borderColor: '#012D5A', fontSize: '1.5vh', width: '100%' }}>
             Export Directions
         </Button>

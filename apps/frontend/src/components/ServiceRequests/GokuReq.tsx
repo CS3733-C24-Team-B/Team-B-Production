@@ -1,34 +1,32 @@
 import React, {useState} from "react";
-import {TextField} from "@mui/material";
+import TextField from '@mui/material/TextField';
 
-// Hien and Katie
-const InternalTransportationRequest = (props: {change1: (arg0: string) => void, change2: (arg0: string) => void}) => {
+const GokuReq = (props: {change1: (arg0: string) => void, change2: (arg0: string) => void}) => {
     const {change1, change2} = props;
-    const [language1, setLanguage1] = useState("");
-    const [language2, setLanguage2] = useState("");
+    const [title, setTitle] = useState("");
+    const [announcement, setAnnouncement] = useState("");
 
     function handleChange1(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
         const value = event.target.value;
-        setLanguage1(value);
+        setTitle(value);
         change1(value);
     }
 
     function handleChange2(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
         const value = event.target.value;
-        setLanguage2(value);
+        setAnnouncement(value);
         change2(value);
     }
 
     return (
         <div className="modal-div">
-
-            <div className="input-field">
+            <div>
                 <TextField
                     style={{width: window.innerWidth * 0.38}}
                     id="standard-basic"
-                    label="Language to Translate From"
+                    label="Email Subject Line"
                     variant="standard"
-                    value={language1}
+                    value={title}
                     onChange={(e) => {
                         handleChange1(e);
                     }}
@@ -36,14 +34,14 @@ const InternalTransportationRequest = (props: {change1: (arg0: string) => void, 
                     required
                 />
             </div>
-
-            <div className="input-field">
+            <div>
                 <TextField
                     style={{width: window.innerWidth * 0.38}}
+                    multiline
+                    rows={3}
                     id="standard-basic"
-                    label="Language to Translate to"
-                    variant="standard"
-                    value={language2}
+                    label="Email Body"
+                    value={announcement}
                     onChange={(e) => {
                         handleChange2(e);
                     }}
@@ -55,4 +53,4 @@ const InternalTransportationRequest = (props: {change1: (arg0: string) => void, 
     );
 };
 
-export default InternalTransportationRequest;
+export default GokuReq;

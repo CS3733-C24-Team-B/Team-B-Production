@@ -3,6 +3,11 @@
     width: 95%;
 }
 
+.translate-card {
+    display: flex;
+    justify-self: end;
+}
+
 .profile-card {
     display: flex;
     flex-direction: row;
@@ -13,7 +18,7 @@
 }
 
 .profile-text {
-    font-family: Lato;
+    font-family: Lato, serif;
     color: white;
     width: 10vw;
 }

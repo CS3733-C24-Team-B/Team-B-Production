@@ -221,7 +221,7 @@ export default function ServiceRequestTable() {
                 setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => sortByStatus(a, b));
                 break;
             case requestSortField.location:
-                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID).localeCompare(nodeNameOrReturn(b.locationID)));
+                setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => nodeNameOrReturn(a.locationID!).localeCompare(nodeNameOrReturn(b.locationID!)));
                 break;
             case requestSortField.createdBy:
                 setSortFunction(() => (a: ServiceRequestWithTypes, b: ServiceRequestWithTypes) => {
@@ -276,7 +276,7 @@ export default function ServiceRequestTable() {
                     <TableCell>{
                         RequestType[getReqType(nsr) as keyof typeof RequestType]
                     }</TableCell>
-                    <TableCell>{nodeNameOrReturn(nsr.locationID)}</TableCell>
+                    <TableCell>{nodeNameOrReturn(nsr.locationID!)}</TableCell>
                     <TableCell>
                         <Select
                             value={(nsr.assignedID !== null) ? nsr.assignedID : "Choose Employee"}
@@ -324,7 +324,7 @@ export default function ServiceRequestTable() {
                             onChange={async (event: SelectChangeEvent) => {
                                 const serviceRequest: UpdateServiceRequest = {
                                     serviceID: nsr.serviceID,
-                                    assignedTo: nsr.assignedID,
+                                    assignedTo: nsr.assignedID!,
                                     status: StatusType[event.target.value as keyof typeof StatusType]
                                 };
 
@@ -428,7 +428,7 @@ export default function ServiceRequestTable() {
     });
 
     return (
-        <div className="AD-OneCard">
+        <div className="AD-OneCard1">
             <Menu
                 open={openMenu}
                 onClose={() => {

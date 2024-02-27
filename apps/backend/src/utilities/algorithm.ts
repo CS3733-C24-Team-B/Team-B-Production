@@ -26,7 +26,7 @@ export class AStar implements searchStrategy {
         const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
         const graph = createGraph(nodeList, edgeList);
         //queue to search
-        let openList = [start];
+        const openList = [start];
         //already searched
         const closedList: aStarNode[] = [];
         //while there are still nodes left to search
@@ -242,9 +242,10 @@ export class Dijkstra implements searchStrategy {
     }
 }
 function calcCost(curr:string,neighbor:MapNode,nodeList:MapNode[]){
-    let weight = 0;
-   weight += Math.sqrt((findNode(nodeList,curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList,curr).ycoord - neighbor.ycoord) ** 2+((nodeToFloor(mapNodeToStar(findNode(nodeList,curr)))-nodeToFloor(mapNodeToStar(neighbor)))*1000)**2);
-    return weight;
+    let weight = 1000;
+        weight = Math.sqrt((findNode(nodeList, curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList, curr).ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(mapNodeToStar(findNode(nodeList, curr))) - nodeToFloor(mapNodeToStar(neighbor))) * weight) ** 2);
+
+   return weight;
 }
 export class MapNode {
     nodeID: string;
