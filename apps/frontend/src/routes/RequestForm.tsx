@@ -3,7 +3,7 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import Navbar from "../components/Navbar.tsx";
 import Topbar from "../components/Topbar.tsx";
-import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
+import ServiceRequestTable from "../components/EmployeeServiceRequestTable.tsx";
 import PieChartStats from "../components/Statistics/PieChartStats.tsx";
 import MiniMap from "../components/ServiceRequests/LeafletMiniMap.tsx";
 import "../css/serviceform_page.css";
