@@ -209,3 +209,22 @@ canvas {
     padding: 20px;
 }
 
+.header {
+    margin: 1.5%;
+    font-size: 25px;
+    font-family: Lato, serif;
+    color: black;
+    /*line-height: 95%;*/
+    font-weight: bold;
+}
+
+.goku-text {
+    if(disabled) {
+    color: dimgray;
+    font-family: Lato;
+}
+    else {
+        color: black;
+        font-family: Lato;
+    }
+}
