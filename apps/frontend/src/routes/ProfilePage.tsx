@@ -187,8 +187,8 @@ export default function ProfilePage() {
                                     overflow: 'hidden',
                                     borderRadius: '50%',
                                     border: '2px solid #34AD84',
-                                    maxHeight: '22vh',
-                                    maxWidth: '22vh'
+                                    maxHeight: '16vh',
+                                    maxWidth: '16vh'
                                 }}>
                                     <label htmlFor={"newProfilePicture"}>
                                         <img src={profilePicture} alt="profile picture"
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                                                  width: 'auto',
                                                  height: 'auto',
                                                  borderRadius: '50%',
-                                                 maxHeight: '22vh',
+                                                 maxHeight: '16vh',
                                                  justifySelf: 'center'
                                              }}/>
                                     </label>
@@ -205,7 +205,7 @@ export default function ProfilePage() {
                                 </div>
                                 <div className={"Profile-page-text"}>
                                     <p className={"Profile-page-firstcard-text"}>
-                                        Email: {employee?.email}
+                                        {employee?.email}
                                     </p>
                                     <TextField className={"Profile-page-firstcard-text"} id="standard-basic"
                                                label="First Name" variant="outlined" required
@@ -256,7 +256,7 @@ export default function ProfilePage() {
                                             <p className={"Profile-page-top-infotext"}>Requests Assigned</p>
                                         </div>
                                         <div className="Number">
-                                            <p className={"Profile-page-top-infotext"}>{getAssigned()}</p>
+                                            <p className={"Profile-page-top-infonumbers"}>{getAssigned()}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@ export default function ProfilePage() {
                                             <p className={"Profile-page-top-infotext"}>Requests In Progress</p>
                                         </div>
                                         <div className="Number">
-                                            <p className={"Profile-page-top-infotext"}>{getInProgress()}</p>
+                                            <p className={"Profile-page-top-infonumbers"}>{getInProgress()}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                                             <p className={"Profile-page-top-infotext"}>Requests Completed</p>
                                         </div>
                                         <div className="Number">
-                                            <p className={"Profile-page-top-infotext"}>{getCompleted()}</p>
+                                            <p className={"Profile-page-top-infonumbers"}>{getCompleted()}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -301,6 +301,7 @@ export default function ProfilePage() {
                                         <PieChartStats srlist={employee!.requestsAssigned} title={"My Requests"}/>
                                     </div>
                                     <div className={"SecondRow_SecondColumn-TestCard"}>
+                                        <p style={{fontSize: 25, fontWeight: 600, fontFamily: 'Lato', marginLeft: '1vw', marginBottom: '-2vh', marginTop: '1vh'}}>Action Buttons</p>
                                         <div style={{display: 'flex', flexDirection: 'column', marginTop:'8.5%', maxWidth: '100%', justifySelf: 'center', alignItems: 'center', alignContent: 'center', rowGap:'20px', alignSelf: 'center'}}>
                                         <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84", justifySelf: "center"}}
                                                 onClick={() => {

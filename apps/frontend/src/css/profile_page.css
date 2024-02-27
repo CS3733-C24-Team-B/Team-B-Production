@@ -92,6 +92,17 @@
     margin-bottom: 1vh;
 }
 
+.Profile-page-top-infonumbers {
+    font-family: Lato, serif;
+    font-weight: 600;
+    font-size: 25px;
+    display: flex;
+    justify-content: center;
+    translate: -20%;
+    margin-top: 0vh;
+    margin-bottom: 1vh;
+}
+
 
 .InfoContainer svg {
     width: 36px;
@@ -224,7 +235,7 @@
 .Profile-page-top-infotext-return{
     font-family: Lato, serif;
     font-weight: 600;
-    font-size: 100%;
+    font-size: 25px;
     margin-left: 4%;
     margin-top: 2%;
     margin-bottom: 0;

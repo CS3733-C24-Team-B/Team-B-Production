@@ -385,9 +385,15 @@ export default function UploadFiles() {
 
                     <div className={"file-buttons"}>
                         <Box sx={{display: "grid", justifyContent: "center"}}>
-                            <div style={{minWidth: '15vw'}}>
+                            <div style={{minWidth: '18vw'}}>
                                 {nodeFile ?
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={nodeFile.name}
                                         filesLimit={1}
                                         showAlerts={false}
@@ -395,6 +401,12 @@ export default function UploadFiles() {
                                             setNodeFile(files[0].file);
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={"Upload Node File"}
                                         filesLimit={1}
                                         showAlerts={false}
@@ -413,9 +425,15 @@ export default function UploadFiles() {
                             </Button>
                         </Box>
                         <Box sx={{display: "grid", justifyContent: "center"}}>
-                            <div style={{minWidth: '15vw'}}>
+                            <div style={{minWidth: '18vw'}}>
                                 {edgeFile ?
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={edgeFile.name}
                                         filesLimit={1}
                                         showAlerts={false}
@@ -423,6 +441,12 @@ export default function UploadFiles() {
                                             setEdgeFile(files[0].file);
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={"Upload Edge File"}
                                         filesLimit={1}
                                         showAlerts={false}
@@ -441,9 +465,15 @@ export default function UploadFiles() {
                             </Button>
                         </Box>
                         <Box sx={{display: "grid", justifyContent: "center"}}>
-                            <div style={{minWidth: '15vw'}}>
+                            <div style={{minWidth: '18vw'}}>
                                 {employeeFile ?
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={employeeFile.name}
                                         filesLimit={1}
                                         showAlerts={false}
@@ -451,6 +481,12 @@ export default function UploadFiles() {
                                             setEmployeeFile(files[0].file);
                                         }} fileObjects={[]}/> :
                                     <DropzoneAreaBase
+                                        acceptedFiles={[".csv"]}
+                                        onDropRejected={() => {
+                                            setAlertText("Please upload a .csv file");
+                                            setIsError(true);
+                                            setSubmitAlert(true);
+                                        }}
                                         dropzoneText={"Upload Employee File"}
                                         filesLimit={1}
                                         showAlerts={false}
