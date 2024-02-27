@@ -176,7 +176,10 @@ export const PathPrinter = (data: {
           );
           const dist = Math.sqrt((currx - x) ** 2 + (curry - y) ** 2);
 
-          if (nodeIDs[i].startsWith("Elevator")) {
+          if (
+            nodeIDs[i].startsWith("Elevator") ||
+            nodeIDs[i].startsWith("Stair")
+          ) {
             //if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
             joinedwords.push(
               "Starting at " +

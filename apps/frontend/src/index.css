@@ -102,7 +102,11 @@
     height: 100%;
     width: 15%; /* WHENEVER YOU CHANGE THIS, YOU ALSO NEED TO CHANGE THE margin-left IN .BackBlue */
 }
-
+@media only screen and (max-width: 600px) {
+    .NavBlue{
+        display: none;
+    }
+}
 .icon-spacing {
     margin-top: 10%;
     gap: 5%;

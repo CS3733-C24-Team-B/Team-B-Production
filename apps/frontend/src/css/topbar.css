@@ -3,6 +3,11 @@
   width: 95%;
 }
 
+.translate-card {
+  display: flex;
+  justify-self: end;
+}
+
 .profile-card {
   display: flex;
   flex-direction: row;

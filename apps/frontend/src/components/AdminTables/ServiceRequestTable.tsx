@@ -580,7 +580,7 @@ export default function ServiceRequestTable() {
   });
 
   return (
-    <div className="AD-OneCard">
+    <div className="AD-OneCard1">
       <Menu
         open={openMenu}
         onClose={() => {

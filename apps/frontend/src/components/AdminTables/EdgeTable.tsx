@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Edge } from "database";
 import {
   Alert,
+  Box,
   CircularProgress,
   IconButton,
   Paper,
@@ -99,80 +100,81 @@ export default function EdgeTable() {
   return (
     <div className={"AD-TwoColumns2"}>
       <div className={"AD-TestCard2"}>
-        <br />
-        {loading ? (
-          <CircularProgress className="center-text" />
-        ) : (
-          <ThemeProvider theme={latoTheme}>
-            <TableContainer
-              component={Paper}
-              className="service-tables"
-              sx={{ maxHeight: "70vh" }}
-            >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      Edge ID
-                      <IconButton
-                        style={{
-                          color: typeSort === "edgeID" ? "#34AD84" : "",
-                        }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEdges(edgeSortField.edgeID);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      Start Node
-                      <IconButton
-                        style={{
-                          color: typeSort === "startNodeID" ? "#34AD84" : "",
-                        }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEdges(edgeSortField.startNodeID);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      End Node
-                      <IconButton
-                        style={{
-                          color: typeSort === "endNodeID" ? "#34AD84" : "",
-                        }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEdges(edgeSortField.endNodeID);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>{arrayEdge}</TableBody>
-              </Table>
-            </TableContainer>
-          </ThemeProvider>
-        )}
+        <Box sx={{ paddingTop: "2vh" }}>
+          {loading ? (
+            <CircularProgress className="center-text" />
+          ) : (
+            <ThemeProvider theme={latoTheme}>
+              <TableContainer
+                component={Paper}
+                className="service-tables"
+                sx={{ maxHeight: "75vh" }}
+              >
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        Edge ID
+                        <IconButton
+                          style={{
+                            color: typeSort === "edgeID" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEdges(edgeSortField.edgeID);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        Start Node
+                        <IconButton
+                          style={{
+                            color: typeSort === "startNodeID" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEdges(edgeSortField.startNodeID);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        End Node
+                        <IconButton
+                          style={{
+                            color: typeSort === "endNodeID" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEdges(edgeSortField.endNodeID);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{arrayEdge}</TableBody>
+                </Table>
+              </TableContainer>
+            </ThemeProvider>
+          )}
+        </Box>
       </div>
 
       <Snackbar

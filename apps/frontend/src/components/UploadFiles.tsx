@@ -427,10 +427,10 @@ export default function UploadFiles() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      {" "}
-      {/* Apply the Lato font theme */}
-      <div className="AD-TwoRows2">
+    <div className="AD-ThreeRows">
+      <ThemeProvider theme={theme}>
+        {" "}
+        {/* Apply the Lato font theme */}
         {/*IMPORT FILES*/}
         <div className="AD-OneCard">
           <Typography
@@ -657,7 +657,6 @@ export default function UploadFiles() {
             {isLoading ? <CircularProgress /> : "UPLOAD ALL FILES"}
           </Button>
         </div>
-
         {/*EXPORT FILES*/}
         <div className="AD-OneCard">
           <Typography
@@ -865,7 +864,7 @@ export default function UploadFiles() {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }

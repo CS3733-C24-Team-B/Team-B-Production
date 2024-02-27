@@ -8,6 +8,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Alert,
+  Box,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -253,80 +254,83 @@ export default function AdminViewer() {
   return (
     <div className={"AD-TwoColumns2"}>
       <div className={"AD-TestCard2"}>
-        <br />
-        {loading || isLoading ? (
-          <CircularProgress className="center-text" />
-        ) : (
-          <ThemeProvider theme={latoTheme}>
-            <TableContainer
-              component={Paper}
-              className="service-tables"
-              sx={{ maxHeight: "70vh" }}
-            >
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      Email
-                      <IconButton
-                        style={{ color: typeSort === "email" ? "#34AD84" : "" }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEmployees(employeeSortField.email);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      First Name
-                      <IconButton
-                        style={{
-                          color: typeSort === "firstName" ? "#34AD84" : "",
-                        }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEmployees(employeeSortField.firstName);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      Last Name
-                      <IconButton
-                        style={{
-                          color: typeSort === "lastName" ? "#34AD84" : "",
-                        }}
-                        onClick={() => {
-                          setSortUp(!sortUp);
-                          sortEmployees(employeeSortField.lastName);
-                        }}
-                      >
-                        {sortUp ? (
-                          <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
-                        ) : (
-                          <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell />
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>{employeeList}</TableBody>
-              </Table>
-            </TableContainer>
-          </ThemeProvider>
-        )}
+        <Box sx={{ paddingTop: "2vh" }}>
+          {loading || isLoading ? (
+            <CircularProgress className="center-text" />
+          ) : (
+            <ThemeProvider theme={latoTheme}>
+              <TableContainer
+                component={Paper}
+                className="service-tables"
+                sx={{ maxHeight: "75vh" }}
+              >
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        Email
+                        <IconButton
+                          style={{
+                            color: typeSort === "email" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEmployees(employeeSortField.email);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        First Name
+                        <IconButton
+                          style={{
+                            color: typeSort === "firstName" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEmployees(employeeSortField.firstName);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        Last Name
+                        <IconButton
+                          style={{
+                            color: typeSort === "lastName" ? "#34AD84" : "",
+                          }}
+                          onClick={() => {
+                            setSortUp(!sortUp);
+                            sortEmployees(employeeSortField.lastName);
+                          }}
+                        >
+                          {sortUp ? (
+                            <ArrowUpwardIcon style={{ fontSize: "0.65em" }} />
+                          ) : (
+                            <ArrowDownwardIcon style={{ fontSize: "0.65em" }} />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell />
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{employeeList}</TableBody>
+                </Table>
+              </TableContainer>
+            </ThemeProvider>
+          )}
+        </Box>
       </div>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
