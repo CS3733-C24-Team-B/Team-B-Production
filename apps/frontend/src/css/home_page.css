@@ -44,19 +44,19 @@
 
 .navigation-autocomplete {
     width: 50%;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 
 .search-label {
-    translate: 0% -62%;
+    translate: 0 -62%;
     font-weight: 600;
     color: black;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 
 .settings-text {
     color: black;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
 
 .action-text {
@@ -195,7 +195,7 @@ canvas {
 
 .small-label {
     color: black;
-    font-family: Dubai;
+    font-family: Dubai, serif;
 }
 
 .logo {
@@ -221,10 +221,10 @@ canvas {
 .goku-text {
     if(disabled) {
     color: dimgray;
-    font-family: Lato;
+    font-family: Lato, serif;
 }
     else {
         color: black;
-        font-family: Lato;
+        font-family: Lato, serif;
     }
 }

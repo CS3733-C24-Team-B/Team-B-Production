@@ -5,6 +5,7 @@ import axios from 'axios';
 import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
 import {useAuth0} from "@auth0/auth0-react";
 import "../../css/dashboard.css";
+import {ChartOptions} from 'chart.js';
 
 ChartJS.register(BarElement, Tooltip, Legend, ArcElement, Title, CategoryScale, LinearScale);
 
@@ -25,17 +26,22 @@ export default function StackedBarChart() {
 
     useEffect(() => {
         async function fetchData() {
-            const accessToken: string = await getAccessTokenSilently();
-            const res = await axios.get("/api/service-request", {
-                headers: {
-                    Authorization: "Bearer " + accessToken
-                }
-            });
-            setsrData(res.data);
+            try {
+                const accessToken: string = await getAccessTokenSilently();
+                const res = await axios.get("/api/service-request", {
+                    headers: {
+                        Authorization: "Bearer " + accessToken
+                    }
+                });
+                setsrData(res.data);
+            } catch (error) {
+                console.error('Error fetching service request data', error);
+            }
         }
 
-        fetchData();
+        fetchData().then();
     }, [getAccessTokenSilently]);
+
 
     const priorityStatusCounts: Record<Priority, Record<Status, number>> = {
         Low: {Paused: 0, Completed: 0, InProgress: 0, Assigned: 0, Unassigned: 0},
@@ -69,7 +75,7 @@ export default function StackedBarChart() {
         datasets,
     };
 
-    const stackBarOptions = {
+    const stackBarOptions: ChartOptions<'bar'> = {
         scales: {
             x: {
                 stacked: true,
@@ -81,7 +87,7 @@ export default function StackedBarChart() {
                     text: 'Priority',
                     color: 'black',
                     font: {
-                        weight: 'bold'
+                        weight: 'bold' as const, // Correctly specifying the font weight
                     }
                 }
             },
@@ -91,10 +97,12 @@ export default function StackedBarChart() {
                 ticks: {
                     color: 'black',
                     // Explicitly type the parameter as a number to resolve TS7006
-                    callback: function(value: number) {
-                        if (value % 1 === 0) { // Check if the value is an integer
+                    callback: function(tickValue: string | number, _index: number, _ticks: any[]): string | number | null | undefined {
+                        const value = Number(tickValue);
+                        if (value % 1 === 0) {
                             return value;
                         }
+                        return undefined; // Explicitly return undefined for non-integer values
                     }
                 },
                 title: {
@@ -102,7 +110,7 @@ export default function StackedBarChart() {
                     text: 'Number of Requests',
                     color: 'black',
                     font: {
-                        weight: 'bold'
+                        weight: 'bold' as const, // Correctly specifying the font weight
                     }
                 }
             },
@@ -112,9 +120,10 @@ export default function StackedBarChart() {
                 labels: {
                     color: 'black',
                     font: {
-                        size: 12
+                        size: 12,
+                        // If necessary, specify weight here as well, e.g., weight: 'bold' as const
                     }
-                }
+                },
             },
         }
     };
