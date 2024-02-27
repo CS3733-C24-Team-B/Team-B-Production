@@ -34,7 +34,7 @@
     width: 22.5vw;
     height: 20.6vw;
     background-color: white;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5); /* Add box shadow with RGBA color */
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5); /* Add box shadow with RGBA color */
     border-radius: 15px;
     display: flex;
     flex-direction: column;
