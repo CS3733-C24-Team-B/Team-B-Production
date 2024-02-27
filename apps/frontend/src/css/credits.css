@@ -1,6 +1,5 @@
 .Settings-Container {
     width: 100%;
-    height: 100vh;
 }
 
 .Credits-NoRows {
@@ -12,17 +11,19 @@
     /*margin: 2vw;*/     /*if you want gap between navbar and page*/
 
     width: 98.2%;
-    height: 188%;
+    height: 100%;
 }
 
 .Credits-spacing {
-    height: 110%;
     display: flex; /*change to grid if you want the old version to work*/
     justify-content: center;
     /*margin-bottom: 5%;*/
     column-gap: 1.5vw;     /*remove if you want old version to work*/
     margin-top: 1.5%;
     /*background-color: orange;*/
+}
+.No-Link{
+    text-decoration: none;
 }
 
 .Credits-TestCard1 {
