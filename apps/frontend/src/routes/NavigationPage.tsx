@@ -250,7 +250,7 @@ export default function NavigationPage() {
                                                            localStorage.setItem("showHalls", !showHalls + "");
                                                            setShowHalls(!showHalls);
                                                        }}/>}
-                                    label={<p className={"goku-text"}>Hall Nodes</p>}/>
+                                    label={<p className={!showNodes ? "goku-disabled" : "goku-text"}>Hall Nodes</p>}/>
                                 <FormControlLabel
                                     style={{marginTop: '-5%'}}
                                     control={<Switch disabled={!showNodes} checked={showIcons}
@@ -258,7 +258,7 @@ export default function NavigationPage() {
                                                            localStorage.setItem("showIcons", !showIcons + "");
                                                            setShowIcons(!showIcons);
                                                        }}/>}
-                                    label={<p className={"goku-text"}>Icon Nodes</p>}/>
+                                    label={<p className={!showNodes ? "goku-disabled" : "goku-text"}>Icon Nodes</p>}/>
                                 <FormControlLabel
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={useDefault}
@@ -302,7 +302,7 @@ export default function NavigationPage() {
                                         localStorage.setItem("goku", !goku + "");
                                         setGoku(!goku);
                                     }}/>}
-                                    label={<p className={"goku-text"}>Goku Animation</p>}/>
+                                    label={<p className={!doAnimation ? "goku-disabled" : "goku-text"}>Goku Animation</p>}/>
                             </FormGroup>
                         </div>
                     </div>
