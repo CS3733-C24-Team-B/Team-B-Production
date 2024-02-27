@@ -26,7 +26,7 @@ export class EmployeeCSVUtility implements CSVUtility {
                     lastName: employee[2],
                     jobTitle: employee[3],
                     department: employee[4],
-                    birthday: employee[5],
+                    birthday: new Date(employee[5]),
                     phoneNumber: employee[6],
                 },
                 create: {
@@ -35,7 +35,7 @@ export class EmployeeCSVUtility implements CSVUtility {
                     lastName: employee[2],
                     jobTitle: employee[3],
                     department: employee[4],
-                    birthday: employee[5],
+                    birthday: new Date(employee[5]),
                     phoneNumber: employee[6],
                 }
             });
@@ -46,7 +46,7 @@ export class EmployeeCSVUtility implements CSVUtility {
             }
             catch (error) {
                 console.log("Could not add user and send invite email to " + employee[0]);
-                console.error(error);
+                // console.error(error);
             }
         }
     }
@@ -58,7 +58,7 @@ export class EmployeeCSVUtility implements CSVUtility {
         for (let i: number = 0; i < employees.length; i++) {
             const employee: Employee = employees[i];
             dataStrings.push([employee.email, employee.firstName, employee.lastName, employee.jobTitle,
-                employee.department, employee.birthday, employee.phoneNumber].join(','));
+                employee.department, employee.birthday?.toDateString(), employee.phoneNumber].join(','));
         }
         return dataStrings.join('\n');
     }
