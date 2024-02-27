@@ -413,19 +413,6 @@ export default function RequestForm() {
                     <div className={"service-form-topcard"}>
                         <Button
                             onClick={() => {
-                                handleTabClick("statistics");
-                            }}
-                            style={{
-                                color: currentTab === 'statistics' ? 'black' : 'black',
-                                borderBottom: currentTab === 'statistics' ? '1.4vh solid #34AD84' : 'white',
-                                fontFamily: 'Lato',
-                                fontSize: '100%',
-                                textTransform: 'none',
-                            }}>
-                            Statistics
-                        </Button>
-                        <Button
-                            onClick={() => {
                                 handleTabClick("create-request");
                             }}
                             style={{
@@ -449,6 +436,19 @@ export default function RequestForm() {
                                 textTransform: 'none',
                             }}>
                             List Service Requests
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                handleTabClick("statistics");
+                            }}
+                            style={{
+                                color: currentTab === 'statistics' ? 'black' : 'black',
+                                borderBottom: currentTab === 'statistics' ? '1.4vh solid #34AD84' : 'white',
+                                fontFamily: 'Lato',
+                                fontSize: '100%',
+                                textTransform: 'none',
+                            }}>
+                            Statistics
                         </Button>
                     </div>
 
@@ -546,7 +546,7 @@ export default function RequestForm() {
                                 <div className={'requestCardGrid'}>
                                     <p style={cardTitle}>Maintenance Request</p>
 
-                                    <p style={cardText}>For ordering maintenance and general upkeep services to rooms.
+                                    <p style={cardText}>For ordering maintenance and upkeep services to rooms.
                                         This request works for all room types</p>
 
                                     <img className={"pillimage"} src={MaintainImage} alt={"Image"}/>
