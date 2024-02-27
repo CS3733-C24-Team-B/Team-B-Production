@@ -144,15 +144,14 @@
     grid-template-rows: 6% 60% 30%; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
-    margin: 2vw;
     /**/
-    margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+    /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+    margin: 2vw 1vw 2vw 2vw;
 }
 
 .TwoRows {
     background-color: yellow;
-    margin: 2vw;
-    margin-left: 1vw;
+    margin: 2vw 2vw 2vw 1vw;
     display: grid;
     grid-template-rows: 20% 78%;
     grid-template-columns: auto;
@@ -221,10 +220,7 @@
 }
 
 body {
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  margin-top: 0;
+    margin: 0;
     background-color: #012d5a;
 }
 

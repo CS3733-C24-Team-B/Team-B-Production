@@ -40,11 +40,9 @@ export default function PieChartStats(props:{srlist:ServiceRequest[], title:stri
 
     function formatLabel(label: string): string {
         const withSpaces = label.replace(/([A-Z])/g, ' $1');
-        const capitalizedWords = withSpaces.split(' ').map(word =>
+        return withSpaces.split(' ').map(word =>
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         ).join(' ');
-
-        return capitalizedWords;
     }
 
 
