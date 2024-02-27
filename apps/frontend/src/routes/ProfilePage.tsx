@@ -301,13 +301,8 @@ export default function ProfilePage() {
                                         <PieChartStats srlist={employee!.requestsAssigned} title={"My Requests"}/>
                                     </div>
                                     <div className={"SecondRow_SecondColumn-TestCard"}>
-                                        <p className={"Profile-page-top-infotext-return"}>Next Birthday</p>
-                                        <div className={"Profile-page-top-infotext-scroll"}>
-                                            <p className={"Profile-page-top-infotext"}
-                                               style={{fontSize: 50, color: "#34AD84"}}>Kenny Doan!</p>
-                                        </div>
-                                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop:'8.5%'}}>
-                                        <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                        <div style={{display: 'flex', flexDirection: 'column', marginTop:'8.5%', maxWidth: '100%', justifySelf: 'center', alignContent: 'center', rowGap:'20px', alignSelf: 'center'}}>
+                                        <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84", justifySelf: "center"}}
                                                 onClick={() => {
                                                     getAccessTokenSilently().then((accessToken: string) => {
                                                         axios.get("/api/employee/reset-password/" + employee.email, {
@@ -321,7 +316,7 @@ export default function ProfilePage() {
                                                 }}>
                                             Change Password
                                         </Button>
-                                        <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84"}}
+                                        <Button variant="contained" color="primary" style={{backgroundColor: "#34AD84", }}
                                                 onClick={() => logout({
                                                     logoutParams: {
                                                         returnTo: window.location.origin
