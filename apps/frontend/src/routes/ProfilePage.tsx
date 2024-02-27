@@ -170,7 +170,7 @@ export default function ProfilePage() {
                                         maxHeight: '24vh',
                                         maxWidth: '24vh'
                                     }}>
-                                        <label for={"newProfilePicture"}>
+                                        <label htmlFor={"newProfilePicture"}>
                                             <img src={profilePicture} alt="profile picture"
                                                  style={{
                                                      width: 'auto',

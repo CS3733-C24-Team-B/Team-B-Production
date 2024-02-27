@@ -58,7 +58,7 @@ export default function Credits() {
                                             }}>
                                                 Material UI
                                             </Typography>
-                                            <img className="C-MUI" src={MUI}></img>
+                                            <img className="C-MUI" src={MUI}  alt={"something"}></img>
                                         </div>
                                     </a>
                                     <a className="No-Link" href="https://expressjs.com/" target="_blank"
@@ -70,7 +70,7 @@ export default function Credits() {
                                                 }}}>
                                                 Express.js
                                             </Typography>
-                                            <img className="C-Express" src={Exp}></img>
+                                            <img className="C-Express" src={Exp} alt={"something"}></img>
                                         </div>
                                     </a>
                                     <a className="No-Link" href="https://www.freepik.com/" target="_blank"
@@ -82,7 +82,7 @@ export default function Credits() {
                                                 }}}>
                                                 FreePik
                                             </Typography>
-                                            <img className="C-Fpik" src={Fpik}></img>
+                                            <img className="C-Fpik" src={Fpik} alt={"something"}></img>
                                         </div>
                                     </a>
                                 </div>
@@ -97,7 +97,7 @@ export default function Credits() {
                                                 }}}>
                                                 Auth0
                                             </Typography>
-                                                <img className="C-AZero" src={AZero}></img>
+                                                <img className="C-AZero" src={AZero} alt={"something"}></img>
                                         </div>
                                     </a>
                                     <a className="No-Link" href="https://axios-http.com/" target="_blank"
@@ -109,7 +109,7 @@ export default function Credits() {
                                                 }}}>
                                                 Axios
                                             </Typography>
-                                            <img className="C-Axs" src={Axs}></img>
+                                            <img className="C-Axs" src={Axs} alt={"something"}></img>
                                         </div>
                                     </a>
                                     <a className="No-Link" href="https://leafletjs.com" target="_blank"
@@ -118,7 +118,7 @@ export default function Credits() {
                                             <a className="Credits-Mini-Titles">
                                                 <h2>Leaflet</h2>
                                             </a>
-                                                <img className="C-Leaf" src={Leaf}></img>
+                                                <img className="C-Leaf" src={Leaf} alt={"something"}></img>
                                         </div>
                                     </a>
                                 </div>
@@ -132,7 +132,7 @@ export default function Credits() {
                                                 }}}>
                                                 Prisma
                                             </Typography>
-                                            <img className="C-Pma" src={Pma}></img>
+                                            <img className="C-Pma" src={Pma} alt={"something"}></img>
                                         </div>
                                     </a>
                                     <a className="No-Link" href="https://react.dev/" target="_blank"
@@ -144,7 +144,7 @@ export default function Credits() {
                                                 }}}>
                                                 React
                                             </Typography>
-                                                <img className="C-Rct" src={Rct}></img>
+                                                <img className="C-Rct" src={Rct} alt={"something"}></img>
                                         </div>
                                     </a>
                                 </div>
