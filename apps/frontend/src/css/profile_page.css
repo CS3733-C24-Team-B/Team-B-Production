@@ -193,7 +193,7 @@
     max-height: 85vh;
     justify-content: center;
     align-items: center;
-    grid-template-rows: 2fr 5fr 0.5fr;
+    grid-template-rows: 2fr 4fr 0.5fr;
     grid-template-columns: 100%;
     padding: 5px;
 }
@@ -244,6 +244,9 @@
     filter:brightness(75%);
 }
 
+.Profile-page-firstcard-text .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+    height: 0.9em !important;
+}
 
 
 

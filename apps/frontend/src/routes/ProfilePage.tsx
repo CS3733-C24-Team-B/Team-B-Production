@@ -187,8 +187,8 @@ export default function ProfilePage() {
                                     overflow: 'hidden',
                                     borderRadius: '50%',
                                     border: '2px solid #34AD84',
-                                    maxHeight: '21vh',
-                                    maxWidth: '21vh'
+                                    maxHeight: '22vh',
+                                    maxWidth: '22vh'
                                 }}>
                                     <label htmlFor={"newProfilePicture"}>
                                         <img src={profilePicture} alt="profile picture"
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                                                  width: 'auto',
                                                  height: 'auto',
                                                  borderRadius: '50%',
-                                                 maxHeight: '21vh',
+                                                 maxHeight: '22vh',
                                                  justifySelf: 'center'
                                              }}/>
                                     </label>
