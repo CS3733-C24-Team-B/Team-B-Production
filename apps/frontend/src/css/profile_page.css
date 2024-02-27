@@ -248,5 +248,15 @@
     height: 0.9em !important;
 }
 
+.Profile-page-firstcard-text .css-1q6at85-MuiInputBase-root-MuiOutlinedInput-root{
+    height:2.8em;
+    width: 12em;
+}
+
+.Profile-page-firstcard-text .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input{
+    height: 0.9em;
+    width: 1.2em;
+}
+
 
 
