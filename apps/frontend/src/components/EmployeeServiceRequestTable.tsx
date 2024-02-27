@@ -271,10 +271,10 @@ export default function ServiceRequestTable() {
                     }</TableCell>
                     <TableCell>{nodeNameOrReturn(nsr.locationID!)}</TableCell>
                     <TableCell>
-                        {nsr.assignedID}
+                        {nsr.assignedID ? nsr.assignedTo.firstName + " " + nsr.assignedTo.lastName : ""}
                     </TableCell>
                     <TableCell>
-                        {StatusType[nsr.status as keyof typeof StatusType]}
+                        {StatusType[nsr.status as keyof typeof StatusType] ? StatusType[nsr.status as keyof typeof StatusType] : "In Progress"}
                     </TableCell>
                     <TableCell>{nsr.createdBy ? nsr.createdBy.firstName + " " + nsr.createdBy.lastName : ""}</TableCell>
                     <TableCell>{sqlToDate(nsr.timeCreated.toString()).getMonth() + "/" + sqlToDate(nsr.timeCreated.toString()).getDate() + "/" + sqlToDate(nsr.timeCreated.toString()).getFullYear() +
