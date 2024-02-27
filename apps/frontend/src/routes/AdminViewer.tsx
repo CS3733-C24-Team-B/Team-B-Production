@@ -9,7 +9,7 @@ import UploadFiles from "../components/UploadFiles.tsx";
 import {Button} from "@mui/material";
 
 export default function AdminViewer() {
-    const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable />);
+    const [ADPageShow, setADPageShow] = useState(<ServiceRequestTable/>);
     const [currentComponent, setCurrentComponent] = useState('ServiceRequestTable');
 
     return (
@@ -59,7 +59,7 @@ export default function AdminViewer() {
                                 setADPageShow(<EdgeTable/>);
                                 setCurrentComponent('EdgeTable'); // Set the state to track the current component
                             }}>
-                               Edge Data
+                                Edge Data
                             </Button>
                             <Button
                                 style={{
@@ -82,7 +82,7 @@ export default function AdminViewer() {
                                     fontSize: '100%',
                                     textTransform: 'none',
                                 }} variant="text" onClick={() => {
-                                    setADPageShow(<UploadFiles/>);
+                                setADPageShow(<UploadFiles/>);
                                 setCurrentComponent('UploadFiles'); // Set the state to track the current component
                             }}>
                                 Upload Files

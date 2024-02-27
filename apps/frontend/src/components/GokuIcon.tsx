@@ -3,7 +3,7 @@ import {createSvgIcon} from "@mui/material/utils";
 const GokuIcon = createSvgIcon(
     // credit: Created by eric from the Noun Project - https://thenounproject.com/icon/goku-58041/
     <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px"
-         viewBox="0 0 100 125" enable-background="new 0 0 100 100" xmlSpace="preserve">
+         viewBox="0 0 100 125" enableBackground="new 0 0 100 100" xmlSpace="preserve">
         <path fill="#000000" d="M74.902,65.634l20.051-11.192l-14.17-0.853l8.146-7.297l-18.137,1.417c0,0-0.389-2.868-4.109-6.589
         c-2.267-2.267-7.367-3.755-7.367-3.755s0.726-9.244-4.446-17.463c-3.274-4.287-10.007-5.421-16.737-7.263
         c5.172,14.736,3.259,20.546,3.259,20.546s-7.439-8.29-15.799-9.565c-4.887-0.284-15.09,5.101-20.564,8.714

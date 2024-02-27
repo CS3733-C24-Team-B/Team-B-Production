@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import HomePage from "./routes/NavigationPage";
-import RequestList from "./routes/RequestList";
 import RequestForm from "./routes/RequestForm";
 import ProfilePage from "./routes/ProfilePage";
 import AdminViewer from "./routes/AdminViewer";
@@ -40,11 +39,6 @@ function App() {
             path: "/requestform",
             errorElement: <div />,
             element: <RequestForm />,
-        },
-        {
-            path: "/requestlist",
-            errorElement: <div/>,
-            element: <RequestList/>,
         },
         {
             path: "/profile-info",

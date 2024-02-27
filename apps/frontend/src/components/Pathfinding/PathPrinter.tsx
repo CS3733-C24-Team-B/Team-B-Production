@@ -88,7 +88,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 accumulator.push(longName);
                 return accumulator;
             }, []);
-            let coords = res2.data.reduce((accumulator: string[], roomData: {
+            const coords = res2.data.reduce((accumulator: string[], roomData: {
                 nodeID: string;
                 xcoord: number;
                 ycoord: number;
@@ -103,7 +103,7 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                 accumulator.push(floor + " " + longName + ":" + xcoord + ":" + ycoord);
                 return accumulator;
             }, []);
-            let directionsFloor: string[][] = [];
+            const directionsFloor: string[][] = [];
             let levels:number = 0;
             let joinedwords: string[] = ["You have arrived at " + nodeIDs[nodeIDs.length - 1]];
             if (data.startNode === data.endNode) {
@@ -122,7 +122,8 @@ export const PathPrinter = (data: { startNode: string; endNode: string; changeTe
                     const curry = parseInt(coords[i].substring(coords[i].lastIndexOf(":") + 1));
                     const dist = Math.sqrt((currx - x) ** 2 + (curry - y) ** 2);
 
-                    if(nodeIDs[i].startsWith("Elevator")){
+                    if(nodeIDs[i].startsWith("Elevator")||nodeIDs[i].startsWith("Stair")){
+
                         //if(coords[i].substring(0,2)!==coords[i-1].substring(0,2)){
                         joinedwords.push("Starting at " + nodeIDs[i] + " head in the direction of " + nodeIDs[i+1]+ " (" + Math.round(dist / 4) + "ft)");
                         directionsFloor[levels]=joinedwords;

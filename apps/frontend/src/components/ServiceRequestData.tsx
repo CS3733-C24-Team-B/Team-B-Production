@@ -20,8 +20,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
                 }
             });
             setEmployees(res.data);
-        })().then(() => {
-        });
+        })().then();
     }, [getAccessTokenSilently]);
     useEffect(() => {
         async function fetchData() {
@@ -32,25 +31,24 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
                 }
             });
             setsrData(res.data);
-            if(isAuthenticated) {
-                const res2 = await axios.get(`/api/employee/${user!.email!}`, {
-                    params: {
-                        email: user!.email!
-                    },
-                    headers: {
-                        Authorization: "Bearer " + accessToken
-                    }
-                });
+            const res2 = await axios.get(`/api/employee/${user!.email!}`, {
+                params: {
+                    email: user!.email!
+                },
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
 
-                setEmail(res2.data.email);
-            }
+            setEmail(res2.data.email);
+
 
             const res3 = await axios.get("/api/nodes/read");
             setNodeData(res3.data);
         }
 
-        fetchData();
-    }, [getAccessTokenSilently, isAuthenticated, user]);
+        fetchData().then();
+    }, [getAccessTokenSilently,user]);
 
     function nextBirthday(){
         return employees.shift();
@@ -73,11 +71,11 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
     let completedCount = 0;
     let assignedCount = 0;
     let availableCount = 0;
-    let myRequests:ServiceRequest[] = [];
-    let recentRequests:ServiceRequest[] = [];
+    const myRequests:ServiceRequest[] = [];
+    const recentRequests:ServiceRequest[] = [];
     srData.forEach(item => {
         if(item.status===StatusType.Completed){completedCount++;}
-        if(item.assignedTo!==null&&item.assignedTo.email===email){
+        if(item.assignedTo.email===email){
             assignedCount++;
             myRequests.push(item);
         }
@@ -102,59 +100,57 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
             return "";
         }
     }
-if(dataType==="completed") {
-    return (
-        <div>
-            {completedCount}
-
-        </div>
-    );
-}
+    if(dataType==="completed") {
+        return (
+            <div>
+                {completedCount}
+            </div>
+        );
+    }
     if(dataType==="available") {
         return (
             <div>
                 {availableCount}
-
             </div>
         );
     }
-    if(dataType==="assigned") {
+    if (dataType === "assigned") {
         return (
             <div>
                 {assignedCount}
-
             </div>
         );
     }
 
-    if(dataType==="requests") {
+    if (dataType === "requests") {
         return (
             <div>
                 <ul>{myRequests.map(obj =>
-                    <div><div style={{color:"green",fontSize:20}}>{getReqType(obj)}</div>
-                        <div style={{fontSize:20}}>Request</div>
-                        <div style={{fontSize:14, marginBlockEnd:12}}>Priority: {obj.priority}<br/>
-                        Location: {nodeIDtoName(obj.locationID)}<br/>
-                        Notes: {obj.notes}</div></div>)}</ul>
+                    <div><div style={{color:"green",fontSize:26}}>{getReqType(obj)}</div>
+                        <div style={{fontSize:26}}>Request</div>
+                        <div style={{fontSize:18, marginBlockEnd:20}}>Priority: {obj.priority}<br/>
+                            Location: {nodeIDtoName(obj.locationID)}<br/>
+                            Notes: {obj.notes}</div></div>)}</ul>
             </div>
         );
     }
     if(dataType==="recents") {
         return (
             <div>
-                <ul>{recentRequests.slice(0,5).map(obj =>
-                      <div>
-                          <div style={{fontSize:18}}>{getReqType(obj)} Request</div>
-                        <div style={{fontSize:12, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
+                <ul>{recentRequests.slice(0,10).map(obj =>
+                    <div>
+                        <div style={{fontSize:26}}>{getReqType(obj)} Request</div>
+                        <div style={{fontSize:18, marginBlockEnd:20}}>{nodeIDtoName(obj.locationID)}</div></div>)}</ul>
             </div>
         );
     }
     if(dataType==="birthday") {
         return (
             <div>
-                Next Birthday
                 {nextBirthday()?.firstName} {nextBirthday()?.lastName}
             </div>
         );
     }
 }
+
+

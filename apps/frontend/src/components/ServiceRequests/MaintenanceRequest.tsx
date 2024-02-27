@@ -2,11 +2,12 @@ import React, {useState} from 'react';
 import {TextField} from "@mui/material";
 
 // Kenny
-const MaintenanceRequest = ({change}) => {
+const MaintenanceRequest = (props: {change: (arg0: string) => void}) => {
+    const {change} = props;
     const [details, setDetails] = useState("");
 
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setDetails(value);
         change(value);
     }

@@ -19,7 +19,8 @@ const mapStyle = {
 };
 
 // Cameron and Katy
-const InternalTransportationRequest = ({change1, change2, change3}) => {
+const InternalTransportationRequest = (props: {change1: (arg0: string) => void, change2: (arg0: string) => void, change3: (arg0: string) => void}) => {
+    const {change1, change2, change3} = props;
     const [nodeData, setNodeData] = useState([]);
     const [toLocation, setToLocation] = useState("");
     const [mobilityAid, setMobilityAid] = useState("");
@@ -94,6 +95,7 @@ const InternalTransportationRequest = ({change1, change2, change3}) => {
                         `${nd.nid}`
                     }
                     onChange={(newValue, val) => {
+                        console.log(newValue);
                         if (val !== null) {
                             handleChange1(val.nid);
                         }
