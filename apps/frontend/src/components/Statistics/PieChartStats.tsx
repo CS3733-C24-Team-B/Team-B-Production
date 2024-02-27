@@ -75,9 +75,10 @@ export default function PieChartStats(props:{srlist:ServiceRequest[], title:stri
                         family: 'Arial',
                     },
                     color: 'black',
-                    padding: 20,
+                    padding: 20
                 },
                 position: 'right',
+                maxWidth: 200,
             },
             tooltip: {
                 bodyFont: {
