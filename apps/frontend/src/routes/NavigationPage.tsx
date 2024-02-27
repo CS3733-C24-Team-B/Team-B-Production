@@ -282,6 +282,8 @@ export default function NavigationPage() {
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={showPopups}
                                                        onClick={() => {
+                                                           localStorage.setItem("doAnimation", "false");
+                                                           setDoAnimation(false);
                                                            localStorage.setItem("showPopups", !showPopups + "");
                                                            setShowPopups(!showPopups);
                                                        }}/>}
@@ -290,6 +292,8 @@ export default function NavigationPage() {
                                     style={{marginTop: '-5%'}}
                                     control={<Checkbox checked={doAnimation}
                                                        onClick={() => {
+                                                           localStorage.setItem("showPopups", "false");
+                                                           setShowPopups(false);
                                                            localStorage.setItem("doAnimation", !doAnimation + "");
                                                            setDoAnimation(!doAnimation);
                                                            if (doAnimation) {setGoku(!doAnimation);}
