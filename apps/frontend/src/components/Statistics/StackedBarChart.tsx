@@ -97,7 +97,7 @@ export default function StackedBarChart() {
                 ticks: {
                     color: 'black',
                     // Explicitly type the parameter as a number to resolve TS7006
-                    callback: function(tickValue: string | number, _index: number, _ticks: any[]): string | number | null | undefined {
+                    callback: function(tickValue: string | number): string | number | null | undefined {
                         const value = Number(tickValue);
                         if (value % 1 === 0) {
                             return value;

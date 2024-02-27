@@ -27,10 +27,10 @@
     grid-template-rows: 6vh 50vh 40vh; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
-    margin: 2vw;
     height: 100%;
     /* order matter :) \/ */
-    margin-right: 1vw; /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+    /* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows */
+    margin: 2vw 1vw 2vw 2vw;
 }
 .requestCardGrid{
     /*
@@ -50,8 +50,7 @@
 
 .service-form-TwoRows {
     /* Positioning */
-    margin: 2vw;
-    margin-left: 1vw;
+    margin: 2vw 2vw 2vw 1vw;
     display: grid;
     grid-template-rows: 20% 78%;
     grid-template-columns: auto;

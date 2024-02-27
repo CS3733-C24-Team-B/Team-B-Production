@@ -47,7 +47,7 @@ export default function ServiceRequestData(dataType:"completed"|"available"|"ass
             setNodeData(res3.data);
         }
 
-        fetchData();
+        fetchData().then();
     }, [getAccessTokenSilently,user]);
 
     function nextBirthday(){
