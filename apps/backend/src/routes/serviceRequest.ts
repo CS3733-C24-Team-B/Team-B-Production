@@ -4,7 +4,7 @@ import {EmailUtility} from "../utilities/EmailUtility.ts";
 import client from "../bin/database-connection.ts";
 import {
     NewServiceRequest, UpdateRequest, DeleteRequest, SanitationRequest, MaintenanceRequest,
-    InternalTransportRequest, LanguageRequest, MedicineRequest
+    InternalTransportRequest, LanguageRequest, MedicineRequest, GokuRequest
 } from "common/src/serviceRequestTypes.ts";
 
 const router: Router = express.Router();
@@ -163,6 +163,18 @@ router.post("/language", async function (req: Request, res: Response) {
         console.error(error);
         return res.status(400).send("Could not add language service request to db");
     }
+});
+
+router.post("/goku", async function (req: Request, res: Response) {
+    const gokuRequest: GokuRequest = req.body;
+    const mailingList: string[] = (await client.employee.findMany({ select: { email: true } })).map((obj) => obj.email);
+    const employee = await client.employee.findUnique({
+        where: {
+            email: gokuRequest.sender
+        }
+    });
+    await emailUtility.gokuRequest(mailingList, gokuRequest.title, gokuRequest.announcement, employee!.firstName + " " + employee!.lastName);
+    return res.status(200).send("Successfully sent GOKU request email");
 });
 
 router.put('/', async function (req: Request, res: Response) {

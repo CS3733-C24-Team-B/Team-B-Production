@@ -40,6 +40,12 @@ export type LanguageRequest = NewServiceRequest & {
     when: Date
 }
 
+export type GokuRequest = {
+    title: string,
+    announcement: string,
+    sender: string
+}
+
 export type DeleteRequest = {
     serviceID: number
 }

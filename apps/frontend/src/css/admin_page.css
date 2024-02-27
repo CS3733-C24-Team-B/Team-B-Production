@@ -46,11 +46,11 @@
     /*!* order matter :) \/ *!*/
     /*margin-right: 1vw; !* overrides margin padding, so there isn't double margin from ThreeRows and TwoRows *!*/
 }
-.AD-TwoRows3 {
+.AD-TwoRows2 {
      background-color: #012d5a;
      display: grid;
-     height: 135%;
-     grid-template-rows: 54% 42%; /* percentages of Container height, has to add up to 100%, not over */
+     height: 120%;
+     grid-template-rows: 57% 37%; /* percentages of Container height, has to add up to 100%, not over */
      grid-template-columns: auto;
      grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
      margin-right: 1%;
@@ -197,6 +197,14 @@
     background-color: #c1cbc9;
 }
 
+.download-icon {
+    width: 9%;
+    height: 65%;
+}
+
+.download-icon:hover {
+    transform: scale(1.1);
+}
 
 /*DELETE LATER */
 
