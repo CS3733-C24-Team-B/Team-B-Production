@@ -221,10 +221,10 @@ export default function UploadFiles() {
                     Authorization: "Bearer " + accessToken
                 }
             }).then(() => {
-                setAlertText("Data deleted successfully");
-                setIsError(false);
-                setSubmitAlert(true);
-            },
+                    setAlertText("Data deleted successfully");
+                    setIsError(false);
+                    setSubmitAlert(true);
+                },
                 () => {
                     setAlertText("There was an error deleting the data");
                     setIsError(true);
@@ -393,8 +393,8 @@ export default function UploadFiles() {
     });
 
     return (
-        <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
-            <div className="AD-TwoRows2">
+        <div className="AD-ThreeRows">
+            <ThemeProvider theme={theme}> {/* Apply the Lato font theme */}
                 {/*IMPORT FILES*/}
                 <div className="AD-OneCard">
                     <Typography style={{marginLeft: "1.5vw", fontWeight: 550, fontSize: "1.35em"}}>
@@ -408,7 +408,11 @@ export default function UploadFiles() {
                                     <DropzoneAreaBase
                                         style={{minWidth: '100%'}}
                                         dropzoneText={<>
-                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>{nodeFile.name}</p>
+                                            <p style={{
+                                                fontFamily: 'Lato',
+                                                margin: '1%',
+                                                fontSize: '0.8em'
+                                            }}>{nodeFile.name}</p>
                                             <InsertDriveFileIcon/>
                                         </>}
                                         Icon={"none"}
@@ -419,16 +423,17 @@ export default function UploadFiles() {
                                         }}/> :
                                     <DropzoneAreaBase
                                         style={{minWidth: '100%'}}
-                                    dropzoneText={<>
-                                        <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload Node File</p>
-                                        <CloudUploadIcon/>
-                                    </>}
+                                        dropzoneText={<>
+                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload
+                                                Node File</p>
+                                            <CloudUploadIcon/>
+                                        </>}
                                         Icon={"none"}
-                                    filesLimit={1}
-                                    showAlerts={false}
-                                    onAdd={(files) => {
-                                        setNodeFile(files[0].file);
-                                    }}/>}
+                                        filesLimit={1}
+                                        showAlerts={false}
+                                        onAdd={(files) => {
+                                            setNodeFile(files[0].file);
+                                        }}/>}
                             </div>
                             <Button sx={{
                                 marginTop: "3vh",
@@ -462,7 +467,8 @@ export default function UploadFiles() {
                                     <DropzoneAreaBase
                                         style={{minWidth: '100%'}}
                                         dropzoneText={<>
-                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload Edge File</p>
+                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload
+                                                Edge File</p>
                                             <CloudUploadIcon/>
                                         </>}
                                         Icon={"none"}
@@ -504,7 +510,8 @@ export default function UploadFiles() {
                                     <DropzoneAreaBase
                                         style={{minWidth: '100%'}}
                                         dropzoneText={<>
-                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload Employee File</p>
+                                            <p style={{fontFamily: 'Lato', margin: '1%', fontSize: '0.8em'}}>Upload
+                                                Employee File</p>
                                             <CloudUploadIcon/>
                                         </>}
                                         Icon={"none"}
@@ -693,8 +700,9 @@ export default function UploadFiles() {
                         </Button>
                     </DialogActions>
                 </Dialog>
-            </div>
-        </ThemeProvider>
+
+            </ThemeProvider>
+        </div>
     );
 }
 

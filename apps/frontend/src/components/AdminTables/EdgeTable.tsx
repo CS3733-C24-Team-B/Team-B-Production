@@ -3,7 +3,7 @@ import axios from "axios";
 import {useAuth0} from "@auth0/auth0-react";
 import {Edge} from "database";
 import {
-    Alert, CircularProgress, IconButton, Paper, Snackbar,
+    Alert, Box, CircularProgress, IconButton, Paper, Snackbar,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from "@mui/material";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
@@ -81,11 +81,11 @@ export default function EdgeTable() {
     return (
         <div className={"AD-TwoColumns2"}>
             <div className={"AD-TestCard2"}>
-                <br/>
-                {loading ? <CircularProgress className="center-text"/> :
+                <Box sx={{ paddingTop:"2vh"}}>
+                    {loading ? <CircularProgress className="center-text"/> :
                     <ThemeProvider theme={latoTheme}>
                         <TableContainer component={Paper} className="service-tables"
-                                        sx={{maxHeight: "70vh"}}>
+                                        sx={{maxHeight: "75vh"}}>
                             <Table stickyHeader>
                                 <TableHead>
                                     <TableRow>
@@ -124,6 +124,7 @@ export default function EdgeTable() {
                             </Table>
                         </TableContainer>
                     </ThemeProvider>}
+                </Box>
             </div>
 
             <Snackbar
