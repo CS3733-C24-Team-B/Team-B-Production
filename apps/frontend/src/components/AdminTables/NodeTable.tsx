@@ -38,7 +38,7 @@ export default function NodeTable(){
     const [refresh] = useState(false);
     const [loading, setLoading] = useState(true);
     const [typeSort, setTypeSort] = useState<keyof typeof nodeSortField>();
-    const [menuAnchor, setMenuAnchor] = useState(null);
+    const [menuAnchor, setMenuAnchor] = useState<HTMLElement>();
     const [filterType, setFilterType] = useState("none");
     const [filterFunction, setFilterFunction] = useState<(node: Node) => boolean>(() => () => {
         return true;
@@ -157,7 +157,7 @@ export default function NodeTable(){
                 <Menu
                     open={openMenu}
                     onClose={() => {
-                        setMenuAnchor(null);
+                        setMenuAnchor(undefined);
                     }}
                     anchorEl={menuAnchor}>
                     <FormControl style={{minWidth: 180, gap: 10, padding: 10}}>
@@ -196,16 +196,6 @@ export default function NodeTable(){
                         <TableContainer component={Paper} className="service-tables"
                                         sx={{maxHeight: "70vh"}}>
                             <Table stickyHeader>
-                                <colgroup>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                    <col width="12.5%"/>
-                                </colgroup>
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>
