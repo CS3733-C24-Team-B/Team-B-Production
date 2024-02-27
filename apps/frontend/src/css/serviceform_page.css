@@ -24,7 +24,7 @@
 .service-form-ThreeRows {
     /* Positioning */
     display: grid;
-    grid-template-rows: 6% 50% 40%; /* percentages of Container height, has to add up to 100%, not over */
+    grid-template-rows: 6vh 50vh 40vh; /* percentages of Container height, has to add up to 100%, not over */
     grid-template-columns: auto;
     grid-row-gap: 2%; /* make sure to account for gap percentage when defining areas */
     margin: 2vw;
@@ -65,7 +65,7 @@
 
     /* Positioning */
     display: grid;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 33.33% 33.33% 33.33%;
     grid-template-rows: auto;
     /*justify-content: center;*/
     /*justify-items: center;*/

@@ -44,77 +44,109 @@ export default function Credits() {
                             </Typography>
                             <Box sx={{marginBottom: "2vh"}}>
                                 <div className={"Credits-spacing"}>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom:"3vh"}}>
-                                            Material UI
-                                        </Typography>
-                                        <a href="https://mui.com/material-ui/">
-                                            <img className="C-MUI" src={MUI}></img>
-                                        </a>
-                                    </div>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem",marginBottom:"3.2vh"}}>
-                                            Express.js
-                                        </Typography>
-                                        <a href="https://expressjs.com/">
-                                            <img className="C-Express" src={Exp}></img>
-                                        </a>
-                                    </div>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom:"-1vh"}}>
-                                            FreePik
-                                        </Typography>
-                                        <a href="https://www.freepik.com/">
-                                            <img className="C-Fpik" src={Fpik}></img>
-                                        </a>
-                                    </div>
+                                    <a className="No-Link" href="https://mui.com/material-ui/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{
+                                                fontWeight: 600,
+                                                fontSize: "2rem",
+                                                marginBottom: "3vh",
+                                                color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }
+                                            }}>
+                                                Material UI
+                                            </Typography>
+                                            <img className="C-MUI" src={MUI}  alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://expressjs.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "3.2vh", color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Express.js
+                                            </Typography>
+                                            <img className="C-Express" src={Exp} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://www.freepik.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "-1vh", color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                FreePik
+                                            </Typography>
+                                            <img className="C-Fpik" src={Fpik} alt={"something"}></img>
+                                        </div>
+                                    </a>
                                 </div>
 
-                                <div className={"Credits-spacing"}>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem"}}>
-                                            Auth0
-                                        </Typography>
-                                        <a href="https://auth0.com/">
-                                            <img className="C-AZero" src={AZero}></img>
-                                        </a>
-                                    </div>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh"}}>
-                                            Axios
-                                        </Typography>
-                                        <a href="https://axios-http.com/">
-                                            <img className="C-Axs" src={Axs}></img>
-                                        </a>
-                                    </div>
-                                    <div className="Credits-TestCard2">
-                                        <a className="Credits-Mini-Titles">
-                                            <h2>Leaflet</h2>
-                                        </a>
-                                        <a href="https://leafletjs.com/">
-                                            <img className="C-Leaf" src={Leaf}></img>
-                                        </a>
-                                    </div>
+                                <div className="Credits-spacing">
+                                    <a className="No-Link" href="https://auth0.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Auth0
+                                            </Typography>
+                                                <img className="C-AZero" src={AZero} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://axios-http.com/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Axios
+                                            </Typography>
+                                            <img className="C-Axs" src={Axs} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://leafletjs.com" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <a className="Credits-Mini-Titles">
+                                                <h2>Leaflet</h2>
+                                            </a>
+                                                <img className="C-Leaf" src={Leaf} alt={"something"}></img>
+                                        </div>
+                                    </a>
                                 </div>
                                 <div className={"Credits-spacing"}>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh"}}>
-                                            Prisma
-                                        </Typography>
-                                        <a href="https://www.prisma.io/">
-                                            <img className="C-Pma" src={Pma}></img>
-                                        </a>
-                                    </div>
-                                    <div className="Credits-TestCard2">
-                                        <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "-1vh"}}>
-                                            React
-                                        </Typography>
-
-                                        <a href="https://react.dev/">
-                                            <img className="C-Rct" src={Rct}></img>
-                                        </a>
-                                    </div>
-
+                                    <a className="No-Link" href="https://www.prisma.io/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                Prisma
+                                            </Typography>
+                                            <img className="C-Pma" src={Pma} alt={"something"}></img>
+                                        </div>
+                                    </a>
+                                    <a className="No-Link" href="https://react.dev/" target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div className="Credits-TestCard2">
+                                            <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "-1vh",color: 'black',
+                                                '&:hover': {
+                                                    color: 'black', // Use the default text color on hover}}>
+                                                }}}>
+                                                React
+                                            </Typography>
+                                                <img className="C-Rct" src={Rct} alt={"something"}></img>
+                                        </div>
+                                    </a>
                                 </div>
                             </Box>
                         </div>

@@ -40,6 +40,7 @@ import {
     MedicineRequest,
     PriorityType,
     SanitationRequest,
+    ServiceRequest,
     GokuRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
@@ -141,6 +142,21 @@ export default function RequestForm() {
     const [gokuPressed, setGokuPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
     const [showMap, setShowMap] = useState(false);
+    const [srData, setsrData] = useState<ServiceRequest[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setsrData(res.data);
+        }
+
+        fetchData();
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -392,7 +408,7 @@ export default function RequestForm() {
             <Navbar/> {/* NavBlue css fixes this to the left */}
             <div className={"service-form-BackBlue"}> {/* divides area below topbar into navbar and main space */}
                 <div className={"service-form-ThreeRows"}
-                     style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : '8% 85%')}}
+                     style={{gridTemplateRows: (currentTab === "statistics" ? '5.5% 50% 40%' : (currentTab === "create-request" ? '8vh 85%' : '8vh 55vh'))}}
                 >
                     <div className={"service-form-topcard"}>
                         <Button
@@ -469,14 +485,14 @@ export default function RequestForm() {
                                 </div>
                             </div>
 
-                            <div
-                                className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
-                                <div>
-                                    <PieChartStats/>
+                                <div
+                                    className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
+                                    <div>
+                                        <PieChartStats srlist={srData} title={"Number of Requests in Types"}/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
                     {/*If current tab is the create request tab*/}
                     {currentTab === "create-request" && (
@@ -844,7 +860,5 @@ export default function RequestForm() {
                 </Alert>
             </Snackbar>;
         </div>
-    )
-        ;
-
+    );
 }

@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import TextField from '@mui/material/TextField';
 
 // Rodrick and Piotr
-const MedicineRequest = ({ change1, change2 }) => {
+const MedicineRequest = (props: { change1: (arg0: string) => void, change2: (arg0: string) => void }) => {
+    const {change1, change2} = props;
     const [additionalField1, setAdditionalField1] = useState("");
     const [additionalField2, setAdditionalField2] = useState("");
     function handleChange1(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setAdditionalField1(value);
         change1(value);
     }
 
     function handleChange2(event: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) {
-        let value = event.target.value;
+        const value = event.target.value;
         setAdditionalField2(value);
         change2(value);
     }

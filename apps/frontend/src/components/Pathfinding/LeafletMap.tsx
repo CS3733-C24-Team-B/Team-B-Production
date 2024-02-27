@@ -10,7 +10,7 @@ import {
     ZoomControl
 } from 'react-leaflet';
 import "../../css/leaflet.css";
-import React, {useState, useEffect, useRef, Ref} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import axios from "axios";
 import {LatLng, LatLngBounds} from "leaflet";
 import {
@@ -195,7 +195,7 @@ export default function LeafletMap(props: MapProps) {
     const [redraw, setRedraw] = useState(false);
     const [doAnimation, setDoAnimation] = useState(false);
     const startDraw = useRef(0);
-    const lMap: Ref<L.Map> = useRef();
+    const lMap = useRef(null);
     const [floorSet, setFloorSet] = useState(new Set());
     const [nodeColor, setNodeColor] = useState(props.nodeColor);
     const [edgeColor, setEdgeColor] = useState(props.edgeColor);
@@ -267,7 +267,7 @@ export default function LeafletMap(props: MapProps) {
             if (props.defaultStart !== undefined && nodeData.length > 0) {
                 setSelectedFloor(levelToFloor(nodeIDToFloor(props.defaultStart)));
                 setCurrLevel(nodeIDToFloor(props.defaultStart));
-                lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.defaultStart)), transX(nodeIDToXPos(props.defaultStart))), 6);
+                (lMap!.current! as L.Map).setView(new LatLng(transY(nodeIDToYPos(props.defaultStart)), transX(nodeIDToXPos(props.defaultStart))), 6);
             }
         }
     }, [nodeData, props.defaultStart, props.useDefault]);
@@ -299,7 +299,7 @@ export default function LeafletMap(props: MapProps) {
                 setSelectedFloor(levelToFloor(nodeIDToFloor(props.zoomNode)));
                 setCurrLevel(nodeIDToFloor(props.zoomNode));
             }
-            lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.zoomNode)), transX(nodeIDToXPos(props.zoomNode))), 8);
+            (lMap!.current! as L.Map).setView(new LatLng(transY(nodeIDToYPos(props.zoomNode)), transX(nodeIDToXPos(props.zoomNode))), 8);
             setOldZoom(props.zoomNode);
         }
     }, [props.zoomNode, nodeData, currLevel, oldZoom]);
@@ -747,7 +747,7 @@ export default function LeafletMap(props: MapProps) {
                                             setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
                                             setCurrLevel(nodeIDToFloor(nId));
                                         }
-                                        lMap!.current.setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
+                                        (lMap!.current! as L.Map).setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
                                     } else {
                                         setNodeStart("");
                                         setPathData([]);
@@ -778,7 +778,7 @@ export default function LeafletMap(props: MapProps) {
                                             setSelectedFloor(levelToFloor(nodeIDToFloor(nId)));
                                             setCurrLevel(nodeIDToFloor(nId));
                                         }
-                                        lMap!.current.setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
+                                        (lMap!.current! as L.Map).setView(new LatLng(transY(nodeIDToYPos(nId)), transX(nodeIDToXPos(nId))), 8);
                                     } else {
                                         setNodeEnd("");
                                         setPathData([]);
@@ -883,52 +883,51 @@ export default function LeafletMap(props: MapProps) {
                                 {NodeIcons[nodeType as keyof typeof NodeIcons]}
                             </SVGOverlay> :
                             <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
-                                          radius={6} color={nodeColor}
-                                          eventHandlers={{
-                                              click: () => {
-                                                  if (!showEdges) {
-                                                      if (nodeStart === "") {
-                                                          setNodeStart(nodeID);
-                                                      } else if (nodeEnd === "") {
-                                                          setNodeEnd(nodeID);
-                                                          props.changeDrawer(true);
-                                                          props.changeTopbar(nodeID);
-                                                      } else {
-                                                          if (!useDefault) {
-                                                              setNodeStart(nodeEnd);
-                                                          }
-                                                          setNodeEnd(nodeID);
-                                                          props.changeDrawer(true);
-                                                          props.changeTopbar(nodeID);
+                                      radius={6} color={nodeColor}
+                                      eventHandlers={{
+                                          click: () => {
+                                              if (!showEdges) {
+                                                  if (nodeStart === "") {
+                                                      setNodeStart(nodeID);
+                                                  } else if (nodeEnd === "") {
+                                                      setNodeEnd(nodeID);
+                                                      props.changeDrawer(true);
+                                                      props.changeTopbar(nodeID);
+                                                  } else {
+                                                      if (!useDefault) {
+                                                          setNodeStart(nodeEnd);
                                                       }
+                                                      setNodeEnd(nodeID);
+                                                      props.changeDrawer(true);
+                                                      props.changeTopbar(nodeID);
                                                   }
                                               }
-                                          }}>
-                                <Tooltip>
-                                    {/*{longName + ": " + xcoord + ", " + ycoord}*/}
-                                    <div>
-                                        {longName} <br/>
-                                        <Divider/> <br/>
-                                        {nodeTypeDescriptors(nodeType)} <br/>
-                                        <img style={{maxWidth: '20%', maxHeight: '20%'}}
-                                             src={NodeImages[nodeType as keyof typeof NodeImages]}/>
-                                        {/* Display service request data here */}
-                                        {srData.map((serviceRequest) => (
-                                            <div key={serviceRequest.serviceID}>
-                                                {serviceRequest.locationID === nodeID && (
-                                                    <div>
-                                                        <Divider/>
-                                                        <p>Contains {getReqType(serviceRequest)} service request <br/>
-                                                            Request Status: {serviceRequest.status} <br/>
-                                                            Created By: {serviceRequest.createdByID} <br/>
-                                                            Assigned To: {serviceRequest.assignedID}</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </Tooltip>
-                            </CircleMarker>) : <></>)
+                                          }
+                                      }}>
+                            <Tooltip>
+                                {/*{longName + ": " + xcoord + ", " + ycoord}*/}
+                                <div>
+                                    {longName} <br/>
+                                    <Divider/> <br/>
+                                    {nodeTypeDescriptors(nodeType)} <br/>
+                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
+                                    {/* Display service request data here */}
+                                    {srData.map((serviceRequest) => (
+                                        <div key={serviceRequest.serviceID}>
+                                            {serviceRequest.locationID === nodeID && (
+                                                <div>
+                                                    <Divider/>
+                                                    <p>Contains {getReqType(serviceRequest)} service request <br/>
+                                                        Request Status: {serviceRequest.status} <br/>
+                                                        Created By: {serviceRequest.createdByID} <br/>
+                                                        Assigned To: {serviceRequest.assignedID}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </Tooltip>
+                        </CircleMarker>) : <></>)
                 ))}
                 {lineData}
                 {nodeStart !== "" ? drawNodeStart() : <></>}
@@ -941,7 +940,7 @@ export default function LeafletMap(props: MapProps) {
                         key={floor}
                         className={`mui-btn mui-btn--fab ${currLevel === level ? 'selected' : floorSet.has(level) ? 'highlighted' : ''}`}
                         onClick={() => {
-                            lMap!.current.setZoom(5.5);
+                            (lMap!.current! as L.Map).setZoom(5.5);
                             setSelectedFloor(floor);
                             setCurrLevel(level);
                         }}

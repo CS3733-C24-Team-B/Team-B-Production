@@ -13,7 +13,7 @@
 }
 
 .bar-chart-title{
-    font-family: 'Lato';
+    font-family: 'Lato', serif;
     font-size: 1.5rem;
     margin-left: 2%;
     font-weight: bold;
@@ -21,7 +21,7 @@
 }
 
 .stacked-bar-title{
-    font-family: 'Lato';
+    font-family: 'Lato', serif;
     font-size: 1.5rem;
     margin-left: 2%;
     font-weight: bold;
@@ -29,7 +29,7 @@
 }
 
 .Piechart-title{
-    font-family: 'Lato';
+    font-family: 'Lato', serif;
     font-size: 2.5vh;
     margin-left: 1.5%;
     font-weight: bold;
