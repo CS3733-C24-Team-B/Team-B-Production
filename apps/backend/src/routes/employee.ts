@@ -30,7 +30,15 @@ router.get("/:email?", async function (req: Request, res: Response) {
             },
             include: {
                 requestsCreated: true,
-                requestsAssigned: true
+                requestsAssigned: {
+                    include: {
+                        sanitation: true,
+                        maintenance: true,
+                        internalTransport: true,
+                        medicine: true,
+                        language: true
+                    }
+                }
             }
         });
         if (employee === null) {
@@ -114,6 +122,7 @@ router.get("/profile-picture/:email", async function (req: Request, res: Respons
 
 router.put("/", async function (req: Request, res: Response) {
     const employeeInfo: UpdateEmployee = req.body;
+    console.log(employeeInfo);
     try {
         await client.employee.update({
             where: {
@@ -121,7 +130,11 @@ router.put("/", async function (req: Request, res: Response) {
             },
             data: {
                 firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
+                lastName: employeeInfo.lastName,
+                jobTitle: employeeInfo.jobTitle,
+                department: employeeInfo.department,
+                birthday: employeeInfo.birthday,
+                phoneNumber: employeeInfo.phoneNumber
             }
         });
         res.status(200).send("Updated name of " + employeeInfo.email + " to " +

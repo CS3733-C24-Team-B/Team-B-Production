@@ -9,6 +9,9 @@ export type EmployeeWithSR = Prisma.EmployeeGetPayload<{
                 internalTransport: true,
                 medicine: true,
                 language: true
+                createdBy: true,
+                assignedTo: true,
+                location: true
             }
         }
     }
@@ -23,5 +26,6 @@ export type ServiceRequestWithTypes = Prisma.ServiceRequestGetPayload<{
         language: true
         createdBy: true,
         assignedTo: true
+        location: true
     }
 }>

@@ -1,10 +1,10 @@
 import React from "react";
 import {Pie} from 'react-chartjs-2';
 import {ChartOptions} from 'chart.js';
-import {ServiceRequest} from "common/src/serviceRequestTypes.ts";
+import {ServiceRequestWithTypes} from "database";
 import "../../css/dashboard.css";
 
-export default function PieChartStats(props:{srlist:ServiceRequest[], title:string}){
+export default function PieChartStats(props:{srlist:ServiceRequestWithTypes[], title:string}){
     const {srlist, title} = props;
     // const [srData, setsrData] = useState<ServiceRequest[]>([]);
     // const {getAccessTokenSilently} = useAuth0();
