@@ -44,7 +44,8 @@ export default function Credits() {
                             </Typography>
                             <Box sx={{marginBottom: "2vh"}}>
                                 <div className={"Credits-spacing"}>
-                                    <a className="No-Link" href="https://mui.com/material-ui/">
+                                    <a className="No-Link" href="https://mui.com/material-ui/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{
                                                 fontWeight: 600,
@@ -60,7 +61,8 @@ export default function Credits() {
                                             <img className="C-MUI" src={MUI}></img>
                                         </div>
                                     </a>
-                                    <a className="No-Link" href="https://expressjs.com/">
+                                    <a className="No-Link" href="https://expressjs.com/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "3.2vh", color: 'black',
                                                 '&:hover': {
@@ -71,7 +73,8 @@ export default function Credits() {
                                             <img className="C-Express" src={Exp}></img>
                                         </div>
                                     </a>
-                                    <a className="No-Link" href="https://www.freepik.com/">
+                                    <a className="No-Link" href="https://www.freepik.com/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "-1vh", color: 'black',
                                                 '&:hover': {
@@ -85,7 +88,8 @@ export default function Credits() {
                                 </div>
 
                                 <div className="Credits-spacing">
-                                    <a className="No-Link" href="https://auth0.com/">
+                                    <a className="No-Link" href="https://auth0.com/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem",color: 'black',
                                                 '&:hover': {
@@ -93,12 +97,11 @@ export default function Credits() {
                                                 }}}>
                                                 Auth0
                                             </Typography>
-                                            <a href="">
                                                 <img className="C-AZero" src={AZero}></img>
-                                            </a>
                                         </div>
                                     </a>
-                                    <a className="No-Link" href="https://axios-http.com/">
+                                    <a className="No-Link" href="https://axios-http.com/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
                                                 '&:hover': {
@@ -109,7 +112,8 @@ export default function Credits() {
                                             <img className="C-Axs" src={Axs}></img>
                                         </div>
                                     </a>
-                                    <a className="No-Link" href="https://leafletjs.com">
+                                    <a className="No-Link" href="https://leafletjs.com" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <a className="Credits-Mini-Titles">
                                                 <h2>Leaflet</h2>
@@ -119,7 +123,8 @@ export default function Credits() {
                                     </a>
                                 </div>
                                 <div className={"Credits-spacing"}>
-                                    <a className="No-Link" href="https://www.prisma.io/">
+                                    <a className="No-Link" href="https://www.prisma.io/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
                                                 '&:hover': {
@@ -130,7 +135,8 @@ export default function Credits() {
                                             <img className="C-Pma" src={Pma}></img>
                                         </div>
                                     </a>
-                                    <a className="No-Link" href="https://react.dev/">
+                                    <a className="No-Link" href="https://react.dev/" target="_blank"
+                                       rel="noopener noreferrer">
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "-1vh",color: 'black',
                                                 '&:hover': {
