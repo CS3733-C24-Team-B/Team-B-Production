@@ -40,6 +40,7 @@ import {
     MedicineRequest,
     PriorityType,
     SanitationRequest,
+    ServiceRequest,
     GokuRequest,
     StatusType
 } from "common/src/serviceRequestTypes.ts";
@@ -141,6 +142,21 @@ export default function RequestForm() {
     const [gokuPressed, setGokuPressed] = useState(false);
     const [submitAlert, setSubmitAlert] = useState(false);
     const [showMap, setShowMap] = useState(false);
+    const [srData, setsrData] = useState<ServiceRequest[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const accessToken: string = await getAccessTokenSilently();
+            const res = await axios.get("/api/service-request", {
+                headers: {
+                    Authorization: "Bearer " + accessToken
+                }
+            });
+            setsrData(res.data);
+        }
+
+        fetchData();
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         async function fetch() {
@@ -469,14 +485,14 @@ export default function RequestForm() {
                                 </div>
                             </div>
 
-                            <div
-                                className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
-                                <div>
-                                    <PieChartStats/>
+                                <div
+                                    className={`service-form-midcard ${currentTab === "statistics" ? "service-form-midcard-right" : ""}`}>
+                                    <div>
+                                        <PieChartStats srlist={srData} title={"Number of Requests in Types"}/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
                     {/*If current tab is the create request tab*/}
                     {currentTab === "create-request" && (
