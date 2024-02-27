@@ -53,7 +53,7 @@ export default function Credits() {
                                                 marginBottom: "3vh",
                                                 color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }
                                             }}>
                                                 Material UI
@@ -66,7 +66,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "3.2vh", color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 Express.js
                                             </Typography>
@@ -78,7 +78,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginBottom: "-1vh", color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 FreePik
                                             </Typography>
@@ -93,7 +93,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem",color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 Auth0
                                             </Typography>
@@ -105,7 +105,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 Axios
                                             </Typography>
@@ -128,7 +128,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "1vh",color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 Prisma
                                             </Typography>
@@ -140,7 +140,7 @@ export default function Credits() {
                                         <div className="Credits-TestCard2">
                                             <Typography sx={{fontWeight: 600, fontSize: "2rem", marginTop: "-1vh",color: 'black',
                                                 '&:hover': {
-                                                    color: 'black', // Use the default text color on hover}}>
+                                                    color: 'black', // Use the default text color on hover>
                                                 }}}>
                                                 React
                                             </Typography>
