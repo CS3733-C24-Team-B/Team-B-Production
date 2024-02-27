@@ -1112,7 +1112,13 @@ export default function LeafletMap(props: MapProps) {
           .map(({ floor, level }) => (
             <button
               key={floor}
-              className={`mui-btn mui-btn--fab ${currLevel === level ? "selected" : floorSet.has(level) ? "highlighted" : ""}`}
+              className={`mui-btn mui-btn--fab ${
+                currLevel === level
+                  ? "selected"
+                  : floorSet.has(level)
+                    ? "highlighted"
+                    : ""
+              }`}
               onClick={() => {
                 lMap!.current.setZoom(5.5);
                 setSelectedFloor(floor);

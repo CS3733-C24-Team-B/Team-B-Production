@@ -116,7 +116,7 @@ export const PathPrinter = (data: {
         },
         [],
       );
-      let coords = res2.data.reduce(
+      const coords = res2.data.reduce(
         (
           accumulator: string[],
           roomData: {
@@ -139,7 +139,7 @@ export const PathPrinter = (data: {
         },
         [],
       );
-      let directionsFloor: string[][] = [];
+      const directionsFloor: string[][] = [];
       let levels: number = 0;
       let joinedwords: string[] = [
         "You have arrived at " + nodeIDs[nodeIDs.length - 1],

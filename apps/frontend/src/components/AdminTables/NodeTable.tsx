@@ -57,7 +57,7 @@ export default function NodeTable() {
   const [refresh] = useState(false);
   const [loading, setLoading] = useState(true);
   const [typeSort, setTypeSort] = useState<keyof typeof nodeSortField>();
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement>();
   const [filterType, setFilterType] = useState("none");
   const [filterFunction, setFilterFunction] = useState<(node: Node) => boolean>(
     () => () => {
@@ -188,7 +188,7 @@ export default function NodeTable() {
         <Menu
           open={openMenu}
           onClose={() => {
-            setMenuAnchor(null);
+            setMenuAnchor(undefined);
           }}
           anchorEl={menuAnchor}
         >
@@ -238,16 +238,6 @@ export default function NodeTable() {
               sx={{ maxHeight: "70vh" }}
             >
               <Table stickyHeader>
-                <colgroup>
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                </colgroup>
                 <TableHead>
                   <TableRow>
                     <TableCell>

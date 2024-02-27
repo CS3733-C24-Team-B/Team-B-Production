@@ -5346,7 +5346,6 @@ __metadata:
     react-router-bootstrap: "npm:^0.26.2"
     react-router-dom: "npm:^6.11.2"
     react-zoom-pan-pinch: "npm:^3.1.0"
-    sass: "npm:^1.62.1"
     serve: "npm:^14.2.0"
     sort-by: "npm:^1.2.0"
     styled-components: "npm:^6.1.8"
@@ -8217,19 +8216,6 @@ __metadata:
   bin:
     sass: sass.js
   checksum: 54df42bdfd1748e079c6602c6ce87eb729c50d13cdd8f78b1537c16ecfd7952bbae138710b5620b232e2095d865799a44fdce80cfc529cb3a1cbb5942e0e3ea2
-  languageName: node
-  linkType: hard
-
-"sass@npm:^1.62.1":
-  version: 1.70.0
-  resolution: "sass@npm:1.70.0"
-  dependencies:
-    chokidar: "npm:>=3.0.0 <4.0.0"
-    immutable: "npm:^4.0.0"
-    source-map-js: "npm:>=0.6.2 <2.0.0"
-  bin:
-    sass: sass.js
-  checksum: f933545d72a932f4a82322dd4ca9f3ea7d3e9d08852d695f76d419939cbdf7f8db3dd894b059ed77bf76811b07319b75b3ef8bb077bf9f52f8fbdfd8cee162f6
   languageName: node
   linkType: hard
 

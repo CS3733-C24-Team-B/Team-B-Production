@@ -34,7 +34,7 @@ export default function ServiceRequestData(
         },
       });
       setEmployees(res.data);
-    })().then(() => {});
+    })().then();
   }, [getAccessTokenSilently]);
   useEffect(() => {
     async function fetchData() {
@@ -86,8 +86,8 @@ export default function ServiceRequestData(
   let completedCount = 0;
   let assignedCount = 0;
   let availableCount = 0;
-  let myRequests: ServiceRequest[] = [];
-  let recentRequests: ServiceRequest[] = [];
+  const myRequests: ServiceRequest[] = [];
+  const recentRequests: ServiceRequest[] = [];
   srData.forEach((item) => {
     if (item.status === StatusType.Completed) {
       completedCount++;

@@ -1,5 +1,5 @@
 import React from "react";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import HomePage from "./routes/NavigationPage.tsx";
 import RequestForm from "./routes/RequestForm.tsx";
@@ -9,45 +9,45 @@ import Credits from "./routes/Credits.tsx";
 import About from "./routes/About.tsx";
 
 function App() {
-    const router = createBrowserRouter([
-        {
-            path: "/",
-            errorElement: <div/>,
-            element: <HomePage/>,
-        },
-        {
-            path: "/home",
-            errorElement: <div/>,
-            element: <HomePage/>,
-        },
-        {
-            path: "/requestform",
-            errorElement: <div />,
-            element: <RequestForm />,
-        },
-        {
-            path: "/profile-info",
-            errorElement: <div/>,
-            element: <ProfilePage/>,
-        },
-        {
-            path: "/admin-viewer",
-            errorElement: <div/>,
-            element: <AdminViewer/>
-        },
-        {
-            path: "/about",
-            errorElement: <div/>,
-            element: <About/>
-        },
-        {
-            path: "/credits",
-            errorElement: <div/>,
-            element: <Credits/>
-        }
-    ]);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      errorElement: <div />,
+      element: <HomePage />,
+    },
+    {
+      path: "/home",
+      errorElement: <div />,
+      element: <HomePage />,
+    },
+    {
+      path: "/requestform",
+      errorElement: <div />,
+      element: <RequestForm />,
+    },
+    {
+      path: "/profile-info",
+      errorElement: <div />,
+      element: <ProfilePage />,
+    },
+    {
+      path: "/admin-viewer",
+      errorElement: <div />,
+      element: <AdminViewer />,
+    },
+    {
+      path: "/about",
+      errorElement: <div />,
+      element: <About />,
+    },
+    {
+      path: "/credits",
+      errorElement: <div />,
+      element: <Credits />,
+    },
+  ]);
 
-    return <RouterProvider router={router}/>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -27,8 +27,7 @@ services:
     expose:
       - *pg-port
     # Use the DB args defined above
-    environment:
-      *db-args
+    environment: *db-args
   # The test runner is the backend, but with a different command
   test-runner:
     # Expose ONLY THE DEBUGGER to the host
@@ -40,7 +39,7 @@ services:
       context: .
       # Leave DB info accessible
       args:
-        <<: [ *db-loc, *db-args, *test-args ]
+        <<: [*db-loc, *db-args, *test-args]
       # This time, build the test runner
       target: test-runner
     depends_on:
@@ -58,4 +57,3 @@ services:
       - /app/packages/database/.turbo
       - /app/packages/database/node_modules
       - /app/packages/database/.prisma
-

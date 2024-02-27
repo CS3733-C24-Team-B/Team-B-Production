@@ -8,7 +8,7 @@ const MedicineRequest = ({ change1, change2 }) => {
   function handleChange1(
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) {
-    let value = event.target.value;
+    const value = event.target.value;
     setAdditionalField1(value);
     change1(value);
   }
@@ -16,7 +16,7 @@ const MedicineRequest = ({ change1, change2 }) => {
   function handleChange2(
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) {
-    let value = event.target.value;
+    const value = event.target.value;
     setAdditionalField2(value);
     change2(value);
   }

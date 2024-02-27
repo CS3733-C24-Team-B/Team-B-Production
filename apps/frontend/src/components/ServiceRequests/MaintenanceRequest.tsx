@@ -8,7 +8,7 @@ const MaintenanceRequest = ({ change }) => {
   function handleChange(
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) {
-    let value = event.target.value;
+    const value = event.target.value;
     setDetails(value);
     change(value);
   }

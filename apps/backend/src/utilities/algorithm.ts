@@ -32,7 +32,7 @@ export class AStar implements searchStrategy {
     );
     const graph = createGraph(nodeList, edgeList);
     //queue to search
-    let openList = [start];
+    const openList = [start];
     //already searched
     const closedList: aStarNode[] = [];
     //while there are still nodes left to search

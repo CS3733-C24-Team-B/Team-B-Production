@@ -125,7 +125,9 @@ export default function LeafletMiniMap(props: {
           .map(({ floor, level }) => (
             <button
               key={floor}
-              className={`mui-btn mui-btn--fab ${currLevel === level ? "selected" : ""}`}
+              className={`mui-btn mui-btn--fab ${
+                currLevel === level ? "selected" : ""
+              }`}
               onClick={() => {
                 setSelectedFloor(floor);
                 setCurrLevel(level);
