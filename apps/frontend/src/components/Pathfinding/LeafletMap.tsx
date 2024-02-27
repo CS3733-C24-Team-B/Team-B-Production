@@ -124,6 +124,7 @@ const gangnamStyle = {
     transform: 'translate(-50%, -50%)',
     width: '80vw',
     maxHeight: '80vh',
+    overflow: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -263,7 +264,7 @@ export default function LeafletMap(props: MapProps) {
         } else {
             setUseDefault(true);
             setNodeStart(props.defaultStart);
-            if(props.defaultStart !== undefined && nodeData.length > 0) {
+            if (props.defaultStart !== undefined && nodeData.length > 0) {
                 setSelectedFloor(levelToFloor(nodeIDToFloor(props.defaultStart)));
                 setCurrLevel(nodeIDToFloor(props.defaultStart));
                 lMap!.current.setView(new LatLng(transY(nodeIDToYPos(props.defaultStart)), transX(nodeIDToXPos(props.defaultStart))), 6);
@@ -650,7 +651,7 @@ export default function LeafletMap(props: MapProps) {
     }, [nodeEnd]);
 
     useEffect(() => {
-        if(pathData.length < 1) {
+        if (pathData.length < 1) {
             setDirections(false);
         }
     }, [pathData]);
@@ -674,13 +675,45 @@ export default function LeafletMap(props: MapProps) {
         return "";
     }
 
-    function nodeTypeDescriptors(nodeType: string):string {
+    function nodeTypeDescriptors(nodeType: string): string {
         return NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum];
     }
 
     // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
     if (isLoading) {
         return <div className="loading-center"><CircularProgress/></div>;
+    }
+
+    // function filterPathByFloor(fl: string) {
+    //     return pathData.filter((nr) => {
+    //         return nodeIDToFloor(nr) === fl;
+    //     });
+    // }
+
+    function splitPath() {
+        const output: {data: [], floor: string}[] = [];
+        let floorPath: [] = [];
+        let currFl = "";
+        pathData.forEach((nr) => {
+            if (currFl === "") {
+                currFl = nodeIDToFloor(nr);
+            } else if (nodeIDToFloor(nr) !== currFl) {
+                output.push({
+                    data: floorPath,
+                    floor: currFl
+                });
+                currFl = nodeIDToFloor(nr);
+                floorPath = [];
+            }
+            floorPath.push(nr);
+        });
+        if(floorPath.length > 1) {
+            output.push({
+                data: floorPath,
+                floor: currFl
+            });
+        }
+        return output;
     }
 
     return (
@@ -772,7 +805,12 @@ export default function LeafletMap(props: MapProps) {
                     <div style={{display: 'grid', width: '90%', gap: '5%'}}>
                         {directions && <PathPrinter startNode={nodeStart} endNode={nodeEnd} changeText={setDirText}/>}
                         {directions && <Button size="small" variant="outlined" onClick={() => setShowPreview(true)}
-                                style={{color:'#012D5A', borderColor: '#012D5A', fontSize: '1.5vh', width: '100%' }}>
+                                               style={{
+                                                   color: '#012D5A',
+                                                   borderColor: '#012D5A',
+                                                   fontSize: '1.5vh',
+                                                   width: '100%'
+                                               }}>
                             Preview
                         </Button>}
                     </div>
@@ -821,7 +859,7 @@ export default function LeafletMap(props: MapProps) {
                 {nodeData.map(({nodeID, longName, xcoord, ycoord, floor, nodeType}) => (
                     ((floor === currLevel && showNodes && (showHalls || nodeType !== "HALL")) ?
                         ((showIcons) ? <SVGOverlay interactive={true}
-                            bounds={new LatLngBounds(new LatLng(34.8 - (ycoord * 34 / 3400) - 0.25, (xcoord * 50 / 5000) + 3 - 0.25), new LatLng(34.8 - (ycoord * 34 / 3400) + 0.25, (xcoord * 50 / 5000) + 3 + 0.25))}
+                                                   bounds={new LatLngBounds(new LatLng(34.8 - (ycoord * 34 / 3400) - 0.25, (xcoord * 50 / 5000) + 3 - 0.25), new LatLng(34.8 - (ycoord * 34 / 3400) + 0.25, (xcoord * 50 / 5000) + 3 + 0.25))}
                                                    eventHandlers={{
                                                        click: () => {
                                                            if (!showEdges) {
@@ -843,53 +881,54 @@ export default function LeafletMap(props: MapProps) {
                                                        }
                                                    }}>
                                 {NodeIcons[nodeType as keyof typeof NodeIcons]}
-                        </SVGOverlay> :
+                            </SVGOverlay> :
                             <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
-                                      radius={6} color={nodeColor}
-                                      eventHandlers={{
-                                          click: () => {
-                                              if (!showEdges) {
-                                                  if (nodeStart === "") {
-                                                      setNodeStart(nodeID);
-                                                  } else if (nodeEnd === "") {
-                                                      setNodeEnd(nodeID);
-                                                      props.changeDrawer(true);
-                                                      props.changeTopbar(nodeID);
-                                                  } else {
-                                                      if (!useDefault) {
-                                                          setNodeStart(nodeEnd);
+                                          radius={6} color={nodeColor}
+                                          eventHandlers={{
+                                              click: () => {
+                                                  if (!showEdges) {
+                                                      if (nodeStart === "") {
+                                                          setNodeStart(nodeID);
+                                                      } else if (nodeEnd === "") {
+                                                          setNodeEnd(nodeID);
+                                                          props.changeDrawer(true);
+                                                          props.changeTopbar(nodeID);
+                                                      } else {
+                                                          if (!useDefault) {
+                                                              setNodeStart(nodeEnd);
+                                                          }
+                                                          setNodeEnd(nodeID);
+                                                          props.changeDrawer(true);
+                                                          props.changeTopbar(nodeID);
                                                       }
-                                                      setNodeEnd(nodeID);
-                                                      props.changeDrawer(true);
-                                                      props.changeTopbar(nodeID);
                                                   }
                                               }
-                                          }
-                                      }}>
-                            <Tooltip>
-                                {/*{longName + ": " + xcoord + ", " + ycoord}*/}
-                                <div>
-                                    {longName} <br/>
-                                    <Divider/> <br/>
-                                    {nodeTypeDescriptors(nodeType)} <br/>
-                                    <img style={{maxWidth: '20%', maxHeight: '20%'}} src={NodeImages[nodeType as keyof typeof NodeImages]}/>
-                                    {/* Display service request data here */}
-                                    {srData.map((serviceRequest) => (
-                                        <div key={serviceRequest.serviceID}>
-                                            {serviceRequest.locationID === nodeID && (
-                                                <div>
-                                                    <Divider/>
-                                                    <p>Contains {getReqType(serviceRequest)} service request <br/>
-                                                        Request Status: {serviceRequest.status} <br/>
-                                                        Created By: {serviceRequest.createdByID} <br/>
-                                                        Assigned To: {serviceRequest.assignedID}</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </Tooltip>
-                        </CircleMarker>) : <></>)
+                                          }}>
+                                <Tooltip>
+                                    {/*{longName + ": " + xcoord + ", " + ycoord}*/}
+                                    <div>
+                                        {longName} <br/>
+                                        <Divider/> <br/>
+                                        {nodeTypeDescriptors(nodeType)} <br/>
+                                        <img style={{maxWidth: '20%', maxHeight: '20%'}}
+                                             src={NodeImages[nodeType as keyof typeof NodeImages]}/>
+                                        {/* Display service request data here */}
+                                        {srData.map((serviceRequest) => (
+                                            <div key={serviceRequest.serviceID}>
+                                                {serviceRequest.locationID === nodeID && (
+                                                    <div>
+                                                        <Divider/>
+                                                        <p>Contains {getReqType(serviceRequest)} service request <br/>
+                                                            Request Status: {serviceRequest.status} <br/>
+                                                            Created By: {serviceRequest.createdByID} <br/>
+                                                            Assigned To: {serviceRequest.assignedID}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Tooltip>
+                            </CircleMarker>) : <></>)
                 ))}
                 {lineData}
                 {nodeStart !== "" ? drawNodeStart() : <></>}
@@ -920,7 +959,11 @@ export default function LeafletMap(props: MapProps) {
                 style={{fontFamily: 'Lato'}}
             >
                 <Box sx={gangnamStyle}>
-                    <div id="canvas" style={{maxWidth: '50%', maxHeight: '50%'}}><Canvas pathData={pathData}/></div>
+                    <div id="canvas">
+                        {splitPath().map(({data, floor}) => (
+                            <div><Canvas pathData={data} floorImg={levelToFloor(floor)}/></div>
+                        ))}
+                    </div>
                     <ExportPDF map={document.querySelector("#canvas")!} textDirections={dirText}/>
                 </Box>
             </Modal>
