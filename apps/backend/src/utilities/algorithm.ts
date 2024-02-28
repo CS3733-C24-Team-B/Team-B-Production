@@ -5,6 +5,25 @@ export interface searchStrategy {
     search(startNode: string, endNode: string): Promise<string[] | undefined>;
 }
 
+export abstract class GraphSearchTemplate implements searchStrategy {
+    protected nodeList: MapNode[] | undefined;
+    protected edgeList: MapEdge[] | undefined;
+    protected graph: Graph | undefined;
+
+    async setup() {
+        this.nodeList = await createNodeList();
+        this.edgeList = await createEdgeList();
+        this.graph = createGraph(this.nodeList, this.edgeList);
+    }
+
+    async search(startNode: string, endNode: string): Promise<string[] | undefined> {
+        await this.setup();
+        return this.pathFind(startNode, endNode);
+    }
+
+    abstract pathFind(startNode: string, goalNode: string): string[] | undefined;
+}
+
 export class Pathfind {
     private searchStrat: searchStrategy;
 
@@ -18,22 +37,105 @@ export class Pathfind {
 
 }
 
-export class AStar implements searchStrategy {
-    async search(startNode: string, goalNode: string):Promise<string[] | undefined> {
-        const nodeList = await createNodeList();
-        const edgeList = await createEdgeList();
-        const start = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === startNode) as MapNode);
-        const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
-        const graph = createGraph(nodeList, edgeList);
+export class AStar extends GraphSearchTemplate {
+
+    pathFind(startNode: string, goalNode: string): string[] | undefined {
+        const start = mapNodeToStar(this.nodeList!.find(MapNode => MapNode.nodeID === startNode) as MapNode);
+        const goal = mapNodeToStar(this.nodeList!.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
         //queue to search
         const openList = [start];
         //already searched
         const closedList: aStarNode[] = [];
         //while there are still nodes left to search
-        return searchNode(openList,closedList,goal,graph,nodeList);
+        return searchNode(openList,closedList,goal,this.graph!,this.nodeList!);
     }
 
 }
+
+export class Dijkstra extends GraphSearchTemplate {
+
+    pathFind(startNode: string, goalNode: string): string[] | undefined {
+
+        //create openlist
+        const openList:string[] = [];
+        openList.push(startNode);
+
+        //create cost map
+        const costList:Map<string,number> = new Map();
+        costList.set(startNode,0);
+
+        //log travel order
+        const lastNode: Map<string,string | null>= new Map();
+        //search through openlist
+        while(openList.length>0){
+
+            openList.sort((obj, obj1)=> (costList.get(obj)||Infinity)-(costList.get(obj1)||Infinity));
+            const curr = openList.shift();
+            if(curr===undefined){
+                return undefined;
+            }
+            //curr is node with lowest cost
+
+            if(curr===goalNode){
+                console.log("Goal node found, returning path");
+                const searchPath:string[] = [];
+                let node = curr;
+                while (node){
+                    searchPath.unshift(node);
+                    if(node!==lastNode.get(lastNode.get(node) as string)) {
+                        node = lastNode.get(node) as string;
+                    }
+                    else{
+                        return [node,node];
+                    }
+
+                }
+                console.log("Goal node found, returned path");
+                return searchPath;
+            }
+            let neighbors: string[] | undefined = this.graph!.adjacencyList.get(curr);
+            if(neighbors?.includes(lastNode.get(curr)!)){
+                neighbors = neighbors?.filter(obj => obj!==lastNode.get(curr));
+            }
+
+            for (const neighbor1 of neighbors as string[]) {
+                const neighbor:MapNode = findNode(this.nodeList!,neighbor1);
+                if(!costList.has(curr)){
+                    return undefined;
+                }
+                const cost =  (costList.get(curr) as number) + calcCost(curr,neighbor,this.nodeList!);
+
+                if(!costList.has(neighbor.nodeID)|| cost  < (costList.get(neighbor.nodeID)||Infinity)){
+
+                    costList.set(neighbor.nodeID,cost);
+                    lastNode.set(neighbor.nodeID,curr);
+                    if(!openList.includes(neighbor.nodeID)){
+                        openList.push(neighbor.nodeID);
+                    }
+                }
+            }
+        }
+
+        return undefined;
+    }
+}
+
+// export class AStar implements searchStrategy {
+//     async search(startNode: string, goalNode: string):Promise<string[] | undefined> {
+//         const nodeList = await createNodeList();
+//         const edgeList = await createEdgeList();
+//         const start = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === startNode) as MapNode);
+//         const goal = mapNodeToStar(nodeList.find(MapNode => MapNode.nodeID === goalNode) as MapNode);
+//         const graph = createGraph(nodeList, edgeList);
+//         //queue to search
+//         const openList = [start];
+//         //already searched
+//         const closedList: aStarNode[] = [];
+//         //while there are still nodes left to search
+//         return searchNode(openList,closedList,goal,graph,nodeList);
+//     }
+//
+// }
 function searchNode(openList:aStarNode[],closedList:aStarNode[],goal:aStarNode,graph:Graph,nodeList:MapNode[]){
     while (openList.length > 0) {
         //get currenet node
@@ -169,78 +271,78 @@ export class DFS implements searchStrategy {
         return undefined;
     }
 }
-
-export class Dijkstra implements searchStrategy {
-
-    async search(startingNode: string, endingNode: string) {
-        console.log("Called Dijkstra's Algorithm");
-        const nodeList = await createNodeList();
-        const edgeList = await createEdgeList();
-        const graph = createGraph(nodeList, edgeList);
-
-        //create openlist
-        const openList:string[] = [];
-        openList.push(startingNode);
-
-        //create cost map
-        const costList:Map<string,number> = new Map();
-        costList.set(startingNode,0);
-
-        //log travel order
-        const lastNode: Map<string,string | null>= new Map();
-        //search through openlist
-        while(openList.length>0){
-
-            openList.sort((obj, obj1)=> (costList.get(obj)||Infinity)-(costList.get(obj1)||Infinity));
-            const curr = openList.shift();
-            if(curr===undefined){
-                return undefined;
-            }
-            //curr is node with lowest cost
-
-            if(curr===endingNode){
-                console.log("Goal node found, returning path");
-                const searchPath:string[] = [];
-                let node = curr;
-                while (node){
-                    searchPath.unshift(node);
-                    if(node!==lastNode.get(lastNode.get(node) as string)) {
-                        node = lastNode.get(node) as string;
-                    }
-                    else{
-                        return [node,node];
-                    }
-
-                }
-                console.log("Goal node found, returned path");
-                return searchPath;
-            }
-            let neighbors: string[] | undefined = graph.adjacencyList.get(curr);
-            if(neighbors?.includes(lastNode.get(curr)!)){
-                neighbors = neighbors?.filter(obj => obj!==lastNode.get(curr));
-            }
-
-            for (const neighbor1 of neighbors as string[]) {
-                const neighbor:MapNode = findNode(nodeList,neighbor1);
-                if(!costList.has(curr)){
-                    return undefined;
-                }
-                const cost =  (costList.get(curr) as number) + calcCost(curr,neighbor,nodeList);
-
-                if(!costList.has(neighbor.nodeID)|| cost  < (costList.get(neighbor.nodeID)||Infinity)){
-
-                    costList.set(neighbor.nodeID,cost);
-                    lastNode.set(neighbor.nodeID,curr);
-                    if(!openList.includes(neighbor.nodeID)){
-                        openList.push(neighbor.nodeID);
-                    }
-                }
-            }
-        }
-
-        return undefined;
-    }
-}
+//
+// export class Dijkstra implements searchStrategy {
+//
+//     async search(startingNode: string, endingNode: string) {
+//         console.log("Called Dijkstra's Algorithm");
+//         const nodeList = await createNodeList();
+//         const edgeList = await createEdgeList();
+//         const graph = createGraph(nodeList, edgeList);
+//
+//         //create openlist
+//         const openList:string[] = [];
+//         openList.push(startingNode);
+//
+//         //create cost map
+//         const costList:Map<string,number> = new Map();
+//         costList.set(startingNode,0);
+//
+//         //log travel order
+//         const lastNode: Map<string,string | null>= new Map();
+//         //search through openlist
+//         while(openList.length>0){
+//
+//             openList.sort((obj, obj1)=> (costList.get(obj)||Infinity)-(costList.get(obj1)||Infinity));
+//             const curr = openList.shift();
+//             if(curr===undefined){
+//                 return undefined;
+//             }
+//             //curr is node with lowest cost
+//
+//             if(curr===endingNode){
+//                 console.log("Goal node found, returning path");
+//                 const searchPath:string[] = [];
+//                 let node = curr;
+//                 while (node){
+//                     searchPath.unshift(node);
+//                     if(node!==lastNode.get(lastNode.get(node) as string)) {
+//                         node = lastNode.get(node) as string;
+//                     }
+//                     else{
+//                         return [node,node];
+//                     }
+//
+//                 }
+//                 console.log("Goal node found, returned path");
+//                 return searchPath;
+//             }
+//             let neighbors: string[] | undefined = graph.adjacencyList.get(curr);
+//             if(neighbors?.includes(lastNode.get(curr)!)){
+//                 neighbors = neighbors?.filter(obj => obj!==lastNode.get(curr));
+//             }
+//
+//             for (const neighbor1 of neighbors as string[]) {
+//                 const neighbor:MapNode = findNode(nodeList,neighbor1);
+//                 if(!costList.has(curr)){
+//                     return undefined;
+//                 }
+//                 const cost =  (costList.get(curr) as number) + calcCost(curr,neighbor,nodeList);
+//
+//                 if(!costList.has(neighbor.nodeID)|| cost  < (costList.get(neighbor.nodeID)||Infinity)){
+//
+//                     costList.set(neighbor.nodeID,cost);
+//                     lastNode.set(neighbor.nodeID,curr);
+//                     if(!openList.includes(neighbor.nodeID)){
+//                         openList.push(neighbor.nodeID);
+//                     }
+//                 }
+//             }
+//         }
+//
+//         return undefined;
+//     }
+// }
 function calcCost(curr:string,neighbor:MapNode,nodeList:MapNode[]){
     let weight = 1000;
         weight = Math.sqrt((findNode(nodeList, curr).xcoord - neighbor.xcoord) ** 2 + (findNode(nodeList, curr).ycoord - neighbor.ycoord) ** 2 + ((nodeToFloor(mapNodeToStar(findNode(nodeList, curr))) - nodeToFloor(mapNodeToStar(neighbor))) * weight) ** 2);
