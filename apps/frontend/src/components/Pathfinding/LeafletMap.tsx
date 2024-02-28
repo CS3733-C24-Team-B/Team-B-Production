@@ -17,7 +17,7 @@ import {
     Button,
     Autocomplete,
     Collapse,
-    CircularProgress, Box, Modal, Divider
+    CircularProgress, Box, Modal, Divider, IconButton
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {PathPrinter} from "./PathPrinter.tsx";
@@ -52,6 +52,7 @@ import StairsIcon from '@mui/icons-material/Stairs';
 import RoomServiceIcon from '@mui/icons-material/RoomService';
 import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import HubIcon from '@mui/icons-material/Hub';
+import CloseIcon from '@mui/icons-material/Close';
 
 const FloorLevel = [
     {
@@ -676,7 +677,10 @@ export default function LeafletMap(props: MapProps) {
     }
 
     function nodeTypeDescriptors(nodeType: string) {
-        return (<p style={{whiteSpace: 'normal', maxWidth: '20vw'}}>{NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum]}</p>);
+        return (<p style={{
+            whiteSpace: 'normal',
+            maxWidth: '20vw'
+        }}>{NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum]}</p>);
     }
 
     // add this before return statement so if auth0 is loading it shows a loading thing or if user isn't authenticated it redirects them to login page
@@ -691,7 +695,7 @@ export default function LeafletMap(props: MapProps) {
     // }
 
     function splitPath() {
-        const output: {data: [], floor: string}[] = [];
+        const output: { data: [], floor: string }[] = [];
         let floorPath: [] = [];
         let currFl = "";
         pathData.forEach((nr) => {
@@ -707,7 +711,7 @@ export default function LeafletMap(props: MapProps) {
             }
             floorPath.push(nr);
         });
-        if(floorPath.length > 1) {
+        if (floorPath.length > 1) {
             output.push({
                 data: floorPath,
                 floor: currFl
@@ -883,53 +887,53 @@ export default function LeafletMap(props: MapProps) {
                                 {NodeIcons[nodeType as keyof typeof NodeIcons]}
                             </SVGOverlay> :
                             <CircleMarker center={new LatLng(34.8 - (ycoord * 34 / 3400), (xcoord * 50 / 5000) + 3)}
-                                      radius={6} color={nodeColor}
-                                      eventHandlers={{
-                                          click: () => {
-                                              if (!showEdges) {
-                                                  if (nodeStart === "") {
-                                                      setNodeStart(nodeID);
-                                                  } else if (nodeEnd === "") {
-                                                      setNodeEnd(nodeID);
-                                                      props.changeDrawer(true);
-                                                      props.changeTopbar(nodeID);
-                                                  } else {
-                                                      if (!useDefault) {
-                                                          setNodeStart(nodeEnd);
+                                          radius={6} color={nodeColor}
+                                          eventHandlers={{
+                                              click: () => {
+                                                  if (!showEdges) {
+                                                      if (nodeStart === "") {
+                                                          setNodeStart(nodeID);
+                                                      } else if (nodeEnd === "") {
+                                                          setNodeEnd(nodeID);
+                                                          props.changeDrawer(true);
+                                                          props.changeTopbar(nodeID);
+                                                      } else {
+                                                          if (!useDefault) {
+                                                              setNodeStart(nodeEnd);
+                                                          }
+                                                          setNodeEnd(nodeID);
+                                                          props.changeDrawer(true);
+                                                          props.changeTopbar(nodeID);
                                                       }
-                                                      setNodeEnd(nodeID);
-                                                      props.changeDrawer(true);
-                                                      props.changeTopbar(nodeID);
                                                   }
                                               }
-                                          }
-                                      }}>
-                            <Tooltip>
-                                {/*{longName + ": " + xcoord + ", " + ycoord}*/}
-                                <div style={{minWidth: '20vw'}}>
-                                    {longName} <br/>
-                                    <Divider/> <br/>
-                                    <div style={{display: 'flex', flexDirection: 'row'}}>
-                                        <img style={{maxWidth: '20%'}}
-                                             src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
-                                        {nodeTypeDescriptors(nodeType)}
-                                    </div>
-                                    {/* Display service request data here */}
-                                    {srData.map((serviceRequest) => (
-                                        <div key={serviceRequest.serviceID}>
-                                            {serviceRequest.locationID === nodeID && (
-                                                <div>
-                                                    <Divider/>
-                                                    <p>Contains {getReqType(serviceRequest)} service request <br/>
-                                                        Request Status: {serviceRequest.status} <br/>
-                                                        Created By: {serviceRequest.createdByID} <br/>
-                                                        Assigned To: {serviceRequest.assignedID}</p>
-                                                </div>
-                                            )}
+                                          }}>
+                                <Tooltip>
+                                    {/*{longName + ": " + xcoord + ", " + ycoord}*/}
+                                    <div style={{minWidth: '20vw'}}>
+                                        {longName} <br/>
+                                        <Divider/> <br/>
+                                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                                            <img style={{maxWidth: '20%'}}
+                                                 src={NodeImages[nodeType as keyof typeof NodeImages]} alt=""/>
+                                            {nodeTypeDescriptors(nodeType)}
                                         </div>
-                                    ))}
-                                </div>
-                            </Tooltip>
+                                        {/* Display service request data here */}
+                                        {srData.map((serviceRequest) => (
+                                            <div key={serviceRequest.serviceID}>
+                                                {serviceRequest.locationID === nodeID && (
+                                                    <div>
+                                                        <Divider/>
+                                                        <p>Contains {getReqType(serviceRequest)} service request <br/>
+                                                            Request Status: {serviceRequest.status} <br/>
+                                                            Created By: {serviceRequest.createdByID} <br/>
+                                                            Assigned To: {serviceRequest.assignedID}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Tooltip>
                             </CircleMarker>) : <></>)
                 ))}
                 {lineData}
@@ -961,6 +965,12 @@ export default function LeafletMap(props: MapProps) {
                 style={{fontFamily: 'Lato'}}
             >
                 <Box sx={gangnamStyle}>
+                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',height: 'fit-content', marginTop: '-5vh'}}>
+                        <p style={{fontWeight: 600, fontSize: 30}}>PDF Preview</p>
+                        <IconButton sx={{height: 'fit-content'}} onClick={() => setShowPreview(false)}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </div>
                     <div id="canvas">
                         {splitPath().map(({data, floor}) => (
                             <div><Canvas pathData={data} floorImg={levelToFloor(floor)}/></div>

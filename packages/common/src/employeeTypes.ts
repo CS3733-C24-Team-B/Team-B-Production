@@ -7,5 +7,9 @@ export type CreateEmployee = {
 export type UpdateEmployee = {
     email: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    jobTitle: string,
+    department: string,
+    birthday: Date,
+    phoneNumber: string
 }

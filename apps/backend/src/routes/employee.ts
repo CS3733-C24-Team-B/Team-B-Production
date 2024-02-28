@@ -12,6 +12,33 @@ const upload: multer.Multer = multer({storage: multer.memoryStorage()});
 const uploadProfilePicture: multer.Multer = multer({dest: "profile-pictures/", limits: { fileSize: 3000000 }});
 const csvUtility: EmployeeCSVUtility = new EmployeeCSVUtility();
 
+router.get("/download", async function (req: Request, res: Response) {
+    const csvString: string = await csvUtility.download();
+    return res.status(200).send(csvString);
+});
+
+router.post("/upload", upload.single("csvFile"), async function (req: Request, res: Response) {
+    const employeeFile: Express.Multer.File | undefined = req.file;
+
+    if (!employeeFile) {
+        console.error("No file was uploaded");
+        return res.status(400).send("No file was uploaded");
+    }
+
+    try {
+        await csvUtility.upload(employeeFile);
+        return res.status(200).send("Successfully added employees");
+    } catch (error) {
+        console.error(error);
+        return res.status(400).send("Could not add employees");
+    }
+});
+
+router.get("/download-template", function (req: Request, res: Response) {
+    const csvString: string = csvUtility.downloadTemplate();
+    return res.status(200).send(csvString);
+});
+
 router.get("/:email?", async function (req: Request, res: Response) {
 
     const email: string = req.params.email;
@@ -30,7 +57,15 @@ router.get("/:email?", async function (req: Request, res: Response) {
             },
             include: {
                 requestsCreated: true,
-                requestsAssigned: true
+                requestsAssigned: {
+                    include: {
+                        sanitation: true,
+                        maintenance: true,
+                        internalTransport: true,
+                        medicine: true,
+                        language: true
+                    }
+                }
             }
         });
         if (employee === null) {
@@ -114,6 +149,7 @@ router.get("/profile-picture/:email", async function (req: Request, res: Respons
 
 router.put("/", async function (req: Request, res: Response) {
     const employeeInfo: UpdateEmployee = req.body;
+    console.log(employeeInfo);
     try {
         await client.employee.update({
             where: {
@@ -121,7 +157,11 @@ router.put("/", async function (req: Request, res: Response) {
             },
             data: {
                 firstName: employeeInfo.firstName,
-                lastName: employeeInfo.lastName
+                lastName: employeeInfo.lastName,
+                jobTitle: employeeInfo.jobTitle,
+                department: employeeInfo.department,
+                birthday: employeeInfo.birthday,
+                phoneNumber: employeeInfo.phoneNumber
             }
         });
         res.status(200).send("Updated name of " + employeeInfo.email + " to " +
@@ -151,33 +191,6 @@ router.delete("/:email", async function (req: Request, res: Response) {
         console.error(error);
         return res.status(400);
     }
-});
-
-router.get("/download", async function (req: Request, res: Response) {
-    const csvString: string = await csvUtility.download();
-    return res.status(200).send(csvString);
-});
-
-router.post("/upload", upload.single("employeeFile"), async function (req: Request, res: Response) {
-    const employeeFile: Express.Multer.File | undefined = req.file;
-
-    if (!employeeFile) {
-        console.error("No file was uploaded");
-        return res.status(400).send("No file was uploaded");
-    }
-
-    try {
-        await csvUtility.upload(employeeFile);
-        return res.status(200).send("Successfully added employees");
-    } catch (error) {
-        console.error(error);
-        return res.status(400).send("Could not add employees");
-    }
-});
-
-router.get("/download-template", function (req: Request, res: Response) {
-    const csvString: string = csvUtility.downloadTemplate();
-    return res.status(200).send(csvString);
 });
 
 router.delete("/", async function (req: Request, res: Response) {
