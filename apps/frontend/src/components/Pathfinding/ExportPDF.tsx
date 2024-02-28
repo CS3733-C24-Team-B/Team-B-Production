@@ -44,7 +44,9 @@ async function exportPDF(map: HTMLElement, textDirections: string[]): Promise<vo
             doc.setLineWidth(25);
             const logo = new Image();
             logo.src = 'src/images/Brigham_and_Womens_Hospital_horiz_rgb.png';
-            doc.addImage(logo, "png", 7.5 - 2.175, 0.75, 2.175, 0.25);
+            logo.onload = () => {
+                doc.addImage(logo, "png", 7.5 - 2.175, 0.75, 2.175, 0.25);
+            };
             const mapImage: HTMLCanvasElement = await HTML2Canvas(map.children.item(i) as HTMLElement);
             doc.addImage(mapImage, 1, 1.2, 6.5, mapImage.height * (6.5 / mapImage.width));
             let cursorY = mapImage.height * (6.5 / mapImage.width) + 1.45;
