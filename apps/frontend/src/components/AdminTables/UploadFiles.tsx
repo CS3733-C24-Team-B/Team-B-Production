@@ -6,7 +6,7 @@ import {
 import {DropzoneAreaBase} from 'material-ui-dropzone';
 import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
-import downloadImage from "../images/downloadImage.png";
+import downloadImage from "../../images/downloadImage.png";
 
 
 export default function UploadFiles() {

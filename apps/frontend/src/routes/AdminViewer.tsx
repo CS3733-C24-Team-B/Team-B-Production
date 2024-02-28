@@ -5,7 +5,7 @@ import NodeTable from "../components/AdminTables/NodeTable.tsx";
 import EdgeTable from "../components/AdminTables/EdgeTable.tsx";
 import ServiceRequestTable from "../components/AdminTables/ServiceRequestTable.tsx";
 import EmployeeTable from "../components/AdminTables/EmployeeTable.tsx";
-import UploadFiles from "../components/UploadFiles.tsx";
+import UploadFiles from "../components/AdminTables/UploadFiles.tsx";
 import {Button} from "@mui/material";
 
 export default function AdminViewer() {

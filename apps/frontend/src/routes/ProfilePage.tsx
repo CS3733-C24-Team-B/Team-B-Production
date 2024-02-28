@@ -183,21 +183,12 @@ export default function ProfilePage() {
                     <div className={"Profile-page-TwoColumns"}>
                         <div className={"Profile-page-TwoRows"}>
                             <div className={"Profile-pic-main-TestCard"}>
-                                <div className="Profile-page-pic" style={{
-                                    overflow: 'hidden',
-                                    borderRadius: '50%',
-                                    border: '2px solid #34AD84',
-                                    maxHeight: '16vh',
-                                    maxWidth: '16vh'
-                                }}>
+                                <div className="Profile-page-pic">
                                     <label htmlFor={"newProfilePicture"}>
                                         <img src={profilePicture} alt="profile picture"
                                              style={{
-                                                 width: 'auto',
-                                                 height: 'auto',
                                                  borderRadius: '50%',
-                                                 maxHeight: '16vh',
-                                                 justifySelf: 'center'
+                                                 justifySelf: 'center',
                                              }}/>
                                     </label>
                                     <input accept="image/png, image/jpeg"
