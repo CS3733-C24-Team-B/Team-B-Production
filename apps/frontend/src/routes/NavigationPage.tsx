@@ -60,7 +60,7 @@ export default function NavigationPage() {
     const [showEdges, setShowEdges] = useState(localStorage.getItem("showEdges") !== null ? localStorage.getItem("showEdges") === "true" : false);
     const [showHalls, setShowHalls] = useState(localStorage.getItem("showHalls") !== null ? localStorage.getItem("showHalls") === "true" : false);
     const [showIcons, setShowIcons] = useState(localStorage.getItem("showIcons") !== null ? localStorage.getItem("showIcons") === "true" : false);
-    const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : true);
+    const [doAnimation, setDoAnimation] = useState(localStorage.getItem("doAnimation") !== null ? localStorage.getItem("doAnimation") === "true" : false);
     const [algorithm, setAlgorithm] = useState(0);
     const [nodeEnd, setNodeEnd] = useState("");
     const [zoomNode, setZoomNode] = useState("");
