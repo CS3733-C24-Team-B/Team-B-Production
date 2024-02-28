@@ -47,7 +47,9 @@ async function exportPDF(
       doc.setLineWidth(25);
       const logo = new Image();
       logo.src = "src/images/Brigham_and_Womens_Hospital_horiz_rgb.png";
-      doc.addImage(logo, "png", 7.5 - 2.175, 0.75, 2.175, 0.25);
+      logo.onload = () => {
+        doc.addImage(logo, "png", 7.5 - 2.175, 0.75, 2.175, 0.25);
+      };
       const mapImage: HTMLCanvasElement = await HTML2Canvas(
         map.children.item(i) as HTMLElement,
       );

@@ -217,7 +217,6 @@ export default function LeafletMap(props: MapProps) {
   // get auth0 stuff
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
-  console.log(user);
   const [srData, setSRData] = useState<ServiceRequest[]>([]);
   //const [employeeData, setEmployeeData] = useState([]);
 
@@ -392,7 +391,6 @@ export default function LeafletMap(props: MapProps) {
     };
 
     const nodeIDToFloor = (nId: string) => {
-      console.log(nodeData.find(({ nodeID }) => nId === nodeID));
       return nodeData.find(({ nodeID }) => nId === nodeID)!["floor"];
     };
 

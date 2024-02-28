@@ -84,7 +84,7 @@ export default function NavigationPage() {
   const [doAnimation, setDoAnimation] = useState(
     localStorage.getItem("doAnimation") !== null
       ? localStorage.getItem("doAnimation") === "true"
-      : true,
+      : false,
   );
   const [algorithm, setAlgorithm] = useState(0);
   const [nodeEnd, setNodeEnd] = useState("");
