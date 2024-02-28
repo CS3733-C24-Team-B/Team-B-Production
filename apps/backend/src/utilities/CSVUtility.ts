@@ -10,7 +10,15 @@ export interface CSVUtility {
 }
 
 export class EmployeeCSVUtility implements CSVUtility {
-  readonly headers: string[] = ["email", "firstName", "lastName"];
+  readonly headers: string[] = [
+    "email",
+    "firstName",
+    "lastName",
+    "jobTitle",
+    "department",
+    "birthday",
+    "phoneNumber",
+  ];
   auth0Utility: Auth0Utility = new Auth0Utility();
 
   async upload(file: Express.Multer.File): Promise<void> {
@@ -24,11 +32,19 @@ export class EmployeeCSVUtility implements CSVUtility {
         update: {
           firstName: employee[1],
           lastName: employee[2],
+          jobTitle: employee[3],
+          department: employee[4],
+          birthday: new Date(employee[5]),
+          phoneNumber: employee[6],
         },
         create: {
           email: employee[0],
           firstName: employee[1],
           lastName: employee[2],
+          jobTitle: employee[3],
+          department: employee[4],
+          birthday: new Date(employee[5]),
+          phoneNumber: employee[6],
         },
       });
       try {
@@ -41,7 +57,7 @@ export class EmployeeCSVUtility implements CSVUtility {
         console.log(
           "Could not add user and send invite email to " + employee[0],
         );
-        console.error(error);
+        // console.error(error);
       }
     }
   }
@@ -53,7 +69,15 @@ export class EmployeeCSVUtility implements CSVUtility {
     for (let i: number = 0; i < employees.length; i++) {
       const employee: Employee = employees[i];
       dataStrings.push(
-        [employee.email, employee.firstName, employee.lastName].join(","),
+        [
+          employee.email,
+          employee.firstName,
+          employee.lastName,
+          employee.jobTitle,
+          employee.department,
+          employee.birthday?.toDateString(),
+          employee.phoneNumber,
+        ].join(","),
       );
     }
     return dataStrings.join("\n");

@@ -21,6 +21,7 @@ import {
   Box,
   Modal,
   Divider,
+  IconButton,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { PathPrinter } from "./PathPrinter.tsx";
@@ -56,6 +57,7 @@ import StairsIcon from "@mui/icons-material/Stairs";
 import RoomServiceIcon from "@mui/icons-material/RoomService";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import HubIcon from "@mui/icons-material/Hub";
+import CloseIcon from "@mui/icons-material/Close";
 
 const FloorLevel = [
   {
@@ -793,7 +795,12 @@ export default function LeafletMap(props: MapProps) {
 
   function nodeTypeDescriptors(nodeType: string) {
     return (
-      <p style={{ whiteSpace: "normal", maxWidth: "20vw" }}>
+      <p
+        style={{
+          whiteSpace: "normal",
+          maxWidth: "20vw",
+        }}
+      >
         {NodeTypeEnum[nodeType as keyof typeof NodeTypeEnum]}
       </p>
     );
@@ -1152,13 +1159,7 @@ export default function LeafletMap(props: MapProps) {
           .map(({ floor, level }) => (
             <button
               key={floor}
-              className={`mui-btn mui-btn--fab ${
-                currLevel === level
-                  ? "selected"
-                  : floorSet.has(level)
-                    ? "highlighted"
-                    : ""
-              }`}
+              className={`mui-btn mui-btn--fab ${currLevel === level ? "selected" : floorSet.has(level) ? "highlighted" : ""}`}
               onClick={() => {
                 (lMap!.current! as L.Map).setZoom(5.5);
                 setSelectedFloor(floor);
@@ -1178,6 +1179,24 @@ export default function LeafletMap(props: MapProps) {
         style={{ fontFamily: "Lato" }}
       >
         <Box sx={gangnamStyle}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              height: "fit-content",
+              marginTop: "-5vh",
+            }}
+          >
+            <p style={{ fontWeight: 600, fontSize: 30 }}>PDF Preview</p>
+            <IconButton
+              sx={{ height: "fit-content" }}
+              onClick={() => setShowPreview(false)}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
           <div id="canvas">
             {splitPath().map(({ data, floor }) => (
               <div>

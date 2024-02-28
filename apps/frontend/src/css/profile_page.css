@@ -91,6 +91,17 @@
   margin-bottom: 1vh;
 }
 
+.Profile-page-top-infonumbers {
+  font-family: Lato, serif;
+  font-weight: 600;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  translate: -20%;
+  margin-top: 0vh;
+  margin-bottom: 1vh;
+}
+
 .InfoContainer svg {
   width: 36px;
   height: 36px;
@@ -166,7 +177,6 @@
   width: 100%;
   max-width: 100%;
   margin-top: 0;
-  justify-content: center;
 }
 
 .Profile-page-pic {
@@ -189,7 +199,7 @@
   max-height: 85vh;
   justify-content: center;
   align-items: center;
-  grid-template-rows: 2fr 3fr 0.5fr;
+  grid-template-rows: 2fr 4fr 0.5fr;
   grid-template-columns: 100%;
   padding: 5px;
 }
@@ -207,12 +217,13 @@
   align-items: center;
   align-self: start;
   margin-top: 5%;
-  row-gap: 15px;
+  row-gap: 8px;
 }
 
 .Profile-page-edit-button {
   display: grid;
   margin-bottom: 5%;
+  margin-top: 5%;
   justify-self: center;
   row-gap: 20px;
 }
@@ -220,7 +231,7 @@
 .Profile-page-top-infotext-return {
   font-family: Lato, serif;
   font-weight: 600;
-  font-size: 100%;
+  font-size: 25px;
   margin-left: 4%;
   margin-top: 2%;
   margin-bottom: 0;
@@ -237,4 +248,15 @@
 
 .Profile-page-pic:hover {
   filter: brightness(75%);
+}
+
+.Profile-page-firstcard-text
+  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  height: 0.9em !important;
+}
+
+.Profile-page-firstcard-text
+  .css-1q6at85-MuiInputBase-root-MuiOutlinedInput-root {
+  height: 2.8em;
+  width: 15vw;
 }

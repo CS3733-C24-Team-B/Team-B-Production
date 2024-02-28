@@ -37,16 +37,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import BarChart from "../components/Statistics/BarChart.tsx";
 import StackedBarChart from "../components/Statistics/StackedBarChart.tsx";
 import {
-  InternalTransportRequest,
-  LanguageRequest,
-  MaintenanceRequest,
-  MedicineRequest,
   PriorityType,
-  SanitationRequest,
-  ServiceRequest,
-  GokuRequest,
   StatusType,
+  SanitationRequest,
+  MaintenanceRequest,
+  InternalTransportRequest,
+  MedicineRequest,
+  LanguageRequest,
+  GokuRequest,
 } from "common/src/serviceRequestTypes.ts";
+import { ServiceRequestWithTypes } from "database";
 import SanitationReq from "../components/ServiceRequests/SanitationRequest.tsx";
 import MedicineReq from "../components/ServiceRequests/MedicineRequest.tsx";
 import MaintenanceReq from "../components/ServiceRequests/MaintenanceRequest.tsx";
@@ -151,7 +151,7 @@ export default function RequestForm() {
   const [gokuPressed, setGokuPressed] = useState(false);
   const [submitAlert, setSubmitAlert] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [srData, setsrData] = useState<ServiceRequest[]>([]);
+  const [srData, setsrData] = useState<ServiceRequestWithTypes[]>([]);
 
   useEffect(() => {
     async function fetchData() {
